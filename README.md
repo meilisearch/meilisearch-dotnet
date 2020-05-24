@@ -84,3 +84,14 @@ var indexes = await client.GetAllIndexes();
  var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
 ```
 Update Status has a reference `UpdateId` to get status of the action.
+
+#### Get Documents
+```c#
+ var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
+```
+
+#### Get Document by Id
+
+```c#
+var documents = await index.GetDocument<Movie>("10");
+```
