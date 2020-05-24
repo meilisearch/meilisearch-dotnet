@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace Meilisearch
             request.Content = new StringContent(content,Encoding.UTF8,"application/json");
             var response = await _client.SendAsync(request);
             // TODO : Revisit the Exception, We need to handle it better .
-            return response.IsSuccessStatusCode? index : throw new Exception("Not able to create index. May be Index already exist");
+            return response.IsSuccessStatusCode? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
         }
         
         /// <summary>
@@ -64,7 +65,8 @@ namespace Meilisearch
             var response = await _client.GetAsync("/indexes");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<Index>>(content);
+            return JsonConvert.DeserializeObject<IEnumerable<Index>>(content)
+                .Select(p => p.WithHttpClient(_client));
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace Meilisearch
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Index>(content);
+                return JsonConvert.DeserializeObject<Index>(content).WithHttpClient(_client);
             }
 
             return null;  // TODO:  Yikes!! returning Null  Need to come back to solve this.
