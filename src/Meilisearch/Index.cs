@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,11 +65,56 @@ namespace Meilisearch
         /// Deletes the Index with unique identifier.
         /// Its a no recovery delete. You will also lose the documents within the index.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Success or failure of the operation.</returns>
         public async Task<bool> Delete()
         {
            var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
            return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
+
+        public async Task<UpdateStatus> AddorUpdateDocuments<T>(IEnumerable<T> documents)
+        {
+            var content = JsonConvert.SerializeObject(documents);
+            var responseMessage = await this._client.PostAsync($"/indexes/{Uid}/documents", new StringContent(content));
+            var responsecontent = await responseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+        }
+
+        /*
+        public async Task<UpdateStatus> UpdateDocuments(IEnumerable<object> documents)
+        {
+            Need to support partial update of document.  Would be nice if Patch can be supported.
+        }
+  
+        public async Task<IEnumerable<T>> GetDocuments<T>()
+        {
+            
+        }
+
+        public async Task<T> GetDocument<T>(string documentId)
+        {
+            
+        }
+
+        public async Task<UpdateStatus> DeleteOneDocument<T>(string documentId)
+        {
+            
+        }
+
+        public async Task<UpdateStatus> DeleteAllDocuments()
+        {
+            
+        }
+
+        public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentId)
+        {
+            
+        }
+
+        public async Task<IEnumerable<T>> Search<T>(string search)
+        {
+            
+        }
+        */
     }
 }
