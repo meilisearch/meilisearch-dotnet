@@ -76,3 +76,11 @@ var indexes = await client.GetAllIndexes();
  var client = new MeilisearchClient(_httpClient);
  var indexes = await client.GetIndex("somerandomIndex");
 ```
+### Documents
+
+#### Add Documents
+
+```c#
+ var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+```
+Update Status has a reference `UpdateId` to get status of the action.

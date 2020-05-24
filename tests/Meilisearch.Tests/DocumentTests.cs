@@ -22,6 +22,7 @@ namespace Meilisearch.Tests
            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(1);
         }
 
+        /* Future test .
         public async Task Should_be_Able_to_Get_One_Document_With_Id()
         {
             
@@ -45,7 +46,7 @@ namespace Meilisearch.Tests
         public async Task Should_be_Able_to_Delete_one_document()
         {
             
-        }
+        } */
     }
 
     public class Movie
