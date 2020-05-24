@@ -30,7 +30,13 @@ namespace Meilisearch.Tests
             {
                 this.documentIndex = index;
             }
-            
+
+            var movies = new[]
+            {
+                new Movie {Id = "10", Name = "SuperMan"},
+                new Movie {Id = "11", Name = "SpiderMan"}
+            };
+            var updateStatus = this.documentIndex.AddorUpdateDocuments(movies).Result;
         }
         
         public void Dispose()

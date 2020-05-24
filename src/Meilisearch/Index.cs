@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
 namespace Meilisearch
@@ -71,13 +72,51 @@ namespace Meilisearch
            var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
            return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
-
+        
+        /// <summary>
+        /// Add or Update Document .
+        /// </summary>
+        /// <param name="documents">Documents to update</param>
+        /// <typeparam name="T">Type of document. Even though document is schemaless in meilisearch making it typed helps in compile time.</typeparam>
+        /// <returns>Document create or update is Async in Meilisearch so status is returned back.</returns>
         public async Task<UpdateStatus> AddorUpdateDocuments<T>(IEnumerable<T> documents)
         {
             var content = JsonConvert.SerializeObject(documents);
             var responseMessage = await this._client.PostAsync($"/indexes/{Uid}/documents", new StringContent(content));
             var responsecontent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+        }
+        
+        /// <summary>
+        /// Get document by its ID
+        /// </summary>
+        /// <param name="documentId">Document Id for query</param>
+        /// <typeparam name="T">Type to return for document</typeparam>
+        /// <returns>Type if the object is availble.</returns>
+        public async Task<T> GetDocument<T>(string documentId)
+        {
+           var responseMessage = await this._client.GetAsync($"/indexes/{Uid}/documents/{documentId}");
+           var responsecontent = await responseMessage.Content.ReadAsStringAsync();
+           return JsonConvert.DeserializeObject<T>(responsecontent);
+        }
+        
+        /// <summary>
+        /// Get documents with the allowed Query Parameters.
+        /// </summary>
+        /// <param name="query">Query Parameter. Supports Limit,offset and attributes to get</param>
+        /// <typeparam name="T">Type of Object.</typeparam>
+        /// <returns>List of document for the query.</returns>
+        public async Task<IEnumerable<T>> GetDocuments<T>(DocumentQuery query=default)
+        {
+            string uri = $"/indexes/{Uid}/documents";
+            if (query != null)
+            {
+                uri = QueryHelpers.AddQueryString(uri, query.AsDictionary());
+            }
+            var responseMessage = await this._client.GetAsync(uri);
+            var responseContent = await responseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<T>>(responseContent);
+            
         }
 
         /*
@@ -86,15 +125,9 @@ namespace Meilisearch
             Need to support partial update of document.  Would be nice if Patch can be supported.
         }
   
-        public async Task<IEnumerable<T>> GetDocuments<T>()
-        {
-            
-        }
+      
 
-        public async Task<T> GetDocument<T>(string documentId)
-        {
-            
-        }
+       
 
         public async Task<UpdateStatus> DeleteOneDocument<T>(string documentId)
         {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -22,17 +24,21 @@ namespace Meilisearch.Tests
            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
-        /* Future test .
+        [Fact]
         public async Task Should_be_Able_to_Get_One_Document_With_Id()
         {
-            
+            var documents = await index.GetDocument<Movie>("10");
+            documents.Id.Should().Be("10");
         }
-
+        
+        [Fact]
         public async Task Should_Be_able_to_get_Many_documents_By_Limit()
         {
-            
+            var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
+            documents.Count().Should().Be(1);
         }
-
+        
+        /* Future test .
         public async Task Should_Be_Delete_All_Documents()
         {
             
