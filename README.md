@@ -55,12 +55,15 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 ### Indexes
 
 #### Create an index <!-- omit in toc -->
- ```csharp
-     # Create an index
-     var index = client.CreateIndex("uid1");
-    # Create an index and give the primary-key
-     client.CreateIndex("uid2", "movieId");
-   ```
+ ```c#
+ var index = client.CreateIndex("uid1");
+```
+
+#### Create an index and give the primary-key
+```c#
+client.CreateIndex("uid2", "movieId");
+```
+
 #### List all an index <!-- omit in toc -->
 
 ```c#
