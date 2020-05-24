@@ -12,13 +12,13 @@ namespace Meilisearch
         /// </summary>
         [JsonProperty(PropertyName = "commitSha")]
         public string CommitSha { get; set; }
-        
+
         /// <summary>
         /// Build Date for current version
         /// </summary>
         [JsonProperty(PropertyName = "buildDate")]
         public string BuildDate { get; set; }
-        
+
         /// <summary>
         /// Version information for Meilisearch.
         /// </summary>
