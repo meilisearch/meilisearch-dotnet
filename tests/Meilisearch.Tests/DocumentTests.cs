@@ -19,7 +19,7 @@ namespace Meilisearch.Tests
         public async Task Should_be_Able_to_add_Document_for_Index()
         {
            var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
-           updateStatus.UpdateId.Should().BeGreaterOrEqualTo(1);
+           updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
         /* Future test .
