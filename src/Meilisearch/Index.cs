@@ -21,11 +21,11 @@ namespace Meilisearch
         /// <summary>
         /// Unique Identifier for the Index. 
         /// </summary>
-        [JsonProperty(PropertyName = "uid")] public string Uid { get; private set; }
+        [JsonProperty(PropertyName = "uid")] public string Uid { get; internal set; }
 
         /// <summary>
         /// Primary key of the document.
         /// </summary>
-        [JsonProperty(PropertyName = "primaryKey")] public string PrimaryKey { get; private set; }
+        [JsonProperty(PropertyName = "primaryKey")] public string PrimaryKey { get; internal set; }
     }
 }

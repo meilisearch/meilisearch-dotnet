@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -51,6 +52,32 @@ namespace Meilisearch.Tests
         {
             var client = new MeilisearchClient(_httpClient);
             await Assert.ThrowsAsync<Exception>(() => client.CreateIndex("wrong UID"));
+        }
+
+        [Fact]
+        public async Task Should_return_All_The_Index_In_the_System()
+        {
+            var client = new MeilisearchClient(_httpClient);
+            var index = await client.CreateIndex("uid4", "movieId");
+            var indexes = await client.GetAllIndexes();
+            indexes.Count().Should().BeGreaterOrEqualTo(1);
+        }
+
+        [Fact]
+        public async Task Should_return_the_index_requested()
+        {
+            var client = new MeilisearchClient(_httpClient);
+            var index = await client.CreateIndex("uid5", "movieId");
+            var indexes = await client.GetIndex("uid5");
+            index.Uid.Should().Be("uid5");
+        }
+
+        [Fact]
+        public async Task Should_return_Null_If_the_Index_Does_not_Exist()
+        {
+            var client = new MeilisearchClient(_httpClient);
+            var indexes = await client.GetIndex("somerandomIndex");
+            indexes.Should().BeNull();
         }
     }
 }

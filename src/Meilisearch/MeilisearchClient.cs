@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,36 @@ namespace Meilisearch
             var response = await _client.SendAsync(request);
             // TODO : Revisit the Exception, We need to handle it better .
             return response.IsSuccessStatusCode? index : throw new Exception("Not able to create index. May be Index already exist");
+        }
+        
+        /// <summary>
+        /// Get All the Indexes for the instance. Throws error if there is no indexes found.
+        /// Need to handle an empty Enumerable.
+        /// </summary>
+        /// <returns>Return Enumerable of Index.</returns>
+        public async Task<IEnumerable<Index>> GetAllIndexes()
+        {
+            var response = await _client.GetAsync("/indexes");
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<Index>>(content);
+        }
+
+        /// <summary>
+        /// Get Index for the unique ID.
+        /// </summary>
+        /// <param name="uid">Unique Id for the index.</param>
+        /// <returns>returns Index or Null if the index is not found.</returns>
+        public async Task<Index> GetIndex(string uid)
+        {
+            var response = await _client.GetAsync($"/indexes/{uid}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Index>(content);
+            }
+
+            return null;  // TODO:  Yikes!! returning Null  Need to come back to solve this.
         }
     }
 }
