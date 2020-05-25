@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    /*
+    
     public class StatusTests
     {
         private readonly Index index;
@@ -29,5 +29,5 @@ namespace Meilisearch.Tests
             UpdateStatus individualStatus = await index.GetUpdateStatus(status.First().UpdateId);
             individualStatus.Should().NotBeNull();
         } 
-    } */
+    } 
 }
