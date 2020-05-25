@@ -5,7 +5,7 @@ namespace Meilisearch.Tests
 {
     public class DocumentFixture : IDisposable
     {
-        private static HttpClient _httpClient = new HttpClient
+        public static HttpClient _httpClient = new HttpClient
         {
             // TODO : Should default URL in the next change.
             BaseAddress = new Uri("http://localhost:7700/")

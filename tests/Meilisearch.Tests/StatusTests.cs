@@ -5,19 +5,20 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    /*
-    public class StatusTests : IClassFixture<DocumentFixture>
+    
+    public class StatusTests 
     {
-        private readonly Index index;
-
-        public StatusTests(DocumentFixture fixture)
+        public StatusTests()
         {
-            index = fixture.documentIndex;
+            
         }
         
         [Fact]
         public async Task Should_be_Able_to_get_All_The_Update_Status()
         {
+            var client = new MeilisearchClient(DocumentFixture._httpClient);
+            var index = await  client.CreateIndex("MoviesStatus");
+            await index.AddorUpdateDocuments(new[] {new Movie {Id = "1"}});
             var status = await index.GetAllUpdateStatus();
             status.Count().Should().BeGreaterOrEqualTo(1);
         }
@@ -25,9 +26,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_Get_Status_By_Id()
         {
-            var status = await index.GetAllUpdateStatus();
-            UpdateStatus individualStatus = await index.GetUpdateStatus(status.First().UpdateId);
+            var client = new MeilisearchClient(DocumentFixture._httpClient);
+            var index = await  client.CreateIndex("MoviesStatus");
+            var status = await index.AddorUpdateDocuments(new[] {new Movie {Id = "2"}});
+            UpdateStatus individualStatus = await index.GetUpdateStatus(status.UpdateId);
             individualStatus.Should().NotBeNull();
         } 
-    } */
+    } 
 }
