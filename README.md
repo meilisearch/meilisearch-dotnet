@@ -99,7 +99,7 @@ var documents = await index.GetDocument<Movie>("10");
 #### Delete documents
 
 ```c#
- var updateStatus = await index.DeleteOneDocument<Movie>("11");
+ var updateStatus = await index.DeleteOneDocument("11");
 ```
 #### Delete in Batch
 
@@ -110,4 +110,15 @@ var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
 #### Delete all documents
 ```c#
 var updateStatus = await indextoDelete.DeleteAllDocuments();
+```
+### Status
+
+#### Get Update Status By Id
+```c#
+ UpdateStatus individualStatus = await index.GetUpdateStatus(1);
+```
+
+#### Get All Update Status
+```c#
+ var status = await index.GetAllUpdateStatus();
 ```

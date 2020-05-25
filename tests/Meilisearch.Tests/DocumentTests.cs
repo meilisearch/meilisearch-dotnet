@@ -8,12 +8,13 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    public class DocumentTests : IClassFixture<DocumentFixture>
+  
+    public class DocumentTest : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
         private readonly Index indextoDelete;
 
-        public DocumentTests(DocumentFixture fixture)
+        public DocumentTest(DocumentFixture fixture)
         {
             index = fixture.documentIndex;
             indextoDelete = fixture.DocumentDeleteIndex;
@@ -43,7 +44,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_Delete_one_document()
         {
-            var updateStatus = await index.DeleteOneDocument<Movie>("11");
+            var updateStatus = await index.DeleteOneDocument("11");
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
         

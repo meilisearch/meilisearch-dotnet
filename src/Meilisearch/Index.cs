@@ -118,13 +118,23 @@ namespace Meilisearch
             return JsonConvert.DeserializeObject<IEnumerable<T>>(responseContent);
         }
         
-        public async Task<UpdateStatus> DeleteOneDocument<T>(string documentId)
+        /// <summary>
+        /// Delete one document by its ID
+        /// </summary>
+        /// <param name="documentId">document ID</param>
+        /// <returns>Update Status with ID to look for document.</returns>
+        public async Task<UpdateStatus> DeleteOneDocument(string documentId)
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
         }
         
+        /// <summary>
+        /// Delete documents in batch.
+        /// </summary>
+        /// <param name="documentIds">List of document Id</param>
+        /// <returns>Update status with ID to look for progress of update.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
         {
             var content = JsonConvert.SerializeObject(documentIds);
@@ -133,9 +143,36 @@ namespace Meilisearch
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
         }
         
+        /// <summary>
+        /// Delete all the documents in the index
+        /// </summary>
+        /// <returns>Update status with ID to look for progress of update.</returns>
         public async Task<UpdateStatus> DeleteAllDocuments()
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents");
+            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+        }
+
+        /// <summary>
+        /// Gets the update status of all the asynchronous operation.
+        /// </summary>
+        /// <returns>Update status with the Operation status.</returns>
+        public async Task<IEnumerable<UpdateStatus>> GetAllUpdateStatus()
+        {
+            var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates");
+            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<UpdateStatus>>(responsecontent); 
+        }
+
+        /// <summary>
+        /// Get Update Status by Status Id
+        /// </summary>
+        /// <param name="updateId">UpdateId for the Operation</param>
+        /// <returns>Current status of the operation.</returns>
+        public async Task<UpdateStatus> GetUpdateStatus(int updateId)
+        {
+            var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates/{updateId}");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
         }

@@ -6,5 +6,10 @@ namespace Meilisearch
     {
         [JsonProperty(PropertyName = "updateId")]
         public int UpdateId { get; set; }
+
+        [JsonProperty(PropertyName = "status")]
+        public string Status { get; set; }
+        
+        
     }
 }
