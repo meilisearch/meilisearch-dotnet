@@ -95,3 +95,19 @@ Update Status has a reference `UpdateId` to get status of the action.
 ```c#
 var documents = await index.GetDocument<Movie>("10");
 ```
+
+#### Delete documents
+
+```c#
+ var updateStatus = await index.DeleteOneDocument<Movie>("11");
+```
+#### Delete in Batch
+
+```c#
+var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
+```
+
+#### Delete all documents
+```c#
+var updateStatus = await indextoDelete.DeleteAllDocuments();
+```

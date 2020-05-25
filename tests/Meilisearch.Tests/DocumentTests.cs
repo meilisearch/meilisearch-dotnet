@@ -11,10 +11,12 @@ namespace Meilisearch.Tests
     public class DocumentTests : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
+        private readonly Index indextoDelete;
 
         public DocumentTests(DocumentFixture fixture)
         {
             index = fixture.documentIndex;
+            indextoDelete = fixture.DocumentDeleteIndex;
         }
        
         [Fact]
@@ -38,21 +40,26 @@ namespace Meilisearch.Tests
             documents.Count().Should().Be(1);
         }
         
-        /* Future test .
-        public async Task Should_Be_Delete_All_Documents()
-        {
-            
-        }
-
-        public async Task Should_be_Able_to_Delete_documents_by_ids()
-        {
-            
-        }
-
+        [Fact]
         public async Task Should_be_Able_to_Delete_one_document()
         {
-            
-        } */
+            var updateStatus = await index.DeleteOneDocument<Movie>("11");
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+        
+        [Fact]
+        public async Task Should_be_Able_to_Delete_documents_by_ids()
+        {
+            var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+        
+        [Fact]
+        public async Task Should_Be_Delete_All_Documents()
+        {
+            var updateStatus = await indextoDelete.DeleteAllDocuments();
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
     }
 
     public class Movie

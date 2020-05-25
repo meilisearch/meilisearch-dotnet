@@ -116,8 +116,30 @@ namespace Meilisearch
             var responseMessage = await this._client.GetAsync(uri);
             var responseContent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<T>>(responseContent);
-            
         }
+        
+        public async Task<UpdateStatus> DeleteOneDocument<T>(string documentId)
+        {
+            var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
+            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+        }
+        
+        public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
+        {
+            var content = JsonConvert.SerializeObject(documentIds);
+            var httpresponse = await this._client.PostAsync($"/indexes/{Uid}/documents/delete-batch", new StringContent(content));
+            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+        }
+        
+        public async Task<UpdateStatus> DeleteAllDocuments()
+        {
+            var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents");
+            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+        }
+
 
         /*
         public async Task<UpdateStatus> UpdateDocuments(IEnumerable<object> documents)
@@ -125,25 +147,6 @@ namespace Meilisearch
             Need to support partial update of document.  Would be nice if Patch can be supported.
         }
   
-      
-
-       
-
-        public async Task<UpdateStatus> DeleteOneDocument<T>(string documentId)
-        {
-            
-        }
-
-        public async Task<UpdateStatus> DeleteAllDocuments()
-        {
-            
-        }
-
-        public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentId)
-        {
-            
-        }
-
         public async Task<IEnumerable<T>> Search<T>(string search)
         {
             
