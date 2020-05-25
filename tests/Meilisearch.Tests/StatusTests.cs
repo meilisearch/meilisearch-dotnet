@@ -6,7 +6,7 @@ using Xunit;
 namespace Meilisearch.Tests
 {
     
-    public class StatusTests
+    public class StatusTests : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
 
