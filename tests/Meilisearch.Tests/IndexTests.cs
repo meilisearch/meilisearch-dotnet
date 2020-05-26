@@ -8,7 +8,7 @@ namespace Meilisearch.Tests
 {
     public class IndexTests
     {
-        private static HttpClient _httpClient = new HttpClient
+        private HttpClient _httpClient = new HttpClient
         {
             // TODO : Should default URL in the next change.
             BaseAddress = new Uri("http://localhost:7700/")
@@ -18,7 +18,7 @@ namespace Meilisearch.Tests
         public async Task Should_be_Able_To_Modify_Primary_Key()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("Indextest");
+            var index = await client.CreateIndex("Indextest"+new Random().Next());
             var modifiedIndex = await index.ChangePrimaryKey("MovieId");
             modifiedIndex.PrimaryKey.Should().Be("MovieId");
         }

@@ -9,10 +9,10 @@ namespace Meilisearch.Tests
 {
     public class MeilisearchClientTests
     {
-        private static HttpClient _httpClient = new HttpClient
+        private HttpClient _httpClient = new HttpClient
         {
             // TODO : Should default URL in the next change.
-            BaseAddress = new Uri("http://localhost:7700/")
+            BaseAddress = new Uri("http://localhost:7700/"),
         };
 
         [Fact]
@@ -27,24 +27,27 @@ namespace Meilisearch.Tests
         public async Task Should_be_able_To_Create_Index()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("uid1");
-            index.Uid.Should().Be("uid1");
+            var indexName = "uid" + new Random().Next();
+            var index = await client.CreateIndex(indexName);
+            index.Uid.Should().Be(indexName);
         }
 
         [Fact]
         public async Task Should_be_able_To_Create_Index_with_primaryKey()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("uid2", "movieId");
-            index.Uid.Should().Be("uid2");
+            var indexName = "uid" + new Random().Next();
+            var index = await client.CreateIndex(indexName, "movieId");
+            index.Uid.Should().Be(indexName);
             index.PrimaryKey.Should().Be("movieId");
         }
         [Fact]
         public async Task Should_Throw_an_Exception_if_the_Index_Is_already_Taken()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("uid3", "movieId");
-            await Assert.ThrowsAsync<Exception>(() => client.CreateIndex("uid3", "movieId"));
+            var indexName = "uid3" + new Random().Next();
+            var index = await client.CreateIndex(indexName, "movieId");
+            await Assert.ThrowsAsync<Exception>(() => client.CreateIndex(indexName, "movieId"));
         }
 
         [Fact]
@@ -58,7 +61,8 @@ namespace Meilisearch.Tests
         public async Task Should_return_All_The_Index_In_the_System()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("uid4", "movieId");
+            var indexName = "uid4" + new Random().Next();
+            var index = await client.CreateIndex(indexName, "movieId");
             var indexes = await client.GetAllIndexes();
             indexes.Count().Should().BeGreaterOrEqualTo(1);
         }
@@ -67,9 +71,10 @@ namespace Meilisearch.Tests
         public async Task Should_return_the_index_requested()
         {
             var client = new MeilisearchClient(_httpClient);
-            var index = await client.CreateIndex("uid5", "movieId");
-            var indexes = await client.GetIndex("uid5");
-            index.Uid.Should().Be("uid5");
+            var indexName = "uid5" + new Random().Next();
+            var index = await client.CreateIndex(indexName, "movieId");
+            var indexes = await client.GetIndex(indexName);
+            index.Uid.Should().Be(indexName);
         }
 
         [Fact]
