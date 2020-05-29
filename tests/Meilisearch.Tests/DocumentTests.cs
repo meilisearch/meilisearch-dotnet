@@ -8,8 +8,7 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-
-    /*
+    
     public class DocumentTest : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
@@ -56,14 +55,14 @@ namespace Meilisearch.Tests
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
-      /*  [Fact]
+       [Fact]
         public async Task Should_Be_Delete_All_Documents()
         {
             var updateStatus = await indextoDelete.DeleteAllDocuments();
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
-        } #1#
+        } 
     }
-    */
+    
 
     public class Movie
     {
