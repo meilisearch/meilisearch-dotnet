@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
+    [Collection("Sequential")]
 
     public class StatusTests 
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Http;
@@ -8,14 +7,9 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
+    [Collection("Sequential")]
     public class IndexTests
     {
-        private HttpClient _httpClient = new HttpClient
-        {
-            // TODO : Should default URL in the next change.
-            BaseAddress = new Uri("http://localhost:7700/")
-        };
-        
         [Fact]
         public async Task Should_be_Able_To_Modify_Primary_Key()
         {

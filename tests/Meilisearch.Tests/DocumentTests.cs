@@ -8,16 +8,14 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    
+    [Collection("Sequential")]
     public class DocumentTest : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
-        private readonly Index indextoDelete;
 
         public DocumentTest(DocumentFixture fixture)
         {
             index = fixture.documentIndex;
-            indextoDelete = fixture.DocumentDeleteIndex;
         }
 
         [Fact]

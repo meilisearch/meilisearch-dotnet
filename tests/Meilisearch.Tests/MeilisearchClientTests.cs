@@ -8,6 +8,7 @@ using Microsoft.Extensions.Http;
 
 namespace Meilisearch.Tests
 {
+    [Collection("Sequential")]
     public class MeilisearchClientTests
     {
 
