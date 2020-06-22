@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
@@ -182,12 +183,33 @@ namespace Meilisearch
         public async Task<UpdateStatus> UpdateDocuments(IEnumerable<object> documents)
         {
             Need to support partial update of document.  Would be nice if Patch can be supported.
-        }
+        } */
   
-        public async Task<IEnumerable<T>> Search<T>(string search)
+        /// <summary>
+        /// Search documents with a default Search Query
+        /// </summary>
+        /// <param name="query">Query Parameter with Search</param>
+        /// <typeparam name="T">Type parameter to return</typeparam>
+        /// <returns>Enumerable of items</returns>
+        public async Task<SearchResult<T>> Search<T>(string query)
         {
-            
+            var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>($"/indexes/{Uid}/search?q={query}");
+            return searchResults;
         }
-        */
+    }
+
+    public class SearchResult<T>
+    {
+        [JsonProperty("hits")]
+        public IEnumerable<T> Hits { get; set; }
+
+        [JsonProperty("offset")]
+        public int Offset { get; set; }
+
+        [JsonProperty("limit")]
+        public int Limit { get; set; }
+
+        [JsonProperty("query")]
+        public string Query { get; set; }
     }
 }

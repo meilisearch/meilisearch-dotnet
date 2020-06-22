@@ -122,3 +122,7 @@ var updateStatus = await indextoDelete.DeleteAllDocuments();
 ```c#
  var status = await index.GetAllUpdateStatus();
 ```
+#### Search
+```c#
+var movies = await this.index.Search<Movie>("ironman");
+```
