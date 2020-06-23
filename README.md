@@ -1,4 +1,8 @@
-<h1 align="center">MeiliSearch Dotnet</h1>
+<p align="center">
+  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_dotnet.svg" alt="MeiliSearch-Dotnet" width="200" height="200" />
+</p>
+
+<h1 align="center">MeiliSearch .NET</h1>
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
@@ -9,31 +13,32 @@
   <a href="https://docs.meilisearch.com/faq">FAQ</a>
 </h4>
 
-![.NET Core](https://github.com/satish860/meilisearch-dotnet/workflows/.NET%20Core/badge.svg?branch=master)
+<p align="center">
+  <a href="https://github.com/meilisearch/meilisearch-dotnet/actions"><img src="https://github.com/meilisearch/meilisearch-dotnet/workflows/.NET%20Core/badge.svg?branch=master" alt=".NET Core"></a>
+  <a href="https://github.com/meilisearch/meilisearch-dotnet/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
+  <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
+</p>
+
+<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in C#</p>
 
 
-<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in dotnet</p>
-
-**MeiliSearch dotnet** is a client for **MeiliSearch** written in Dotnet. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box
+**MeiliSearch .NET** is a client for **MeiliSearch** written in C#. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
 
 - [🔧 Installation](#-installation)
 - [🚀 Getting started](#-getting-started)
+- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
   - [Documents](#documents)
-  - [Update status](#update-status)
+  - [Update Status](#update-status)
   - [Search](#search)
 - [⚙️ Development Workflow](#️-development-workflow)
-  - [Install dependencies](#install-dependencies)
-  - [Tests and Linter](#tests-and-linter)
-  - [Release](#release)
-- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 
 ## 🔧 Installation
 
-TODO
+// TODO
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -50,6 +55,11 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
 // TODO
 
+## 🤖 Compatibility with MeiliSearch
+
+This package is compatible with the following MeiliSearch versions:
+- `v0.11.X`
+
 ## 🎬 Examples
 
 ### Indexes
@@ -59,7 +69,7 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
  var index = client.CreateIndex("uid1");
 ```
 
-#### Create an index and give the primary-key
+#### Create an index and give the primary-key <!-- omit in toc -->
 ```c#
 client.CreateIndex("uid2", "movieId");
 ```
@@ -78,74 +88,77 @@ var indexes = await client.GetAllIndexes();
 ```
 ### Documents
 
-#### Add Documents
+#### Add Documents <!-- omit in toc -->
 
 ```c#
  var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
 ```
 Update Status has a reference `UpdateId` to get status of the action.
 
-#### Get Documents
+#### Get Documents <!-- omit in toc -->
 ```c#
  var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
 ```
 
-#### Get Document by Id
+#### Get Document by Id <!-- omit in toc -->
 
 ```c#
 var documents = await index.GetDocument<Movie>("10");
 ```
 
-#### Delete documents
+#### Delete documents <!-- omit in toc -->
 
 ```c#
  var updateStatus = await index.DeleteOneDocument("11");
 ```
-#### Delete in Batch
+#### Delete in Batch <!-- omit in toc -->
 
 ```c#
 var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
 ```
 
-#### Delete all documents
+#### Delete all documents <!-- omit in toc -->
 ```c#
 var updateStatus = await indextoDelete.DeleteAllDocuments();
 ```
-### Status
+### Update Status
 
-#### Get Update Status By Id
+#### Get Update Status By Id <!-- omit in toc -->
 ```c#
  UpdateStatus individualStatus = await index.GetUpdateStatus(1);
 ```
 
-#### Get All Update Status
+#### Get All Update Status <!-- omit in toc -->
 ```c#
  var status = await index.GetAllUpdateStatus();
 ```
-#### Search
+### Search
+
+#### Basic Search <!-- omit in toc -->
+
 ```c#
 var movies = await this.index.Search<Movie>("ironman");
 ```
 
-#### Custom Search
+#### Custom Search <!-- omit in toc -->
+
 ```c#
 var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
 ```
 
-⚙️ Development Workflow
+## ⚙️ Development Workflow
 
-If you want to contribute, this sections describes the steps to follow.
+If you want to contribute, this section describes the steps to follow.
 
-### Tests
+### Tests <!-- omit in toc -->
 
 ```bash
-# Tests
-docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch  --no-analytics
-dotnet restore
-dotnet test
+$ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true
+$ dotnet restore
+$ dotnet test
 ```
 
-### Release
+### Release <!-- omit in toc -->
 
 MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
@@ -159,6 +172,6 @@ Once the changes are merged on `master`, you can publish the current draft relea
 
 A GitHub Action will be triggered and push the new package to [Nuget](https://www.nuget.org/packages/MeiliSearch/).
 
-## 🤖 Compatibility with MeiliSearch
+<hr>
 
-This package works for MeiliSearch >=0.10.x
+**MeiliSearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
