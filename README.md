@@ -133,6 +133,7 @@ var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 
 ```
 
 ⚙️ Development Workflow
+
 If you want to contribute, this sections describes the steps to follow.
 
 ### Tests
