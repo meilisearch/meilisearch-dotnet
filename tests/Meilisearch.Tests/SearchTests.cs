@@ -20,5 +20,12 @@ namespace Meilisearch.Tests
            var movies = await this.index.Search<Movie>("ironman");
            movies.Hits.Should().NotBeEmpty();
         }
+
+        [Fact]
+        public async Task Should_Be_able_to_Send_Different_Parameters()
+        {
+            var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
+            movies.Hits.Should().NotBeEmpty();
+        }
     }
 }

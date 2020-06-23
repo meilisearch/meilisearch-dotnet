@@ -184,16 +184,23 @@ namespace Meilisearch
         {
             Need to support partial update of document.  Would be nice if Patch can be supported.
         } */
-  
+
         /// <summary>
         /// Search documents with a default Search Query
         /// </summary>
         /// <param name="query">Query Parameter with Search</param>
+        /// <param name="searchattributes">Attributes to search.</param>
         /// <typeparam name="T">Type parameter to return</typeparam>
         /// <returns>Enumerable of items</returns>
-        public async Task<SearchResult<T>> Search<T>(string query)
+        public async Task<SearchResult<T>> Search<T>(string query,SearchQuery searchattributes = default(SearchQuery))
         {
-            var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>($"/indexes/{Uid}/search?q={query}");
+            string uri = $"/indexes/{Uid}/search?q={query}";
+            if (searchattributes != null)
+            {
+                uri = QueryHelpers.AddQueryString(uri, searchattributes.AsDictionary());
+            }
+                
+            var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>(uri);
             return searchResults;
         }
     }

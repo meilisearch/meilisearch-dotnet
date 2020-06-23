@@ -128,6 +128,30 @@ var movies = await this.index.Search<Movie>("ironman");
 ```
 
 #### Custom Search
+```c#
+var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
+```
 
 ⚙️ Development Workflow
+If you want to contribute, this sections describes the steps to follow.
 
+### Tests
+
+```bash
+# Tests
+docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch  --no-analytics
+dotnet restore
+dotnet test
+```
+
+### Release
+
+TODO 
+
+```xml
+<Version>x.x.x</Version>
+```
+
+## 🤖 Compatibility with MeiliSearch
+
+This package works for MeiliSearch >=0.10.x
