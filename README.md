@@ -126,3 +126,8 @@ var updateStatus = await indextoDelete.DeleteAllDocuments();
 ```c#
 var movies = await this.index.Search<Movie>("ironman");
 ```
+
+#### Custom Search
+
+⚙️ Development Workflow
+
