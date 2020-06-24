@@ -147,11 +147,17 @@ dotnet test
 
 ### Release
 
-TODO 
+MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
+
+You must do a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https://github.com/meilisearch/meilisearch-dotnet/blob/master/src/Meilisearch/Meilisearch.csproj) with the right version.
 
 ```xml
-<Version>x.x.x</Version>
+<Version>X.X.X</Version>
 ```
+
+Once the changes are merged on `master`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases).
+
+A GitHub Action will be triggered and push the new package to [Nuget](https://www.nuget.org/packages/MeiliSearch/).
 
 ## 🤖 Compatibility with MeiliSearch
 
