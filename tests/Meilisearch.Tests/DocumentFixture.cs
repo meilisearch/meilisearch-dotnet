@@ -10,9 +10,9 @@ namespace Meilisearch.Tests
             // TODO : Should default URL in the next change.
             BaseAddress = new Uri("http://localhost:7700/"),
         };
-        
+
         public Index documentIndex { get; private set; }
-        
+
         public Index DocumentDeleteIndex { get; private set; }
 
         public DocumentFixture()
@@ -44,9 +44,9 @@ namespace Meilisearch.Tests
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                
+
             }
-           
+
         }
 
         public void SetUp()
@@ -55,7 +55,7 @@ namespace Meilisearch.Tests
             {
                 var client = new MeilisearchClient(_httpClient);
                 var index = client.GetIndex("Movies").Result;
-            
+
                 if (index == null)
                 {
                     this.documentIndex = client.CreateIndex("Movies").Result;
@@ -81,9 +81,9 @@ namespace Meilisearch.Tests
             {
                 Console.WriteLine(e);
             }
-           
+
         }
-        
+
         public void Dispose()
         {
         }

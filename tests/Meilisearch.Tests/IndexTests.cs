@@ -29,7 +29,6 @@ namespace Meilisearch.Tests
         //     var isDeleteSucessfull= await index.Delete();
         //     isDeleteSucessfull.Should().BeTrue();
         // }
-        
-        
+
     }
 }
