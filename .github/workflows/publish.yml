@@ -11,6 +11,8 @@ publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Check release validity
+      run: sh .github/scripts/check-release.sh
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
