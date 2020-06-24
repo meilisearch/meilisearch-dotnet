@@ -18,5 +18,5 @@ publish:
     - name: Publish
         uses: rohith/publish-nuget@v2
         with:
-        PROJECT_FILE_PATH: src/Meilisearch/Meilisearch.csproj
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          PROJECT_FILE_PATH: src/Meilisearch/Meilisearch.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
