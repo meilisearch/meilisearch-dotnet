@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 namespace Meilisearch
 {
     /// <summary>
-    /// Meilisearch Index for Search and managing document. 
+    /// Meilisearch Index for Search and managing document.
     /// </summary>
     public class Index
     {
         private HttpClient _client;
-        
+
         /// <summary>
         /// Initializes with the default unique identifier and Primary Key.
         /// </summary>
@@ -26,9 +26,9 @@ namespace Meilisearch
             this.Uid = uid;
             this.PrimaryKey = primaryKey;
         }
-        
+
         /// <summary>
-        /// Unique Identifier for the Index. 
+        /// Unique Identifier for the Index.
         /// </summary>
         [JsonProperty(PropertyName = "uid")] public string Uid { get; internal set; }
 
@@ -38,7 +38,7 @@ namespace Meilisearch
         [JsonProperty(PropertyName = "primaryKey")] public string PrimaryKey { get; internal set; }
 
         /// <summary>
-        /// Initialize the Index with HTTP client. Only for internal use 
+        /// Initialize the Index with HTTP client. Only for internal use
         /// </summary>
         /// <param name="client">HTTP client from the base client</param>
         /// <returns>The same object with the initialization.</returns>
@@ -73,7 +73,7 @@ namespace Meilisearch
            var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
            return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
-        
+
         /// <summary>
         /// Add or Update Document .
         /// </summary>
@@ -87,7 +87,7 @@ namespace Meilisearch
             var responsecontent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
-        
+
         /// <summary>
         /// Get document by its ID
         /// </summary>
@@ -100,7 +100,7 @@ namespace Meilisearch
            var responsecontent = await responseMessage.Content.ReadAsStringAsync();
            return JsonConvert.DeserializeObject<T>(responsecontent);
         }
-        
+
         /// <summary>
         /// Get documents with the allowed Query Parameters.
         /// </summary>
@@ -118,7 +118,7 @@ namespace Meilisearch
             var responseContent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<T>>(responseContent);
         }
-        
+
         /// <summary>
         /// Delete one document by its ID
         /// </summary>
@@ -128,9 +128,9 @@ namespace Meilisearch
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
-        
+
         /// <summary>
         /// Delete documents in batch.
         /// </summary>
@@ -141,9 +141,9 @@ namespace Meilisearch
             var content = JsonConvert.SerializeObject(documentIds);
             var httpresponse = await this._client.PostAsync($"/indexes/{Uid}/documents/delete-batch", new StringContent(content));
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
-        
+
         /// <summary>
         /// Delete all the documents in the index
         /// </summary>
@@ -152,7 +152,7 @@ namespace Meilisearch
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Meilisearch
         {
             var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<UpdateStatus>>(responsecontent); 
+            return JsonConvert.DeserializeObject<IEnumerable<UpdateStatus>>(responsecontent);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Meilisearch
         {
             var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates/{updateId}");
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent); 
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
 
 
@@ -199,7 +199,7 @@ namespace Meilisearch
             {
                 uri = QueryHelpers.AddQueryString(uri, searchattributes.AsDictionary());
             }
-                
+
             var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>(uri);
             return searchResults;
         }

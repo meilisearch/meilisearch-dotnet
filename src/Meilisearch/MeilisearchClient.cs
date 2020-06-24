@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Meilisearch
 {
     /// <summary>
-    /// Typed client for Meilisearch. 
+    /// Typed client for Meilisearch.
     /// </summary>
     public class MeilisearchClient
     {
@@ -54,7 +54,7 @@ namespace Meilisearch
             // TODO : Revisit the Exception, We need to handle it better .
             return response.IsSuccessStatusCode? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
         }
-        
+
         /// <summary>
         /// Get All the Indexes for the instance. Throws error if there is no indexes found.
         /// Need to handle an empty Enumerable.

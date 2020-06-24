@@ -9,7 +9,7 @@ namespace Meilisearch
 
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
-        
-        
+
+
     }
 }

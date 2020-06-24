@@ -8,12 +8,12 @@ namespace Meilisearch.Tests
     public class SearchTests : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
-        
+
         public SearchTests(DocumentFixture fixture)
         {
             this.index = fixture.documentIndex;
         }
-        
+
         [Fact]
         public async Task Should_Be_to_Search_A_Index_Document()
         {

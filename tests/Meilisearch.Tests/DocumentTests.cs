@@ -60,9 +60,9 @@ namespace Meilisearch.Tests
         {
             var updateStatus = await indextoDelete.DeleteAllDocuments();
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
-        } 
+        }
     }
-    
+
 
     public class Movie
     {

@@ -1,0 +1,29 @@
+# https://editorconfig.org/
+
+root = true
+
+[*]
+trim_trailing_whitespace = true
+insert_final_newline     = true
+end_of_line              = lf
+charset                  = utf-8
+tab_width                = 4
+indent_style             = space
+
+[*.cs]
+indent_size              = 4
+indent_style             = space
+
+[*{.csproj, .xml}]
+indent_size              = 4
+indent_style             = space
+
+[*.sln]
+indent_style             = tab
+
+[*.md]
+indent_style             = space
+max_line_length          = 80
+
+[*.{yml,yaml}]
+indent_size              = 2
