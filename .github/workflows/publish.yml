@@ -6,7 +6,7 @@ on:
       - v*
 
 jobs:
-publish:
+  publish:
     name: Build, pack & publish
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +18,7 @@ publish:
       with:
         dotnet-version: 3.1.101
     - name: Publish
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Meilisearch/Meilisearch.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      uses: rohith/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: src/Meilisearch/Meilisearch.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
