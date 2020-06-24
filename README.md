@@ -22,7 +22,6 @@
 
 <p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in C#</p>
 
-
 **MeiliSearch .NET** is a client for **MeiliSearch** written in C#. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
@@ -39,7 +38,17 @@
 
 ## 🔧 Installation
 
-// TODO
+Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
+
+```bash
+$ dotnet add package MeiliSearch
+```
+
+or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/tools/package-manager-console):
+
+```bash
+$ Install-Package MeiliSearch
+```
 
 ### Run MeiliSearch <!-- omit in toc -->
 
