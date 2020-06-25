@@ -14,13 +14,13 @@
 </h4>
 
 <p align="center">
+  <a href="https://www.nuget.org/packages/MeiliSearch"><img src="https://img.shields.io/nuget/v/MeiliSearch" alt="NuGet"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/actions"><img src="https://github.com/meilisearch/meilisearch-dotnet/workflows/.NET%20Core/badge.svg?branch=master" alt=".NET Core"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
   <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
 </p>
 
 <p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in C#</p>
-
 
 **MeiliSearch .NET** is a client for **MeiliSearch** written in C#. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
 
@@ -38,7 +38,17 @@
 
 ## 🔧 Installation
 
-// TODO
+Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
+
+```bash
+$ dotnet add package MeiliSearch
+```
+
+or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/tools/package-manager-console):
+
+```bash
+$ Install-Package MeiliSearch
+```
 
 ### Run MeiliSearch <!-- omit in toc -->
 
@@ -170,7 +180,7 @@ You must do a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https
 
 Once the changes are merged on `master`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases).
 
-A GitHub Action will be triggered and push the new package to [Nuget](https://www.nuget.org/packages/MeiliSearch/).
+A GitHub Action will be triggered and push the new package to [NuGet](https://www.nuget.org/packages/MeiliSearch/).
 
 <hr>
 
