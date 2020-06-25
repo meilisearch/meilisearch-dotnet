@@ -33,7 +33,7 @@ namespace Meilisearch
         /// Typed client for Meilisearch API. Use it with proper Http Client Factory.
         /// </summary>
         /// <param name="client">Injects the reusable Httpclient </param>
-        /// <param name="masterKey">Master Key for Meilisearchclient. Best pratice is to use Httpclientfactory default header rather than master Key.</param>
+        /// <param name="masterKey">Master Key for Meilisearchclient. Best practice is to use Httpclientfactory default header rather than master Key.</param>
         public MeilisearchClient(HttpClient client,string masterKey=default)
         {
             _client = client;
