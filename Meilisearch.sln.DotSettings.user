@@ -4,6 +4,9 @@
     &lt;TestId&gt;xUnit::CDAACB2F-0197-4266-B40C-D51F61136ABF::.NETCoreApp,Version=v3.1::Meilisearch.Tests.SearchTests.Should_Be_to_Search_A_Index_Document&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4631f27e_002Dc2b6_002D4d12_002D8d70_002D0944164e8ce7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f825195d_002D16f6_002D4838_002Da70e_002D75e2b801d643/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>

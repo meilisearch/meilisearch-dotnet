@@ -22,6 +22,24 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task Should_be_Able_To_Get_Version_By_default_Client()
+        {
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
+            var meilisearchversion = await client.GetVersion();
+            meilisearchversion.Version.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Basic_Version_Of_default_client()
+        {
+            MeilisearchClient ms = new MeilisearchClient("http://localhost:7700", "masterKey");
+            var indexName = "uid" + new Random().Next();
+            Index index = await ms.CreateIndex(indexName);
+            var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+
+        [Fact]
         public async Task Should_be_able_To_Create_Index()
         {
             var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
