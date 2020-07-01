@@ -108,7 +108,7 @@ MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "maste
 #### Add Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.UpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
 ```
 Update Status has a reference `UpdateId` to get status of the action.
 
