@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace Meilisearch
 {
     /// <summary>
-    /// Meilisearch Index for Search and managing document.
+    /// MeiliSearch Index for Search and managing document.
     /// </summary>
     public class Index
     {
@@ -78,7 +78,7 @@ namespace Meilisearch
         /// Add documents.
         /// </summary>
         /// <param name="documents">Documents to add</param>
-        /// <typeparam name="T">Type of document. Even though document is schemaless in meilisearch making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
         /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
         public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
         {
@@ -92,7 +92,7 @@ namespace Meilisearch
         /// Add or Update Document .
         /// </summary>
         /// <param name="documents">Documents to update</param>
-        /// <typeparam name="T">Type of document. Even though document is schemaless in meilisearch making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
         /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
         public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
         {

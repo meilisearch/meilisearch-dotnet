@@ -24,7 +24,7 @@ namespace Meilisearch.Tests
         // [Fact]
         // public async Task Should_be_Able_To_Delete_The_Documents()
         // {
-        //     var client = new MeilisearchClient(_httpClient);
+        //     var client = new MeiliSearchClient(_httpClient);
         //     var index = await client.CreateIndex("DeleteTests");
         //     var isDeleteSucessfull= await index.Delete();
         //     isDeleteSucessfull.Should().BeTrue();

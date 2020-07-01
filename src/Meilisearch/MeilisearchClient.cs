@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Meilisearch
 {
     /// <summary>
-    /// Typed client for Meilisearch.
+    /// Typed client for MeiliSearch.
     /// </summary>
     public class MeilisearchClient
     {
@@ -44,10 +44,10 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Get the current version Meilisearch. For more details on response
+        /// Get the current version MeiliSearch. For more details on response
         /// https://docs.meilisearch.com/references/version.html#get-version-of-meilisearch
         /// </summary>
-        /// <returns>Returns the Meilisearch Version with commit and Build version.</returns>
+        /// <returns>Returns the MeiliSearch Version with commit and Build version.</returns>
         public async Task<MeiliSearchVersion> GetVersion()
         {
             var response = await _client.GetAsync("/version");

@@ -1,7 +1,7 @@
 ﻿namespace Meilisearch
 {
     /// <summary>
-    /// Search Query for Meilisearch class
+    /// Search Query for MeiliSearch class
     /// </summary>
     public class SearchQuery
     {

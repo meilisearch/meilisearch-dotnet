@@ -8,7 +8,7 @@ namespace Meilisearch
     public class MeiliSearchVersion
     {
         /// <summary>
-        /// Commit Sha for Meilisearch
+        /// Commit Sha for MeiliSearch
         /// </summary>
         [JsonProperty(PropertyName = "commitSha")]
         public string CommitSha { get; set; }
@@ -20,7 +20,7 @@ namespace Meilisearch
         public string BuildDate { get; set; }
 
         /// <summary>
-        /// Version information for Meilisearch.
+        /// Version information for MeiliSearch.
         /// </summary>
         [JsonProperty(PropertyName = "pkgVersion")]
         public string Version { get; set; }
