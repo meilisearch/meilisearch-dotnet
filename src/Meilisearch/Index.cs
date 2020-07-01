@@ -192,13 +192,6 @@ namespace Meilisearch
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
 
-
-        /*
-        public async Task<UpdateStatus> UpdateDocuments(IEnumerable<object> documents)
-        {
-            Need to support partial update of document.  Would be nice if Patch can be supported.
-        } */
-
         /// <summary>
         /// Search documents with a default Search Query
         /// </summary>

@@ -21,10 +21,16 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task Should_be_Able_to_add_Document_for_Index()
+        public async Task Should_be_Able_to_Add_Document_for_Index()
+        {
+            var updateStatus = await index.AddDocuments(new[] {new Movie {Id = "1", Name = "Batman"}});
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+
+        public async Task Should_be_Able_to_Update_Document_for_Index()
         {
             var updateStatus = await index.UpdateDocuments(new[] {new Movie {Id = "1", Name = "Batman"}});
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(1);
         }
 
         [Fact]
