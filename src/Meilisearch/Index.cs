@@ -79,11 +79,11 @@ namespace Meilisearch
         /// </summary>
         /// <param name="documents">Documents to update</param>
         /// <typeparam name="T">Type of document. Even though document is schemaless in meilisearch making it typed helps in compile time.</typeparam>
-        /// <returns>Document create or update is Async in Meilisearch so status is returned back.</returns>
-        public async Task<UpdateStatus> AddorUpdateDocuments<T>(IEnumerable<T> documents)
+        /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
+        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
         {
             var content = JsonConvert.SerializeObject(documents);
-            var responseMessage = await this._client.PostAsync($"/indexes/{Uid}/documents", new StringContent(content));
+            var responseMessage = await this._client.PutAsync($"/indexes/{Uid}/documents", new StringContent(content));
             var responsecontent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
