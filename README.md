@@ -94,13 +94,13 @@ client.CreateIndex("uid2", "movieId");
 #### List all an index <!-- omit in toc -->
 
 ```c#
-var client = new MeilisearchClient(_httpClient);
+MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var indexes = await client.GetAllIndexes();
 ```
 
 #### Get an Index object <!-- omit in toc -->
 ```c#
- var client = new MeilisearchClient(_httpClient);
+MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
  var indexes = await client.GetIndex("somerandomIndex");
 ```
 ### Documents
