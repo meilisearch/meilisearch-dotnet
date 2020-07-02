@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Docker setup
-      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true
+      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
     - name: Install dependencies
       run: dotnet restore
     - name: Build

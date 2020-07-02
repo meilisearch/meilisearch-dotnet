@@ -13,7 +13,12 @@ namespace Meilisearch.Tests
 
                     var httpclientfactory = new HttpClientFactory();
                     httpclientfactory.Register<MeilisearchClient>(
-                        builder => builder.ConfigureHttpClient(p => p.BaseAddress = new Uri("http://localhost:7700/")));
+                        builder =>
+                            builder.ConfigureHttpClient(p =>
+                            {
+                                p.BaseAddress = new Uri("http://localhost:7700/");
+                                p.DefaultRequestHeaders.Add("X-Meili-API-Key","masterKey");
+                            }));
                     return httpclientfactory;
                 });
 

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using Microsoft.Extensions.Http;
 
 namespace Meilisearch.Tests
 {
     public class DocumentFixture : IDisposable
     {
-        private static HttpClient _httpClient = new HttpClient
-        {
-            // TODO : Should default URL in the next change.
-            BaseAddress = new Uri("http://localhost:7700/"),
-        };
+        private static HttpClient _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
 
         public Index documentIndex { get; private set; }
 

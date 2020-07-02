@@ -63,7 +63,13 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
 ## 🚀 Getting started
 
-// TODO
+```c#
+MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+var index = await client.CreateIndex("movies");
+var updateStatus = await index.AddorUpdateDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
+Movie movie = await index.GetDocument<Movie>("1");
+SearchResult<Movie> movies = await index.Search<Movie>("bat");
+```
 
 ## 🤖 Compatibility with MeiliSearch
 
@@ -88,13 +94,13 @@ client.CreateIndex("uid2", "movieId");
 #### List all an index <!-- omit in toc -->
 
 ```c#
-var client = new MeilisearchClient(_httpClient);
+MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var indexes = await client.GetAllIndexes();
 ```
 
 #### Get an Index object <!-- omit in toc -->
 ```c#
- var client = new MeilisearchClient(_httpClient);
+MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
  var indexes = await client.GetIndex("somerandomIndex");
 ```
 ### Documents
