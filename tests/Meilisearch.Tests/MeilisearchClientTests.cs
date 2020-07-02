@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
             MeilisearchClient ms = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid" + new Random().Next();
             Index index = await ms.CreateIndex(indexName);
-            var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+            var updateStatus = await index.AddDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 

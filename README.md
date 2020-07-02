@@ -66,7 +66,7 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 ```c#
 MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var index = await client.CreateIndex("movies");
-var updateStatus = await index.AddorUpdateDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
+var updateStatus = await index.AddDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
 Movie movie = await index.GetDocument<Movie>("1");
 SearchResult<Movie> movies = await index.Search<Movie>("bat");
 ```
