@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace Meilisearch
 {
     /// <summary>
-    /// Meilisearch Index for Search and managing document.
+    /// MeiliSearch Index for Search and managing document.
     /// </summary>
     public class Index
     {
@@ -75,15 +75,29 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Add or Update Document .
+        /// Add documents.
         /// </summary>
-        /// <param name="documents">Documents to update</param>
-        /// <typeparam name="T">Type of document. Even though document is schemaless in meilisearch making it typed helps in compile time.</typeparam>
-        /// <returns>Document create or update is Async in Meilisearch so status is returned back.</returns>
-        public async Task<UpdateStatus> AddorUpdateDocuments<T>(IEnumerable<T> documents)
+        /// <param name="documents">Documents to add</param>
+        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
+        /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
+        public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
         {
             var content = JsonConvert.SerializeObject(documents);
             var responseMessage = await this._client.PostAsync($"/indexes/{Uid}/documents", new StringContent(content));
+            var responsecontent = await responseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+        }
+
+        /// <summary>
+        /// Add or Update Document .
+        /// </summary>
+        /// <param name="documents">Documents to update</param>
+        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
+        /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
+        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
+        {
+            var content = JsonConvert.SerializeObject(documents);
+            var responseMessage = await this._client.PutAsync($"/indexes/{Uid}/documents", new StringContent(content));
             var responsecontent = await responseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
@@ -177,13 +191,6 @@ namespace Meilisearch
             var responsecontent = await httpresponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
         }
-
-
-        /*
-        public async Task<UpdateStatus> UpdateDocuments(IEnumerable<object> documents)
-        {
-            Need to support partial update of document.  Would be nice if Patch can be supported.
-        } */
 
         /// <summary>
         /// Search documents with a default Search Query

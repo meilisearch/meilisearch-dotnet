@@ -25,7 +25,7 @@ namespace Meilisearch.Tests
             var client = new MeilisearchClient(httpclient);
             var indexName = "MoviesStatus" + new Random().Next();
             var index = await  client.CreateIndex(indexName);
-            await index.AddorUpdateDocuments(new[] {new Movie {Id = "1"}});
+            await index.AddDocuments(new[] {new Movie {Id = "1"}});
             var status = await index.GetAllUpdateStatus();
             status.Count().Should().BeGreaterOrEqualTo(1);
         }
@@ -37,7 +37,7 @@ namespace Meilisearch.Tests
             var client = new MeilisearchClient(httpclient);
             var indexName = "MoviesStatus" + new Random().Next();
             var index = await  client.CreateIndex(indexName);
-            var status = await index.AddorUpdateDocuments(new[] {new Movie {Id = "2"}});
+            var status = await index.AddDocuments(new[] {new Movie {Id = "2"}});
             UpdateStatus individualStatus = await index.GetUpdateStatus(status.UpdateId);
             individualStatus.Should().NotBeNull();
         }

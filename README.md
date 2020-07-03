@@ -66,7 +66,7 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 ```c#
 MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var index = await client.CreateIndex("movies");
-var updateStatus = await index.AddorUpdateDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
+var updateStatus = await index.AddDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
 Movie movie = await index.GetDocument<Movie>("1");
 SearchResult<Movie> movies = await index.Search<Movie>("bat");
 ```
@@ -105,14 +105,17 @@ MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "maste
 ```
 ### Documents
 
-#### Add Documents <!-- omit in toc -->
+#### Add or Update Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddorUpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.AddDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.UpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
 ```
+
 Update Status has a reference `UpdateId` to get status of the action.
 
 #### Get Documents <!-- omit in toc -->
+
 ```c#
  var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
 ```
@@ -128,6 +131,7 @@ var documents = await index.GetDocument<Movie>("10");
 ```c#
  var updateStatus = await index.DeleteOneDocument("11");
 ```
+
 #### Delete in Batch <!-- omit in toc -->
 
 ```c#
@@ -135,17 +139,21 @@ var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
 ```
 
 #### Delete all documents <!-- omit in toc -->
+
 ```c#
 var updateStatus = await indextoDelete.DeleteAllDocuments();
 ```
+
 ### Update Status
 
 #### Get Update Status By Id <!-- omit in toc -->
+
 ```c#
  UpdateStatus individualStatus = await index.GetUpdateStatus(1);
 ```
 
 #### Get All Update Status <!-- omit in toc -->
+
 ```c#
  var status = await index.GetAllUpdateStatus();
 ```

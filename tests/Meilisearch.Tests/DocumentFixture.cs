@@ -36,7 +36,7 @@ namespace Meilisearch.Tests
                 {
                     new Movie {Id = "10", Name = "SuperMan"},
                 };
-                var updateStatus = this.DocumentDeleteIndex.AddorUpdateDocuments(movies).Result;
+                var updateStatus = this.DocumentDeleteIndex.AddDocuments(movies).Result;
             }
             catch (Exception e)
             {
@@ -72,7 +72,7 @@ namespace Meilisearch.Tests
                     new Movie {Id = "15", Name = "SpiderMan"},
                     new Movie {Id = "16", Name = "IronMan"}
                 };
-                var updateStatus = this.documentIndex.AddorUpdateDocuments(movies).Result;
+                var updateStatus = this.documentIndex.AddDocuments(movies).Result;
             }
             catch (Exception e)
             {
