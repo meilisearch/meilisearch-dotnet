@@ -34,7 +34,7 @@
   - [Documents](#documents)
   - [Update Status](#update-status)
   - [Search](#search)
-- [⚙️ Development Workflow](#️-development-workflow)
+- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
 
@@ -171,31 +171,11 @@ var movies = await this.index.Search<Movie>("ironman");
 var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
 ```
 
-## ⚙️ Development Workflow
+## ⚙️ Development Workflow and Contributing
 
-If you want to contribute, this section describes the steps to follow.
+Any new contribution is more than welcome in this project!
 
-### Tests <!-- omit in toc -->
-
-```bash
-$ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true
-$ dotnet restore
-$ dotnet test
-```
-
-### Release <!-- omit in toc -->
-
-MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
-
-You must do a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https://github.com/meilisearch/meilisearch-dotnet/blob/master/src/Meilisearch/Meilisearch.csproj) with the right version.
-
-```xml
-<Version>X.X.X</Version>
-```
-
-Once the changes are merged on `master`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases).
-
-A GitHub Action will be triggered and push the new package to [NuGet](https://www.nuget.org/packages/MeiliSearch/).
+If you want to know more about the development workflow or want to contribute, please visit our [contributing guidelines](/CONTRIBUTING.md) for detailed instructions!
 
 <hr>
 
