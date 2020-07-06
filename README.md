@@ -113,13 +113,13 @@ This package is compatible with the following MeiliSearch versions:
 #### Create an index <!-- omit in toc -->
 
  ```c#
-var index = client.CreateIndex("uid1");
+var index = client.CreateIndex("movies");
 ```
 
 #### Create an index and give the primary-key <!-- omit in toc -->
 
 ```c#
-var index = client.CreateIndex("uid2", "movieId");
+var index = client.CreateIndex("movies", "movieId");
 ```
 
 #### List all an index <!-- omit in toc -->
@@ -131,7 +131,7 @@ var indexes = await client.GetAllIndexes();
 #### Get an Index object <!-- omit in toc -->
 
 ```c#
-var index = await client.GetIndex("somerandomIndex");
+var index = await client.GetIndex("movies");
 ```
 
 ### Documents
