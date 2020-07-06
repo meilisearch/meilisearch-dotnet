@@ -4,19 +4,10 @@ First of all, thank you for contributing to MeiliSearch! The goal of this docume
 
 <!-- MarkdownTOC autolink="true" style="ordered" indent="   " -->
 
-- [Contributing](#contributing)
-  - [Assumptions](#assumptions)
-  - [How to Contribute](#how-to-contribute)
-  - [Development Workflow](#development-workflow)
-    - [Setup](#setup)
-    - [Tests](#tests)
-    - [Release Process](#release-process)
-      - [Automated Changelogs](#automated-changelogs)
-      - [How to Publish the Release](#how-to-publish-the-release)
-  - [Git Guidelines](#git-guidelines)
-    - [Git Branches](#git-branches)
-    - [Git Commits](#git-commits)
-    - [GitHub Pull Requests](#github-pull-requests)
+- [Assumptions](#assumptions)
+- [How to Contribute](#how-to-contribute)
+- [Development Workflow](#development-workflow)
+- [Git Guidelines](#git-guidelines)
 
 <!-- /MarkdownTOC -->
 
