@@ -1,13 +1,18 @@
-﻿using Newtonsoft.Json;
-
-namespace Meilisearch
+﻿namespace Meilisearch
 {
+    /// <summary>
+    /// Update Status of the actions done.
+    /// </summary>
     public class UpdateStatus
     {
-        [JsonProperty(PropertyName = "updateId")]
+        /// <summary>
+        /// Update ID for the actions.
+        /// </summary>
         public int UpdateId { get; set; }
 
-        [JsonProperty(PropertyName = "status")]
+        /// <summary>
+        /// Actions done for the update.
+        /// </summary>
         public string Status { get; set; }
 
 

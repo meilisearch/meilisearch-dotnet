@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Meilisearch
 {
@@ -10,19 +10,19 @@ namespace Meilisearch
         /// <summary>
         /// Commit Sha for MeiliSearch
         /// </summary>
-        [JsonProperty(PropertyName = "commitSha")]
+        [JsonPropertyName("commitSha")]
         public string CommitSha { get; set; }
 
         /// <summary>
         /// Build Date for current version
         /// </summary>
-        [JsonProperty(PropertyName = "buildDate")]
+        [JsonPropertyName("buildDate")]
         public string BuildDate { get; set; }
 
         /// <summary>
         /// Version information for MeiliSearch.
         /// </summary>
-        [JsonProperty(PropertyName = "pkgVersion")]
+        [JsonPropertyName("pkgVersion")]
         public string Version { get; set; }
     }
 }
