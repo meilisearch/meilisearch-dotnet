@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
 
 namespace Meilisearch
 {
@@ -30,12 +30,12 @@ namespace Meilisearch
         /// <summary>
         /// Unique Identifier for the Index.
         /// </summary>
-        [JsonProperty(PropertyName = "uid")] public string Uid { get; internal set; }
+       public string Uid { get; internal set; }
 
         /// <summary>
         /// Primary key of the document.
         /// </summary>
-        [JsonProperty(PropertyName = "primaryKey")] public string PrimaryKey { get; internal set; }
+         public string PrimaryKey { get; internal set; }
 
         /// <summary>
         /// Initialize the Index with HTTP client. Only for internal use
@@ -55,11 +55,9 @@ namespace Meilisearch
         /// <returns>Index with the updated Primary Key.</returns>
         public async Task<Index> ChangePrimaryKey(string primarykeytoChange)
         {
-            var content = JsonConvert.SerializeObject(new {primaryKey = primarykeytoChange});
-            var message = await this._client.PutAsync($"indexes/{Uid}", new StringContent(content, Encoding.UTF8));
-            var responsecontent = await message.Content.ReadAsStringAsync();
-            var index = JsonConvert.DeserializeObject<Index>(responsecontent);
-            this.PrimaryKey = index.PrimaryKey;
+            var message = await this._client.PutAsJsonAsync($"indexes/{Uid}", new {primaryKey = primarykeytoChange});
+            var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
+            this.PrimaryKey = responsecontent.PrimaryKey;
             return this;
         }
 
@@ -82,10 +80,8 @@ namespace Meilisearch
         /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
         public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
         {
-            var content = JsonConvert.SerializeObject(documents);
-            var responseMessage = await this._client.PostAsync($"/indexes/{Uid}/documents", new StringContent(content));
-            var responsecontent = await responseMessage.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            var responseMessage = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents", documents);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>
@@ -96,10 +92,8 @@ namespace Meilisearch
         /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
         public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
         {
-            var content = JsonConvert.SerializeObject(documents);
-            var responseMessage = await this._client.PutAsync($"/indexes/{Uid}/documents", new StringContent(content));
-            var responsecontent = await responseMessage.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            var responseMessage = await this._client.PutAsJsonAsync($"/indexes/{Uid}/documents", documents);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>
@@ -110,9 +104,7 @@ namespace Meilisearch
         /// <returns>Type if the object is availble.</returns>
         public async Task<T> GetDocument<T>(string documentId)
         {
-           var responseMessage = await this._client.GetAsync($"/indexes/{Uid}/documents/{documentId}");
-           var responsecontent = await responseMessage.Content.ReadAsStringAsync();
-           return JsonConvert.DeserializeObject<T>(responsecontent);
+           return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
         }
 
         /// <summary>
@@ -128,9 +120,7 @@ namespace Meilisearch
             {
                 uri = QueryHelpers.AddQueryString(uri, query.AsDictionary());
             }
-            var responseMessage = await this._client.GetAsync(uri);
-            var responseContent = await responseMessage.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<T>>(responseContent);
+            return await this._client.GetFromJsonAsync<IEnumerable<T>>(uri);
         }
 
         /// <summary>
@@ -141,8 +131,7 @@ namespace Meilisearch
         public async Task<UpdateStatus> DeleteOneDocument(string documentId)
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
-            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>
@@ -152,10 +141,8 @@ namespace Meilisearch
         /// <returns>Update status with ID to look for progress of update.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
         {
-            var content = JsonConvert.SerializeObject(documentIds);
-            var httpresponse = await this._client.PostAsync($"/indexes/{Uid}/documents/delete-batch", new StringContent(content));
-            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            var httpresponse = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents/delete-batch", documentIds);
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>
@@ -165,8 +152,7 @@ namespace Meilisearch
         public async Task<UpdateStatus> DeleteAllDocuments()
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents");
-            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>
@@ -175,9 +161,7 @@ namespace Meilisearch
         /// <returns>Update status with the Operation status.</returns>
         public async Task<IEnumerable<UpdateStatus>> GetAllUpdateStatus()
         {
-            var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates");
-            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<UpdateStatus>>(responsecontent);
+            return await this._client.GetFromJsonAsync<IEnumerable<UpdateStatus>>($"/indexes/{Uid}/updates");
         }
 
         /// <summary>
@@ -187,9 +171,7 @@ namespace Meilisearch
         /// <returns>Current status of the operation.</returns>
         public async Task<UpdateStatus> GetUpdateStatus(int updateId)
         {
-            var httpresponse = await this._client.GetAsync($"/indexes/{Uid}/updates/{updateId}");
-            var responsecontent = await httpresponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UpdateStatus>(responsecontent);
+            return await this._client.GetFromJsonAsync<UpdateStatus>($"/indexes/{Uid}/updates/{updateId}");
         }
 
         /// <summary>
@@ -210,20 +192,5 @@ namespace Meilisearch
             var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>(uri);
             return searchResults;
         }
-    }
-
-    public class SearchResult<T>
-    {
-        [JsonProperty("hits")]
-        public IEnumerable<T> Hits { get; set; }
-
-        [JsonProperty("offset")]
-        public int Offset { get; set; }
-
-        [JsonProperty("limit")]
-        public int Limit { get; set; }
-
-        [JsonProperty("query")]
-        public string Query { get; set; }
     }
 }

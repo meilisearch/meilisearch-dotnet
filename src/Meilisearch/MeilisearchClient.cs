@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Meilisearch
 {
@@ -52,8 +51,7 @@ namespace Meilisearch
         {
             var response = await _client.GetAsync("/version");
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<MeiliSearchVersion>(content);
+            return await response.Content.ReadFromJsonAsync<MeiliSearchVersion>();
         }
 
         /// <summary>
@@ -66,10 +64,7 @@ namespace Meilisearch
         public async Task<Index> CreateIndex(string uid,string primaryKey=default)
         {
             Index index = new Index(uid, primaryKey);
-            var content = JsonConvert.SerializeObject(index);
-            var request = new HttpRequestMessage(HttpMethod.Post, "/indexes");
-            request.Content = new StringContent(content,Encoding.UTF8,"application/json");
-            var response = await _client.SendAsync(request);
+            var response = await _client.PostAsJsonAsync("/indexes",index);
             // TODO : Revisit the Exception, We need to handle it better .
             return response.IsSuccessStatusCode? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
         }
@@ -83,8 +78,8 @@ namespace Meilisearch
         {
             var response = await _client.GetAsync("/indexes");
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<Index>>(content)
+            var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>();
+            return content
                 .Select(p => p.WithHttpClient(_client));
         }
 
@@ -98,8 +93,8 @@ namespace Meilisearch
             var response = await _client.GetAsync($"/indexes/{uid}");
             if (response.IsSuccessStatusCode)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Index>(content).WithHttpClient(_client);
+                var content = await response.Content.ReadFromJsonAsync<Index>();
+                return content.WithHttpClient(_client);
             }
 
             return null;  // TODO:  Yikes!! returning Null  Need to come back to solve this.
