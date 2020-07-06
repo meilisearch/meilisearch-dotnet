@@ -80,7 +80,9 @@ namespace GettingStarted
         static async Task Main(string[] args)
         {
             MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var index = await client.CreateIndex("movies");
+            var index = await client.CreateIndex("movies"); // If your index does not exist
+            // OR
+            var index = await client.GetIndex("movies"); // If your index exists
             var documents = new Movie[] {
                 new Movie {Id = "1", Name = "Batman"},
                 new Movie {Id = "2", Name = "Interstellar"},
