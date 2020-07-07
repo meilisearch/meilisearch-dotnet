@@ -21,8 +21,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_get_All_The_Update_Status()
         {
-            var httpclient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpclient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "MoviesStatus" + new Random().Next();
             var index = await  client.CreateIndex(indexName);
             await index.AddDocuments(new[] {new Movie {Id = "1"}});
@@ -33,8 +32,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_Get_Status_By_Id()
         {
-            var httpclient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpclient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "MoviesStatus" + new Random().Next();
             var index = await  client.CreateIndex(indexName);
             var status = await index.AddDocuments(new[] {new Movie {Id = "2"}});

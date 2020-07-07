@@ -13,7 +13,7 @@ namespace Meilisearch.Tests
     {
 
         [Fact]
-        public async Task Should_be_Able_To_Get_Version()
+        public async Task Should_be_Able_To_Get_Version_By_Custom_Client()
         {
             var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             var client = new MeilisearchClient(_httpClient);
@@ -22,7 +22,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task Should_be_Able_To_Get_Version_By_default_Client()
+        public async Task Should_be_Able_To_Get_Version_By_Default_Client()
         {
             var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var meilisearchversion = await client.GetVersion();
@@ -30,20 +30,20 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task Basic_Version_Of_default_client()
+        public async Task Basic_Usage_Of_Custom_Client()
         {
-            MeilisearchClient ms = new MeilisearchClient("http://localhost:7700", "masterKey");
+            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(_httpClient);
             var indexName = "uid" + new Random().Next();
             Index index = await ms.CreateIndex(indexName);
-            var updateStatus = await index.AddDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+            var updateStatus = await index.AddDocuments(new[]{new Movie {Id = "1", Name = "Batman"}});
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
         [Fact]
         public async Task Should_be_able_To_Create_Index()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(_httpClient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid" + new Random().Next();
             var index = await client.CreateIndex(indexName);
             index.Uid.Should().Be(indexName);
@@ -52,8 +52,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_able_To_Create_Index_with_primaryKey()
         {
-            var httpclient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpclient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid2"+new Random().Next();
             var index = await client.CreateIndex(indexName, "movieId");
             index.Uid.Should().Be(indexName);
@@ -62,8 +61,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_Throw_an_Exception_if_the_Index_Is_already_Taken()
         {
-            var httpclient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpclient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid3" + new Random().Next();
             var index = await client.CreateIndex(indexName, "movieId");
             await Assert.ThrowsAsync<Exception>(() => client.CreateIndex(indexName, "movieId"));
@@ -72,16 +70,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_Fail_to_Create_If_the_Index_is_of_bad_Format()
         {
-            var httpclient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpclient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             await Assert.ThrowsAsync<Exception>(() => client.CreateIndex("wrong UID"));
         }
 
         [Fact]
         public async Task Should_return_All_The_Index_In_the_System()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(_httpClient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid4" + new Random().Next();
             var index = await client.CreateIndex(indexName, "movieId");
             var indexes = await client.GetAllIndexes();
@@ -91,8 +87,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_return_the_index_requested()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(_httpClient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "uid5" + new Random().Next();
             var index = await client.CreateIndex(indexName, "movieId");
             var indexes = await client.GetIndex(indexName);
@@ -102,8 +97,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_return_Null_If_the_Index_Does_not_Exist()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(_httpClient);
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexes = await client.GetIndex("somerandomIndex");
             indexes.Should().BeNull();
         }

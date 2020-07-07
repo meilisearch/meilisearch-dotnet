@@ -15,7 +15,7 @@ namespace Meilisearch
         private readonly HttpClient _client;
 
         /// <summary>
-        /// Basic Meilisearch client with master Key.
+        /// Default client for Meilisearch API.
         /// </summary>
         /// <param name="url">URL to connect to meilisearch client</param>
         /// <param name="masterKey">Master key for the usage</param>
@@ -29,11 +29,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Typed client for Meilisearch API. Use it with proper Http Client Factory.
+        /// Custom client for Meilisearch API. Use it with proper Http Client Factory.
         /// </summary>
         /// <param name="client">Injects the reusable Httpclient </param>
-        /// <param name="masterKey">Master Key for Meilisearchclient. Best practice is to use Httpclientfactory default header rather than master Key.</param>
-        public MeilisearchClient(HttpClient client,string masterKey=default)
+        /// <param name="masterKey">Master Key for Meilisearchclient. Best practice is to use HttpClient default header rather than this parameter.</param>
+        public MeilisearchClient(HttpClient client, string masterKey=default)
         {
             _client = client;
             if (!string.IsNullOrEmpty(masterKey))
@@ -43,10 +43,10 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Get the current version MeiliSearch. For more details on response
+        /// Gets the current MeiliSearch version. For more details on response
         /// https://docs.meilisearch.com/references/version.html#get-version-of-meilisearch
         /// </summary>
-        /// <returns>Returns the MeiliSearch Version with commit and Build version.</returns>
+        /// <returns>Returns the MeiliSearch version with commit and build version.</returns>
         public async Task<MeiliSearchVersion> GetVersion()
         {
             var response = await _client.GetAsync("/version");
@@ -55,23 +55,22 @@ namespace Meilisearch
         }
 
         /// <summary>
-        ///  Create Index with Unique name and Primary Key.
-        /// BEWARE : Throws error If the Index already exist. Use GetIndex before using Create.
+        /// Creates and index with an UID and a primary key.
+        /// BEWARE : Throws error if the index already exist. Use GetIndex before using Create.
         /// </summary>
         /// <param name="uid">Unique Id</param>
-        /// <param name="primaryKey">Primary key for Operation.</param>
-        /// <returns>Index for the future operation.</returns>
+        /// <param name="primaryKey">Primary key for documents.</param>
+        /// <returns>Returns Index.</returns>
         public async Task<Index> CreateIndex(string uid,string primaryKey=default)
         {
             Index index = new Index(uid, primaryKey);
             var response = await _client.PostAsJsonAsync("/indexes",index);
-            // TODO : Revisit the Exception, We need to handle it better .
+            // TODO : Revisit the Exception, We need to handle it better.
             return response.IsSuccessStatusCode? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
         }
 
         /// <summary>
-        /// Get All the Indexes for the instance. Throws error if there is no indexes found.
-        /// Need to handle an empty Enumerable.
+        /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
         /// <returns>Return Enumerable of Index.</returns>
         public async Task<IEnumerable<Index>> GetAllIndexes()
@@ -84,10 +83,10 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Get Index for the unique ID.
+        /// Gets and index with the unique ID.
         /// </summary>
-        /// <param name="uid">Unique Id for the index.</param>
-        /// <returns>returns Index or Null if the index is not found.</returns>
+        /// <param name="uid">UID of the index.</param>
+        /// <returns>Returns Index or Null if the index does not exist.</returns>
         public async Task<Index> GetIndex(string uid)
         {
             var response = await _client.GetAsync($"/indexes/{uid}");
