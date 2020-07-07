@@ -109,7 +109,7 @@ namespace Meilisearch
 
         public async Task<T> GetDocument<T>(int documentId)
         {
-            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
+            return await this.GetDocument<T>(documentId.ToString());
         }
 
         /// <summary>
@@ -137,6 +137,11 @@ namespace Meilisearch
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        public async Task<UpdateStatus> DeleteOneDocument(int documentId)
+        {
+            return await DeleteOneDocument(documentId.ToString());
         }
 
         /// <summary>
