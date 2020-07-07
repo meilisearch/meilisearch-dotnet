@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -107,6 +108,12 @@ namespace Meilisearch
            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
         }
 
+        /// <summary>
+        /// Get document by its ID
+        /// </summary>
+        /// <param name="documentId">Document Id for query</param>
+        /// <typeparam name="T">Type to return for document</typeparam>
+        /// <returns>Type if the object is availble.</returns>
         public async Task<T> GetDocument<T>(int documentId)
         {
             return await this.GetDocument<T>(documentId.ToString());
@@ -139,6 +146,11 @@ namespace Meilisearch
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
+        /// <summary>
+        /// Delete one document by its ID
+        /// </summary>
+        /// <param name="documentId">document ID</param>
+        /// <returns>Update Status with ID to look for document.</returns>
         public async Task<UpdateStatus> DeleteOneDocument(int documentId)
         {
             return await DeleteOneDocument(documentId.ToString());
@@ -151,6 +163,21 @@ namespace Meilisearch
         /// <returns>Update status with ID to look for progress of update.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
         {
+            var httpresponse = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents/delete-batch", documentIds);
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Delete documents in batch.
+        /// </summary>
+        /// <param name="documentIds">List of document Id</param>
+        /// <returns>Update status with ID to look for progress of update.</returns>
+        public async Task<UpdateStatus> DeleteDocuments(IEnumerable<int> documentIds)
+        {
+            // We could do
+            // var docIds = documentIds.Select(id => id.ToString())
+            // await this.DeleteDocuments(docIds)
+            // which would keep keep the code more DRY, but at the cost of casting all to a strings
             var httpresponse = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents/delete-batch", documentIds);
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
