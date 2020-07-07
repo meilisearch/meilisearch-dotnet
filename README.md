@@ -34,6 +34,7 @@
   - [Documents](#documents)
   - [Update Status](#update-status)
   - [Search](#search)
+- [🧰 Use a Custom HTTP Client](#-use-a-custom-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
 
 ## 🔧 Installation
@@ -189,6 +190,7 @@ UpdateStatus individualStatus = await index.GetUpdateStatus(1);
 ```c#
 var status = await index.GetAllUpdateStatus();
 ```
+
 ### Search
 
 #### Basic Search <!-- omit in toc -->
@@ -202,6 +204,19 @@ var movies = await this.index.Search<Movie>("ironman");
 ```c#
 var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
 ```
+
+## 🧰 Use a Custom HTTP Client
+
+You can replace the default client used in this package by the one you want.
+
+For example:
+
+```c#
+var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+var client = new MeilisearchClient(_httpClient);
+```
+
+Where `ClientFactory` is declared [like this](/tests/Meilisearch.Tests/ClientFactory.cs).
 
 ## ⚙️ Development Workflow and Contributing
 
