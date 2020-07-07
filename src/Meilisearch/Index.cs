@@ -107,6 +107,11 @@ namespace Meilisearch
            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
         }
 
+        public async Task<T> GetDocument<T>(int documentId)
+        {
+            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
+        }
+
         /// <summary>
         /// Get documents with the allowed Query Parameters.
         /// </summary>
