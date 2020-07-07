@@ -11,12 +11,12 @@
         public int? Offset { get; set; }
 
         /// <summary>
-        /// Limit the number of results.
+        /// Limits the number of results.
         /// </summary>
         public int? Limit { get; set; }
 
         /// <summary>
-        /// Filters to search the query.
+        /// Filters to apply to the query.
         /// </summary>
         public string Filter { get; set; }
 
@@ -31,17 +31,17 @@
         public string attributesToCrop { get; set; }
 
         /// <summary>
-        /// Length used to crop field values
+        /// Length used to crop field values.
         /// </summary>
         public int? cropLength { get; set; }
 
         /// <summary>
-        /// Attributes whose values will contain highlighted matching terms
+        /// Attributes to highlight.
         /// </summary>
         public string AttributesToHighlight { get; set; }
 
         /// <summary>
-        /// Defines whether an object that contains information about the matches should be returned or not
+        /// Defines whether an object that contains information about the matches should be returned or not.
         /// </summary>
         public string Matches { get; set; }
     }
