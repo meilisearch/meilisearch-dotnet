@@ -27,7 +27,7 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [🔧 Installation](#-installation)
-- [🚀 Getting started](#-getting-started)
+- [🚀 Getting Started](#-getting-started)
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
@@ -61,14 +61,43 @@ $ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --m
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
-## 🚀 Getting started
+## 🚀 Getting Started
 
 ```c#
-MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-var index = await client.CreateIndex("movies");
-var updateStatus = await index.AddDocuments<Movie>(new Movie[] {new Movie {Id = "1", Name = "Batman"}, new Movie{Id="2",Name = "Interstellar"}});
-Movie movie = await index.GetDocument<Movie>("1");
-SearchResult<Movie> movies = await index.Search<Movie>("bat");
+using System;
+using System.Threading.Tasks;
+using Meilisearch;
+
+namespace GettingStarted
+{
+    class Program
+    {
+        public class Movie
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+        }
+        static async Task Main(string[] args)
+        {
+            MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+            var index = await client.CreateIndex("movies"); // If your index does not exist
+            // OR
+            var index = await client.GetIndex("movies"); // If your index exists
+            var documents = new Movie[] {
+                new Movie {Id = "1", Name = "Batman"},
+                new Movie {Id = "2", Name = "Interstellar"},
+                new Movie {Id = "3", Name = "Batman Begins"}
+            };
+            var updateStatus = await index.AddDocuments<Movie>(documents);
+            Movie movie = await index.GetDocument<Movie>("1");
+            SearchResult<Movie> movies = await index.Search<Movie>("bat");
+            foreach(var prop in movies.Hits) {
+                Console.WriteLine (prop.Name);
+            }
+        }
+    }
+}
+
 ```
 
 ## 🤖 Compatibility with MeiliSearch
@@ -82,37 +111,39 @@ This package is compatible with the following MeiliSearch versions:
 ### Indexes
 
 #### Create an index <!-- omit in toc -->
+
  ```c#
- var index = client.CreateIndex("uid1");
+var index = client.CreateIndex("movies");
 ```
 
 #### Create an index and give the primary-key <!-- omit in toc -->
+
 ```c#
-client.CreateIndex("uid2", "movieId");
+var index = client.CreateIndex("movies", "movieId");
 ```
 
 #### List all an index <!-- omit in toc -->
 
 ```c#
-MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var indexes = await client.GetAllIndexes();
 ```
 
 #### Get an Index object <!-- omit in toc -->
+
 ```c#
-MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
- var indexes = await client.GetIndex("somerandomIndex");
+var index = await client.GetIndex("movies");
 ```
+
 ### Documents
 
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
- var updateStatus = await index.UpdateDocuments(new[]{new  Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.AddDocuments(new Movie[] {new Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.UpdateDocuments(new Movie[] {new Movie {Id = "1", Name = "Batman"}});
 ```
 
-Update Status has a reference `UpdateId` to get status of the action.
+Update Status has a reference `UpdateId` to get the status of the action.
 
 #### Get Documents <!-- omit in toc -->
 
@@ -123,7 +154,7 @@ Update Status has a reference `UpdateId` to get status of the action.
 #### Get Document by Id <!-- omit in toc -->
 
 ```c#
-var documents = await index.GetDocument<Movie>("10");
+var document = await index.GetDocument<Movie>("10");
 ```
 
 #### Delete documents <!-- omit in toc -->
@@ -149,13 +180,13 @@ var updateStatus = await indextoDelete.DeleteAllDocuments();
 #### Get Update Status By Id <!-- omit in toc -->
 
 ```c#
- UpdateStatus individualStatus = await index.GetUpdateStatus(1);
+UpdateStatus individualStatus = await index.GetUpdateStatus(1);
 ```
 
 #### Get All Update Status <!-- omit in toc -->
 
 ```c#
- var status = await index.GetAllUpdateStatus();
+var status = await index.GetAllUpdateStatus();
 ```
 ### Search
 
