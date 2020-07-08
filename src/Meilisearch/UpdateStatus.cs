@@ -6,12 +6,12 @@
     public class UpdateStatus
     {
         /// <summary>
-        /// Update ID for the actions.
+        /// Update ID for the operation.
         /// </summary>
         public int UpdateId { get; set; }
 
         /// <summary>
-        /// Actions done for the update.
+        /// State of the operation.
         /// </summary>
         public string Status { get; set; }
 
