@@ -174,12 +174,8 @@ namespace Meilisearch
         /// <returns>Update status with ID to look for progress of update.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<int> documentIds)
         {
-            // We could do
-            // var docIds = documentIds.Select(id => id.ToString())
-            // await this.DeleteDocuments(docIds)
-            // which would keep keep the code more DRY, but at the cost of casting all to a strings
-            var httpresponse = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents/delete-batch", documentIds);
-            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+            var docIds = documentIds.Select(id => id.ToString());
+            return await this.DeleteDocuments(docIds);
         }
 
         /// <summary>
