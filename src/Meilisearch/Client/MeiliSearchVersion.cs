@@ -3,24 +3,24 @@
 namespace Meilisearch
 {
     /// <summary>
-    /// Deserialized response of the Meilisearch verion
+    /// Deserialized response of the MeiliSearch version.
     /// </summary>
     public class MeiliSearchVersion
     {
         /// <summary>
-        /// Commit Sha for MeiliSearch
+        /// Commit SHA for MeiliSearch.
         /// </summary>
         [JsonPropertyName("commitSha")]
         public string CommitSha { get; set; }
 
         /// <summary>
-        /// Build Date for current version
+        /// Build date of the current version.
         /// </summary>
         [JsonPropertyName("buildDate")]
         public string BuildDate { get; set; }
 
         /// <summary>
-        /// Version information for MeiliSearch.
+        /// Information about MeiliSearch version.
         /// </summary>
         [JsonPropertyName("pkgVersion")]
         public string Version { get; set; }

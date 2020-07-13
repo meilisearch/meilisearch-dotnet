@@ -11,14 +11,14 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Meilisearch
 {
     /// <summary>
-    /// MeiliSearch Index for Search and managing document.
+    /// MeiliSearch index to search and manage documents.
     /// </summary>
     public class Index
     {
         private HttpClient _client;
 
         /// <summary>
-        /// Initializes with the default unique identifier and Primary Key.
+        /// Initializes with the UID (mandatory) and the primary key.
         /// </summary>
         /// <param name="uid">Unique Identifier</param>
         /// <param name="primaryKey"></param>
@@ -29,19 +29,19 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Unique Identifier for the Index.
+        /// Unique identifier of the index.
         /// </summary>
        public string Uid { get; internal set; }
 
         /// <summary>
-        /// Primary key of the document.
+        /// Primary key of the documents.
         /// </summary>
          public string PrimaryKey { get; internal set; }
 
         /// <summary>
-        /// Initialize the Index with HTTP client. Only for internal use
+        /// Initializes the Index with HTTP client. Only for internal usage.
         /// </summary>
-        /// <param name="client">HTTP client from the base client</param>
+        /// <param name="client">HTTP client from the base client.</param>
         /// <returns>The same object with the initialization.</returns>
         internal Index WithHttpClient(HttpClient client)
         {
@@ -50,7 +50,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Changes the Primary Key for a given index.
+        /// Changes the primary key of the index.
         /// </summary>
         /// <param name="primarykeytoChange"></param>
         /// <returns>Index with the updated Primary Key.</returns>
@@ -63,10 +63,10 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Deletes the Index with unique identifier.
-        /// Its a no recovery delete. You will also lose the documents within the index.
+        /// Deletes the index.
+        /// It's not a recovery delete. You will also lose the documents within the index.
         /// </summary>
-        /// <returns>Success or failure of the operation.</returns>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<bool> Delete()
         {
            var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
@@ -76,9 +76,9 @@ namespace Meilisearch
         /// <summary>
         /// Add documents.
         /// </summary>
-        /// <param name="documents">Documents to add</param>
-        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
-        /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
+        /// <param name="documents">Documents to add.</param>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
         {
             var responseMessage = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents", documents);
@@ -86,11 +86,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Add or Update Document .
+        /// Update documents.
         /// </summary>
-        /// <param name="documents">Documents to update</param>
-        /// <typeparam name="T">Type of document. Even though document is schemaless in MeiliSearch making it typed helps in compile time.</typeparam>
-        /// <returns>This action is Async in MeiliSearch so status is returned back.</returns>
+        /// <param name="documents">Documents to update.</param>
+        /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
         {
             var responseMessage = await this._client.PutAsJsonAsync($"/indexes/{Uid}/documents", documents);
@@ -100,9 +100,9 @@ namespace Meilisearch
         /// <summary>
         /// Get document by its ID
         /// </summary>
-        /// <param name="documentId">Document Id for query</param>
-        /// <typeparam name="T">Type to return for document</typeparam>
-        /// <returns>Type if the object is availble.</returns>
+        /// <param name="documentId">Document identifier.</param>
+        /// <typeparam name="T">Type of the document.</typeparam>
+        /// <returns>Returns the document, with the according type if the object is available.</returns>
         public async Task<T> GetDocument<T>(string documentId)
         {
            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
@@ -120,11 +120,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Get documents with the allowed Query Parameters.
+        /// Get documents with the allowed Query Parameters
         /// </summary>
-        /// <param name="query">Query Parameter. Supports Limit,offset and attributes to get</param>
-        /// <typeparam name="T">Type of Object.</typeparam>
-        /// <returns>List of document for the query.</returns>
+        /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve.</param>
+        /// <typeparam name="T">Type of the document.</typeparam>
+        /// <returns>Returns the list of documents.</returns>
         public async Task<IEnumerable<T>> GetDocuments<T>(DocumentQuery query=default)
         {
             string uri = $"/indexes/{Uid}/documents";
@@ -136,10 +136,10 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Delete one document by its ID
+        /// Delete one document.
         /// </summary>
-        /// <param name="documentId">document ID</param>
-        /// <returns>Update Status with ID to look for document.</returns>
+        /// <param name="documentId">Document identifier.</param>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteOneDocument(string documentId)
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents/{documentId}");
@@ -159,8 +159,8 @@ namespace Meilisearch
         /// <summary>
         /// Delete documents in batch.
         /// </summary>
-        /// <param name="documentIds">List of document Id</param>
-        /// <returns>Update status with ID to look for progress of update.</returns>
+        /// <param name="documentIds">List of documents identifier.</param>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
         {
             var httpresponse = await this._client.PostAsJsonAsync($"/indexes/{Uid}/documents/delete-batch", documentIds);
@@ -181,7 +181,7 @@ namespace Meilisearch
         /// <summary>
         /// Delete all the documents in the index
         /// </summary>
-        /// <returns>Update status with ID to look for progress of update.</returns>
+        /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteAllDocuments()
         {
             var httpresponse = await this._client.DeleteAsync($"/indexes/{Uid}/documents");
@@ -189,9 +189,9 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets the update status of all the asynchronous operation.
+        /// Gets the update status of all the asynchronous operations.
         /// </summary>
-        /// <returns>Update status with the Operation status.</returns>
+        /// <returns>Returns a list of the operations status.</returns>
         public async Task<IEnumerable<UpdateStatus>> GetAllUpdateStatus()
         {
             return await this._client.GetFromJsonAsync<IEnumerable<UpdateStatus>>($"/indexes/{Uid}/updates");
@@ -200,20 +200,20 @@ namespace Meilisearch
         /// <summary>
         /// Get Update Status by Status Id
         /// </summary>
-        /// <param name="updateId">UpdateId for the Operation</param>
-        /// <returns>Current status of the operation.</returns>
+        /// <param name="updateId">UpdateId for the operation.</param>
+        /// <returns>Return the current status of the operation.</returns>
         public async Task<UpdateStatus> GetUpdateStatus(int updateId)
         {
             return await this._client.GetFromJsonAsync<UpdateStatus>($"/indexes/{Uid}/updates/{updateId}");
         }
 
         /// <summary>
-        /// Search documents with a default Search Query
+        /// Search documents according to search parameters.
         /// </summary>
         /// <param name="query">Query Parameter with Search</param>
         /// <param name="searchattributes">Attributes to search.</param>
         /// <typeparam name="T">Type parameter to return</typeparam>
-        /// <returns>Enumerable of items</returns>
+        /// <returns>Returns Enumerable of items</returns>
         public async Task<SearchResult<T>> Search<T>(string query,SearchQuery searchattributes = default(SearchQuery))
         {
             string uri = $"/indexes/{Uid}/search?q={query}";

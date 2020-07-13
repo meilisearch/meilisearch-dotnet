@@ -9,22 +9,22 @@ namespace Meilisearch
     public class SearchResult<T>
     {
         /// <summary>
-        /// Total count of search results
+        /// Total count of search results.
         /// </summary>
         public IEnumerable<T> Hits { get; set; }
 
         /// <summary>
-        /// Offset from the initial search
+        /// Offset of the initial search.
         /// </summary>
         public int Offset { get; set; }
 
         /// <summary>
-        /// Limit for the search results.
+        /// Limit of the initial search.
         /// </summary>
         public int Limit { get; set; }
 
         /// <summary>
-        /// Query sent for the same.
+        /// Query sent.
         /// </summary>
         public string Query { get; set; }
     }
