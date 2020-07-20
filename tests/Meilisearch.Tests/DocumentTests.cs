@@ -42,6 +42,13 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task Should_be_Able_to_Get_One_Document_With_Int_Id()
+        {
+            var documents = await index.GetDocument<Movie>(10);
+            documents.Id.Should().Be("10");
+        }
+
+        [Fact]
         public async Task Should_Be_able_to_get_Many_documents_By_Limit()
         {
             var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
@@ -56,9 +63,23 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task Should_be_Able_to_Delete_one_document_with_int_id()
+        {
+            var updateStatus = await index.DeleteOneDocument(11);
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+
+        [Fact]
         public async Task Should_be_Able_to_Delete_documents_by_ids()
         {
             var updateStatus = await index.DeleteDocuments(new[] {"12", "13", "14"});
+            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+        }
+
+        [Fact]
+        public async Task Should_be_Able_to_Delete_documents_by_int_ids()
+        {
+            var updateStatus = await index.DeleteDocuments(new[] {12, 13, 14});
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 

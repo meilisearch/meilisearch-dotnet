@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -108,7 +109,18 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Get documents with the allowed query parameters.
+        /// Get document by its ID
+        /// </summary>
+        /// <param name="documentId">Document Id for query</param>
+        /// <typeparam name="T">Type to return for document</typeparam>
+        /// <returns>Type if the object is availble.</returns>
+        public async Task<T> GetDocument<T>(int documentId)
+        {
+            return await this.GetDocument<T>(documentId.ToString());
+        }
+
+        /// <summary>
+        /// Get documents with the allowed Query Parameters
         /// </summary>
         /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
@@ -135,6 +147,16 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Delete one document by its ID
+        /// </summary>
+        /// <param name="documentId">document ID</param>
+        /// <returns>Update Status with ID to look for document.</returns>
+        public async Task<UpdateStatus> DeleteOneDocument(int documentId)
+        {
+            return await DeleteOneDocument(documentId.ToString());
+        }
+
+        /// <summary>
         /// Delete documents in batch.
         /// </summary>
         /// <param name="documentIds">List of documents identifier.</param>
@@ -146,7 +168,18 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Delete all the documents in the index.
+        /// Delete documents in batch.
+        /// </summary>
+        /// <param name="documentIds">List of document Id</param>
+        /// <returns>Update status with ID to look for progress of update.</returns>
+        public async Task<UpdateStatus> DeleteDocuments(IEnumerable<int> documentIds)
+        {
+            var docIds = documentIds.Select(id => id.ToString());
+            return await this.DeleteDocuments(docIds);
+        }
+
+        /// <summary>
+        /// Delete all the documents in the index
         /// </summary>
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteAllDocuments()
