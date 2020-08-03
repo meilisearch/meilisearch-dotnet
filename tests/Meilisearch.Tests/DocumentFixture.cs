@@ -6,8 +6,6 @@ namespace Meilisearch.Tests
 {
     public class DocumentFixture : IDisposable
     {
-        private static HttpClient _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-
         public Index documentIndex { get; private set; }
 
         public Index DocumentDeleteIndex { get; private set; }
@@ -22,7 +20,7 @@ namespace Meilisearch.Tests
         {
             try
             {
-                var client = new MeilisearchClient(_httpClient);
+                var client = new MeilisearchClient("http://localhost:7700", "masterKey");
                 var index = client.GetIndex("MoviesToDelete").Result;
                 if (index == null)
                 {
@@ -50,7 +48,7 @@ namespace Meilisearch.Tests
         {
             try
             {
-                var client = new MeilisearchClient(_httpClient);
+                var client = new MeilisearchClient("http://localhost:7700", "masterKey");
                 var index = client.GetIndex("Movies").Result;
 
                 if (index == null)
