@@ -18,13 +18,13 @@ namespace Meilisearch
         /// Default client for Meilisearch API.
         /// </summary>
         /// <param name="url">URL to connect to meilisearch client</param>
-        /// <param name="masterKey">Master key for the usage</param>
-        public MeilisearchClient(string url, string masterKey=default)
+        /// <param name="apiKey">API key for the usage</param>
+        public MeilisearchClient(string url, string apiKey=default)
         {
             _client = new HttpClient {BaseAddress = new Uri(url)};
-            if (!string.IsNullOrEmpty(masterKey))
+            if (!string.IsNullOrEmpty(apiKey))
             {
-                _client.DefaultRequestHeaders.Add("X-Meili-API-Key", masterKey);
+                _client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
             }
         }
 
@@ -32,13 +32,13 @@ namespace Meilisearch
         /// Custom client for Meilisearch API. Use it with proper Http Client Factory.
         /// </summary>
         /// <param name="client">Injects the reusable Httpclient </param>
-        /// <param name="masterKey">Master Key for Meilisearchclient. Best practice is to use HttpClient default header rather than this parameter.</param>
-        public MeilisearchClient(HttpClient client, string masterKey=default)
+        /// <param name="apiKey">API Key for MeilisearchClient. Best practice is to use HttpClient default header rather than this parameter.</param>
+        public MeilisearchClient(HttpClient client, string apiKey=default)
         {
             _client = client;
-            if (!string.IsNullOrEmpty(masterKey))
+            if (!string.IsNullOrEmpty(apiKey))
             {
-                _client.DefaultRequestHeaders.Add("X-Meili-API-Key", masterKey);
+                _client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
             }
         }
 
