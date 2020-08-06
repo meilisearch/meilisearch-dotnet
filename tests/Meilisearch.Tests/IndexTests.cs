@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Http;
 using Xunit;
 
 namespace Meilisearch.Tests
