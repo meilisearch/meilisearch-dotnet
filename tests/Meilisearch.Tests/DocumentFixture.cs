@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Http;
-using Microsoft.Extensions.Http;
 
 namespace Meilisearch.Tests
 {

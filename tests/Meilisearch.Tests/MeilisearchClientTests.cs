@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
-using Microsoft.Extensions.Http;
+using HttpClientFactoryLite;
 
 namespace Meilisearch.Tests
 {
