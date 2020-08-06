@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Extensions.Http;
+using HttpClientFactoryLite;
 
 namespace Meilisearch.Tests
 {
@@ -11,15 +11,15 @@ namespace Meilisearch.Tests
                     (() =>
                 {
 
-                    var httpclientfactory = new HttpClientFactory();
-                    httpclientfactory.Register<MeilisearchClient>(
+                    var httpClientFactory = new HttpClientFactory();
+                    httpClientFactory.Register<MeilisearchClient>(
                         builder =>
                             builder.ConfigureHttpClient(p =>
                             {
                                 p.BaseAddress = new Uri("http://localhost:7700/");
-                                p.DefaultRequestHeaders.Add("X-Meili-API-Key","masterKey");
+                                p.DefaultRequestHeaders.Add("X-Meili-API-Key", "masterKey");
                             }));
-                    return httpclientfactory;
+                    return httpClientFactory;
                 });
 
         public static HttpClientFactory Instance { get { return lazy.Value; } }
