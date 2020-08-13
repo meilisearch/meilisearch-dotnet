@@ -3,8 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -214,16 +212,17 @@ namespace Meilisearch
         /// <param name="searchattributes">Attributes to search.</param>
         /// <typeparam name="T">Type parameter to return</typeparam>
         /// <returns>Returns Enumerable of items</returns>
-        public async Task<SearchResult<T>> Search<T>(string query,SearchQuery searchattributes = default(SearchQuery))
+        public async Task<SearchResult<T>> Search<T>(string query, SearchQuery searchAttributes = default(SearchQuery))
         {
-            string uri = $"/indexes/{Uid}/search?q={query}";
-            if (searchattributes != null)
-            {
-                uri = QueryHelpers.AddQueryString(uri, searchattributes.AsDictionary());
+            SearchQuery body = null;
+            if (searchAttributes == null) {
+                body = new SearchQuery { Q = query };
+            } else {
+                body = searchAttributes;
+                body.Q = query;
             }
-
-            var searchResults = await this._client.GetFromJsonAsync<SearchResult<T>>(uri);
-            return searchResults;
+            var responseMessage = await this._client.PostAsJsonAsync<SearchQuery>($"/indexes/{Uid}/search", body);
+            return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>();;
         }
     }
 }
