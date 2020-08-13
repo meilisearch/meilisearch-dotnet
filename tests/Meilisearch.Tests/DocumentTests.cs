@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
@@ -97,5 +94,18 @@ namespace Meilisearch.Tests
         public string Id { get; set; }
 
         public string Name { get; set; }
+
+        public string Genre { get; set; }
+    }
+
+    public class FormattedMovie
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+
+        public Movie _Formatted { get; set; }
     }
 }

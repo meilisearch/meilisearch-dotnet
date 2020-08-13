@@ -60,13 +60,13 @@ namespace Meilisearch.Tests
 
                 var movies = new[]
                 {
-                    new Movie {Id = "10", Name = "SuperMan"},
-                    new Movie {Id = "11", Name = "SpiderMan"},
-                    new Movie {Id = "12", Name = "IronMan"},
-                    new Movie {Id = "13", Name = "SpiderMan"},
-                    new Movie {Id = "14", Name = "IronMan"},
-                    new Movie {Id = "15", Name = "SpiderMan"},
-                    new Movie {Id = "16", Name = "IronMan"}
+                    new Movie { Id = "10", Name = "Gladiator" },
+                    new Movie { Id = "11", Name = "Interstellar" },
+                    new Movie { Id = "12", Name = "Start Wars", Genre = "SF" },
+                    new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
+                    new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
+                    new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
+                    new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" }
                 };
                 var updateStatus = this.documentIndex.AddDocuments(movies).Result;
             }
