@@ -42,6 +42,17 @@ $ dotnet restore
 $ dotnet test
 ```
 
+### Style Rules
+
+The format style is checked with `dotnet-format`. You need to [install it](https://github.com/dotnet/format#how-to-install) to run the following commands:
+
+```bash
+# Check
+$ dotnet format --check Meilisearch.sln
+# Auto-fix
+$ dotnet format Meilisearch.sln
+```
+
 ### Release Process
 
 MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
