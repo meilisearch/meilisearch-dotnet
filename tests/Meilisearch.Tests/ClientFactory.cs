@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using HttpClientFactoryLite;
 
 namespace Meilisearch.Tests

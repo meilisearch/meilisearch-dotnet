@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
@@ -20,14 +20,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_Add_Document_for_Index()
         {
-            var updateStatus = await index.AddDocuments(new[] {new Movie {Id = "1", Name = "Batman"}});
+            var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
         [Fact]
         public async Task Should_be_Able_to_Update_Document_for_Index()
         {
-            var updateStatus = await index.UpdateDocuments(new[] {new Movie {Id = "1", Name = "Batman"}});
+            var updateStatus = await index.UpdateDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(1);
         }
 
@@ -48,7 +48,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_Be_able_to_get_Many_documents_By_Limit()
         {
-            var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
+            var documents = await index.GetDocuments<Movie>(new DocumentQuery { Limit = 1 });
             documents.Count().Should().Be(1);
         }
 
@@ -69,18 +69,18 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Should_be_Able_to_Delete_documents_by_ids()
         {
-            var updateStatus = await index.DeleteDocuments(new[] {"12", "13", "14"});
+            var updateStatus = await index.DeleteDocuments(new[] { "12", "13", "14" });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
         [Fact]
         public async Task Should_be_Able_to_Delete_documents_by_int_ids()
         {
-            var updateStatus = await index.DeleteDocuments(new[] {12, 13, 14});
+            var updateStatus = await index.DeleteDocuments(new[] { 12, 13, 14 });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
-       [Fact]
+        [Fact]
         public async Task Should_Be_Delete_All_Documents()
         {
             var updateStatus = await indextoDelete.DeleteAllDocuments();

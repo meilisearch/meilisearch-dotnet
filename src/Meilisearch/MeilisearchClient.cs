@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -19,9 +19,9 @@ namespace Meilisearch
         /// </summary>
         /// <param name="url">URL to connect to meilisearch client</param>
         /// <param name="apiKey">API key for the usage</param>
-        public MeilisearchClient(string url, string apiKey=default)
+        public MeilisearchClient(string url, string apiKey = default)
         {
-            _client = new HttpClient {BaseAddress = new Uri(url)};
+            _client = new HttpClient { BaseAddress = new Uri(url) };
             if (!string.IsNullOrEmpty(apiKey))
             {
                 _client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
@@ -33,7 +33,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="client">Injects the reusable Httpclient </param>
         /// <param name="apiKey">API Key for MeilisearchClient. Best practice is to use HttpClient default header rather than this parameter.</param>
-        public MeilisearchClient(HttpClient client, string apiKey=default)
+        public MeilisearchClient(HttpClient client, string apiKey = default)
         {
             _client = client;
             if (!string.IsNullOrEmpty(apiKey))
@@ -61,12 +61,12 @@ namespace Meilisearch
         /// <param name="uid">Unique Id</param>
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <returns>Returns Index.</returns>
-        public async Task<Index> CreateIndex(string uid,string primaryKey=default)
+        public async Task<Index> CreateIndex(string uid, string primaryKey = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await _client.PostAsJsonAsync("/indexes",index);
+            var response = await _client.PostAsJsonAsync("/indexes", index);
             // TODO : Revisit the Exception, We need to handle it better.
-            return response.IsSuccessStatusCode? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
+            return response.IsSuccessStatusCode ? index.WithHttpClient(this._client) : throw new Exception("Not able to create index. May be Index already exist");
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Meilisearch
+namespace Meilisearch
 {
     /// <summary>
     /// Update Status of the actions done.

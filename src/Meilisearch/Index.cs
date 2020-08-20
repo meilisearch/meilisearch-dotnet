@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,7 +20,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uid">Unique Identifier</param>
         /// <param name="primaryKey"></param>
-        public Index(string uid,string primaryKey=default)
+        public Index(string uid, string primaryKey = default)
         {
             this.Uid = uid;
             this.PrimaryKey = primaryKey;
@@ -29,12 +29,12 @@ namespace Meilisearch
         /// <summary>
         /// Unique identifier of the index.
         /// </summary>
-       public string Uid { get; internal set; }
+        public string Uid { get; internal set; }
 
         /// <summary>
         /// Primary key of the documents.
         /// </summary>
-         public string PrimaryKey { get; internal set; }
+        public string PrimaryKey { get; internal set; }
 
         /// <summary>
         /// Initializes the Index with HTTP client. Only for internal usage.
@@ -54,7 +54,7 @@ namespace Meilisearch
         /// <returns>Index with the updated Primary Key.</returns>
         public async Task<Index> ChangePrimaryKey(string primarykeytoChange)
         {
-            var message = await this._client.PutAsJsonAsync($"indexes/{Uid}", new {primaryKey = primarykeytoChange});
+            var message = await this._client.PutAsJsonAsync($"indexes/{Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = responsecontent.PrimaryKey;
             return this;
@@ -67,8 +67,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<bool> Delete()
         {
-           var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
-           return responseMessage.StatusCode == HttpStatusCode.NoContent;
+            var responseMessage = await this._client.DeleteAsync($"/indexes/{Uid}");
+            return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Meilisearch
         /// <returns>Returns the document, with the according type if the object is available.</returns>
         public async Task<T> GetDocument<T>(string documentId)
         {
-           return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
+            return await this._client.GetFromJsonAsync<T>($"/indexes/{Uid}/documents/{documentId}");
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Meilisearch
         /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the list of documents.</returns>
-        public async Task<IEnumerable<T>> GetDocuments<T>(DocumentQuery query=default)
+        public async Task<IEnumerable<T>> GetDocuments<T>(DocumentQuery query = default)
         {
             string uri = $"/indexes/{Uid}/documents";
             if (query != null)
@@ -215,14 +215,17 @@ namespace Meilisearch
         public async Task<SearchResult<T>> Search<T>(string query, SearchQuery searchAttributes = default(SearchQuery))
         {
             SearchQuery body = null;
-            if (searchAttributes == null) {
+            if (searchAttributes == null)
+            {
                 body = new SearchQuery { Q = query };
-            } else {
+            }
+            else
+            {
                 body = searchAttributes;
                 body.Q = query;
             }
             var responseMessage = await this._client.PostAsJsonAsync<SearchQuery>($"/indexes/{Uid}/search", body);
-            return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>();;
+            return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
             MeilisearchClient ms = new MeilisearchClient(_httpClient);
             var indexName = "uid" + new Random().Next();
             Index index = await ms.CreateIndex(indexName);
-            var updateStatus = await index.AddDocuments(new[]{new Movie {Id = "1", Name = "Batman"}});
+            var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
 
@@ -52,7 +52,7 @@ namespace Meilisearch.Tests
         public async Task Should_be_able_To_Create_Index_with_primaryKey()
         {
             var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid2"+new Random().Next();
+            var indexName = "uid2" + new Random().Next();
             var index = await client.CreateIndex(indexName, "movieId");
             index.Uid.Should().Be(indexName);
             index.PrimaryKey.Should().Be("movieId");

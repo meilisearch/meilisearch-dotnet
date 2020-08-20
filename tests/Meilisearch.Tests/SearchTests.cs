@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 using System.Linq;
@@ -98,7 +98,8 @@ namespace Meilisearch.Tests
         {
             var movies = await this.index.Search<FormattedMovie>(
                 "man",
-                new SearchQuery {
+                new SearchQuery
+                {
                     AttributesToHighlight = new string[] { "name" },
                     AttributesToRetrieve = new string[] { "name", "id" },
                     Offset = 1

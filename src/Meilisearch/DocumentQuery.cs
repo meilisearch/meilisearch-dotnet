@@ -1,4 +1,4 @@
-﻿namespace Meilisearch
+namespace Meilisearch
 {
     public class DocumentQuery
     {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Meilisearch.Tests
 {
@@ -10,8 +10,8 @@ namespace Meilisearch.Tests
 
         public DocumentFixture()
         {
-           SetUp();
-           SetUpForDelete();
+            SetUp();
+            SetUpForDelete();
         }
 
         private void SetUpForDelete()
