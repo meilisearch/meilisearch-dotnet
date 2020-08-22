@@ -1,30 +1,30 @@
-using System.Collections.Generic;
-
 namespace Meilisearch
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Wrapper for Search Results
+    /// Wrapper for Search Results.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Hit type.</typeparam>
     public class SearchResult<T>
     {
         /// <summary>
-        /// Total count of search results.
+        /// Gets or sets total count of search results.
         /// </summary>
         public IEnumerable<T> Hits { get; set; }
 
         /// <summary>
-        /// Offset of the initial search.
+        /// Gets or sets offset of the initial search.
         /// </summary>
         public int Offset { get; set; }
 
         /// <summary>
-        /// Limit of the initial search.
+        /// Gets or sets limit of the initial search.
         /// </summary>
         public int Limit { get; set; }
 
         /// <summary>
-        /// Query sent.
+        /// Gets or sets query sent.
         /// </summary>
         public string Query { get; set; }
     }

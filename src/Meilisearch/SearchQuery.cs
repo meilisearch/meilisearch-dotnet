@@ -1,49 +1,49 @@
-using System.Collections.Generic;
-
 namespace Meilisearch
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Search Query for MeiliSearch class
+    /// Search Query for MeiliSearch class.
     /// </summary>
     public class SearchQuery
     {
         /// <summary>
-        /// Query string
+        /// Gets or sets query string.
         /// </summary>
         public string Q { get; set; }
 
         /// <summary>
-        /// Offset for the Query.
+        /// Gets or sets offset for the Query.
         /// </summary>
         public int? Offset { get; set; }
 
         /// <summary>
-        /// Limits the number of results.
+        /// Gets or sets limits the number of results.
         /// </summary>
         public int? Limit { get; set; }
 
         /// <summary>
-        /// Filters to apply to the query.
+        /// Gets or sets filters to apply to the query.
         /// </summary>
         public IEnumerable<string> Filters { get; set; }
 
         /// <summary>
-        /// Attributes to retrieve.
+        /// Gets or sets attributes to retrieve.
         /// </summary>
         public IEnumerable<string> AttributesToRetrieve { get; set; }
 
         /// <summary>
-        /// Attributes to crop.
+        /// Gets or sets attributes to crop.
         /// </summary>
         public IEnumerable<string> AttributesToCrop { get; set; }
 
         /// <summary>
-        /// Length used to crop field values.
+        /// Gets or sets length used to crop field values.
         /// </summary>
         public int? CropLength { get; set; }
 
         /// <summary>
-        /// Attributes to highlight.
+        /// Gets or sets attributes to highlight.
         /// </summary>
         public IEnumerable<string> AttributesToHighlight { get; set; }
         
@@ -53,7 +53,7 @@ namespace Meilisearch
         public IEnumerable<dynamic> FacetFilters { get; set; }
 
         /// <summary>
-        /// Defines whether an object that contains information about the matches should be returned or not.
+        /// Gets or sets matches. It defines whether an object that contains information about the matches should be returned or not.
         /// </summary>
         public bool? Matches { get; set; }
     }
