@@ -1,10 +1,11 @@
-using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Xunit;
-
 namespace Meilisearch.Tests
 {
+
+    using System;
+    using System.Threading.Tasks;
+    using FluentAssertions;
+    using Xunit;
+
     [Collection("Sequential")]
     public class IndexTests
     {

@@ -10,6 +10,10 @@
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="HttpClientFactoryLite" Version="0.4.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     </ItemGroup>
@@ -17,5 +21,9 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Meilisearch\Meilisearch.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <CodeAnalysisRuleSet>..\_stylecop\StyleCopRules.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
 
 </Project>

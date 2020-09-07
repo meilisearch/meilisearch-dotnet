@@ -57,6 +57,7 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexName);
             index.PrimaryKey.Should().Be("movieId");
         }
+
         [Fact]
         public async Task Should_Throw_an_Exception_if_the_Index_Is_already_Taken()
         {
