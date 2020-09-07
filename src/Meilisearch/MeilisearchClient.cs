@@ -46,7 +46,7 @@ namespace Meilisearch
 
         /// <summary>
         /// Gets the current MeiliSearch version. For more details on response
-        /// https://docs.meilisearch.com/references/version.html#get-version-of-meilisearch
+        /// https://docs.meilisearch.com/references/version.html#get-version-of-meilisearch.
         /// </summary>
         /// <returns>Returns the MeiliSearch version with commit and build version.</returns>
         public async Task<MeiliSearchVersion> GetVersion()

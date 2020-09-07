@@ -12,6 +12,8 @@ namespace Meilisearch
         /// <summary>
         /// Transforms an MeiliSearch object into a dictionary.
         /// </summary>
+        /// <param name="source">Object to transform.</param>
+        /// <param name="bindingAttr">Binding flags.</param>
         /// <returns>Returns a dictionary.</returns>
         public static IDictionary<string, string> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
