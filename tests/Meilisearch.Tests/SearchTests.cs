@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
-using System.Linq;
-
 namespace Meilisearch.Tests
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using FluentAssertions;
+    using Xunit;
+
     [Collection("Sequential")]
     public class SearchTests : IClassFixture<DocumentFixture>
     {
@@ -12,7 +12,7 @@ namespace Meilisearch.Tests
 
         public SearchTests(DocumentFixture fixture)
         {
-            this.index = fixture.documentIndex;
+            this.index = fixture.DocumentsIndex;
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithEmptyQuery()
         {
-            var movies = await this.index.Search<Movie>("");
+            var movies = await this.index.Search<Movie>(string.Empty);
             movies.Hits.Should().BeEmpty();
         }
 
@@ -45,8 +45,7 @@ namespace Meilisearch.Tests
         {
             var movies = await this.index.Search<Movie>(
                 "man",
-                new SearchQuery { Limit = 1 }
-            );
+                new SearchQuery { Limit = 1 });
             movies.Hits.Should().NotBeEmpty();
             Assert.Single(movies.Hits);
             Assert.Equal("14", movies.Hits.First().Id);
@@ -59,8 +58,7 @@ namespace Meilisearch.Tests
         {
             var movies = await this.index.Search<FormattedMovie>(
                 "man",
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } }
-            );
+                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
             Assert.Equal("14", movies.Hits.First().Id);
             Assert.Equal("Iron Man", movies.Hits.First().Name);
@@ -74,8 +72,7 @@ namespace Meilisearch.Tests
         {
             var movies = await this.index.Search<FormattedMovie>(
                 null,
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } }
-            );
+                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -87,9 +84,8 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithEmptyQuery()
         {
             var movies = await this.index.Search<FormattedMovie>(
-                "",
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } }
-            );
+                string.Empty,
+                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().BeEmpty();
         }
 
@@ -102,9 +98,8 @@ namespace Meilisearch.Tests
                 {
                     AttributesToHighlight = new string[] { "name" },
                     AttributesToRetrieve = new string[] { "name", "id" },
-                    Offset = 1
-                }
-            );
+                    Offset = 1,
+                });
             movies.Hits.Should().NotBeEmpty();
             Assert.Single(movies.Hits);
             Assert.Equal("Spider-Man", movies.Hits.First().Name);

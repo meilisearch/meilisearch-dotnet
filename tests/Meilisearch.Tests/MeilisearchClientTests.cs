@@ -1,20 +1,20 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
-using HttpClientFactoryLite;
-
 namespace Meilisearch.Tests
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using FluentAssertions;
+    using HttpClientFactoryLite;
+    using Xunit;
+
     [Collection("Sequential")]
     public class MeilisearchClientTests
     {
         [Fact]
         public async Task Should_be_Able_To_Get_Version_By_Custom_Client()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(_httpClient);
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            var client = new MeilisearchClient(httpClient);
             var meilisearchversion = await client.GetVersion();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
@@ -30,10 +30,10 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Basic_Usage_Of_Custom_Client()
         {
-            var _httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(_httpClient);
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexName = "uid" + new Random().Next();
-            Index index = await ms.CreateIndex(indexName);
+            Meilisearch.Index index = await ms.CreateIndex(indexName);
             var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }

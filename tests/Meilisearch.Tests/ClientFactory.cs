@@ -1,16 +1,14 @@
-using System;
-using HttpClientFactoryLite;
-
 namespace Meilisearch.Tests
 {
+    using System;
+    using HttpClientFactoryLite;
+
     public class ClientFactory
     {
         private static readonly Lazy<HttpClientFactory>
-            lazy =
-                new Lazy<HttpClientFactory>
-                    (() =>
+            Lazy =
+                new Lazy<HttpClientFactory>(() =>
                 {
-
                     var httpClientFactory = new HttpClientFactory();
                     httpClientFactory.Register<MeilisearchClient>(
                         builder =>
@@ -22,6 +20,12 @@ namespace Meilisearch.Tests
                     return httpClientFactory;
                 });
 
-        public static HttpClientFactory Instance { get { return lazy.Value; } }
+        public static HttpClientFactory Instance
+        {
+            get
+            {
+                return Lazy.Value;
+            }
+        }
     }
 }

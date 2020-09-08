@@ -7,5 +7,13 @@
        - SA1633: FileMustHaveHeader
     -->
     <Rule Id="SA1633" Action="None" />
+    <!--
+        No documentation
+    -->
+    <Rule Id="SA0001" Action="None" />
+    <!--
+        Files can contain many types
+    -->
+    <Rule Id="SA1402" Action="None" />
   </Rules>
 </RuleSet>
