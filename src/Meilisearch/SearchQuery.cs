@@ -46,6 +46,11 @@ namespace Meilisearch
         /// Attributes to highlight.
         /// </summary>
         public IEnumerable<string> AttributesToHighlight { get; set; }
+        
+        /// <summary>
+        /// Faceted search to apply to the query.
+        /// </summary>
+        public IEnumerable<dynamic> FacetFilters { get; set; }
 
         /// <summary>
         /// Defines whether an object that contains information about the matches should be returned or not.
