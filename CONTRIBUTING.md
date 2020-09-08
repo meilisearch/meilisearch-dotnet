@@ -53,6 +53,13 @@ $ dotnet format --check Meilisearch.sln
 $ dotnet format Meilisearch.sln
 ```
 
+[StyleCop Analyzers](https://www.nuget.org/packages/StyleCop.Analyzers) is also installed in this package.<br>
+The warnings are visible when building the project:
+
+```bash
+$ dotnet build
+```
+
 ### Release Process
 
 MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
