@@ -15,7 +15,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task Should_be_Able_to_get_All_The_Update_Status()
+        public async Task GetAllUpdateStatus()
         {
             var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "MoviesStatus" + new Random().Next();
@@ -26,7 +26,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task Should_be_Able_to_Get_Status_By_Id()
+        public async Task GetOneUpdateStatus()
         {
             var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var indexName = "MoviesStatus" + new Random().Next();

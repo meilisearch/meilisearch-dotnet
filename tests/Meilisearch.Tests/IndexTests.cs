@@ -9,7 +9,7 @@ namespace Meilisearch.Tests
     public class IndexTests
     {
         [Fact]
-        public async Task Should_be_Able_To_Modify_Primary_Key()
+        public async Task UpdatePrimaryKey()
         {
             var client = new MeilisearchClient("http://localhost:7700", "masterKey");
             var index = await client.CreateIndex("Indextest" + new Random().Next());
