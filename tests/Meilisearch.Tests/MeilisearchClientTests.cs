@@ -10,7 +10,6 @@ namespace Meilisearch.Tests
     [Collection("Sequential")]
     public class MeilisearchClientTests
     {
-
         [Fact]
         public async Task Should_be_Able_To_Get_Version_By_Custom_Client()
         {
