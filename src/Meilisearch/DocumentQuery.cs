@@ -15,7 +15,7 @@ namespace Meilisearch
         /// </summary>
         public int? Limit { get; set; }
 
-    /// <summary>
+        /// <summary>
         /// Gets or sets the attributes to retrieve.
         /// </summary>
         public string AttributesToRetrieve { get; set; }

@@ -46,7 +46,7 @@ namespace Meilisearch
         /// Gets or sets attributes to highlight.
         /// </summary>
         public IEnumerable<string> AttributesToHighlight { get; set; }
-        
+
         /// <summary>
         /// Faceted search to apply to the query.
         /// </summary>

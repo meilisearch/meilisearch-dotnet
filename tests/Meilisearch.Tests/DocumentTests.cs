@@ -105,7 +105,7 @@ namespace Meilisearch.Tests
 
         public string Genre { get; set; }
 
-        #pragma warning disable SA1300
+#pragma warning disable SA1300
         public Movie _Formatted { get; set; }
     }
 }
