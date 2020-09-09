@@ -1,4 +1,4 @@
-﻿namespace Meilisearch
+namespace Meilisearch
 {
     /// <summary>
     /// Update Status of the actions done.
@@ -6,15 +6,13 @@
     public class UpdateStatus
     {
         /// <summary>
-        /// Update ID for the operation.
+        /// Gets or sets update ID for the operation.
         /// </summary>
         public int UpdateId { get; set; }
 
         /// <summary>
-        /// State of the operation.
+        /// Gets or sets state of the operation.
         /// </summary>
         public string Status { get; set; }
-
-
     }
 }
