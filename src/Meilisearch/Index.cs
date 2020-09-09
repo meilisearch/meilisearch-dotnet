@@ -251,6 +251,26 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets all the settings of an index.
+        /// </summary>
+        /// <returns>Returns all the settings.</returns>
+        public async Task<Settings> GetAllSettings()
+        {
+            return await this.client.GetFromJsonAsync<Settings>($"/indexes/{Uid}/settings");
+        }
+
+        /// <summary>
+        /// Updates all the settings of an index.
+        /// The settings that are not passed in parameter are not overwritten.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateAllSettings(Settings settings)
+        {
+            var responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
         /// Initializes the Index with HTTP client. Only for internal usage.
         /// </summary>
         /// <param name="client">HTTP client from the base client.</param>

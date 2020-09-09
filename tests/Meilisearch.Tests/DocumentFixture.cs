@@ -7,27 +7,28 @@ namespace Meilisearch.Tests
         public DocumentFixture()
         {
             this.SetUp();
-            this.SetUpForDelete();
+            this.SetUpForDocumentsDeletion();
         }
 
-        public Meilisearch.Index DocumentsIndex { get; private set; }
+        public Meilisearch.Index BasicIndexWithDocuments { get; private set; }
 
-        public Meilisearch.Index DocumentDeleteIndex { get; private set; }
+        public Meilisearch.Index IndexForDocumentsDeletion { get; private set; }
 
         public void SetUp()
         {
             try
             {
+                var indexUid = "Movies";
                 var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-                var index = client.GetIndex("Movies").Result;
+                var index = client.GetIndex(indexUid).Result;
 
                 if (index == null)
                 {
-                    this.DocumentsIndex = client.CreateIndex("Movies").Result;
+                    this.BasicIndexWithDocuments = client.CreateIndex(indexUid).Result;
                 }
                 else
                 {
-                    this.DocumentsIndex = index;
+                    this.BasicIndexWithDocuments = index;
                 }
 
                 var movies = new[]
@@ -40,7 +41,7 @@ namespace Meilisearch.Tests
                     new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                     new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
                 };
-                var updateStatus = this.DocumentsIndex.AddDocuments(movies).Result;
+                var updateStatus = this.BasicIndexWithDocuments.AddDocuments(movies).Result;
             }
             catch (Exception e)
             {
@@ -52,23 +53,24 @@ namespace Meilisearch.Tests
         {
         }
 
-        private void SetUpForDelete()
+        private void SetUpForDocumentsDeletion()
         {
             try
             {
+                var indexUid = "MoviesToDelete";
                 var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-                var index = client.GetIndex("MoviesToDelete").Result;
+                var index = client.GetIndex(indexUid).Result;
                 if (index == null)
                 {
-                    this.DocumentDeleteIndex = client.CreateIndex("MoviesToDelete").Result;
+                    this.IndexForDocumentsDeletion = client.CreateIndex(indexUid).Result;
                 }
                 else
                 {
-                    this.DocumentDeleteIndex = index;
+                    this.IndexForDocumentsDeletion = index;
                 }
 
                 var movies = new[] { new Movie { Id = "10", Name = "SuperMan" } };
-                var updateStatus = this.DocumentDeleteIndex.AddDocuments(movies).Result;
+                var updateStatus = this.IndexForDocumentsDeletion.AddDocuments(movies).Result;
             }
             catch (Exception e)
             {
