@@ -101,5 +101,24 @@ namespace Meilisearch
 
             return null;  // TODO:  Yikes!! returning Null  Need to come back to solve this.
         }
+
+        /// <summary>
+        /// Gets the index instance or creates the index if it does not exist.
+        /// /!\ Really basics. An error handler should be created to check the exception.
+        /// <param name="uid">Unique Id.</param>
+        /// <param name="primaryKey">Primary key for documents.</param>
+        /// <returns>Returns Index.</returns>
+        /// </summary>
+        public async Task<Index> GetOrCreateIndex(string uid, string primaryKey = default)
+        {
+            try
+            {
+                return await CreateIndex(uid, primaryKey);
+            }
+            catch (Exception)
+            {
+                return await GetIndex(uid);
+            }
+        }
     }
 }
