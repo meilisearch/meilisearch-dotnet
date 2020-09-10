@@ -106,23 +106,25 @@ namespace Meilisearch
         /// Gets the index instance or creates the index if it does not exist.
         ///
         /// /!\ Really basics. An error handler should be created to check the errorCode.
-        /// cf https://docs.meilisearch.com/errors/#index_already_exists
+        /// cf https://docs.meilisearch.com/errors/#index_already_exists.
+        /// </summary>
         /// <param name="uid">Unique Id.</param>
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <returns>Returns Index.</returns>
-        /// </summary>
         public async Task<Index> GetOrCreateIndex(string uid, string primaryKey = default)
         {
             try
             {
-                return await CreateIndex(uid, primaryKey);
+                return await this.CreateIndex(uid, primaryKey);
             }
             catch (Exception e)
             {
                 if (e.Message == "Not able to create index. May be Index already exist")
                 {
-                    return await GetIndex(uid);
-                } else {
+                    return await this.GetIndex(uid);
+                }
+                else
+                {
                     throw e;
                 }
             }

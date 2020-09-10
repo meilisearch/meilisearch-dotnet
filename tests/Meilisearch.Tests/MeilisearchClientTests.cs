@@ -113,6 +113,7 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
         }
 
+        [Fact]
         public async Task GetOrCreateIndexIfIndexAlreadyExists()
         {
             var indexUid = "index2";
@@ -122,6 +123,7 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
         }
 
+        [Fact]
         public async Task GetOrCreateIndexWithPrimaryKey()
         {
             var indexUid = "index3";

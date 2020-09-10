@@ -48,7 +48,7 @@ namespace Meilisearch
         public IEnumerable<string> AttributesToHighlight { get; set; }
 
         /// <summary>
-        /// Faceted search to apply to the query.
+        /// Gets or sets the faceted search to apply to the query.
         /// </summary>
         public IEnumerable<dynamic> FacetFilters { get; set; }
 
