@@ -7,7 +7,6 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-
     public class StatusTests : IClassFixture<DocumentFixture>
     {
         private readonly Meilisearch.Index index;
@@ -41,7 +40,7 @@ namespace Meilisearch.Tests
             var status = await this.index.AddDocuments(new[] { new Movie { Id = "3" } });
             var response = await this.index.WaitForPendingUpdate(status.UpdateId);
             Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal(response.Status, "processed");
+            Assert.Equal("processed", response.Status);
         }
 
         [Fact]
@@ -50,15 +49,14 @@ namespace Meilisearch.Tests
             var status = await this.index.AddDocuments(new[] { new Movie { Id = "4" } });
             var response = await this.index.WaitForPendingUpdate(status.UpdateId, 10000.0, 20);
             Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal(response.Status, "processed");
+            Assert.Equal("processed", response.Status);
         }
 
         [Fact]
         public async Task WaitForPendingUpdateWithException()
         {
             var status = await this.index.AddDocuments(new[] { new Movie { Id = "5" } });
-            await Assert.ThrowsAsync<Exception>(() => index.WaitForPendingUpdate(status.UpdateId, 0.0, 20));
-
+            await Assert.ThrowsAsync<Exception>(() => this.index.WaitForPendingUpdate(status.UpdateId, 0.0, 20));
         }
     }
 }
