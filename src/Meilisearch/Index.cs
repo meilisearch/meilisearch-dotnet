@@ -224,25 +224,29 @@ namespace Meilisearch
         /// <summary>
         /// Waits until the asynchronous task was done.
         /// </summary>
+        /// <param name="updateId">Unique identifier of the asynchronous task.</param>
+        /// <param name="timeoutMs">Timeout in millisecond.</param>
+        /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <returns>Returns the status of asynchronous task.</returns>
         public async Task<UpdateStatus> WaitForPendingUpdate(
             int updateId,
             double timeoutMs = 5000.0,
-            int intervalMs = 50
-        )
+            int intervalMs = 50)
         {
             DateTime endingTime = DateTime.Now.AddMilliseconds(timeoutMs);
 
             while (DateTime.Now < endingTime)
             {
-                var response = await GetUpdateStatus(updateId);
+                var response = await this.GetUpdateStatus(updateId);
 
                 if (response.Status != "enqueued")
                 {
                     return response;
                 }
+
                 await Task.Delay(intervalMs);
             }
+
             throw new Exception("The task " + updateId.ToString() + " timed out.");
         }
 
