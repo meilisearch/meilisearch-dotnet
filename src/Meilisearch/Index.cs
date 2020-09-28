@@ -6,9 +6,9 @@ namespace Meilisearch
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.WebUtilities;
-    using System.Text.Json;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
@@ -257,14 +257,14 @@ namespace Meilisearch
         /// <returns>Returns all the settings.</returns>
         public async Task<Settings> GetAllSettings()
         {
-            return await this.client.GetFromJsonAsync<Settings>($"/indexes/{Uid}/settings");
+            return await this.client.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings");
         }
 
         /// <summary>
         /// Updates all the settings of an index.
         /// The settings that are not passed in parameter are not overwritten.
         /// </summary>
-        /// <params name="settings">Settings object</params>
+        /// <param name="settings">Settings object.</param>
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateAllSettings(Settings settings)
         {

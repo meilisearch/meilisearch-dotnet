@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-
 namespace Meilisearch
 {
+    using System.Collections.Generic;
+    using System.Text.Json.Serialization;
+
     /// <summary>
     /// Setttings of an index.
     /// </summary>
