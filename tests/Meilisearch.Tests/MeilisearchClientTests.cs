@@ -10,6 +10,15 @@ namespace Meilisearch.Tests
     [Collection("Sequential")]
     public class MeilisearchClientTests
     {
+        private MeilisearchClient defaultClient;
+        private string defaultPrimaryKey;
+
+        public MeilisearchClientTests()
+        {
+            this.defaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            this.defaultPrimaryKey = "movieId";
+        }
+
         [Fact]
         public async Task GetVersionWithCustomClient()
         {
@@ -22,8 +31,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetVersionWithDefaultClient()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var meilisearchversion = await client.GetVersion();
+            var meilisearchversion = await this.defaultClient.GetVersion();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
 
@@ -32,8 +40,8 @@ namespace Meilisearch.Tests
         {
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
-            var indexName = "uid" + new Random().Next();
-            Meilisearch.Index index = await ms.CreateIndex(indexName);
+            var indexUid = "uid" + new Random().Next();
+            Meilisearch.Index index = await ms.CreateIndex(indexUid);
             var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
@@ -41,64 +49,88 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicIndexCreation()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid" + new Random().Next();
-            var index = await client.CreateIndex(indexName);
-            index.Uid.Should().Be(indexName);
+            var indexUid = "uid" + new Random().Next();
+            var index = await this.defaultClient.CreateIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().BeNull();
         }
 
         [Fact]
         public async Task IndexCreationWithPrimaryKey()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid2" + new Random().Next();
-            var index = await client.CreateIndex(indexName, "movieId");
-            index.Uid.Should().Be(indexName);
-            index.PrimaryKey.Should().Be("movieId");
+            var indexUid = "uid2" + new Random().Next();
+            var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
         }
 
         [Fact]
         public async Task IndexAlreadyExistsError()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid3" + new Random().Next();
-            var index = await client.CreateIndex(indexName, "movieId");
-            await Assert.ThrowsAsync<Exception>(() => client.CreateIndex(indexName, "movieId"));
+            var indexUid = "uid3" + new Random().Next();
+            var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
+            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey));
         }
 
         [Fact]
         public async Task IndexUIDWrongFormattedError()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            await Assert.ThrowsAsync<Exception>(() => client.CreateIndex("wrong UID"));
+            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex("wrong UID"));
         }
 
         [Fact]
         public async Task GetAllExistingIndexes()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid4" + new Random().Next();
-            var index = await client.CreateIndex(indexName, "movieId");
-            var indexes = await client.GetAllIndexes();
+            var indexUid = "uid4" + new Random().Next();
+            await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var indexes = await this.defaultClient.GetAllIndexes();
             indexes.Count().Should().BeGreaterOrEqualTo(1);
         }
 
         [Fact]
         public async Task GetOneExistingIndexes()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexName = "uid5" + new Random().Next();
-            var index = await client.CreateIndex(indexName, "movieId");
-            var indexes = await client.GetIndex(indexName);
-            index.Uid.Should().Be(indexName);
+            var indexUid = "uid5" + new Random().Next();
+            await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var index = await this.defaultClient.GetIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
         }
 
         [Fact]
         public async Task GetAnNonExistingIndex()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var indexes = await client.GetIndex("somerandomIndex");
+            var indexes = await this.defaultClient.GetIndex("someRandomIndex");
             indexes.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetOrCreateIndexIfIndexDoesNotExist()
+        {
+            var indexUid = "index1";
+            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetOrCreateIndexIfIndexAlreadyExists()
+        {
+            var indexUid = "index2";
+            await this.defaultClient.GetOrCreateIndex(indexUid);
+            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetOrCreateIndexWithPrimaryKey()
+        {
+            var indexUid = "index3";
+            await this.defaultClient.GetOrCreateIndex(indexUid, this.defaultPrimaryKey);
+            var index = await this.defaultClient.GetOrCreateIndex(indexUid, this.defaultPrimaryKey);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
         }
     }
 }
