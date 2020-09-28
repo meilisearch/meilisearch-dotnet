@@ -13,7 +13,7 @@ namespace Meilisearch.Tests
 
         public StatusTests(DocumentFixture fixture)
         {
-            this.index = fixture.DocumentsIndex;
+            this.index = fixture.BasicIndexWithDocuments;
         }
 
         [Fact]
