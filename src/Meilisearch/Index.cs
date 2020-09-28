@@ -8,6 +8,7 @@ namespace Meilisearch
     using System.Net.Http.Json;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.WebUtilities;
+    using System.Text.Json;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
@@ -266,7 +267,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateAllSettings(Settings settings)
         {
-            var responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings);
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 

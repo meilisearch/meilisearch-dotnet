@@ -1,7 +1,7 @@
-﻿namespace Meilisearch.Tests
+﻿using System;
+
+namespace Meilisearch.Tests
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using FluentAssertions;
@@ -17,7 +17,8 @@
         public SettingsTests()
         {
             this.client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            this.defaultRankingRules = new string[] {
+            this.defaultRankingRules = new string[]
+            {
                 "typo",
                 "words",
                 "proximity",
@@ -48,15 +49,16 @@
         [Fact]
         public async Task UpdateAllSettings()
         {
-            var indexUID = "UpdateSettingsTests";
+            var indexUID = "UpdateSettingsTests1";
             var index = await this.client.GetOrCreateIndex(indexUID);
-            Settings newSettings = new Settings {
+            Settings newSettings = new Settings
+            {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
             };
-            Meilisearch.UpdateStatus update = await index.UpdateAllSettings(newSettings);
-            Assert.NotNull(update.UpdateId);
+            UpdateStatus update = await index.UpdateAllSettings(newSettings);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdate(update.UpdateId);
 
             Settings response = await index.GetAllSettings();
@@ -64,41 +66,51 @@
             response.RankingRules.Should().Equals(this.defaultRankingRules);
             response.DistinctAttribute.Should().Equals("name");
             Assert.Equal("name", response.DistinctAttribute);
-            Assert.Equal(response.SearchableAttributes, new string[] { "name", "genre" });
-            Assert.Equal(response.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
-            Assert.Equal(response.StopWords, new string[] { "of", "the" });
+            Assert.Equal(new string[] { "name", "genre" }, response.SearchableAttributes);
+            Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
+            Assert.Equal(new string[] { "of", "the" }, response.StopWords);
             response.Synonyms.Should().BeEmpty();
             response.AttributesForFaceting.Should().BeEmpty();
 
             await index.Delete();
         }
 
-        // [Fact]
-        // public async Task UpdateAllSettingsWithoutOverwritting()
-        // {
-        //     var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-        //     var indexUID = "IndexForSettingsTests" + new Random().Next();
-        //     var index = await client.CreateIndex(indexUID);
-        //     Settings newSettings = new Settings {
-        //         SearchableAttributes = new string[] { "name", "genre" },
-        //         DistinctAttribute = "name",
-        //     };
-        //     Meilisearch.UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
-        //     Console.WriteLine(update.UpdateId);
-        //     Assert.NotNull(update.UpdateId);
-        //     await this.index.WaitForPendingUpdate(update.UpdateId);
+        [Fact]
+        public async Task UpdateAllSettingsWithoutOverwritting()
+        {
+            var indexUID = "UpdateSettingsTests2";
+            var index = await this.client.GetOrCreateIndex(indexUID);
 
-        //     Settings response = await this.index.GetAllSettings();
-        //     response.Should().NotBeNull();
-        //     response.RankingRules.Equals(this.defaultRankingRules);
-        //     response.DistinctAttribute.Equals("name");
-        //     response.SearchableAttributes.Equals(new string[] { "name", "genre" });
-        //     response.DisplayedAttributes.Equals(this.defaultSearchableAndDisplayedAttributes);
-        //     response.StopWords.Equals(new string[] { "of", "the" });
-        //     response.Synonyms.Should().BeEmpty();
-        //     response.AttributesForFaceting.Should().BeEmpty();
-        //     await index.Delete();
-        // }
+            // First update
+            Settings newSettings = new Settings
+            {
+                SearchableAttributes = new string[] { "name", "genre" },
+                StopWords = new string[] { "of", "the" },
+                DistinctAttribute = "name",
+            };
+            UpdateStatus update = await index.UpdateAllSettings(newSettings);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Second update: this one should not overwritten StopWords and DistinctAttribute.
+            newSettings = new Settings { SearchableAttributes = new string[] { "name" } };
+            update = await index.UpdateAllSettings(newSettings);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            Settings response = await index.GetAllSettings();
+            response.Should().NotBeNull();
+            response.RankingRules.Should().Equals(this.defaultRankingRules);
+            response.DistinctAttribute.Should().Equals("name");
+            Assert.Equal("name", response.DistinctAttribute);
+            Assert.Equal(new string[] { "name" }, response.SearchableAttributes);
+            Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
+            Assert.Equal(new string[] { "of", "the" }, response.StopWords);
+            response.Synonyms.Should().BeEmpty();
+            response.AttributesForFaceting.Should().BeEmpty();
+
+            await index.Delete();
+        }
 
         // [Fact]
         // public async Task UpdateSettings()
@@ -115,6 +127,5 @@
         // public async Task ResetAllSettings()
         // {
         // }
-
     }
 }
