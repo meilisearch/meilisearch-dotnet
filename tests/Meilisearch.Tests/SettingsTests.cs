@@ -1,4 +1,4 @@
-﻿namespace Meilisearch.Tests
+namespace Meilisearch.Tests
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
