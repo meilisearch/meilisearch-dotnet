@@ -73,7 +73,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task IndexUIDWrongFormattedError()
+        public async Task IndexNameWrongFormattedError()
         {
             await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex("wrong UID"));
         }

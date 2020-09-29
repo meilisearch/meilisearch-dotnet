@@ -9,12 +9,12 @@ namespace Meilisearch.Tests
     public class DocumentTests : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
-        private readonly Index indextoDelete;
+        private readonly Index indexForDocumentsDeletion;
 
         public DocumentTests(DocumentFixture fixture)
         {
-            this.index = fixture.DocumentsIndex;
-            this.indextoDelete = fixture.DocumentDeleteIndex;
+            this.index = fixture.BasicIndexWithDocuments;
+            this.indexForDocumentsDeletion = fixture.IndexForDocumentsDeletion;
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteAllExistingDocuments()
         {
-            var updateStatus = await this.indextoDelete.DeleteAllDocuments();
+            var updateStatus = await this.indexForDocumentsDeletion.DeleteAllDocuments();
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
         }
     }
