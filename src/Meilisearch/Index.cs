@@ -6,6 +6,7 @@ namespace Meilisearch
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.WebUtilities;
 
@@ -248,6 +249,38 @@ namespace Meilisearch
             }
 
             throw new Exception("The task " + updateId.ToString() + " timed out.");
+        }
+
+        /// <summary>
+        /// Gets all the settings of an index.
+        /// </summary>
+        /// <returns>Returns all the settings.</returns>
+        public async Task<Settings> GetAllSettings()
+        {
+            return await this.client.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings");
+        }
+
+        /// <summary>
+        /// Updates all the settings of an index.
+        /// The settings that are not passed in parameter are not overwritten.
+        /// </summary>
+        /// <param name="settings">Settings object.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateAllSettings(Settings settings)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets all the settings to their default values.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetAllSettings()
+        {
+            var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/settings");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
         /// <summary>

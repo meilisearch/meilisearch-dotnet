@@ -12,7 +12,7 @@ namespace Meilisearch.Tests
 
         public SearchTests(DocumentFixture fixture)
         {
-            this.index = fixture.DocumentsIndex;
+            this.index = fixture.BasicIndexWithDocuments;
         }
 
         [Fact]
