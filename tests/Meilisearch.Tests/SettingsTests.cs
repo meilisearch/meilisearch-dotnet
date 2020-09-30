@@ -9,12 +9,14 @@ namespace Meilisearch.Tests
     public class SettingsTests
     {
         private MeilisearchClient client;
+        private Index index;
         private IEnumerable<string> defaultRankingRules;
         private IEnumerable<string> defaultSearchableAndDisplayedAttributes;
 
-        public SettingsTests()
+        public SettingsTests(IndexFixture fixture)
         {
-            this.client = new MeilisearchClient("http://localhost:7700", "masterKey");
+            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
+            this.client = fixture.DefaultClient;
             this.defaultRankingRules = new string[]
             {
                 "typo",
@@ -25,14 +27,13 @@ namespace Meilisearch.Tests
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
+            this.index = fixture.SetUpBasicIndex("BasicIndex-SettingsTests").Result;
         }
 
         [Fact]
         public async Task GetAllSettings()
         {
-            var indexUID = "GetSettingsTests";
-            var index = await this.client.GetOrCreateIndex(indexUID);
-            Settings settings = await index.GetAllSettings();
+            Settings settings = await this.index.GetAllSettings();
             settings.Should().NotBeNull();
             Assert.Equal(settings.RankingRules, this.defaultRankingRules);
             settings.DistinctAttribute.Should().BeNull();
@@ -41,25 +42,22 @@ namespace Meilisearch.Tests
             settings.StopWords.Should().BeEmpty();
             settings.Synonyms.Should().BeEmpty();
             settings.AttributesForFaceting.Should().BeEmpty();
-            await index.Delete();
         }
 
         [Fact]
         public async Task UpdateAllSettings()
         {
-            var indexUID = "UpdateSettingsTests1";
-            var index = await this.client.GetOrCreateIndex(indexUID);
             Settings newSettings = new Settings
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
             };
-            UpdateStatus update = await index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(update.UpdateId);
+            await this.index.WaitForPendingUpdate(update.UpdateId);
 
-            Settings response = await index.GetAllSettings();
+            Settings response = await this.index.GetAllSettings();
             response.Should().NotBeNull();
             response.RankingRules.Should().Equals(this.defaultRankingRules);
             response.DistinctAttribute.Should().Equals("name");
@@ -68,52 +66,47 @@ namespace Meilisearch.Tests
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
             response.Synonyms.Should().BeEmpty();
             response.AttributesForFaceting.Should().BeEmpty();
-
-            await index.Delete();
         }
 
         [Fact]
         public async Task UpdateAllSettingsWithoutOverwritting()
         {
-            var indexUID = "UpdateSettingsTests2";
-            var index = await this.client.GetOrCreateIndex(indexUID);
-
             // First update
+            var synonyms = new Dictionary<string, IEnumerable<string>>();
+            synonyms.Add("HP", new[] { "Harry Potter" });
+            synonyms.Add("Harry Potter", new[] { "HP" });
             Settings newSettings = new Settings
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
+                Synonyms = synonyms,
             };
-            UpdateStatus update = await index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(update.UpdateId);
+            await this.index.WaitForPendingUpdate(update.UpdateId);
 
             // Second update: this one should not overwritten StopWords and DistinctAttribute.
             newSettings = new Settings { SearchableAttributes = new string[] { "name" } };
-            update = await index.UpdateAllSettings(newSettings);
+            update = await this.index.UpdateAllSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(update.UpdateId);
+            await this.index.WaitForPendingUpdate(update.UpdateId);
 
-            Settings response = await index.GetAllSettings();
+            Settings response = await this.index.GetAllSettings();
             response.Should().NotBeNull();
             response.RankingRules.Should().Equals(this.defaultRankingRules);
             response.DistinctAttribute.Should().Equals("name");
             Assert.Equal(new string[] { "name" }, response.SearchableAttributes);
             Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
-            response.Synonyms.Should().BeEmpty();
+            Assert.Equal(response.Synonyms["HP"], new[] { "Harry Potter" });
+            Assert.Equal(response.Synonyms["Harry Potter"], new[] { "HP" });
             response.AttributesForFaceting.Should().BeEmpty();
-
-            await index.Delete();
         }
 
         [Fact]
         public async Task ResetAllSettings()
         {
-            var indexUID = "ResetSettingsTests1";
-            var index = await this.client.GetOrCreateIndex(indexUID);
-
             // Update all settings
             Settings newSettings = new Settings
             {
@@ -124,17 +117,17 @@ namespace Meilisearch.Tests
                 RankingRules = new string[] { "typo" },
                 AttributesForFaceting = new string[] { "genre" },
             };
-            UpdateStatus update = await index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(update.UpdateId);
-            Settings response = await index.GetAllSettings();
+            await this.index.WaitForPendingUpdate(update.UpdateId);
+            Settings response = await this.index.GetAllSettings();
             Assert.Equal(new string[] { "typo" }, response.RankingRules);
 
             // Reset all settings
-            update = await index.ResetAllSettings();
+            update = await this.index.ResetAllSettings();
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(update.UpdateId);
-            response = await index.GetAllSettings();
+            await this.index.WaitForPendingUpdate(update.UpdateId);
+            response = await this.index.GetAllSettings();
             response.Should().NotBeNull();
             Assert.Equal(response.RankingRules, this.defaultRankingRules);
             response.DistinctAttribute.Should().BeNull();
@@ -143,8 +136,6 @@ namespace Meilisearch.Tests
             response.StopWords.Should().BeEmpty();
             response.Synonyms.Should().BeEmpty();
             response.AttributesForFaceting.Should().BeEmpty();
-
-            await index.Delete();
         }
     }
 }

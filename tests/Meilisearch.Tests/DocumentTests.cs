@@ -6,106 +6,184 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class DocumentTests : IClassFixture<DocumentFixture>
+    public class DocumentTests
     {
-        private readonly Index index;
-        private readonly Index indexForDocumentsDeletion;
+        private readonly MeilisearchClient client;
+        private readonly IndexFixture fixture;
 
-        public DocumentTests(DocumentFixture fixture)
+        public DocumentTests(IndexFixture fixture)
         {
-            this.index = fixture.BasicIndexWithDocuments;
-            this.indexForDocumentsDeletion = fixture.IndexForDocumentsDeletion;
+            fixture.DeleteAllIndexes().Wait(); // Context test cleaned for each [Fact]
+            this.fixture = fixture;
+            this.client = fixture.DefaultClient;
         }
 
         [Fact]
         public async Task BasicDocumentsAddition()
         {
-            var updateStatus = await this.index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            var indexUID = "BasicDocumentsAdditionTest";
+            Index index = await this.client.GetOrCreateIndex(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been added
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal("1", docs.First().Id);
+            Assert.Equal("Batman", docs.First().Name);
+            docs.First().Genre.Should().BeNull();
         }
 
         [Fact]
         public async Task BasicDocumentsUpdate()
         {
-            var updateStatus = await this.index.UpdateDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(1);
+            var indexUID = "BasicDocumentsUpdateTest";
+            Index index = await this.client.GetOrCreateIndex(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[]
+            {
+                new Movie { Id = "1", Name = "Batman", Genre = "Action" },
+                new Movie { Id = "2", Name = "Superman" },
+            });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Update the documents
+            update = await index.UpdateDocuments(new[] { new Movie { Id = "1", Name = "Ironman" } });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been updated and added
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal("1", docs.First().Id);
+            Assert.Equal("Ironman", docs.First().Name);
+
+            // Assert.Equal("Action", docs.First().Genre); // Commented until the issue #67 is fixed (https://github.com/meilisearch/meilisearch-dotnet/issues/67)
+            Assert.Equal("2", docs.ElementAt(1).Id);
+            Assert.Equal("Superman", docs.ElementAt(1).Name);
+            docs.ElementAt(1).Genre.Should().BeNull();
         }
 
         [Fact]
         public async Task GetOneExistingDocumentWithStringId()
         {
-            var documents = await this.index.GetDocument<Movie>("10");
+            Index index = await this.fixture.SetUpBasicIndex("GetOneExistingDocumentWithStringIdTest");
+            var documents = await index.GetDocument<Movie>("10");
             documents.Id.Should().Be("10");
         }
 
         [Fact]
         public async Task GetOneExistingDocumentWithIntegerId()
         {
-            var documents = await this.index.GetDocument<Movie>(10);
-            documents.Id.Should().Be("10");
+            Index index = await this.fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
+            var documents = await index.GetDocument<MovieWithIntId>(10);
+            documents.Id.Should().Be(10);
         }
 
         [Fact]
-        public async Task GetMultipleExistingDocumentWithLimit()
+        public async Task GetMultipleExistingDocuments()
         {
-            var documents = await this.index.GetDocuments<Movie>(new DocumentQuery { Limit = 1 });
-            documents.Count().Should().Be(1);
+            Index index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentTest");
+            var documents = await index.GetDocuments<Movie>();
+            Assert.Equal(7, documents.Count());
+            documents.First().Id.Should().Be("10");
+            documents.Last().Id.Should().Be("16");
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingDocumentsWithLimit()
+        {
+            Index index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
+            var documents = await index.GetDocuments<Movie>(new DocumentQuery() { Limit = 2 });
+            Assert.Equal(2, documents.Count());
+            documents.First().Id.Should().Be("10");
+            documents.Last().Id.Should().Be("11");
         }
 
         [Fact]
         public async Task DeleteOneExistingDocumentWithStringId()
         {
-            var updateStatus = await this.index.DeleteOneDocument("11");
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            Index index = await this.fixture.SetUpBasicIndex("DeleteOneExistingDocumentWithStringIdTest");
+
+            // Delete the document
+            UpdateStatus update = await index.DeleteOneDocument("11");
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the document has been deleted
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal(6, docs.Count());
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("11"));
         }
 
         [Fact]
-        public async Task DeleteOneExistingDocumentWithIntegerId()
+        public async Task DeleteOneExistingDocumentWithIntId()
         {
-            var updateStatus = await this.index.DeleteOneDocument(11);
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteOneExistingDocumentWithIntIdTest");
+
+            // Delete the document
+            UpdateStatus update = await index.DeleteOneDocument(11);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the document has been deleted
+            var docs = await index.GetDocuments<MovieWithIntId>();
+            Assert.Equal(6, docs.Count());
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(11));
         }
 
         [Fact]
         public async Task DeleteMultipleDocumentsWithStringId()
         {
-            var updateStatus = await this.index.DeleteDocuments(new[] { "12", "13", "14" });
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithStringIdTest");
+
+            // Delete the documents
+            UpdateStatus update = await index.DeleteDocuments(new[] { "12", "13", "14" });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been deleted
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal(4, docs.Count());
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("12"));
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("13"));
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("14"));
         }
 
         [Fact]
         public async Task DeleteMultipleDocumentsWithIntegerId()
         {
-            var updateStatus = await this.index.DeleteDocuments(new[] { 12, 13, 14 });
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteMultipleDocumentsWithIntegerIdTest");
+
+            // Delete the documents
+            UpdateStatus update = await index.DeleteDocuments(new[] { 12, 13, 14 });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been deleted
+            var docs = await index.GetDocuments<MovieWithIntId>();
+            Assert.Equal(4, docs.Count());
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(12));
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(13));
+            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(14));
         }
 
         [Fact]
         public async Task DeleteAllExistingDocuments()
         {
-            var updateStatus = await this.indexForDocumentsDeletion.DeleteAllDocuments();
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithIntegerIdTest");
+
+            // Delete all the documents
+            UpdateStatus update = await index.DeleteAllDocuments();
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check all the documents have been deleted
+            var docs = await index.GetDocuments<Movie>();
+            docs.Should().BeEmpty();
         }
-    }
-
-    public class Movie
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Genre { get; set; }
-    }
-
-    public class FormattedMovie
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Genre { get; set; }
-
-#pragma warning disable SA1300
-        public Movie _Formatted { get; set; }
     }
 }
