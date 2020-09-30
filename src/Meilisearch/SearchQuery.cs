@@ -55,7 +55,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the facets distribution for the query.
         /// </summary>
-        public IEnumerable<dynamic> FacetsDistribution { get; set; }
+        public IEnumerable<string> FacetsDistribution { get; set; }
 
         /// <summary>
         /// Gets or sets matches. It defines whether an object that contains information about the matches should be returned or not.
