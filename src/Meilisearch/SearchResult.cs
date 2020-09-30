@@ -31,7 +31,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the facets distribution.
         /// </summary>
-        public Dictionary<string, IEnumerable<string>> FacetsDistribution { get; set; }
+        public Dictionary<string, Dictionary<string, int>> FacetsDistribution { get; set; }
 
         /// <summary>
         /// Gets or sets the ExhaustiveFacetsCount boolean.
