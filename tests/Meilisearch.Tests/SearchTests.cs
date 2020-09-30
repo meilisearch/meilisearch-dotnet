@@ -1,3 +1,4 @@
+using System;
 namespace Meilisearch.Tests
 {
     using System.Linq;
@@ -9,10 +10,12 @@ namespace Meilisearch.Tests
     public class SearchTests : IClassFixture<DocumentFixture>
     {
         private readonly Index index;
+        private readonly Index indexForFaceting;
 
         public SearchTests(DocumentFixture fixture)
         {
             this.index = fixture.BasicIndexWithDocuments;
+            this.indexForFaceting = fixture.IndexForFaceting;
         }
 
         [Fact]
@@ -107,6 +110,23 @@ namespace Meilisearch.Tests
             movies.Hits.First()._Formatted.Name.Should().NotBeEmpty();
             movies.Hits.First()._Formatted.Id.Should().BeNull();
             movies.Hits.First()._Formatted.Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithFacetFilters()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    FacetFilters = new [] { new string[] { "genre:SF" }},
+                });
+            movies.Hits.Should().NotBeEmpty();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
     }
 }
