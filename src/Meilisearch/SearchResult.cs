@@ -9,23 +9,33 @@ namespace Meilisearch
     public class SearchResult<T>
     {
         /// <summary>
-        /// Gets or sets total count of search results.
+        /// Gets or sets the total count of search results.
         /// </summary>
         public IEnumerable<T> Hits { get; set; }
 
         /// <summary>
-        /// Gets or sets offset of the initial search.
+        /// Gets or sets the offset of the initial search.
         /// </summary>
         public int Offset { get; set; }
 
         /// <summary>
-        /// Gets or sets limit of the initial search.
+        /// Gets or sets the limit of the initial search.
         /// </summary>
         public int Limit { get; set; }
 
         /// <summary>
-        /// Gets or sets query sent.
+        /// Gets or sets the query sent.
         /// </summary>
         public string Query { get; set; }
+
+        /// <summary>
+        /// Gets or sets the facets distribution.
+        /// </summary>
+        public Dictionary<string, IEnumerable<string>> FacetsDistribution { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExhaustiveFacetsCount boolean.
+        /// </summary>
+        public bool ExhaustiveFacetsCount { get; set; }
     }
 }
