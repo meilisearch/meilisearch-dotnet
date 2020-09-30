@@ -18,7 +18,7 @@ namespace Meilisearch.Tests
 
         public Meilisearch.Index IndexForFaceting { get; private set; }
 
-        public void SetUp(MeilisearchClient client, string indexUid)
+        public async void SetUp(MeilisearchClient client, string indexUid)
         {
             this.BasicIndexWithDocuments = client.GetOrCreateIndex(indexUid).Result;
             var movies = new[]
@@ -31,7 +31,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
             };
-            var update = this.BasicIndexWithDocuments.AddDocuments(movies).Result;
+            await this.BasicIndexWithDocuments.AddDocuments(movies);
         }
 
         public void Dispose()
