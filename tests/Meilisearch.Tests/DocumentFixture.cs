@@ -34,16 +34,6 @@ namespace Meilisearch.Tests
             await this.BasicIndexWithDocuments.AddDocuments(movies);
         }
 
-        public void Dispose()
-        {
-        }
-
-        private async void SetUpForDocumentsDeletion(MeilisearchClient client, string indexUid)
-        {
-            this.IndexForDocumentsDeletion = client.GetOrCreateIndex(indexUid).Result;
-            var movies = new[] { new Movie { Id = "10", Name = "SuperMan" } };
-            await this.IndexForDocumentsDeletion.AddDocuments(movies);
-        }
         public async void SetUpForFaceting(MeilisearchClient client, string indexUid)
         {
             this.IndexForFaceting = client.GetOrCreateIndex(indexUid).Result;
@@ -64,6 +54,17 @@ namespace Meilisearch.Tests
                 AttributesForFaceting = new string[] { "genre" },
             };
             await this.IndexForFaceting.UpdateAllSettings(settings);
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private async void SetUpForDocumentsDeletion(MeilisearchClient client, string indexUid)
+        {
+            this.IndexForDocumentsDeletion = client.GetOrCreateIndex(indexUid).Result;
+            var movies = new[] { new Movie { Id = "10", Name = "SuperMan" } };
+            await this.IndexForDocumentsDeletion.AddDocuments(movies);
         }
     }
 }

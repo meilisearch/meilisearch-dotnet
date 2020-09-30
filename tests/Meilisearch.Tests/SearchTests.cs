@@ -118,7 +118,7 @@ namespace Meilisearch.Tests
                 null,
                 new SearchQuery
                 {
-                    FacetFilters = new [] { new string[] { "genre:SF" }},
+                    FacetFilters = new[] { new string[] { "genre:SF" } },
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();

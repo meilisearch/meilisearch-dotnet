@@ -34,7 +34,7 @@ namespace Meilisearch
         public Dictionary<string, Dictionary<string, int>> FacetsDistribution { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExhaustiveFacetsCount boolean.
+        /// Gets or sets a value indicating whether the facets distribution is exhaustive or not.
         /// </summary>
         public bool ExhaustiveFacetsCount { get; set; }
     }
