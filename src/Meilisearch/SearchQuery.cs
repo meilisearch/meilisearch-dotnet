@@ -53,6 +53,11 @@ namespace Meilisearch
         public IEnumerable<dynamic> FacetFilters { get; set; }
 
         /// <summary>
+        /// Gets or sets the facets distribution for the query.
+        /// </summary>
+        public IEnumerable<string> FacetsDistribution { get; set; }
+
+        /// <summary>
         /// Gets or sets matches. It defines whether an object that contains information about the matches should be returned or not.
         /// </summary>
         public bool? Matches { get; set; }

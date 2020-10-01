@@ -6,76 +6,65 @@ namespace Meilisearch.Tests
     {
         public DocumentFixture()
         {
-            this.SetUp();
-            this.SetUpForDocumentsDeletion();
+            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
+            this.SetUp(client, "Movies");
+            this.SetUpForDocumentsDeletion(client, "MoviesToDelete");
+            this.SetUpForFaceting(client, "MoviesForFaceting");
         }
 
         public Meilisearch.Index BasicIndexWithDocuments { get; private set; }
 
         public Meilisearch.Index IndexForDocumentsDeletion { get; private set; }
 
-        public void SetUp()
+        public Meilisearch.Index IndexForFaceting { get; private set; }
+
+        public async void SetUp(MeilisearchClient client, string indexUid)
         {
-            try
+            this.BasicIndexWithDocuments = client.GetOrCreateIndex(indexUid).Result;
+            var movies = new[]
             {
-                var indexUid = "Movies";
-                var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-                var index = client.GetIndex(indexUid).Result;
+                new Movie { Id = "10", Name = "Gladiator" },
+                new Movie { Id = "11", Name = "Interstellar" },
+                new Movie { Id = "12", Name = "Star Wars", Genre = "SF" },
+                new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
+                new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
+                new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
+                new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
+            };
+            await this.BasicIndexWithDocuments.AddDocuments(movies);
+        }
 
-                if (index == null)
-                {
-                    this.BasicIndexWithDocuments = client.CreateIndex(indexUid).Result;
-                }
-                else
-                {
-                    this.BasicIndexWithDocuments = index;
-                }
-
-                var movies = new[]
-                {
-                    new Movie { Id = "10", Name = "Gladiator" },
-                    new Movie { Id = "11", Name = "Interstellar" },
-                    new Movie { Id = "12", Name = "Start Wars", Genre = "SF" },
-                    new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
-                    new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
-                    new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
-                    new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
-                };
-                var updateStatus = this.BasicIndexWithDocuments.AddDocuments(movies).Result;
-            }
-            catch (Exception e)
+        public async void SetUpForFaceting(MeilisearchClient client, string indexUid)
+        {
+            this.IndexForFaceting = client.GetOrCreateIndex(indexUid).Result;
+            var movies = new[]
             {
-                Console.WriteLine(e);
-            }
+                new Movie { Id = "10", Name = "Gladiator" },
+                new Movie { Id = "11", Name = "Interstellar" },
+                new Movie { Id = "12", Name = "Star Wars", Genre = "SF" },
+                new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
+                new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
+                new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
+                new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
+                new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
+            };
+            await this.IndexForFaceting.AddDocuments(movies);
+            Settings settings = new Settings
+            {
+                AttributesForFaceting = new string[] { "genre" },
+            };
+            await this.IndexForFaceting.UpdateAllSettings(settings);
         }
 
         public void Dispose()
         {
         }
 
-        private void SetUpForDocumentsDeletion()
+        private async void SetUpForDocumentsDeletion(MeilisearchClient client, string indexUid)
         {
-            try
-            {
-                var indexUid = "MoviesToDelete";
-                var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-                var index = client.GetIndex(indexUid).Result;
-                if (index == null)
-                {
-                    this.IndexForDocumentsDeletion = client.CreateIndex(indexUid).Result;
-                }
-                else
-                {
-                    this.IndexForDocumentsDeletion = index;
-                }
-
-                var movies = new[] { new Movie { Id = "10", Name = "SuperMan" } };
-                var updateStatus = this.IndexForDocumentsDeletion.AddDocuments(movies).Result;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            this.IndexForDocumentsDeletion = client.GetOrCreateIndex(indexUid).Result;
+            var movies = new[] { new Movie { Id = "10", Name = "SuperMan" } };
+            await this.IndexForDocumentsDeletion.AddDocuments(movies);
         }
     }
 }
