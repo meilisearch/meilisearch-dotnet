@@ -132,5 +132,12 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
         }
+
+        [Fact]
+        public async Task GetStats()
+        {
+            var stats = await this.defaultClient.GetStats();
+            stats.Should().NotBeNull();
+        }
     }
 }

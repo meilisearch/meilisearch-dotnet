@@ -129,5 +129,14 @@ namespace Meilisearch
                 }
             }
         }
+
+        /// <summary>
+        /// Gets stats of all indexes.
+        /// </summary>
+        /// <returns>Returns stats of all indexes.</returns>
+        public Task<Stats> GetStats()
+        {
+            return this.client.GetFromJsonAsync<Stats>("/stats");
+        }
     }
 }
