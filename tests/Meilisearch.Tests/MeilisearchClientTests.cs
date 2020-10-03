@@ -143,12 +143,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Health()
         {
-            bool health;
-            await this.defaultClient.UpdateHealth(false);
-            health = await this.defaultClient.GetHealth();
-            health.Should().BeFalse();
-            await this.defaultClient.UpdateHealth(true);
-            health = await this.defaultClient.GetHealth();
+            var health = await this.defaultClient.GetHealth();
             health.Should().BeTrue();
         }
     }
