@@ -8,14 +8,30 @@ namespace Meilisearch.Tests
     [Collection("Sequential")]
     public class IndexTests
     {
+        private MeilisearchClient defaultClient;
+        private Random random;
+
+        public IndexTests()
+        {
+            this.defaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            this.random = new Random();
+        }
+
         [Fact]
         public async Task UpdatePrimaryKey()
         {
-            var client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var index = await client.CreateIndex("Indextest" + new Random().Next());
+            var index = await defaultClient.CreateIndex("Indextest" + random.Next());
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await index.ChangePrimaryKey(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
+        }
+
+        [Fact]
+        public async Task GetStats()
+        {
+            var index = await defaultClient.GetOrCreateIndex("Statstest" + random.Next());
+            var stats = await index.GetStats();
+            stats.Should().NotBeNull();
         }
     }
 }
