@@ -13,7 +13,7 @@ namespace Meilisearch
         public int NumberOfDocuments { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not the index is currently indexing.
+        /// Gets or sets a value indicating whether the index is currently indexing.
         /// </summary>
         public bool IsIndexing { get; set; }
 

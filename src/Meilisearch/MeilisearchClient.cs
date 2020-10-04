@@ -159,7 +159,7 @@ namespace Meilisearch
         /// <summary>
         /// Updates server health status.
         /// </summary>
-        /// <param name="value">New health value</param>
+        /// <param name="value">New health value.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         public async Task UpdateHealth(bool value)
         {

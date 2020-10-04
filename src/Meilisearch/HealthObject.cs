@@ -6,7 +6,7 @@ namespace Meilisearch
     public class HealthObject
     {
         /// <summary>
-        /// Gets or sets whether or not the server is healthy.
+        /// Gets or sets a value indicating whether the server is healthy.
         /// </summary>
         public bool Health { get; set; }
     }
