@@ -20,7 +20,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdatePrimaryKey()
         {
-            var index = await this.defaultClient.CreateIndex("Indextest" + random.Next());
+            var index = await this.defaultClient.CreateIndex("Indextest" + this.random.Next());
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await index.ChangePrimaryKey(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
@@ -29,7 +29,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetStats()
         {
-            var index = await this.defaultClient.GetOrCreateIndex("Statstest" + random.Next());
+            var index = await this.defaultClient.GetOrCreateIndex("Statstest" + this.random.Next());
             var stats = await index.GetStats();
             stats.Should().NotBeNull();
         }
