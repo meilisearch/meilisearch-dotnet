@@ -139,12 +139,5 @@ namespace Meilisearch.Tests
             var stats = await this.defaultClient.GetStats();
             stats.Should().NotBeNull();
         }
-
-        [Fact]
-        public async Task Health()
-        {
-            var health = await this.defaultClient.GetHealth();
-            health.Should().BeTrue();
-        }
     }
 }
