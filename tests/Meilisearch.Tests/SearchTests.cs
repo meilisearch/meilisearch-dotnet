@@ -39,7 +39,9 @@ namespace Meilisearch.Tests
         public async Task BasicSearchWithEmptyQuery()
         {
             var movies = await this.index.Search<Movie>(string.Empty);
-            movies.Hits.Should().BeEmpty();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Id.Should().NotBeNull();
+            movies.Hits.First().Name.Should().NotBeNull();
         }
 
         [Fact]
@@ -87,7 +89,11 @@ namespace Meilisearch.Tests
             var movies = await this.index.Search<FormattedMovie>(
                 string.Empty,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
-            movies.Hits.Should().BeEmpty();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Id.Should().NotBeNull();
+            movies.Hits.First().Name.Should().NotBeNull();
+            movies.Hits.First()._Formatted.Id.Should().NotBeNull();
+            movies.Hits.First()._Formatted.Name.Should().NotBeNull();
         }
 
         [Fact]
