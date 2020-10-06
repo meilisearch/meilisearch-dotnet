@@ -284,6 +284,15 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Get stats.
+        /// </summary>
+        /// <returns>Return index stats.</returns>
+        public async Task<IndexStats> GetStats()
+        {
+            return await this.client.GetFromJsonAsync<IndexStats>($"/indexes/{this.Uid}/stats");
+        }
+
+        /// <summary>
         /// Initializes the Index with HTTP client. Only for internal usage.
         /// </summary>
         /// <param name="client">HTTP client from the base client.</param>

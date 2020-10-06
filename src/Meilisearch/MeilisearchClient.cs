@@ -129,5 +129,42 @@ namespace Meilisearch
                 }
             }
         }
+
+        /// <summary>
+        /// Gets stats of all indexes.
+        /// </summary>
+        /// <returns>Returns stats of all indexes.</returns>
+        public Task<Stats> GetStats()
+        {
+            return this.client.GetFromJsonAsync<Stats>("/stats");
+        }
+
+        /// <summary>
+        /// Gets health state of the server.
+        /// </summary>
+        /// <returns>Returns whether server is healthy or not.</returns>
+        public async Task<bool> GetHealth()
+        {
+            try
+            {
+                var result = await this.client.GetFromJsonAsync<HealthObject>("/health");
+                return result.Health;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Updates server health status.
+        /// </summary>
+        /// <param name="value">New health value.</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        public async Task UpdateHealth(bool value)
+        {
+            var response = await this.client.PutAsJsonAsync("/health", new HealthObject { Health = value });
+            response.EnsureSuccessStatusCode();
+        }
     }
 }
