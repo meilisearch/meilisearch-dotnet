@@ -23,9 +23,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
     - name: Format
       run: |
         dotnet tool install -g dotnet-format
         dotnet format --check Meilisearch.sln
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
