@@ -255,7 +255,7 @@ namespace Meilisearch
         /// Gets all the settings of an index.
         /// </summary>
         /// <returns>Returns all the settings.</returns>
-        public async Task<Settings> GetAllSettings()
+        public async Task<Settings> GetSettings()
         {
             return await this.client.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings");
         }
@@ -266,7 +266,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="settings">Settings object.</param>
         /// <returns>Returns the updateID of the asynchronous task.</returns>
-        public async Task<UpdateStatus> UpdateAllSettings(Settings settings)
+        public async Task<UpdateStatus> UpdateSettings(Settings settings)
         {
             JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options);
@@ -277,7 +277,7 @@ namespace Meilisearch
         /// Resets all the settings to their default values.
         /// </summary>
         /// <returns>Returns the updateID of the asynchronous task.</returns>
-        public async Task<UpdateStatus> ResetAllSettings()
+        public async Task<UpdateStatus> ResetSettings()
         {
             var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/settings");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();

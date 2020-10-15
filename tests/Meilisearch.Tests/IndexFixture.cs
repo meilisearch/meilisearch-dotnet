@@ -98,7 +98,7 @@ namespace Meilisearch.Tests
             {
                 AttributesForFaceting = new string[] { "genre" },
             };
-            update = await index.UpdateAllSettings(settings);
+            update = await index.UpdateSettings(settings);
 
             // Check the settings have been added
             finalUpdateStatus = await index.WaitForPendingUpdate(update.UpdateId);

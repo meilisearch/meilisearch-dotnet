@@ -31,9 +31,9 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task GetAllSettings()
+        public async Task GetSettings()
         {
-            Settings settings = await this.index.GetAllSettings();
+            Settings settings = await this.index.GetSettings();
             settings.Should().NotBeNull();
             Assert.Equal(settings.RankingRules, this.defaultRankingRules);
             settings.DistinctAttribute.Should().BeNull();
@@ -45,7 +45,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task UpdateAllSettings()
+        public async Task UpdateSettings()
         {
             Settings newSettings = new Settings
             {
@@ -53,11 +53,11 @@ namespace Meilisearch.Tests
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
             };
-            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.index.WaitForPendingUpdate(update.UpdateId);
 
-            Settings response = await this.index.GetAllSettings();
+            Settings response = await this.index.GetSettings();
             response.Should().NotBeNull();
             response.RankingRules.Should().Equals(this.defaultRankingRules);
             response.DistinctAttribute.Should().Equals("name");
@@ -69,7 +69,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task UpdateAllSettingsWithoutOverwritting()
+        public async Task UpdateSettingsWithoutOverwritting()
         {
             // First update
             var synonyms = new Dictionary<string, IEnumerable<string>>();
@@ -82,17 +82,17 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 Synonyms = synonyms,
             };
-            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.index.WaitForPendingUpdate(update.UpdateId);
 
             // Second update: this one should not overwritten StopWords and DistinctAttribute.
             newSettings = new Settings { SearchableAttributes = new string[] { "name" } };
-            update = await this.index.UpdateAllSettings(newSettings);
+            update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.index.WaitForPendingUpdate(update.UpdateId);
 
-            Settings response = await this.index.GetAllSettings();
+            Settings response = await this.index.GetSettings();
             response.Should().NotBeNull();
             response.RankingRules.Should().Equals(this.defaultRankingRules);
             response.DistinctAttribute.Should().Equals("name");
@@ -105,7 +105,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task ResetAllSettings()
+        public async Task ResetSettings()
         {
             // Update all settings
             Settings newSettings = new Settings
@@ -117,17 +117,17 @@ namespace Meilisearch.Tests
                 RankingRules = new string[] { "typo" },
                 AttributesForFaceting = new string[] { "genre" },
             };
-            UpdateStatus update = await this.index.UpdateAllSettings(newSettings);
+            UpdateStatus update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.index.WaitForPendingUpdate(update.UpdateId);
-            Settings response = await this.index.GetAllSettings();
+            Settings response = await this.index.GetSettings();
             Assert.Equal(new string[] { "typo" }, response.RankingRules);
 
             // Reset all settings
-            update = await this.index.ResetAllSettings();
+            update = await this.index.ResetSettings();
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.index.WaitForPendingUpdate(update.UpdateId);
-            response = await this.index.GetAllSettings();
+            response = await this.index.GetSettings();
             response.Should().NotBeNull();
             Assert.Equal(response.RankingRules, this.defaultRankingRules);
             response.DistinctAttribute.Should().BeNull();
