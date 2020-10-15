@@ -7,13 +7,15 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class StatusTests : IClassFixture<DocumentFixture>
+    public class UpdateStatusTests
     {
         private readonly Meilisearch.Index index;
 
-        public StatusTests(DocumentFixture fixture)
+        public UpdateStatusTests(IndexFixture fixture)
         {
-            this.index = fixture.BasicIndexWithDocuments;
+            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
+            var client = fixture.DefaultClient;
+            this.index = fixture.SetUpBasicIndex("BasicIndex-UpdateStatusTests").Result;
         }
 
         [Fact]

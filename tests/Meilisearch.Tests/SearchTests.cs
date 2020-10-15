@@ -6,21 +6,23 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class SearchTests : IClassFixture<DocumentFixture>
+    public class SearchTests
     {
-        private readonly Index index;
+        private readonly Index basicIndex;
         private readonly Index indexForFaceting;
 
-        public SearchTests(DocumentFixture fixture)
+        public SearchTests(IndexFixture fixture)
         {
-            this.index = fixture.BasicIndexWithDocuments;
-            this.indexForFaceting = fixture.IndexForFaceting;
+            fixture.DeleteAllIndexes().Wait(); // Context test cleaned for each [Fact]
+            var client = fixture.DefaultClient;
+            this.basicIndex = fixture.SetUpBasicIndex("BasicIndex-SearchTests").Result;
+            this.indexForFaceting = fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests").Result;
         }
 
         [Fact]
         public async Task BasicSearch()
         {
-            var movies = await this.index.Search<Movie>("man");
+            var movies = await this.basicIndex.Search<Movie>("man");
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
             movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
@@ -29,7 +31,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithNoQuery()
         {
-            var movies = await this.index.Search<Movie>(null);
+            var movies = await this.basicIndex.Search<Movie>(null);
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -38,7 +40,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithEmptyQuery()
         {
-            var movies = await this.index.Search<Movie>(string.Empty);
+            var movies = await this.basicIndex.Search<Movie>(string.Empty);
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -47,7 +49,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithLimit()
         {
-            var movies = await this.index.Search<Movie>(
+            var movies = await this.basicIndex.Search<Movie>(
                 "man",
                 new SearchQuery { Limit = 1 });
             movies.Hits.Should().NotBeEmpty();
@@ -60,7 +62,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
-            var movies = await this.index.Search<FormattedMovie>(
+            var movies = await this.basicIndex.Search<FormattedMovie>(
                 "man",
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -73,7 +75,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithNoQuery()
         {
-            var movies = await this.index.Search<FormattedMovie>(
+            var movies = await this.basicIndex.Search<FormattedMovie>(
                 null,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -86,7 +88,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithEmptyQuery()
         {
-            var movies = await this.index.Search<FormattedMovie>(
+            var movies = await this.basicIndex.Search<FormattedMovie>(
                 string.Empty,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -99,7 +101,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMultipleOptions()
         {
-            var movies = await this.index.Search<FormattedMovie>(
+            var movies = await this.basicIndex.Search<FormattedMovie>(
                 "man",
                 new SearchQuery
                 {

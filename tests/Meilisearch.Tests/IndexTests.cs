@@ -9,18 +9,17 @@ namespace Meilisearch.Tests
     public class IndexTests
     {
         private MeilisearchClient defaultClient;
-        private Random random;
 
-        public IndexTests()
+        public IndexTests(IndexFixture fixture)
         {
-            this.defaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
-            this.random = new Random();
+            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
+            this.defaultClient = fixture.DefaultClient;
         }
 
         [Fact]
         public async Task UpdatePrimaryKey()
         {
-            var index = await this.defaultClient.CreateIndex("Indextest" + this.random.Next());
+            var index = await this.defaultClient.GetOrCreateIndex("UpdatePrimaryKeyTest");
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await index.ChangePrimaryKey(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
@@ -29,7 +28,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetStats()
         {
-            var index = await this.defaultClient.GetOrCreateIndex("Statstest" + this.random.Next());
+            var index = await this.defaultClient.GetOrCreateIndex("GetStatsTests");
             var stats = await index.GetStats();
             stats.Should().NotBeNull();
         }
