@@ -1,16 +1,18 @@
-name: .NET Core
+name: .NET Test
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
+  push:
+    # trying and staging branches are for BORS config
+    branches:
+      - trying
+      - staging
+      - master
 
 jobs:
-  build:
-
+  test:
+    name: dotnet-tests
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
