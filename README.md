@@ -6,10 +6,10 @@
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://www.meilisearch.com">Website</a> |
   <a href="https://blog.meilisearch.com">Blog</a> |
   <a href="https://twitter.com/meilisearch">Twitter</a> |
-  <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://docs.meilisearch.com/faq">FAQ</a>
 </h4>
 
@@ -18,14 +18,16 @@
   <a href="https://github.com/meilisearch/meilisearch-dotnet/actions"><img src="https://github.com/meilisearch/meilisearch-dotnet/workflows/.NET%20Core/badge.svg?branch=master" alt=".NET Core"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
   <a href="https://slack.meilisearch.com"><img src="https://img.shields.io/badge/slack-MeiliSearch-blue.svg?logo=slack" alt="Slack"></a>
+  <a href="https://app.bors.tech/repositories/28784"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
 </p>
 
-<p align="center">⚡ Lightning Fast, Ultra Relevant, and Typo-Tolerant Search Engine MeiliSearch client written in C#</p>
+<p align="center">⚡ The MeiliSearch API client written for .NET</p>
 
-**MeiliSearch .NET** is a client for **MeiliSearch** written in C#. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, and synonyms are provided out-of-the-box.
+**MeiliSearch .NET** is the MeiliSearch API client for C# developers. **MeiliSearch** is a powerful, fast, open-source, easy to use and deploy search engine. Both searching and indexing are highly customizable. Features such as typo-tolerance, filters, facets, and synonyms are provided out-of-the-box.
 
 ## Table of Contents <!-- omit in toc -->
 
+- [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
 - [🚀 Getting Started](#-getting-started)
 - [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
@@ -36,6 +38,10 @@
   - [Search](#search)
 - [🧰 Use a Custom HTTP Client](#-use-a-custom-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+
+## 📖 Documentation
+
+See our [Documentation](https://docs.meilisearch.com/guides/introduction/quick_start_guide.html) or our [API References](https://docs.meilisearch.com/references/).
 
 ## 🔧 Installation
 
@@ -65,6 +71,8 @@ NB: you can also download MeiliSearch from **Homebrew** or **APT**.
 
 ## 🚀 Getting Started
 
+#### Add Documents <!-- omit in toc -->
+
 ```c#
 using System;
 using System.Threading.Tasks;
@@ -74,32 +82,98 @@ namespace GettingStarted
 {
     class Program
     {
-        public class Movie
+        public class Book
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
+            public string BookId { get; set; }
+            public string Title { get; set; }
         }
         static async Task Main(string[] args)
         {
             MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var index = await client.CreateIndex("movies"); // If your index does not exist
+            var index = await client.CreateIndex("books"); // If your index does not exist
             // OR
-            var index = await client.GetIndex("movies"); // If your index exists
-            var documents = new Movie[] {
-                new Movie {Id = "1", Name = "Batman"},
-                new Movie {Id = "2", Name = "Interstellar"},
-                new Movie {Id = "3", Name = "Batman Begins"}
+            var index = await client.GetIndex("books"); // If your index exists
+            var documents = new Book[] {
+                new Book { BookId = "123",  Title = "Pride and Prejudice" },
+                new Book { BookId = "456",  Title = "Le Petit Prince" },
+                new Book { BookId = "1",    Title = "Alice In Wonderland" },
+                new Book { BookId = "1344", Title = "The Hobbit" },
+                new Book { BookId = "4",    Title = "Harry Potter and the Half-Blood Prince" },
+                new Book { BookId = "42",   Title = "The Hitchhiker's Guide to the Galaxy" }
             };
-            var updateStatus = await index.AddDocuments<Movie>(documents);
-            Movie movie = await index.GetDocument<Movie>("1");
-            SearchResult<Movie> movies = await index.Search<Movie>("bat");
-            foreach(var prop in movies.Hits) {
-                Console.WriteLine (prop.Name);
-            }
+            var update = await index.AddDocuments<Book>(documents); # => { "updateId": 0 }
         }
     }
 }
 
+```
+
+With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/references/updates.html#get-an-update-status).
+
+#### Basic Search <!-- omit in toc -->
+
+```c#
+# MeiliSearch is typo-tolerant:
+SearchResult<Book> books = await index.Search<Book>("harry pottre");
+foreach(var prop in books.Hits) {
+    Console.WriteLine (prop.Title);
+}
+```
+
+JSON Output:
+
+```json
+{
+    "hits": [
+        {
+            "book_id": 4,
+            "title": "Harry Potter and the Half-Blood Prince",
+        }
+    ],
+    "offset": 0,
+    "limit": 20,
+    "processingTimeMs": 10,
+    "query": "harry pottre"
+}
+```
+
+#### Custom Search <!-- omit in toc -->
+
+All the supported options are described in the [search parameters](https://docs.meilisearch.com/guides/advanced_guides/search_parameters.html) section of the documentation.
+
+```c#
+SearchResult<Book> books = await index.Search<Book>(
+    "prince",
+    new SearchQuery
+    {
+        AttributesToHighlight = new string[] { "title" },
+        Filters = "book_id > 10"
+    }
+);
+foreach(var prop in books.Hits) {
+    Console.WriteLine (prop.Title);
+}
+```
+
+JSON Output:
+
+```json
+{
+    "hits": [
+        {
+            "book_id": 456,
+            "title": "Le Petit Prince",
+            "_formatted": {
+                "book_id": 456,
+                "title": "Le Petit <em>Prince</em>"
+            }
+        }
+    ],
+    "offset": 0,
+    "limit": 20,
+    "processingTimeMs": 10,
+    "query": "prince"
+}
 ```
 
 ## 🤖 Compatibility with MeiliSearch
@@ -113,13 +187,13 @@ This package only guarantees the compatibility with the [version v0.15.0 of Meil
 #### Create an index <!-- omit in toc -->
 
  ```c#
-var index = client.CreateIndex("movies");
+var index = client.CreateIndex("books");
 ```
 
 #### Create an index and give the primary-key <!-- omit in toc -->
 
 ```c#
-var index = client.CreateIndex("movies", "movieId");
+var index = client.CreateIndex("books", "book_id");
 ```
 
 #### List all an index <!-- omit in toc -->
@@ -131,7 +205,7 @@ var indexes = await client.GetAllIndexes();
 #### Get an Index object <!-- omit in toc -->
 
 ```c#
-var index = await client.GetIndex("movies");
+var index = await client.GetIndex("books");
 ```
 
 ### Documents
@@ -139,8 +213,8 @@ var index = await client.GetIndex("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddDocuments(new Movie[] {new Movie {Id = "1", Name = "Batman"}});
- var updateStatus = await index.UpdateDocuments(new Movie[] {new Movie {Id = "1", Name = "Batman"}});
+ var updateStatus = await index.AddDocuments(new Book[] { new Book { BookId = "1", Title = "Alice In Wonderland" } } );
+ var updateStatus = await index.UpdateDocuments(new Book[] { new Book { BookId = "1", Title = "Alice aux Pays des Merveilles" } } );
 ```
 
 Update Status has a reference `UpdateId` to get the status of the action.
@@ -148,13 +222,13 @@ Update Status has a reference `UpdateId` to get the status of the action.
 #### Get Documents <!-- omit in toc -->
 
 ```c#
- var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
+ var documents = await index.GetDocuments<Book>(new DocumentQuery {Limit = 1});
 ```
 
 #### Get Document by Id <!-- omit in toc -->
 
 ```c#
-var document = await index.GetDocument<Movie>("10");
+var document = await index.GetDocument<Book>("10");
 ```
 
 #### Delete documents <!-- omit in toc -->
@@ -194,13 +268,13 @@ var status = await index.GetAllUpdateStatus();
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.Search<Movie>("ironman");
+var books = await this.index.Search<Book>("prince");
 ```
 
 #### Custom Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.Search<Movie>("ironman", new SearchQuery {Limit = 100});
+var books = await this.index.Search<Book>("prince", new SearchQuery {Limit = 100});
 ```
 
 ## 🧰 Use a Custom HTTP Client
