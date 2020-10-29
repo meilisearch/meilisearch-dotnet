@@ -161,5 +161,12 @@ namespace Meilisearch.Tests
             dumpStatus.Status.Should().Be("done");
             Assert.Equal(dump.Uid, dumpStatus.Uid);
         }
+
+        [Fact]
+        public async Task Health()
+        {
+            var health = await this.defaultClient.Health();
+            health.Should().BeTrue();
+        }
     }
 }
