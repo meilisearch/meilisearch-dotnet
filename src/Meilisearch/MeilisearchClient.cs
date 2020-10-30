@@ -166,5 +166,28 @@ namespace Meilisearch
             var response = await this.client.PutAsJsonAsync("/health", new HealthObject { Health = value });
             response.EnsureSuccessStatusCode();
         }
+
+        /// <summary>
+        /// Creates Dump process.
+        /// </summary>
+        /// <returns>Returns dump creation status with uid and processing status.</returns>
+        public async Task<DumpStatus> CreateDump()
+        {
+            var response = await this.client.PostAsync("/dumps", default, default);
+
+            return await response.Content.ReadFromJsonAsync<DumpStatus>();
+        }
+
+        /// <summary>
+        /// Gets a dump creation status.
+        /// </summary>
+        /// <param name="uid">unique dump identifier.</param>
+        /// <returns>Returns dump creation status with uid and processing status.</returns>
+        public async Task<DumpStatus> GetDumpStatus(string uid)
+        {
+            var response = await this.client.GetAsync($"/dumps/{uid}/status");
+
+            return await response.Content.ReadFromJsonAsync<DumpStatus>();
+        }
     }
 }

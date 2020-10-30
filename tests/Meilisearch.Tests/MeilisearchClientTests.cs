@@ -140,5 +140,26 @@ namespace Meilisearch.Tests
             var stats = await this.defaultClient.GetStats();
             stats.Should().NotBeNull();
         }
+
+        [Fact]
+        public async Task CreateDumps()
+        {
+            var dumpResponse = await this.defaultClient.CreateDump();
+
+            dumpResponse.Status.Should().Be("processing");
+            Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
+        }
+
+        [Fact]
+        public async Task GetDumpStatusById()
+        {
+            var dump = await this.defaultClient.CreateDump();
+            Assert.NotNull(dump);
+
+            var dumpStatus = await this.defaultClient.GetDumpStatus(dump.Uid);
+
+            dumpStatus.Status.Should().Be("done");
+            Assert.Equal(dump.Uid, dumpStatus.Uid);
+        }
     }
 }
