@@ -175,7 +175,9 @@ namespace Meilisearch
         {
             var response = await this.client.PostAsync("/dumps", default, default);
 
-            return await response.Content.ReadFromJsonAsync<DumpStatus>();
+            return response.IsSuccessStatusCode
+                ? await response.Content.ReadFromJsonAsync<DumpStatus>()
+                : throw new Exception("Another dump is already in progress");
         }
 
         /// <summary>
