@@ -146,7 +146,7 @@ namespace Meilisearch.Tests
         {
             var dumpResponse = await this.defaultClient.CreateDump();
 
-            dumpResponse.Status.Should().Be("processing");
+            dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
         }
 
