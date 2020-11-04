@@ -146,7 +146,7 @@ namespace Meilisearch.Tests
         {
             var dumpResponse = await this.defaultClient.CreateDump();
 
-            dumpResponse.Status.Should().Be("processing");
+            dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
         }
 
@@ -160,6 +160,13 @@ namespace Meilisearch.Tests
 
             dumpStatus.Status.Should().Be("done");
             Assert.Equal(dump.Uid, dumpStatus.Uid);
+        }
+
+        [Fact]
+        public async Task Health()
+        {
+            var health = await this.defaultClient.Health();
+            health.Should().BeTrue();
         }
     }
 }
