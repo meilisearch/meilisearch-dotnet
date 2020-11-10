@@ -16,7 +16,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.5.20278.1" />
+      <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     </ItemGroup>
 
     <PropertyGroup>
