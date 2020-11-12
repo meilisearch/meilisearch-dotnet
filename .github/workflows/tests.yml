@@ -1,4 +1,4 @@
-name: .NET Test
+name: Tests
 
 on:
   pull_request:
@@ -10,8 +10,8 @@ on:
       - master
 
 jobs:
-  test:
-    name: dotnet-tests
+  integration_tests:
+    name: integration-tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,15 +19,23 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Docker setup
+    - name: MeiliSearch setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Format
-      run: |
-        dotnet tool install -g dotnet-format
-        dotnet format --check Meilisearch.sln
-    - name: Test
+    - name: Run tests
       run: dotnet test --no-restore --verbosity normal
+
+  format:
+    name: format-check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    - name: Insatll dotnet-format
+      run: dotnet tool install -g dotnet-format
+    - name: Check with dotnet-format
+      run: dotnet format --check Meilisearch.sln
