@@ -120,6 +120,24 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithFilters()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filters = "genre = SF",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
         public async Task CustomSearchWithFacetFilters()
         {
             var movies = await this.indexForFaceting.Search<Movie>(
