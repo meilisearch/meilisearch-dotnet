@@ -23,9 +23,9 @@ namespace Meilisearch
         public int? Limit { get; set; }
 
         /// <summary>
-        /// Gets or sets filters to apply to the query.
+        /// Gets or sets the filter to apply to the query.
         /// </summary>
-        public IEnumerable<string> Filters { get; set; }
+        public string Filters { get; set; }
 
         /// <summary>
         /// Gets or sets attributes to retrieve.
