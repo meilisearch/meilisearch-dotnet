@@ -112,7 +112,7 @@ Make a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https://gith
 
 Once the changes are merged on `master`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases).
 
-A GitHub Action will be triggered and push the package to [NuGet](https://www.nuget.org/packages/MeiliSearch).
+GitHub Actions will be triggered and push the package to [NuGet](https://www.nuget.org/packages/MeiliSearch).
 
 <hr>
 
