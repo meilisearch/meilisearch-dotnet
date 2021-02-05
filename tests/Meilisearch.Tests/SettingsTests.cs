@@ -99,8 +99,8 @@ namespace Meilisearch.Tests
             Assert.Equal(new string[] { "name" }, response.SearchableAttributes);
             Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
-            Assert.Equal(response.Synonyms["HP"], new[] { "Harry Potter" });
-            Assert.Equal(response.Synonyms["Harry Potter"], new[] { "HP" });
+            Assert.Equal(response.Synonyms["hp"], new[] { "harry potter" });
+            Assert.Equal(response.Synonyms["harry potter"], new[] { "hp" });
             response.AttributesForFaceting.Should().BeEmpty();
         }
 
