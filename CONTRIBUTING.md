@@ -33,10 +33,10 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 ### Tests <!-- omit in TOC -->
 
 ```bash
-$ docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
-$ docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
-$ dotnet restore
-$ dotnet test
+docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
+docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
+dotnet restore
+dotnet test
 ```
 
 ### Style Rules <!-- omit in TOC -->
@@ -45,16 +45,16 @@ The format style is checked with `dotnet-format`. You need to [install it](https
 
 ```bash
 # Check
-$ dotnet format --check Meilisearch.sln
+dotnet format --check Meilisearch.sln
 # Auto-fix
-$ dotnet format Meilisearch.sln
+dotnet format Meilisearch.sln
 ```
 
 [StyleCop Analyzers](https://www.nuget.org/packages/StyleCop.Analyzers) is also installed in this package.<br>
 The warnings are visible when building the project:
 
 ```bash
-$ dotnet build
+dotnet build
 ```
 
 ## Git Guidelines
