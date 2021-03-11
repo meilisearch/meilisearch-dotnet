@@ -49,13 +49,13 @@ See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_sta
 Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
 
 ```bash
-$ dotnet add package MeiliSearch
+dotnet add package MeiliSearch
 ```
 
 or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/tools/package-manager-console):
 
 ```bash
-$ Install-Package MeiliSearch
+Install-Package MeiliSearch
 ```
 
 ### Run MeiliSearch <!-- omit in toc -->
@@ -64,8 +64,8 @@ There are many easy ways to [download and run a MeiliSearch instance](https://do
 
 For example, if you use Docker:
 ```bash
-$ docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
-$ docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
+docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
+docker run -it --rm -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey
 ```
 
 NB: you can also download MeiliSearch from **Homebrew** or **APT**.
