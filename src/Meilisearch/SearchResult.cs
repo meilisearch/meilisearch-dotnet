@@ -37,5 +37,15 @@ namespace Meilisearch
         /// Gets or sets a value indicating whether the facets distribution is exhaustive or not.
         /// </summary>
         public bool ExhaustiveFacetsCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the nbHits returned by the search.
+        /// </summary>
+        public int NbHits { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the nbHits number returned by the search is exhaustive or not.
+        /// </summary>
+        public bool ExhaustiveNbHits { get; set; }
     }
 }
