@@ -166,7 +166,22 @@ namespace Meilisearch.Tests
         public async Task Health()
         {
             var health = await this.defaultClient.Health();
+            health.Status.Should().Be("available");
+        }
+
+        [Fact]
+        public async Task IsHealthy()
+        {
+            var health = await this.defaultClient.IsHealthy();
             health.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task IsHealthyWithBadUrl()
+        {
+            var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
+            var health = await client.IsHealthy();
+            health.Should().BeFalse();
         }
     }
 }

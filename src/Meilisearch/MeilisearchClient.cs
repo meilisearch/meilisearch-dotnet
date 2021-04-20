@@ -142,12 +142,23 @@ namespace Meilisearch
         /// <summary>
         /// Gets health state of the server.
         /// </summary>
+        /// <returns>Returns whether server is healthy or throw an error.</returns>
+        public async Task<MeiliSearchHealth> Health()
+        {
+            var response = await this.client.GetAsync("/health");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<MeiliSearchHealth>();
+        }
+
+        /// <summary>
+        /// Gets health state of the server.
+        /// </summary>
         /// <returns>Returns whether server is healthy or not.</returns>
-        public async Task<bool> Health()
+        public async Task<bool> IsHealthy()
         {
             try
             {
-                await this.client.GetAsync("/health");
+                await this.Health();
                 return true;
             }
             catch
