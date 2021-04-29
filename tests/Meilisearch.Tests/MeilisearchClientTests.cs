@@ -2,6 +2,7 @@ namespace Meilisearch.Tests
 {
     using System;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using FluentAssertions;
     using HttpClientFactoryLite;
@@ -70,13 +71,26 @@ namespace Meilisearch.Tests
         {
             var indexUid = "IndexAlreadyExistsErrorTest";
             var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey));
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey));
+            Assert.Equal("index_already_exists", ex.ErrorCode);
+        }
+
+        [Fact]
+        public async Task ErrorHandlerOfCustomClient()
+        {
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var indexUid = "IndexAlreadyExistsErrorTest";
+            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndex(indexUid, this.defaultPrimaryKey));
+            Assert.Equal("index_already_exists", ex.ErrorCode);
         }
 
         [Fact]
         public async Task IndexNameWrongFormattedError()
         {
-            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex("wrong UID"));
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.CreateIndex("wrong UID"));
+            Assert.Equal("invalid_index_uid", ex.ErrorCode);
         }
 
         [Fact]
@@ -101,8 +115,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAnNonExistingIndex()
         {
-            var indexes = await this.defaultClient.GetIndex("someRandomIndex");
-            indexes.Should().BeNull();
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.GetIndex("someRandomIndex"));
+            Assert.Equal("index_not_found", ex.ErrorCode);
         }
 
         [Fact]
@@ -170,6 +184,14 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task HealthWithBadUrl()
+        {
+            var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
+            MeilisearchCommunicationError ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.Health());
+            Assert.Equal("CommunicationError", ex.Message);
+        }
+
+        [Fact]
         public async Task IsHealthy()
         {
             var health = await this.defaultClient.IsHealthy();
@@ -182,6 +204,14 @@ namespace Meilisearch.Tests
             var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
             var health = await client.IsHealthy();
             health.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ExceptionWithBadPath()
+        {
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri("http://localhost:7700/") };
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
+            Assert.Equal("MeilisearchApiError, Message: Not Found, ErrorCode: 404", ex.Message);
         }
     }
 }

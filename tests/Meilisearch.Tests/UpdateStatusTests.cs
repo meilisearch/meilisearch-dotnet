@@ -1,6 +1,5 @@
 namespace Meilisearch.Tests
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
@@ -58,7 +57,7 @@ namespace Meilisearch.Tests
         public async Task WaitForPendingUpdateWithException()
         {
             var status = await this.index.AddDocuments(new[] { new Movie { Id = "5" } });
-            await Assert.ThrowsAsync<Exception>(() => this.index.WaitForPendingUpdate(status.UpdateId, 0.0, 20));
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.index.WaitForPendingUpdate(status.UpdateId, 0.0, 20));
         }
     }
 }
