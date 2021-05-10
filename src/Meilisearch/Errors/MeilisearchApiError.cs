@@ -10,7 +10,7 @@ namespace Meilisearch
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchApiError"/> class.
-        /// Handler Exception received from Meilisearch API.
+        /// Handler Exception received from MeiliSearch API.
         /// </summary>
         /// <param name="apiError">Specific error message from Meilisearch Api.</param>
         public MeilisearchApiError(MeilisearchApiErrorContent apiError)
