@@ -22,7 +22,7 @@ namespace Meilisearch
         /// <param name="apiKey">API key for the usage.</param>
         public MeilisearchClient(string url, string apiKey = default)
         {
-            this.client = new HttpClient { BaseAddress = new Uri(url) };
+            this.client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
             if (!string.IsNullOrEmpty(apiKey))
             {
                 this.client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
@@ -52,7 +52,7 @@ namespace Meilisearch
         public async Task<MeiliSearchVersion> GetVersion()
         {
             var response = await this.client.GetAsync("/version");
-            response.EnsureSuccessStatusCode();
+
             return await response.Content.ReadFromJsonAsync<MeiliSearchVersion>();
         }
 
@@ -68,8 +68,7 @@ namespace Meilisearch
             Index index = new Index(uid, primaryKey);
             var response = await this.client.PostAsJsonAsync("/indexes", index);
 
-            // TODO : Revisit the Exception, We need to handle it better.
-            return response.IsSuccessStatusCode ? index.WithHttpClient(this.client) : throw new Exception("Not able to create index. May be Index already exist");
+            return index.WithHttpClient(this.client);
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace Meilisearch
         public async Task<IEnumerable<Index>> GetAllIndexes()
         {
             var response = await this.client.GetAsync("/indexes");
-            response.EnsureSuccessStatusCode();
+
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>();
             return content
                 .Select(p => p.WithHttpClient(this.client));
@@ -93,20 +92,13 @@ namespace Meilisearch
         public async Task<Index> GetIndex(string uid)
         {
             var response = await this.client.GetAsync($"/indexes/{uid}");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadFromJsonAsync<Index>();
-                return content.WithHttpClient(this.client);
-            }
+            var content = await response.Content.ReadFromJsonAsync<Index>();
 
-            return null;  // TODO:  Yikes!! returning Null  Need to come back to solve this.
+            return content.WithHttpClient(this.client);
         }
 
         /// <summary>
         /// Gets the index instance or creates the index if it does not exist.
-        ///
-        /// /!\ Really basics. An error handler should be created to check the errorCode.
-        /// cf https://docs.meilisearch.com/errors/#index_already_exists.
         /// </summary>
         /// <param name="uid">Unique Id.</param>
         /// <param name="primaryKey">Primary key for documents.</param>
@@ -115,18 +107,16 @@ namespace Meilisearch
         {
             try
             {
-                return await this.CreateIndex(uid, primaryKey);
+                return await this.GetIndex(uid);
             }
-            catch (Exception e)
+            catch (MeilisearchApiError e)
             {
-                if (e.Message == "Not able to create index. May be Index already exist")
-                {
-                    return await this.GetIndex(uid);
-                }
-                else
+                if (e.ErrorCode != "index_not_found")
                 {
                     throw e;
                 }
+
+                return await this.CreateIndex(uid, primaryKey);
             }
         }
 
@@ -146,7 +136,7 @@ namespace Meilisearch
         public async Task<MeiliSearchHealth> Health()
         {
             var response = await this.client.GetAsync("/health");
-            response.EnsureSuccessStatusCode();
+
             return await response.Content.ReadFromJsonAsync<MeiliSearchHealth>();
         }
 
@@ -175,9 +165,7 @@ namespace Meilisearch
         {
             var response = await this.client.PostAsync("/dumps", default, default);
 
-            return response.IsSuccessStatusCode
-                ? await response.Content.ReadFromJsonAsync<DumpStatus>()
-                : throw new Exception("Another dump is already in progress");
+            return await response.Content.ReadFromJsonAsync<DumpStatus>();
         }
 
         /// <summary>

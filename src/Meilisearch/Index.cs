@@ -248,7 +248,7 @@ namespace Meilisearch
                 await Task.Delay(intervalMs);
             }
 
-            throw new Exception("The task " + updateId.ToString() + " timed out.");
+            throw new MeilisearchTimeoutError("The task " + updateId.ToString() + " timed out.");
         }
 
         /// <summary>

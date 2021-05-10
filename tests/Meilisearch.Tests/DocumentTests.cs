@@ -37,6 +37,28 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicDocumentsAdditionWithTimeoutError()
+        {
+            var indexUID = "BasicDocumentsAdditionWithTimeoutError";
+            Index index = await this.client.GetOrCreateIndex(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForPendingUpdate(update.UpdateId, 0));
+        }
+
+        [Fact]
+        public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
+        {
+            var indexUID = "BasicDocumentsAdditionWithTimeoutError";
+            Index index = await this.client.GetOrCreateIndex(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForPendingUpdate(update.UpdateId, 0, 10));
+        }
+
+        [Fact]
         public async Task BasicDocumentsUpdate()
         {
             var indexUID = "BasicDocumentsUpdateTest";
@@ -116,7 +138,8 @@ namespace Meilisearch.Tests
             // Check the document has been deleted
             var docs = await index.GetDocuments<Movie>();
             Assert.Equal(6, docs.Count());
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("11"));
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<Movie>("11"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
         }
 
         [Fact]
@@ -132,7 +155,8 @@ namespace Meilisearch.Tests
             // Check the document has been deleted
             var docs = await index.GetDocuments<MovieWithIntId>();
             Assert.Equal(6, docs.Count());
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(11));
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<MovieWithIntId>(11));
+            Assert.Equal("document_not_found", ex.ErrorCode);
         }
 
         [Fact]
@@ -148,9 +172,13 @@ namespace Meilisearch.Tests
             // Check the documents have been deleted
             var docs = await index.GetDocuments<Movie>();
             Assert.Equal(4, docs.Count());
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("12"));
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("13"));
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<Movie>("14"));
+            MeilisearchApiError ex;
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<Movie>("12"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<Movie>("13"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<Movie>("14"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
         }
 
         [Fact]
@@ -166,9 +194,13 @@ namespace Meilisearch.Tests
             // Check the documents have been deleted
             var docs = await index.GetDocuments<MovieWithIntId>();
             Assert.Equal(4, docs.Count());
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(12));
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(13));
-            await Assert.ThrowsAsync<System.Net.Http.HttpRequestException>(() => index.GetDocument<MovieWithIntId>(14));
+            MeilisearchApiError ex;
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<MovieWithIntId>("12"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<MovieWithIntId>("13"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocument<MovieWithIntId>("14"));
+            Assert.Equal("document_not_found", ex.ErrorCode);
         }
 
         [Fact]
