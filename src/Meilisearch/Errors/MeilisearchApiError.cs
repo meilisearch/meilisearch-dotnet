@@ -31,7 +31,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets the errorCode return by MeilisearchApi..
+        /// Gets or sets the errorCode return by MeilisearchApi.
         /// </summary>
         public string ErrorCode { get; set; }
     }
