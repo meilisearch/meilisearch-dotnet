@@ -3,7 +3,7 @@ namespace Meilisearch
     using System;
 
     /// <summary>
-    /// Error sent when trying to connecting to Meilisearch.
+    /// Error sent when trying to connecting to MeiliSearch.
     /// </summary>
     public class MeilisearchCommunicationError : Exception
     {
