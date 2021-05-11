@@ -22,7 +22,25 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAddition()
         {
             var indexUID = "BasicDocumentsAdditionTest";
-            Index index = await this.client.GetOrCreateIndex(indexUID);
+            Index index = this.client.Index(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been added
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal("1", docs.First().Id);
+            Assert.Equal("Batman", docs.First().Name);
+            docs.First().Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task BasicDocumentsAdditionWithCreateIndex()
+        {
+            var indexUID = "BasicDocumentsAdditionTest";
+            Index index = await this.client.CreateIndex(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
@@ -62,7 +80,7 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsUpdate()
         {
             var indexUID = "BasicDocumentsUpdateTest";
-            Index index = await this.client.GetOrCreateIndex(indexUID);
+            Index index = this.client.Index(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocuments(new[]

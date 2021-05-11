@@ -40,6 +40,18 @@ namespace Meilisearch
         public string PrimaryKey { get; internal set; }
 
         /// <summary>
+        /// Fetch the primary key of the index.
+        /// </summary>
+        /// <returns>Primary key of the index fetch.</returns>
+        public async Task<string> FetchPrimaryKey()
+        {
+            var response = await this.client.GetAsync($"indexes/{this.Uid}");
+            var content = await response.Content.ReadFromJsonAsync<Index>();
+            this.PrimaryKey = content.PrimaryKey;
+            return this.PrimaryKey;
+        }
+
+        /// <summary>
         /// Changes the primary key of the index.
         /// </summary>
         /// <param name="primarykeytoChange">Primary key set.</param>
@@ -67,11 +79,20 @@ namespace Meilisearch
         /// Add documents.
         /// </summary>
         /// <param name="documents">Documents to add.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
+        public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents, string primaryKey = default)
         {
-            var responseMessage = await this.client.PostAsJsonAsync($"/indexes/{this.Uid}/documents", documents);
+            HttpResponseMessage responseMessage;
+            string uri = $"/indexes/{this.Uid}/documents";
+            if (primaryKey != default)
+            {
+                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+            }
+
+            responseMessage = await this.client.PostAsJsonAsync(uri, documents);
+
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -79,11 +100,20 @@ namespace Meilisearch
         /// Update documents.
         /// </summary>
         /// <param name="documents">Documents to update.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
+        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents, string primaryKey = default)
         {
-            var responseMessage = await this.client.PutAsJsonAsync($"/indexes/{this.Uid}/documents", documents);
+            HttpResponseMessage responseMessage;
+            string uri = $"/indexes/{this.Uid}/documents";
+            if (primaryKey != default)
+            {
+                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+            }
+
+            responseMessage = await this.client.PutAsJsonAsync(uri, documents);
+
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 

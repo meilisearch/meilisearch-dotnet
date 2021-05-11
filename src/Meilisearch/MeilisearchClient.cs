@@ -45,7 +45,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets the current MeiliSearch version. For more details on response
+        /// Gets the current MeiliSearch version. For more details on response.
         /// https://docs.meilisearch.com/reference/api/version.html#get-version-of-meilisearch.
         /// </summary>
         /// <returns>Returns the MeiliSearch version with commit and build version.</returns>
@@ -54,6 +54,19 @@ namespace Meilisearch
             var response = await this.client.GetAsync("/version");
 
             return await response.Content.ReadFromJsonAsync<MeiliSearchVersion>();
+        }
+
+        /// <summary>
+        /// Create a local reference to an index identified by UID, without doing an HTTP call.
+        /// Calling this method doesn't create an index in the MeiliSearch instance, but grants access to all the other methods in the Index class.
+        /// </summary>
+        /// <param name="uid">Unique Id.</param>
+        /// <returns>Returns Index.</returns>
+        public Index Index(string uid)
+        {
+            Index index = new Index(uid);
+            index.WithHttpClient(this.client);
+            return index;
         }
 
         /// <summary>
