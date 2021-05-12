@@ -49,17 +49,6 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task ImplicitIndexCreationWithPrimaryKey()
-        {
-            var indexUid = "ImplicitIndexCreationWithPrimaryKeyTest";
-            var index = this.defaultClient.Index(indexUid);
-            index.Uid.Should().Be(indexUid);
-            var document = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } }, this.defaultPrimaryKey);
-            index.PrimaryKey.Should().BeNull();
-            document.UpdateId.Should().BeGreaterOrEqualTo(0);
-        }
-
-        [Fact]
         public async Task IndexMethodUsageOnExistingIndex()
         {
             Meilisearch.Index index;

@@ -85,14 +85,13 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var document = await index.AddDocuments(new[] { new { movieId = "1", Name = "Batman" } }, "movieId");
-            await index.WaitForPendingUpdate(document.UpdateId);
-            document.UpdateId.Should().BeGreaterOrEqualTo(0);
+            var update = await index.AddDocuments(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForPendingUpdate(update.UpdateId);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
-            Thread.Sleep(50);
             await index.FetchPrimaryKey();
-            Assert.Equal("movieId", index.PrimaryKey);
+            Assert.Equal("key", index.PrimaryKey);
         }
 
         [Fact]
@@ -134,14 +133,13 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var document = await index.UpdateDocuments(new[] { new { movieId = "1", Name = "Batman" } }, "movieId");
-            await index.WaitForPendingUpdate(document.UpdateId);
-            document.UpdateId.Should().BeGreaterOrEqualTo(0);
+            var update = await index.UpdateDocuments(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForPendingUpdate(update.UpdateId);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
-            Thread.Sleep(50);
             await index.FetchPrimaryKey();
-            Assert.Equal("movieId", index.PrimaryKey);
+            Assert.Equal("key", index.PrimaryKey);
         }
 
         [Fact]
