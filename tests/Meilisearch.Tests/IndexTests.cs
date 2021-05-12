@@ -89,19 +89,6 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task CheckValidityOfPrimaryKeyOnExistingIndex()
-        {
-            var indexUid = "CheckValidityOfPrimaryKeyOnExistingIndexTest";
-            var createIndex = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            var indexObject = this.defaultClient.Index(indexUid);
-            Assert.Equal(createIndex.Uid, indexObject.Uid);
-            Assert.Equal(this.defaultPrimaryKey, createIndex.PrimaryKey);
-            indexObject.PrimaryKey.Should().BeNull();
-            await indexObject.FetchPrimaryKey();
-            Assert.Equal(createIndex.PrimaryKey, indexObject.PrimaryKey);
-        }
-
-        [Fact]
         public async Task IndexAlreadyExistsError()
         {
             var indexUid = "IndexAlreadyExistsErrorTest";
