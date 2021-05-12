@@ -1,6 +1,7 @@
 namespace Meilisearch.Tests
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
     using Xunit;
@@ -39,7 +40,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicDocumentsAdditionWithCreateIndex()
         {
-            var indexUID = "BasicDocumentsAdditionTest";
+            var indexUID = "BasicDocumentsAdditionWithCreateIndexTest";
             Index index = await this.client.CreateIndex(indexUID);
 
             // Add the documents
@@ -68,12 +69,30 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
         {
-            var indexUID = "BasicDocumentsAdditionWithTimeoutError";
+            var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
             Index index = await this.client.GetOrCreateIndex(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForPendingUpdate(update.UpdateId, 0, 10));
+        }
+
+        [Fact]
+        public async Task DocumentsAdditionWithPrimaryKey()
+        {
+            var indexUid = "DocumentsAdditionWithPrimaryKeyTest";
+            var index = this.client.Index(indexUid);
+            index.PrimaryKey.Should().BeNull();
+
+            // Add the documents
+            var document = await index.AddDocuments(new[] { new { movieId = "1", Name = "Batman" } }, "movieId");
+            await index.WaitForPendingUpdate(document.UpdateId);
+            document.UpdateId.Should().BeGreaterOrEqualTo(0);
+
+            // Check the primary key has been set
+            Thread.Sleep(50);
+            await index.FetchPrimaryKey();
+            Assert.Equal("movieId", index.PrimaryKey);
         }
 
         [Fact]
@@ -105,6 +124,24 @@ namespace Meilisearch.Tests
             Assert.Equal("2", docs.ElementAt(1).Id);
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task DocumentsUpdateWithPrimaryKey()
+        {
+            var indexUid = "DocumentsUpdateWithPrimaryKeyTest";
+            var index = this.client.Index(indexUid);
+            index.PrimaryKey.Should().BeNull();
+
+            // Add the documents
+            var document = await index.UpdateDocuments(new[] { new { movieId = "1", Name = "Batman" } }, "movieId");
+            await index.WaitForPendingUpdate(document.UpdateId);
+            document.UpdateId.Should().BeGreaterOrEqualTo(0);
+
+            // Check the primary key has been set
+            Thread.Sleep(50);
+            await index.FetchPrimaryKey();
+            Assert.Equal("movieId", index.PrimaryKey);
         }
 
         [Fact]
@@ -224,7 +261,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteAllExistingDocuments()
         {
-            Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithIntegerIdTest");
+            Index index = await this.fixture.SetUpBasicIndex("DeleteAllExistingDocumentsTest");
 
             // Delete all the documents
             UpdateStatus update = await index.DeleteAllDocuments();

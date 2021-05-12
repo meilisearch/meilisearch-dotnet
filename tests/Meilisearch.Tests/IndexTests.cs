@@ -2,7 +2,6 @@ namespace Meilisearch.Tests
 {
     using System;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using FluentAssertions;
     using Xunit;
@@ -50,9 +49,9 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task ImpliciteIndexCreationWithPrimaryKey()
+        public async Task ImplicitIndexCreationWithPrimaryKey()
         {
-            var indexUid = "ImpliciteIndexCreationWithPrimaryKeyTest";
+            var indexUid = "ImplicitIndexCreationWithPrimaryKeyTest";
             var index = this.defaultClient.Index(indexUid);
             index.Uid.Should().Be(indexUid);
             var document = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } }, this.defaultPrimaryKey);
@@ -141,7 +140,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAnNonExistingIndex()
         {
-            var indexUid = "SomeRandomIndex";
+            var indexUid = "GetAnNonExistingIndexTest";
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.GetIndex(indexUid));
             Assert.Equal("index_not_found", ex.ErrorCode);
         }
@@ -179,14 +178,9 @@ namespace Meilisearch.Tests
         public async Task FetchPrimaryKey()
         {
             var indexUid = "FetchPrimaryKeyTest";
-            var index = this.defaultClient.Index(indexUid);
+            var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
             index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-
-            var document = await index.AddDocuments(new[] { new { movieId = "1", Name = "Batman" } }, this.defaultPrimaryKey);
-
-            Thread.Sleep(50);
-            index.PrimaryKey.Should().BeNull();
+            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
             await index.FetchPrimaryKey();
             Assert.Equal(this.defaultPrimaryKey, index.PrimaryKey);
         }
