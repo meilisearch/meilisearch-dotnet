@@ -40,15 +40,24 @@ namespace Meilisearch
         public string PrimaryKey { get; internal set; }
 
         /// <summary>
+        /// Fetch the info of the index.
+        /// </summary>
+        /// <returns>An instance of the index fetch.</returns>
+        public async Task<Index> FetchInfo()
+        {
+            var response = await this.client.GetAsync($"indexes/{this.Uid}");
+            var content = await response.Content.ReadFromJsonAsync<Index>();
+            this.PrimaryKey = content.PrimaryKey;
+            return this;
+        }
+
+        /// <summary>
         /// Fetch the primary key of the index.
         /// </summary>
         /// <returns>Primary key of the index fetch.</returns>
         public async Task<string> FetchPrimaryKey()
         {
-            var response = await this.client.GetAsync($"indexes/{this.Uid}");
-            var content = await response.Content.ReadFromJsonAsync<Index>();
-            this.PrimaryKey = content.PrimaryKey;
-            return this.PrimaryKey;
+            return (await this.FetchInfo()).PrimaryKey;
         }
 
         /// <summary>

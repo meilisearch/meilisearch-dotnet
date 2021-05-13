@@ -104,10 +104,7 @@ namespace Meilisearch
         /// <returns>Returns Index or Null if the index does not exist.</returns>
         public async Task<Index> GetIndex(string uid)
         {
-            var response = await this.client.GetAsync($"/indexes/{uid}");
-            var content = await response.Content.ReadFromJsonAsync<Index>();
-
-            return content.WithHttpClient(this.client);
+            return await this.Index(uid).FetchInfo();
         }
 
         /// <summary>
