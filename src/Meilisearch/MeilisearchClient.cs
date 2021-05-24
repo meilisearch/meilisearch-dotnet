@@ -61,7 +61,7 @@ namespace Meilisearch
         /// Calling this method doesn't create an index in the MeiliSearch instance, but grants access to all the other methods in the Index class.
         /// </summary>
         /// <param name="uid">Unique Id.</param>
-        /// <returns>Returns Index.</returns>
+        /// <returns>Returns an Index instance.</returns>
         public Index Index(string uid)
         {
             Index index = new Index(uid);
