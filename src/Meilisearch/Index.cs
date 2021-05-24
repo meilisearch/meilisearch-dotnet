@@ -54,7 +54,7 @@ namespace Meilisearch
         /// <summary>
         /// Fetch the primary key of the index.
         /// </summary>
-        /// <returns>Primary key of the index fetch.</returns>
+        /// <returns>Primary key of the fetched index.</returns>
         public async Task<string> FetchPrimaryKey()
         {
             return (await this.FetchInfo()).PrimaryKey;
