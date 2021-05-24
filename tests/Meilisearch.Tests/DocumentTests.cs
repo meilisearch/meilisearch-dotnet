@@ -22,7 +22,25 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAddition()
         {
             var indexUID = "BasicDocumentsAdditionTest";
-            Index index = await this.client.GetOrCreateIndex(indexUID);
+            Index index = this.client.Index(indexUID);
+
+            // Add the documents
+            UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(update.UpdateId);
+
+            // Check the documents have been added
+            var docs = await index.GetDocuments<Movie>();
+            Assert.Equal("1", docs.First().Id);
+            Assert.Equal("Batman", docs.First().Name);
+            docs.First().Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task BasicDocumentsAdditionWithCreateIndex()
+        {
+            var indexUID = "BasicDocumentsAdditionWithCreateIndexTest";
+            Index index = await this.client.CreateIndex(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
@@ -50,7 +68,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
         {
-            var indexUID = "BasicDocumentsAdditionWithTimeoutError";
+            var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
             Index index = await this.client.GetOrCreateIndex(indexUID);
 
             // Add the documents
@@ -59,10 +77,27 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task DocumentsAdditionWithPrimaryKey()
+        {
+            var indexUid = "DocumentsAdditionWithPrimaryKeyTest";
+            var index = this.client.Index(indexUid);
+            index.PrimaryKey.Should().BeNull();
+
+            // Add the documents
+            var update = await index.AddDocuments(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForPendingUpdate(update.UpdateId);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+
+            // Check the primary key has been set
+            await index.FetchPrimaryKey();
+            Assert.Equal("key", index.PrimaryKey);
+        }
+
+        [Fact]
         public async Task BasicDocumentsUpdate()
         {
             var indexUID = "BasicDocumentsUpdateTest";
-            Index index = await this.client.GetOrCreateIndex(indexUID);
+            Index index = this.client.Index(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocuments(new[]
@@ -87,6 +122,23 @@ namespace Meilisearch.Tests
             Assert.Equal("2", docs.ElementAt(1).Id);
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task DocumentsUpdateWithPrimaryKey()
+        {
+            var indexUid = "DocumentsUpdateWithPrimaryKeyTest";
+            var index = this.client.Index(indexUid);
+            index.PrimaryKey.Should().BeNull();
+
+            // Add the documents
+            var update = await index.UpdateDocuments(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForPendingUpdate(update.UpdateId);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+
+            // Check the primary key has been set
+            await index.FetchPrimaryKey();
+            Assert.Equal("key", index.PrimaryKey);
         }
 
         [Fact]
@@ -206,7 +258,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteAllExistingDocuments()
         {
-            Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithIntegerIdTest");
+            Index index = await this.fixture.SetUpBasicIndex("DeleteAllExistingDocumentsTest");
 
             // Delete all the documents
             UpdateStatus update = await index.DeleteAllDocuments();
