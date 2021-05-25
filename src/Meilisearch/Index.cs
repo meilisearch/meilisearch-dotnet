@@ -65,7 +65,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <returns>Index with the updated Primary Key.</returns>
-        public async Task<Index> ChangePrimaryKey(string primarykeytoChange)
+        public async Task<Index> UpdateIndex(string primarykeytoChange)
         {
             var message = await this.client.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
