@@ -166,7 +166,7 @@ namespace Meilisearch.Tests
         {
             var index = await this.defaultClient.GetOrCreateIndex("UpdatePrimaryKeyTest");
             var primarykey = "MovieId" + new Random().Next();
-            var modifiedIndex = await index.ChangePrimaryKey(primarykey);
+            var modifiedIndex = await index.UpdateIndex(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
         }
 
