@@ -3,6 +3,7 @@ namespace Meilisearch
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
@@ -188,6 +189,18 @@ namespace Meilisearch
             var response = await this.client.GetAsync($"/dumps/{uid}/status");
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>();
+        }
+
+        /// <summary>
+        /// Deletes the index.
+        /// It's not a recovery delete. You will also lose the documents within the index.
+        /// </summary>
+        /// <param name="uid">unique dump identifier.</param>
+        /// <returns>Returns the status of delete operation.</returns>
+        public async Task<bool> DeleteIndex(string uid)
+        {
+            var responseMessage = await this.client.DeleteAsync($"/indexes/{uid}");
+            return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
     }
 }
