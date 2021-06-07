@@ -123,5 +123,16 @@ namespace Meilisearch.Tests
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, ErrorCode: 404", ex.Message);
         }
+
+        [Fact]
+        public async Task DeleteIndex()
+        {
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var indexUid = "DeleteIndexTest";
+            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var deletedResult = await ms.DeleteIndex(indexUid);
+            deletedResult.Should().BeTrue();
+        }
     }
 }
