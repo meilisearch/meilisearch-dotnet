@@ -28,7 +28,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="objectToTransform">Object to transform.</param>
         /// <returns>Returns the same IEnumerable with null keys removed. </returns>
-        public static object ConvertToObjectWithoutPropertiesWithNullValues<T>(this IEnumerable<T> objectToTransform)
+        public static object RemoveNullValues<T>(this IEnumerable<T> objectToTransform)
         {
             var result = objectToTransform.Select(item =>
             {
