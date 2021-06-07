@@ -199,8 +199,7 @@ namespace Meilisearch
         /// <returns>Returns the status of delete operation.</returns>
         public async Task<bool> DeleteIndex(string uid)
         {
-            var responseMessage = await this.client.DeleteAsync($"/indexes/{uid}");
-            return responseMessage.StatusCode == HttpStatusCode.NoContent;
+            return await this.Index(uid).Delete();
         }
     }
 }
