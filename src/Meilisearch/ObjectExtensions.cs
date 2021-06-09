@@ -27,6 +27,7 @@ namespace Meilisearch
         /// Iterates through Ienumerable and removes null keys.
         /// </summary>
         /// <param name="objectToTransform">Object to transform.</param>
+        /// <typeparam name="T">The element type of the IEnumerable.</typeparam>
         /// <returns>Returns the same IEnumerable with null keys removed. </returns>
         public static object RemoveNullValues<T>(this IEnumerable<T> objectToTransform)
         {
