@@ -118,7 +118,7 @@ namespace Meilisearch.Tests
             Assert.Equal("1", docs.First().Id);
             Assert.Equal("Ironman", docs.First().Name);
 
-            // Assert.Equal("Action", docs.First().Genre); // Commented until the issue #67 is fixed (https://github.com/meilisearch/meilisearch-dotnet/issues/67)
+            Assert.Equal("Action", docs.First().Genre);
             Assert.Equal("2", docs.ElementAt(1).Id);
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();

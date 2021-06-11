@@ -121,7 +121,8 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.client.PutAsJsonAsync(uri, documents);
+            var filteredDocuments = documents.RemoveNullValues();
+            responseMessage = await this.client.PutAsJsonAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
