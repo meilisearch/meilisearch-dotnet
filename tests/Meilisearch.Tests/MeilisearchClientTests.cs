@@ -1,7 +1,7 @@
 namespace Meilisearch.Tests
 {
     using System;
-    using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using FluentAssertions;
     using HttpClientFactoryLite;
@@ -48,90 +48,14 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task BasicIndexCreation()
+        public async Task ErrorHandlerOfCustomClient()
         {
-            var indexUid = "BasicIndexCreationTest";
-            var index = await this.defaultClient.CreateIndex(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task IndexCreationWithPrimaryKey()
-        {
-            var indexUid = "IndexCreationWithPrimaryKeyTest";
-            var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
-        }
-
-        [Fact]
-        public async Task IndexAlreadyExistsError()
-        {
-            var indexUid = "IndexAlreadyExistsErrorTest";
-            var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey));
-        }
-
-        [Fact]
-        public async Task IndexNameWrongFormattedError()
-        {
-            await Assert.ThrowsAsync<Exception>(() => this.defaultClient.CreateIndex("wrong UID"));
-        }
-
-        [Fact]
-        public async Task GetAllExistingIndexes()
-        {
-            var indexUid = "GetAllExistingIndexesTest";
-            await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            var indexes = await this.defaultClient.GetAllIndexes();
-            indexes.Count().Should().BeGreaterOrEqualTo(1);
-        }
-
-        [Fact]
-        public async Task GetOneExistingIndexes()
-        {
-            var indexUid = "GetOneExistingIndexesTest";
-            await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
-            var index = await this.defaultClient.GetIndex(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
-        }
-
-        [Fact]
-        public async Task GetAnNonExistingIndex()
-        {
-            var indexes = await this.defaultClient.GetIndex("someRandomIndex");
-            indexes.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task GetOrCreateIndexIfIndexDoesNotExist()
-        {
-            var indexUid = "GetOrCreateIndexIfIndexDoesNotExistTest";
-            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task GetOrCreateIndexIfIndexAlreadyExists()
-        {
-            var indexUid = "GetOrCreateIndexIfIndexAlreadyExistsTest";
-            await this.defaultClient.GetOrCreateIndex(indexUid);
-            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task GetOrCreateIndexWithPrimaryKey()
-        {
-            var indexUid = "GetOrCreateIndexWithPrimaryKeyTest";
-            await this.defaultClient.GetOrCreateIndex(indexUid, this.defaultPrimaryKey);
-            var index = await this.defaultClient.GetOrCreateIndex(indexUid, this.defaultPrimaryKey);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var indexUid = "ErrorHandlerOfCustomClientTest";
+            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndex(indexUid, this.defaultPrimaryKey));
+            Assert.Equal("index_already_exists", ex.ErrorCode);
         }
 
         [Fact]
@@ -170,6 +94,14 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task HealthWithBadUrl()
+        {
+            var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
+            MeilisearchCommunicationError ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.Health());
+            Assert.Equal("CommunicationError", ex.Message);
+        }
+
+        [Fact]
         public async Task IsHealthy()
         {
             var health = await this.defaultClient.IsHealthy();
@@ -182,6 +114,25 @@ namespace Meilisearch.Tests
             var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
             var health = await client.IsHealthy();
             health.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ExceptionWithBadPath()
+        {
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri("http://localhost:7700/") };
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
+            Assert.Equal("MeilisearchApiError, Message: Not Found, ErrorCode: 404", ex.Message);
+        }
+
+        [Fact]
+        public async Task DeleteIndex()
+        {
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var indexUid = "DeleteIndexTest";
+            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var deletedResult = await ms.DeleteIndex(indexUid);
+            deletedResult.Should().BeTrue();
         }
     }
 }

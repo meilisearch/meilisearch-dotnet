@@ -91,9 +91,8 @@ namespace GettingStarted
         static async Task Main(string[] args)
         {
             MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var index = await client.CreateIndex("books"); // If your index does not exist
-            // OR
-            var index = await client.GetIndex("books"); // If your index exists
+            // An index is where the documents are stored.
+            var index = await client.Index("books");
             var documents = new Book[] {
                 new Book { BookId = "123",  Title = "Pride and Prejudice" },
                 new Book { BookId = "456",  Title = "Le Petit Prince" },
@@ -102,6 +101,7 @@ namespace GettingStarted
                 new Book { BookId = "4",    Title = "Harry Potter and the Half-Blood Prince" },
                 new Book { BookId = "42",   Title = "The Hitchhiker's Guide to the Galaxy" }
             };
+            // If the index 'books' does not exist, MeiliSearch creates it when you first add the documents.
             var update = await index.AddDocuments<Book>(documents); # => { "updateId": 0 }
         }
     }

@@ -20,7 +20,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.GetOrCreateIndex(indexUid).Result;
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new Movie { Id = "10", Name = "Gladiator" },
@@ -45,7 +45,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndexWithIntId(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.GetOrCreateIndex(indexUid).Result;
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new MovieWithIntId { Id = 10, Name = "Gladiator" },
@@ -70,7 +70,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpIndexForFaceting(string indexUid)
         {
-            Meilisearch.Index index = await this.DefaultClient.GetOrCreateIndex(indexUid);
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
 
             // Add documents
             var movies = new[]

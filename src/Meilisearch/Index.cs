@@ -40,11 +40,32 @@ namespace Meilisearch
         public string PrimaryKey { get; internal set; }
 
         /// <summary>
+        /// Fetch the info of the index.
+        /// </summary>
+        /// <returns>An instance of the index fetch.</returns>
+        public async Task<Index> FetchInfo()
+        {
+            var response = await this.client.GetAsync($"indexes/{this.Uid}");
+            var content = await response.Content.ReadFromJsonAsync<Index>();
+            this.PrimaryKey = content.PrimaryKey;
+            return this;
+        }
+
+        /// <summary>
+        /// Fetch the primary key of the index.
+        /// </summary>
+        /// <returns>Primary key of the fetched index.</returns>
+        public async Task<string> FetchPrimaryKey()
+        {
+            return (await this.FetchInfo()).PrimaryKey;
+        }
+
+        /// <summary>
         /// Changes the primary key of the index.
         /// </summary>
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <returns>Index with the updated Primary Key.</returns>
-        public async Task<Index> ChangePrimaryKey(string primarykeytoChange)
+        public async Task<Index> UpdateIndex(string primarykeytoChange)
         {
             var message = await this.client.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
@@ -67,11 +88,20 @@ namespace Meilisearch
         /// Add documents.
         /// </summary>
         /// <param name="documents">Documents to add.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents)
+        public async Task<UpdateStatus> AddDocuments<T>(IEnumerable<T> documents, string primaryKey = default)
         {
-            var responseMessage = await this.client.PostAsJsonAsync($"/indexes/{this.Uid}/documents", documents);
+            HttpResponseMessage responseMessage;
+            string uri = $"/indexes/{this.Uid}/documents";
+            if (primaryKey != default)
+            {
+                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+            }
+
+            responseMessage = await this.client.PostAsJsonAsync(uri, documents);
+
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -79,11 +109,21 @@ namespace Meilisearch
         /// Update documents.
         /// </summary>
         /// <param name="documents">Documents to update.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents)
+        public async Task<UpdateStatus> UpdateDocuments<T>(IEnumerable<T> documents, string primaryKey = default)
         {
-            var responseMessage = await this.client.PutAsJsonAsync($"/indexes/{this.Uid}/documents", documents);
+            HttpResponseMessage responseMessage;
+            string uri = $"/indexes/{this.Uid}/documents";
+            if (primaryKey != default)
+            {
+                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+            }
+
+            var filteredDocuments = documents.RemoveNullValues();
+            responseMessage = await this.client.PutAsJsonAsync(uri, filteredDocuments);
+
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -248,7 +288,7 @@ namespace Meilisearch
                 await Task.Delay(intervalMs);
             }
 
-            throw new Exception("The task " + updateId.ToString() + " timed out.");
+            throw new MeilisearchTimeoutError("The task " + updateId.ToString() + " timed out.");
         }
 
         /// <summary>
