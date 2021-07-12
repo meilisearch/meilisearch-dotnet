@@ -10,6 +10,7 @@ namespace Meilisearch.Tests
     {
         private readonly Index basicIndex;
         private readonly Index indexForFaceting;
+        private readonly Index indexWithIntId;
 
         public SearchTests(IndexFixture fixture)
         {
@@ -17,6 +18,7 @@ namespace Meilisearch.Tests
             var client = fixture.DefaultClient;
             this.basicIndex = fixture.SetUpBasicIndex("BasicIndex-SearchTests").Result;
             this.indexForFaceting = fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests").Result;
+            this.indexWithIntId = fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests").Result;
         }
 
         [Fact]
@@ -160,9 +162,9 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "id" },
             };
-            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            UpdateStatus update = await this.indexWithIntId.UpdateSettings(newFilters);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+            await this.indexWithIntId.WaitForPendingUpdate(update.UpdateId);
 
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
@@ -176,7 +178,6 @@ namespace Meilisearch.Tests
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
-            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
 
         [Fact]
@@ -215,7 +216,6 @@ namespace Meilisearch.Tests
             Assert.Equal("13", movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
-            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
 
         [Fact]
