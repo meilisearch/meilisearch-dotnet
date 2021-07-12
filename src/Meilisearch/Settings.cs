@@ -47,7 +47,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the attributes for faceting.
         /// </summary>
-        [JsonPropertyName("attributesForFaceting")]
-        public IEnumerable<string> AttributesForFaceting { get; set; }
+        [JsonPropertyName("filterableAttributes")]
+        public IEnumerable<string> FilterableAttributes { get; set; }
     }
 }

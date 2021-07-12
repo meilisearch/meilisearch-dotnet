@@ -96,7 +96,7 @@ namespace Meilisearch.Tests
             // Update settings
             Settings settings = new Settings
             {
-                AttributesForFaceting = new string[] { "genre" },
+                FilterableAttributes = new string[] { "genre" },
             };
             update = await index.UpdateSettings(settings);
 
