@@ -62,6 +62,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "name"},
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
             var movies = await this.basicIndex.Search<FormattedMovie>(
                 "man",
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
@@ -122,6 +130,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilter()
         {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "genre"},
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
                 new SearchQuery
