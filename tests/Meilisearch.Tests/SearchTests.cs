@@ -166,7 +166,7 @@ namespace Meilisearch.Tests
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await this.indexWithIntId.WaitForPendingUpdate(update.UpdateId);
 
-            var movies = await this.indexForFaceting.Search<Movie>(
+            var movies = await this.indexWithIntId.Search<MovieWithIntId>(
                 null,
                 new SearchQuery
                 {
@@ -175,7 +175,7 @@ namespace Meilisearch.Tests
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
             Assert.Equal(1, movies.Hits.Count());
-            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal(12, movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
         }
@@ -187,11 +187,11 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "genre", "id" },
             };
-            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            UpdateStatus update = await this.indexWithIntId.UpdateSettings(newFilters);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+            await this.indexWithIntId.WaitForPendingUpdate(update.UpdateId);
 
-            var movies = await this.indexForFaceting.Search<Movie>(
+            var movies = await this.indexWithIntId.Search<MovieWithIntId>(
                 null,
                 new SearchQuery
                 {
@@ -200,10 +200,9 @@ namespace Meilisearch.Tests
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
             Assert.Equal(1, movies.Hits.Count());
-            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal(13, movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
-            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
 
         [Fact]
