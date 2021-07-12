@@ -50,7 +50,7 @@ namespace Meilisearch.Tests
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
-                // DistinctAttribute = "name",
+                DistinctAttribute = "name",
             };
             UpdateStatus update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -59,7 +59,7 @@ namespace Meilisearch.Tests
             Settings response = await this.index.GetSettings();
             response.Should().NotBeNull();
             response.RankingRules.Should().Equals(this.defaultRankingRules);
-            // response.DistinctAttribute.Should().Equals("name");
+            response.DistinctAttribute.Should().Equals("name");
             Assert.Equal(new string[] { "name", "genre" }, response.SearchableAttributes);
             Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
