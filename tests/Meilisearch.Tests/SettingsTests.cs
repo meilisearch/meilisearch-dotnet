@@ -19,11 +19,10 @@ namespace Meilisearch.Tests
             this.client = fixture.DefaultClient;
             this.defaultRankingRules = new string[]
             {
-                "typo",
                 "words",
+                "typo",
                 "proximity",
                 "attribute",
-                "wordsPosition",
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
