@@ -20,6 +20,6 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets field distribution.
         /// </summary>
-        public IDictionary<string, int> FieldsDistribution { get; set; }
+        public IDictionary<string, int> FieldDistribution { get; set; }
     }
 }

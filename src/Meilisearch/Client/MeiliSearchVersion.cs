@@ -16,8 +16,8 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets build date of the current version.
         /// </summary>
-        [JsonPropertyName("buildDate")]
-        public string BuildDate { get; set; }
+        [JsonPropertyName("commitDate")]
+        public string CommitDate { get; set; }
 
         /// <summary>
         /// Gets or sets information about MeiliSearch version.

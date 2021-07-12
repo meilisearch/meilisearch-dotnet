@@ -25,7 +25,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the filter to apply to the query.
         /// </summary>
-        public string Filters { get; set; }
+        public string Filter { get; set; }
 
         /// <summary>
         /// Gets or sets attributes to retrieve.
@@ -46,11 +46,6 @@ namespace Meilisearch
         /// Gets or sets attributes to highlight.
         /// </summary>
         public IEnumerable<string> AttributesToHighlight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the faceted search to apply to the query.
-        /// </summary>
-        public IEnumerable<dynamic> FacetFilters { get; set; }
 
         /// <summary>
         /// Gets or sets the facets distribution for the query.

@@ -280,7 +280,7 @@ namespace Meilisearch
             {
                 var response = await this.GetUpdateStatus(updateId);
 
-                if (response.Status != "enqueued")
+                if (response.Status != "enqueued" && response.Status != "processing")
                 {
                     return response;
                 }
