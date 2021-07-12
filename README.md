@@ -109,7 +109,7 @@ namespace GettingStarted
 
 ```
 
-With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued`, `processing`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -144,11 +144,10 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```c#
 SearchResult<Book> books = await index.Search<Book>(
-    "prince",
+    "hob",
     new SearchQuery
     {
         AttributesToHighlight = new string[] { "title" },
-        Filters = "book_id > 10"
     }
 );
 foreach(var prop in books.Hits) {
@@ -162,18 +161,18 @@ JSON Output:
 {
     "hits": [
         {
-            "book_id": 456,
-            "title": "Le Petit Prince",
+            "book_id": 1344,
+            "title": "The Hobbit",
             "_formatted": {
-                "book_id": 456,
-                "title": "Le Petit <em>Prince</em>"
+                "book_id": 1344,
+                "title": "The <em>Hob</em>bit"
             }
         }
     ],
     "offset": 0,
     "limit": 20,
     "processingTimeMs": 10,
-    "query": "prince"
+    "query": "hob"
 }
 ```
 
