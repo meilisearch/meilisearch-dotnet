@@ -123,7 +123,7 @@ namespace Meilisearch.Tests
             movies.Hits.First().Id.Should().NotBeEmpty();
             movies.Hits.First().Genre.Should().BeNull();
             movies.Hits.First()._Formatted.Name.Should().NotBeEmpty();
-            movies.Hits.First()._Formatted.Id.Should().BeNull();
+            movies.Hits.First()._Formatted.Id.Should().Equals(15);
             movies.Hits.First()._Formatted.Genre.Should().BeNull();
         }
 
@@ -173,6 +173,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFacetsDistribution()
         {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "name"},
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
                 new SearchQuery
