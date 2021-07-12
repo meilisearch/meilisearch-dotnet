@@ -154,6 +154,32 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithNumberFilter()
+        {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "id" },
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = "id = 12",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(1, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
         public async Task CustomSearchWithMultipleFilter()
         {
             Settings newFilters = new Settings
@@ -186,7 +212,7 @@ namespace Meilisearch.Tests
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
             Assert.Equal(1, movies.Hits.Count());
-            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("13", movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
             Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
