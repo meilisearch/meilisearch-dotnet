@@ -64,7 +64,7 @@ namespace Meilisearch.Tests
         {
             Settings newFilters = new Settings
             {
-                FilterableAttributes = new string[] { "name"},
+                FilterableAttributes = new string[] { "name" },
             };
             UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -132,7 +132,7 @@ namespace Meilisearch.Tests
         {
             Settings newFilters = new Settings
             {
-                FilterableAttributes = new string[] { "genre"},
+                FilterableAttributes = new string[] { "genre" },
             };
             UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -175,7 +175,7 @@ namespace Meilisearch.Tests
         {
             Settings newFilters = new Settings
             {
-                FilterableAttributes = new string[] { "genre"},
+                FilterableAttributes = new string[] { "genre" },
             };
             UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
