@@ -153,23 +153,45 @@ namespace Meilisearch.Tests
             Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
 
-        // [Fact]
-        // public async Task CustomSearchWithFacetFilter()
-        // {
-        //     var movies = await this.indexForFaceting.Search<Movie>(
-        //         null,
-        //         new SearchQuery
-        //         {
-        //             FacetFilter = new[] { new string[] { "genre:SF" } },
-        //         });
-        //     movies.Hits.Should().NotBeEmpty();
-        //     movies.FacetsDistribution.Should().BeNull();
-        //     Assert.Equal(2, movies.Hits.Count());
-        //     Assert.Equal("12", movies.Hits.First().Id);
-        //     Assert.Equal("Star Wars", movies.Hits.First().Name);
-        //     Assert.Equal("SF", movies.Hits.First().Genre);
-        //     Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
-        // }
+        [Fact]
+        public async Task CustomSearchWithMultipleFilter()
+        {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "genre", "id" },
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = "genre = SF AND id > 12",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(1, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Harry Potter", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPhraseSearch()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>("coco \"harry\"");
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(1, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Harry Potter", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
         [Fact]
         public async Task CustomSearchWithFacetsDistribution()
         {
