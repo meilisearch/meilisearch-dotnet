@@ -174,7 +174,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
-            Assert.Equal(1, movies.Hits.Count());
+            Assert.Single(movies.Hits);
             Assert.Equal(12, movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
@@ -199,7 +199,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
-            Assert.Equal(1, movies.Hits.Count());
+            Assert.Single(movies.Hits);
             Assert.Equal(13, movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
@@ -211,7 +211,7 @@ namespace Meilisearch.Tests
             var movies = await this.indexForFaceting.Search<Movie>("coco \"harry\"");
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
-            Assert.Equal(1, movies.Hits.Count());
+            Assert.Single(movies.Hits);
             Assert.Equal("13", movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
