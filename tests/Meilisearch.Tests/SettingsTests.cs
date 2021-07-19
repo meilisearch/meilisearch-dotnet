@@ -19,11 +19,10 @@ namespace Meilisearch.Tests
             this.client = fixture.DefaultClient;
             this.defaultRankingRules = new string[]
             {
-                "typo",
                 "words",
+                "typo",
                 "proximity",
                 "attribute",
-                "wordsPosition",
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
@@ -39,8 +38,8 @@ namespace Meilisearch.Tests
             settings.DistinctAttribute.Should().BeNull();
             Assert.Equal(settings.SearchableAttributes, this.defaultSearchableAndDisplayedAttributes);
             Assert.Equal(settings.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
-            settings.StopWords.Should().BeNull();
-            settings.Synonyms.Should().BeNull();
+            settings.StopWords.Should().BeEmpty();
+            settings.Synonyms.Should().BeEmpty();
             settings.FilterableAttributes.Should().BeEmpty();
         }
 
