@@ -132,19 +132,47 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilter()
         {
-            Settings newFilters = new Settings
-            {
-                FilterableAttributes = new string[] { "genre" },
-            };
-            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
-
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
                 new SearchQuery
                 {
                     Filter = "genre = SF",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithFilterArray()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = new string[] { "genre = SF" },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithFilterMultipleArray()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = new string[][] { new string[] { "genre = SF", "genre = SF" }, new string[] { "genre = SF" } },
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
