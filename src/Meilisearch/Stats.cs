@@ -16,7 +16,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets last update timestamp.
         /// </summary>
-        public string LastUpdate { get; set; }
+        public Nullable <DateTime> LastUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets index stats.
