@@ -265,9 +265,9 @@ namespace Meilisearch.Tests
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().NotBeEmpty();
             movies.FacetsDistribution["genre"].Should().NotBeEmpty();
-            Assert.Equal(3, movies.FacetsDistribution["genre"]["action"]);
-            Assert.Equal(2, movies.FacetsDistribution["genre"]["sf"]);
-            Assert.Equal(1, movies.FacetsDistribution["genre"]["french movie"]);
+            Assert.Equal(3, movies.FacetsDistribution["genre"]["Action"]);
+            Assert.Equal(2, movies.FacetsDistribution["genre"]["Sf"]);
+            Assert.Equal(1, movies.FacetsDistribution["genre"]["French movie"]);
         }
     }
 }
