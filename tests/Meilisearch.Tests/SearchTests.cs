@@ -10,6 +10,7 @@ namespace Meilisearch.Tests
     {
         private readonly Index basicIndex;
         private readonly Index indexForFaceting;
+        private readonly Index indexWithIntId;
 
         public SearchTests(IndexFixture fixture)
         {
@@ -17,6 +18,7 @@ namespace Meilisearch.Tests
             var client = fixture.DefaultClient;
             this.basicIndex = fixture.SetUpBasicIndex("BasicIndex-SearchTests").Result;
             this.indexForFaceting = fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests").Result;
+            this.indexWithIntId = fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests").Result;
         }
 
         [Fact]
@@ -62,6 +64,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "name" },
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
             var movies = await this.basicIndex.Search<FormattedMovie>(
                 "man",
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
@@ -115,7 +125,7 @@ namespace Meilisearch.Tests
             movies.Hits.First().Id.Should().NotBeEmpty();
             movies.Hits.First().Genre.Should().BeNull();
             movies.Hits.First()._Formatted.Name.Should().NotBeEmpty();
-            movies.Hits.First()._Formatted.Id.Should().BeNull();
+            movies.Hits.First()._Formatted.Id.Should().Equals(15);
             movies.Hits.First()._Formatted.Genre.Should().BeNull();
         }
 
@@ -137,26 +147,115 @@ namespace Meilisearch.Tests
             Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
         }
 
-        // [Fact]
-        // public async Task CustomSearchWithFacetFilter()
-        // {
-        //     var movies = await this.indexForFaceting.Search<Movie>(
-        //         null,
-        //         new SearchQuery
-        //         {
-        //             FacetFilter = new[] { new string[] { "genre:SF" } },
-        //         });
-        //     movies.Hits.Should().NotBeEmpty();
-        //     movies.FacetsDistribution.Should().BeNull();
-        //     Assert.Equal(2, movies.Hits.Count());
-        //     Assert.Equal("12", movies.Hits.First().Id);
-        //     Assert.Equal("Star Wars", movies.Hits.First().Name);
-        //     Assert.Equal("SF", movies.Hits.First().Genre);
-        //     Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
-        // }
+        [Fact]
+        public async Task CustomSearchWithFilterArray()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = new string[] { "genre = SF" },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithFilterMultipleArray()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = new string[][] { new string[] { "genre = SF", "genre = SF" }, new string[] { "genre = SF" } },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("12", movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+            Assert.Equal("SF", movies.Hits.ElementAt(1).Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithNumberFilter()
+        {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "id" },
+            };
+            UpdateStatus update = await this.indexWithIntId.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.indexWithIntId.WaitForPendingUpdate(update.UpdateId);
+
+            var movies = await this.indexWithIntId.Search<MovieWithIntId>(
+                null,
+                new SearchQuery
+                {
+                    Filter = "id = 12",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Single(movies.Hits);
+            Assert.Equal(12, movies.Hits.First().Id);
+            Assert.Equal("Star Wars", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithMultipleFilter()
+        {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "genre", "id" },
+            };
+            UpdateStatus update = await this.indexWithIntId.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.indexWithIntId.WaitForPendingUpdate(update.UpdateId);
+
+            var movies = await this.indexWithIntId.Search<MovieWithIntId>(
+                null,
+                new SearchQuery
+                {
+                    Filter = "genre = SF AND id > 12",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Single(movies.Hits);
+            Assert.Equal(13, movies.Hits.First().Id);
+            Assert.Equal("Harry Potter", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPhraseSearch()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>("coco \"harry\"");
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Single(movies.Hits);
+            Assert.Equal("13", movies.Hits.First().Id);
+            Assert.Equal("Harry Potter", movies.Hits.First().Name);
+            Assert.Equal("SF", movies.Hits.First().Genre);
+        }
+
         [Fact]
         public async Task CustomSearchWithFacetsDistribution()
         {
+            Settings newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "genre" },
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
                 new SearchQuery

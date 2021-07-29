@@ -258,7 +258,9 @@ namespace Meilisearch
                 body.Q = query;
             }
 
-            var responseMessage = await this.client.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body);
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+
+            var responseMessage = await this.client.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, options);
             return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>();
         }
 
