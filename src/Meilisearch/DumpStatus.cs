@@ -14,5 +14,15 @@ namespace Meilisearch
         /// Gets or sets state of the operation.
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets started at of the operation.
+        /// </summary>
+        public string StartedAt { get; set; }
+
+        /// <summary>
+        /// Gets or sets finished at of the operation.
+        /// </summary>
+        public string FinishedAt { get; set; }
     }
 }

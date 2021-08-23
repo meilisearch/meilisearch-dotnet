@@ -19,11 +19,10 @@ namespace Meilisearch.Tests
             this.client = fixture.DefaultClient;
             this.defaultRankingRules = new string[]
             {
-                "typo",
                 "words",
+                "typo",
                 "proximity",
                 "attribute",
-                "wordsPosition",
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
@@ -41,7 +40,7 @@ namespace Meilisearch.Tests
             Assert.Equal(settings.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
             settings.StopWords.Should().BeEmpty();
             settings.Synonyms.Should().BeEmpty();
-            settings.AttributesForFaceting.Should().BeEmpty();
+            settings.FilterableAttributes.Should().BeEmpty();
         }
 
         [Fact]
@@ -65,7 +64,7 @@ namespace Meilisearch.Tests
             Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
             response.Synonyms.Should().BeEmpty();
-            response.AttributesForFaceting.Should().BeEmpty();
+            response.FilterableAttributes.Should().BeEmpty();
         }
 
         [Fact]
@@ -101,7 +100,7 @@ namespace Meilisearch.Tests
             Assert.Equal(new string[] { "of", "the" }, response.StopWords);
             Assert.Equal(response.Synonyms["hp"], new[] { "harry potter" });
             Assert.Equal(response.Synonyms["harry potter"], new[] { "hp" });
-            response.AttributesForFaceting.Should().BeEmpty();
+            response.FilterableAttributes.Should().BeEmpty();
         }
 
         [Fact]
@@ -115,7 +114,7 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 DisplayedAttributes = new string[] { "name" },
                 RankingRules = new string[] { "typo" },
-                AttributesForFaceting = new string[] { "genre" },
+                FilterableAttributes = new string[] { "genre" },
             };
             UpdateStatus update = await this.index.UpdateSettings(newSettings);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -135,7 +134,7 @@ namespace Meilisearch.Tests
             Assert.Equal(response.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
             response.StopWords.Should().BeEmpty();
             response.Synonyms.Should().BeEmpty();
-            response.AttributesForFaceting.Should().BeEmpty();
+            response.FilterableAttributes.Should().BeEmpty();
         }
     }
 }
