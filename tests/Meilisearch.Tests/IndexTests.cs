@@ -104,9 +104,9 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task GetOneExistingIndexes()
+        public async Task GetOneExistingIndex()
         {
-            var indexUid = "GetOneExistingIndexesTest";
+            var indexUid = "GetOneExistingIndexTest";
             await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
             var index = await this.defaultClient.GetIndex(indexUid);
             index.Uid.Should().Be(indexUid);
