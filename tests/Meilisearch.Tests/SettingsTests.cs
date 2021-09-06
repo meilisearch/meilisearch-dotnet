@@ -21,6 +21,7 @@ namespace Meilisearch.Tests
             {
                 "words",
                 "typo",
+                "sort",
                 "proximity",
                 "attribute",
                 "exactness",
