@@ -21,9 +21,9 @@ namespace Meilisearch.Tests
             {
                 "words",
                 "typo",
-                "sort",
                 "proximity",
                 "attribute",
+                "sort",
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
