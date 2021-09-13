@@ -67,5 +67,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("matches")]
         public bool? Matches { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sorted attributes.
+        /// </summary>
+        [JsonPropertyName("sort")]
+        public IEnumerable<string> Sort { get; set; }
     }
 }

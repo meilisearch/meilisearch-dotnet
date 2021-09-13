@@ -45,9 +45,15 @@ namespace Meilisearch
         public Dictionary<string, IEnumerable<string>> Synonyms { get; set; }
 
         /// <summary>
-        /// Gets or sets the attributes for faceting.
+        /// Gets or sets the filterable attributes.
         /// </summary>
         [JsonPropertyName("filterableAttributes")]
         public IEnumerable<string> FilterableAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sortable attributes.
+        /// </summary>
+        [JsonPropertyName("sortableAttributes")]
+        public IEnumerable<string> SortableAttributes { get; set; }
     }
 }

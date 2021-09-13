@@ -248,14 +248,6 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFacetsDistribution()
         {
-            Settings newFilters = new Settings
-            {
-                FilterableAttributes = new string[] { "genre" },
-            };
-            UpdateStatus update = await this.basicIndex.UpdateSettings(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
-
             var movies = await this.indexForFaceting.Search<Movie>(
                 null,
                 new SearchQuery
@@ -268,6 +260,29 @@ namespace Meilisearch.Tests
             Assert.Equal(3, movies.FacetsDistribution["genre"]["Action"]);
             Assert.Equal(2, movies.FacetsDistribution["genre"]["SF"]);
             Assert.Equal(1, movies.FacetsDistribution["genre"]["French movie"]);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithSort()
+        {
+            Settings newSortable = new Settings
+            {
+                SortableAttributes = new string[] { "name" },
+            };
+            UpdateStatus update = await this.basicIndex.UpdateSettings(newSortable);
+            update.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForPendingUpdate(update.UpdateId);
+
+            var movies = await this.basicIndex.Search<Movie>(
+                "man",
+                new SearchQuery
+                {
+                    Sort = new string[] { "name:asc" },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal("14", movies.Hits.First().Id);
         }
     }
 }

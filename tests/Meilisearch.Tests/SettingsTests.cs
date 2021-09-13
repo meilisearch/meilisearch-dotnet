@@ -23,6 +23,7 @@ namespace Meilisearch.Tests
                 "typo",
                 "proximity",
                 "attribute",
+                "sort",
                 "exactness",
             };
             this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
