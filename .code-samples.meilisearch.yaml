@@ -74,38 +74,48 @@ search_guide_1: |-
 search_guide_2: |-
 getting_started_add_documents_md: |-
 ```sh
-dotnet add package MeiliSearch --version 0.7.1
+dotnet add package MeiliSearch
 ```
 
 ```csharp
+using System.IO;
 using System.Text.Json;
 using Meilisearch;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
- MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-var options = new JsonSerializerOptions
+namespace meilisearch_demo
 {
-    PropertyNameCaseInsensitive = true
-};
+    public class Movie
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Poster { get; set; }
+        public string Overview { get; set; }
+        public IEnumerable<string> Genres { get; set; }
+    }
 
-string jsonString = await File.ReadAllTextAsync("movies.json");
-var movies = JsonSerializer.Deserialize<List<Movie>>(jsonString, options);
+    internal class Program
+    {
+        static async Task Main(string[] args)
+        {
+            MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
 
-var index = await client.GetOrCreateIndex("Movies");
-await index.AddDocuments<Movie>(movies);
+            string jsonString = await File.ReadAllTextAsync("movies.json");
+            var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
-public class Movie
-{
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Poster { get; set; }
-    public string Overview { get; set; }
-    public List<string> Genres { get; set; }
+            var index = await client.GetOrCreateIndex("Movies");
+            await index.AddDocuments<Movie>(movies);
+        }
+    }
 }
 ```
 getting_started_search_md: |-
 ```csharp
-using Meilisearch;
-
 MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var index = await client.GetOrCreateIndex("Movies");
 
@@ -113,15 +123,6 @@ SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
 foreach (var movie in movies.Hits)
 {
     Console.WriteLine(movie.Title);
-}
-
-public class Movie
-{
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Poster { get; set; }
-    public string Overview { get; set; }
-    public List<string> Genres { get; set; }
 }
 ```
 faceted_search_update_settings_1: |-
