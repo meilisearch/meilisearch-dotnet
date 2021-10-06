@@ -129,7 +129,7 @@ JSON Output:
 {
     "hits": [
         {
-            "book_id": 6,
+            "id": 6,
             "title": "Philadelphia",
         }
     ],
@@ -166,7 +166,7 @@ JSON Output:
             "movie_id": 1,
             "title": "Carol",
             "_formatted": {
-                "book_id": 1,
+                "id": 1,
                 "title": "Carol"
             }
         }
@@ -270,13 +270,13 @@ var status = await index.GetAllUpdateStatus();
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-var books = await this.index.Search<Movie>("prince");
+var movies = await this.index.Search<Movie>("prince");
 ```
 
 #### Custom Search <!-- omit in toc -->
 
 ```c#
-var books = await this.index.Search<Movie>("prince", new SearchQuery {Limit = 100});
+var movies = await this.index.Search<Movie>("prince", new SearchQuery {Limit = 100});
 ```
 
 ## 🧰 Use a Custom HTTP Client
