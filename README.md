@@ -215,8 +215,8 @@ var index = await client.GetIndex("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddDocuments(new Movie[] { new Movie { id = "1", Title = "Carol" } } );
- var updateStatus = await index.UpdateDocuments(new Movie[] { new Movie { id = "1", Title = "Carol" } } );
+ var updateStatus = await index.AddDocuments(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+ var updateStatus = await index.UpdateDocuments(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
 Update Status has a reference `UpdateId` to get the status of the action.
