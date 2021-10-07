@@ -136,7 +136,7 @@ JSON Output:
     "offset": 0,
     "limit": 20,
     "processingTimeMs": 10,
-    "query": "Philadelphia"
+    "query": "philadalphia"
 }
 ```
 
