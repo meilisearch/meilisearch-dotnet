@@ -92,6 +92,7 @@ namespace GettingStarted
         static async Task Main(string[] args)
         {
             MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+
             // An index is where the documents are stored.
             var index = await client.Index("movies");
             
