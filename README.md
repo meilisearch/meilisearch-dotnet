@@ -95,7 +95,6 @@ namespace GettingStarted
 
             // An index is where the documents are stored.
             var index = await client.Index("movies");
-            
             var documents = new Movie[] {
                 new Movie { id = "1", Title = "Carol", Genre = ['Romance', 'Drama']  },
                 new Movie { id = "2", Title = "Wonder Woman", Genre = ['Action', 'Adventure']  },
