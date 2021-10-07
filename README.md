@@ -97,11 +97,11 @@ namespace GettingStarted
             var index = await client.Index("movies");
             var documents = new Movie[] {
                 new Movie { id = "1", Title = "Carol", Genre = ['Romance', 'Drama']  },
-                new Movie { id = "2", Title = "Wonder Woman", Genre = ['Action', 'Adventure']  },
-                new Movie { id = "3", Title = "Life of Pi", Genre = ['Adventure', 'Drama'] },
-                new Movie { id = "4", Title = "Mad Max: Fury Road", Genre = ['Adventure', 'Science Fiction'] },
-                new Movie { id = "5", Title = "Moana", Genre = ['Fantasy', 'Action']},
-                new Movie { id = "6", Title = "Philadelphia", Genre = ['Drama'] }
+                new Movie { Id = "2", Title = "Wonder Woman", Genre = ['Action', 'Adventure']  },
+                new Movie { Id = "3", Title = "Life of Pi", Genre = ['Adventure', 'Drama'] },
+                new Movie { Id = "4", Title = "Mad Max: Fury Road", Genre = ['Adventure', 'Science Fiction'] },
+                new Movie { Id = "5", Title = "Moana", Genre = ['Fantasy', 'Action']},
+                new Movie { Id = "6", Title = "Philadelphia", Genre = ['Drama'] }
             };
             // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
             var update = await index.AddDocuments<Movie>(documents); # => { "updateId": 0 }
