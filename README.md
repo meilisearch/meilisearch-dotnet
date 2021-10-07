@@ -146,7 +146,7 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```c#
 SearchResult<Movie> movies = await index.Search<Movie>(
-    "hob",
+    "car",
     new SearchQuery
     {
         AttributesToHighlight = new string[] { "title" },
