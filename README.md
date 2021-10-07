@@ -117,7 +117,7 @@ With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued
 
 ```c#
 # MeiliSearch is typo-tolerant:
-SearchResult<Movie> movies = await index.Search<Movie>("Philadelphia");
+SearchResult<Movie> movies = await index.Search<Movie>("philadalphia");
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
 }
