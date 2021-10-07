@@ -85,7 +85,7 @@ namespace GettingStarted
     {
         public class Movie
         {
-            public string MovieId { get; set; }
+            public string Id { get; set; }
             public string Title { get; set; }
             public string Genre {get; set; }
         }
