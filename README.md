@@ -163,7 +163,7 @@ JSON Output:
 {
     "hits": [
         {
-            "movie_id": 1,
+            "id": 1,
             "title": "Carol",
             "_formatted": {
                 "id": 1,
