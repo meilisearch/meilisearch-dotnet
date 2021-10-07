@@ -148,6 +148,22 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithFilterWithSpaces()
+        {
+            var movies = await this.indexForFaceting.Search<Movie>(
+                null,
+                new SearchQuery
+                {
+                    Filter = "genre = sci fi",
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetsDistribution.Should().BeNull();
+            Assert.Equal(1, movies.Hits.Count());
+            Assert.Equal("1344", movies.Hits.First().Id);
+            Assert.Equal("The Hobbit", movies.Hits.First().Name);
+        }
+
+        [Fact]
         public async Task CustomSearchWithFilterArray()
         {
             var movies = await this.indexForFaceting.Search<Movie>(
