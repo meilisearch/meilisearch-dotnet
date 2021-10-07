@@ -167,7 +167,7 @@ JSON Output:
             "title": "Carol",
             "_formatted": {
                 "id": 1,
-                "title": "Carol"
+                "title": "<em>Car</em>ol"
             }
         }
     ],
