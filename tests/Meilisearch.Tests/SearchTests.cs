@@ -158,7 +158,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
-            Assert.Equal(1, movies.Hits.Count());
+            Assert.Single(movies.Hits);
             Assert.Equal("1344", movies.Hits.First().Id);
             Assert.Equal("The Hobbit", movies.Hits.First().Name);
         }

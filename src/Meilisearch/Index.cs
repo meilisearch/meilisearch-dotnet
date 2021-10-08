@@ -134,6 +134,25 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Adds documents in batches with size specified with <paramref name="batchSize"/>.
+        /// </summary>
+        /// <param name="documents">Documents to add.</param>
+        /// <param name="batchSize">Size of documents batches while adding them.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <returns>Returns the updateID of this async operation.</returns>
+        public async Task<IEnumerable<UpdateStatus>> AddDocumentsInBatches<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default)
+        {
+            async Task AddAction(List<T> items, List<UpdateStatus> updates)
+            {
+                updates.Add(await this.AddDocuments(items, primaryKey));
+            }
+
+            var result = await BatchOperation(documents, batchSize, AddAction);
+            return result;
+        }
+
+        /// <summary>
         /// Update documents.
         /// </summary>
         /// <param name="documents">Documents to update.</param>
@@ -153,6 +172,25 @@ namespace Meilisearch
             responseMessage = await this.http.PutAsJsonAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Updates documents in batches with size specified with <paramref name="batchSize"/>.
+        /// </summary>
+        /// <param name="documents">Documents to update.</param>
+        /// <param name="batchSize">Size of documents batches while updating them.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <returns>Returns the updateID of this async operation.</returns>
+        public async Task<IEnumerable<UpdateStatus>> UpdateDocumentsInBatches<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default)
+        {
+            async Task UpdateAction(List<T> items, List<UpdateStatus> updates)
+            {
+                updates.Add(await this.UpdateDocuments(items, primaryKey));
+            }
+
+            var result = await BatchOperation(documents, batchSize, UpdateAction);
+            return result;
         }
 
         /// <summary>
@@ -620,6 +658,20 @@ namespace Meilisearch
         {
             this.http = http;
             return this;
+        }
+
+        private static async Task<List<UpdateStatus>> BatchOperation<T>(IEnumerable<T> items, int batchSize, Func<List<T>, List<UpdateStatus>, Task> action)
+        {
+            var itemsList = new List<T>(items);
+            var numberOfBatches = Math.Ceiling((double)itemsList.Count / batchSize);
+            var result = new List<UpdateStatus>();
+            for (var i = 0; i < numberOfBatches; i++)
+            {
+                var batch = itemsList.GetRange(i * batchSize, batchSize);
+                await action.Invoke(batch, result);
+            }
+
+            return result;
         }
     }
 }
