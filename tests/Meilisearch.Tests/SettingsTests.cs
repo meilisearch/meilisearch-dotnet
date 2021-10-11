@@ -8,107 +8,100 @@ namespace Meilisearch.Tests
     [Collection("Sequential")]
     public class SettingsTests
     {
+        private readonly Settings defaultSettings;
         private MeilisearchClient client;
         private Index index;
-        private IEnumerable<string> defaultRankingRules;
-        private IEnumerable<string> defaultSearchableAndDisplayedAttributes;
 
         public SettingsTests(IndexFixture fixture)
         {
             fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
             this.client = fixture.DefaultClient;
-            this.defaultRankingRules = new string[]
+
+            this.defaultSettings = new Settings
             {
-                "words",
-                "typo",
-                "proximity",
-                "attribute",
-                "sort",
-                "exactness",
+                RankingRules = new string[]
+                {
+                    "words",
+                    "typo",
+                    "proximity",
+                    "attribute",
+                    "sort",
+                    "exactness",
+                },
+                DistinctAttribute = null,
+                SearchableAttributes = new string[] { "*" },
+                DisplayedAttributes = new string[] { "*" },
+                StopWords = new string[] { },
+                Synonyms = new Dictionary<string, IEnumerable<string>> { },
+                FilterableAttributes = new string[] { },
+                SortableAttributes = new string[] { },
             };
-            this.defaultSearchableAndDisplayedAttributes = new string[] { "*" };
+
             this.index = fixture.SetUpBasicIndex("BasicIndex-SettingsTests").Result;
         }
+
+        private delegate Task<TValue> IndexGetMethod<TValue>();
+
+        private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue);
+
+        private delegate Task<UpdateStatus> IndexResetMethod();
 
         [Fact]
         public async Task GetSettings()
         {
-            Settings settings = await this.index.GetSettings();
-            settings.Should().NotBeNull();
-            Assert.Equal(settings.RankingRules, this.defaultRankingRules);
-            settings.DistinctAttribute.Should().BeNull();
-            Assert.Equal(settings.SearchableAttributes, this.defaultSearchableAndDisplayedAttributes);
-            Assert.Equal(settings.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
-            settings.StopWords.Should().BeEmpty();
-            settings.Synonyms.Should().BeEmpty();
-            settings.FilterableAttributes.Should().BeEmpty();
+            await this.AssertGetEquality(this.index.GetSettings, this.defaultSettings);
         }
 
         [Fact]
         public async Task UpdateSettings()
         {
-            Settings newSettings = new Settings
+            var newSettings = new Settings
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
             };
-            UpdateStatus update = await this.index.UpdateSettings(newSettings);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.index.WaitForPendingUpdate(update.UpdateId);
-
-            Settings response = await this.index.GetSettings();
-            response.Should().NotBeNull();
-            response.RankingRules.Should().Equals(this.defaultRankingRules);
-            response.DistinctAttribute.Should().Equals("name");
-            Assert.Equal(new string[] { "name", "genre" }, response.SearchableAttributes);
-            Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
-            Assert.Equal(new string[] { "of", "the" }, response.StopWords);
-            response.Synonyms.Should().BeEmpty();
-            response.FilterableAttributes.Should().BeEmpty();
+            await this.AssertUpdateSuccess(this.index.UpdateSettings, newSettings);
+            await this.AssertGetInequality(this.index.GetSettings, newSettings); // fields omitted in newSettings shouldn't have changed
+            await this.AssertGetEquality(this.index.GetSettings, SettingsWithDefaultedNullFields(newSettings, this.defaultSettings));
         }
 
         [Fact]
-        public async Task UpdateSettingsWithoutOverwritting()
+        public async Task TwoStepUpdateSettings()
         {
-            // First update
-            var synonyms = new Dictionary<string, IEnumerable<string>>();
-            synonyms.Add("HP", new[] { "Harry Potter" });
-            synonyms.Add("Harry Potter", new[] { "HP" });
-            Settings newSettings = new Settings
+            var newSettingsOne = new Settings
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
-                Synonyms = synonyms,
+                Synonyms = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "hp", new string[] { "harry potter" } },
+                    { "harry potter", new string[] { "hp" } },
+                },
             };
-            UpdateStatus update = await this.index.UpdateSettings(newSettings);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.index.WaitForPendingUpdate(update.UpdateId);
+            await this.AssertUpdateSuccess(this.index.UpdateSettings, newSettingsOne);
+
+            var expectedSettingsOne = SettingsWithDefaultedNullFields(newSettingsOne, this.defaultSettings);
+            await this.AssertGetInequality(this.index.GetSettings, newSettingsOne); // fields omitted in newSettingsOne shouldn't have changed
+            await this.AssertGetEquality(this.index.GetSettings, expectedSettingsOne);
 
             // Second update: this one should not overwritten StopWords and DistinctAttribute.
-            newSettings = new Settings { SearchableAttributes = new string[] { "name" } };
-            update = await this.index.UpdateSettings(newSettings);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.index.WaitForPendingUpdate(update.UpdateId);
+            var newSettingsTwo = new Settings
+            {
+                SearchableAttributes = new string[] { "name" },
+            };
+            await this.AssertUpdateSuccess(this.index.UpdateSettings, newSettingsTwo);
 
-            Settings response = await this.index.GetSettings();
-            response.Should().NotBeNull();
-            response.RankingRules.Should().Equals(this.defaultRankingRules);
-            response.DistinctAttribute.Should().Equals("name");
-            Assert.Equal(new string[] { "name" }, response.SearchableAttributes);
-            Assert.Equal(this.defaultSearchableAndDisplayedAttributes, response.DisplayedAttributes);
-            Assert.Equal(new string[] { "of", "the" }, response.StopWords);
-            Assert.Equal(response.Synonyms["hp"], new[] { "harry potter" });
-            Assert.Equal(response.Synonyms["harry potter"], new[] { "hp" });
-            response.FilterableAttributes.Should().BeEmpty();
+            var expectedSettingsTwo = SettingsWithDefaultedNullFields(newSettingsTwo, expectedSettingsOne);
+            await this.AssertGetInequality(this.index.GetSettings, newSettingsTwo); // fields omitted in newSettingsTwo shouldn't have changed
+            await this.AssertGetEquality(this.index.GetSettings, expectedSettingsTwo);
         }
 
         [Fact]
         public async Task ResetSettings()
         {
-            // Update all settings
-            Settings newSettings = new Settings
+            var newSettings = new Settings
             {
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
@@ -117,25 +110,83 @@ namespace Meilisearch.Tests
                 RankingRules = new string[] { "typo" },
                 FilterableAttributes = new string[] { "genre" },
             };
-            UpdateStatus update = await this.index.UpdateSettings(newSettings);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.index.WaitForPendingUpdate(update.UpdateId);
-            Settings response = await this.index.GetSettings();
-            Assert.Equal(new string[] { "typo" }, response.RankingRules);
+            await this.AssertUpdateSuccess(this.index.UpdateSettings, newSettings);
+            await this.AssertGetInequality(this.index.GetSettings, newSettings); // fields omitted in newSettings shouldn't have changed
+            await this.AssertGetEquality(this.index.GetSettings, SettingsWithDefaultedNullFields(newSettings, this.defaultSettings));
 
-            // Reset all settings
-            update = await this.index.ResetSettings();
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.index.WaitForPendingUpdate(update.UpdateId);
-            response = await this.index.GetSettings();
-            response.Should().NotBeNull();
-            Assert.Equal(response.RankingRules, this.defaultRankingRules);
-            response.DistinctAttribute.Should().BeNull();
-            Assert.Equal(response.SearchableAttributes, this.defaultSearchableAndDisplayedAttributes);
-            Assert.Equal(response.DisplayedAttributes, this.defaultSearchableAndDisplayedAttributes);
-            response.StopWords.Should().BeEmpty();
-            response.Synonyms.Should().BeEmpty();
-            response.FilterableAttributes.Should().BeEmpty();
+            await this.AssertResetSuccess(this.index.ResetSettings);
+            await this.AssertGetEquality(this.index.GetSettings, this.defaultSettings);
+        }
+
+        [Fact]
+        public async Task GetDisplayedAttributes()
+        {
+            await this.AssertGetEquality(this.index.GetDisplayedAttributes, this.defaultSettings.DisplayedAttributes);
+        }
+
+        [Fact]
+        public async Task UpdateDisplayedAttributes()
+        {
+            IEnumerable<string> newDisplayedAttributes = new string[] { "name", "genre" };
+            await this.AssertUpdateSuccess(this.index.UpdateDisplayedAttributes, newDisplayedAttributes);
+            await this.AssertGetEquality(this.index.GetDisplayedAttributes, newDisplayedAttributes);
+        }
+
+        [Fact]
+        public async Task ResetDisplayedAttributes()
+        {
+            IEnumerable<string> newDisplayedAttributes = new string[] { "name", "genre" };
+            await this.AssertUpdateSuccess(this.index.UpdateDisplayedAttributes, newDisplayedAttributes);
+            await this.AssertGetEquality(this.index.GetDisplayedAttributes, newDisplayedAttributes);
+
+            await this.AssertResetSuccess(this.index.ResetDisplayedAttributes);
+            await this.AssertGetEquality(this.index.GetDisplayedAttributes, this.defaultSettings.DisplayedAttributes);
+        }
+
+        private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
+        {
+            return new Settings
+            {
+                RankingRules = inputSettings.RankingRules ?? defaultSettings.RankingRules,
+                DistinctAttribute = inputSettings.DistinctAttribute ?? defaultSettings.DistinctAttribute,
+                SearchableAttributes = inputSettings.SearchableAttributes ?? defaultSettings.SearchableAttributes,
+                DisplayedAttributes = inputSettings.DisplayedAttributes ?? defaultSettings.DisplayedAttributes,
+                StopWords = inputSettings.StopWords ?? defaultSettings.StopWords,
+                Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
+                FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
+                SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
+            };
+        }
+
+        private async Task AssertGetEquality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        {
+            var value = await getMethod();
+            value.Should().BeEquivalentTo(expectedValue);
+        }
+
+        private async Task AssertGetInequality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        {
+            var value = await getMethod();
+            value.Should().NotBeEquivalentTo(expectedValue);
+        }
+
+        private async Task AssertUpdateStatusProcessed(UpdateStatus updateStatus)
+        {
+            updateStatus.UpdateId.Should().BeGreaterThan(0);
+            var updateWaitResponse = await this.index.WaitForPendingUpdate(updateStatus.UpdateId);
+            updateWaitResponse.Status.Should().BeEquivalentTo("processed");
+        }
+
+        private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
+        {
+            var updateStatus = await updateMethod(newValue);
+            await this.AssertUpdateStatusProcessed(updateStatus);
+        }
+
+        private async Task AssertResetSuccess(IndexResetMethod resetMethod)
+        {
+            var updateStatus = await resetMethod();
+            await this.AssertUpdateStatusProcessed(updateStatus);
         }
     }
 }
