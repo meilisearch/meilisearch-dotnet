@@ -85,7 +85,8 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uri">Endpoint.</param>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public async Task<HttpResponseMessage> GetAsync(string uri) {
+        public async Task<HttpResponseMessage> GetAsync(string uri)
+        {
             return await this.client.GetAsync(uri);
         }
 
