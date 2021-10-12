@@ -15,7 +15,7 @@ namespace Meilisearch
     /// </summary>
     public class Index
     {
-        private HttpClient client;
+        private HttpRequest http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Index"/> class.
@@ -45,7 +45,7 @@ namespace Meilisearch
         /// <returns>An instance of the index fetch.</returns>
         public async Task<Index> FetchInfo()
         {
-            var response = await this.client.GetAsync($"indexes/{this.Uid}");
+            var response = await this.http.GetAsync($"indexes/{this.Uid}");
             var content = await response.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = content.PrimaryKey;
             return this;
@@ -67,7 +67,7 @@ namespace Meilisearch
         /// <returns>Index with the updated Primary Key.</returns>
         public async Task<Index> UpdateIndex(string primarykeytoChange)
         {
-            var message = await this.client.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
+            var message = await this.http.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = responsecontent.PrimaryKey;
             return this;
@@ -80,7 +80,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<bool> Delete()
         {
-            var responseMessage = await this.client.DeleteAsync($"/indexes/{this.Uid}");
+            var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}");
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 
@@ -100,8 +100,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.client.PostAsJsonAsync(uri, documents);
-
+            responseMessage = await this.http.PostAsJsonAsync(uri, documents);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -122,7 +121,7 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.client.PutAsJsonAsync(uri, filteredDocuments);
+            responseMessage = await this.http.PutAsJsonAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
@@ -135,7 +134,7 @@ namespace Meilisearch
         /// <returns>Returns the document, with the according type if the object is available.</returns>
         public async Task<T> GetDocument<T>(string documentId)
         {
-            return await this.client.GetFromJsonAsync<T>($"/indexes/{this.Uid}/documents/{documentId}");
+            return await this.http.GetFromJsonAsync<T>($"/indexes/{this.Uid}/documents/{documentId}");
         }
 
         /// <summary>
@@ -163,7 +162,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, query.AsDictionary());
             }
 
-            return await this.client.GetFromJsonAsync<IEnumerable<T>>(uri);
+            return await this.http.GetFromJsonAsync<IEnumerable<T>>(uri);
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteOneDocument(string documentId)
         {
-            var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/documents/{documentId}");
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents/{documentId}");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -194,7 +193,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteDocuments(IEnumerable<string> documentIds)
         {
-            var httpresponse = await this.client.PostAsJsonAsync($"/indexes/{this.Uid}/documents/delete-batch", documentIds);
+            var httpresponse = await this.http.PostAsJsonAsync($"/indexes/{this.Uid}/documents/delete-batch", documentIds);
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -215,7 +214,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of this async operation.</returns>
         public async Task<UpdateStatus> DeleteAllDocuments()
         {
-            var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/documents");
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -225,7 +224,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the operations status.</returns>
         public async Task<IEnumerable<UpdateStatus>> GetAllUpdateStatus()
         {
-            return await this.client.GetFromJsonAsync<IEnumerable<UpdateStatus>>($"/indexes/{this.Uid}/updates");
+            return await this.http.GetFromJsonAsync<IEnumerable<UpdateStatus>>($"/indexes/{this.Uid}/updates");
         }
 
         /// <summary>
@@ -235,7 +234,7 @@ namespace Meilisearch
         /// <returns>Return the current status of the operation.</returns>
         public async Task<UpdateStatus> GetUpdateStatus(int updateId)
         {
-            return await this.client.GetFromJsonAsync<UpdateStatus>($"/indexes/{this.Uid}/updates/{updateId}");
+            return await this.http.GetFromJsonAsync<UpdateStatus>($"/indexes/{this.Uid}/updates/{updateId}");
         }
 
         /// <summary>
@@ -260,7 +259,7 @@ namespace Meilisearch
 
             JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
 
-            var responseMessage = await this.client.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, options);
+            var responseMessage = await this.http.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, options);
             return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>();
         }
 
@@ -299,7 +298,7 @@ namespace Meilisearch
         /// <returns>Returns all the settings.</returns>
         public async Task<Settings> GetSettings()
         {
-            return await this.client.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings");
+            return await this.http.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings");
         }
 
         /// <summary>
@@ -311,7 +310,7 @@ namespace Meilisearch
         public async Task<UpdateStatus> UpdateSettings(Settings settings)
         {
             JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
-            HttpResponseMessage responseMessage = await this.client.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options);
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -321,7 +320,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetSettings()
         {
-            var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/settings");
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -331,17 +330,18 @@ namespace Meilisearch
         /// <returns>Return index stats.</returns>
         public async Task<IndexStats> GetStats()
         {
-            return await this.client.GetFromJsonAsync<IndexStats>($"/indexes/{this.Uid}/stats");
+            return await this.http.GetFromJsonAsync<IndexStats>($"/indexes/{this.Uid}/stats");
         }
 
         /// <summary>
         /// Initializes the Index with HTTP client. Only for internal usage.
         /// </summary>
-        /// <param name="client">HTTP client from the base client.</param>
+        /// <param name="http">HttpRequest instance used.</param>
         /// <returns>The same object with the initialization.</returns>
-        internal Index WithHttpClient(HttpClient client)
+        // internal Index WithHttpClient(HttpClient client)
+        internal Index WithHttpClient(HttpRequest http)
         {
-            this.client = client;
+            this.http = http;
             return this;
         }
     }
