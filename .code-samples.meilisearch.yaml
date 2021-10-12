@@ -108,7 +108,7 @@ namespace meilisearch_demo
             string jsonString = await File.ReadAllTextAsync("movies.json");
             var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
-            var index = await client.GetOrCreateIndex("Movies");
+            var index = await client.Index("Movies");
             await index.AddDocuments<Movie>(movies);
         }
     }
@@ -117,7 +117,7 @@ namespace meilisearch_demo
 getting_started_search_md: |-
 ```csharp
 MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-var index = await client.GetOrCreateIndex("Movies");
+var index = await client.Index("Movies");
 
 SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
 foreach (var movie in movies.Hits)
@@ -143,3 +143,9 @@ get_sortable_attributes_1: |-
 update_sortable_attributes_1: |-
 reset_sortable_attributes_1: |-
 search_parameter_guide_sort_1: |-
+geosearch_guide_filter_settings_1: |-
+geosearch_guide_filter_usage_1: |-
+geosearch_guide_filter_usage_2: |-
+geosearch_guide_sort_settings_1: |-
+geosearch_guide_sort_usage_1: |-
+geosearch_guide_sort_usage_2: |-
