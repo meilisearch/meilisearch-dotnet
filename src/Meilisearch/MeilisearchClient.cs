@@ -201,20 +201,7 @@ namespace Meilisearch
         /// True if the index existed and was deleted. False if it did not exist. </returns>
         public async Task<bool> DeleteIndexIfExists(string uid)
         {
-            try
-            {
-                await this.Index(uid).Delete();
-                return true;
-            }
-            catch (MeilisearchApiError error)
-            {
-                if (error.ErrorCode == "index_not_found")
-                {
-                    return false;
-                }
-
-                throw;
-            }
+            return await this.Index(uid).DeleteIfExists();
         }
     }
 }
