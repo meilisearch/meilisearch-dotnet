@@ -111,7 +111,6 @@ namespace Meilisearch
 
                 throw;
             }
-
         }
 
         /// <summary>
