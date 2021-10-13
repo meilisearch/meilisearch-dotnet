@@ -341,7 +341,7 @@ namespace Meilisearch
         public async Task<UpdateStatus> UpdateDisplayedAttributes(IEnumerable<string> displayedAttributes)
         {
             JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
-            HttpResponseMessage responseMessage = await this.client.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, options);
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, options);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
