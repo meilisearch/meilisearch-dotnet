@@ -177,5 +177,29 @@ namespace Meilisearch.Tests
             var stats = await index.GetStats();
             stats.Should().NotBeNull();
         }
+
+        [Fact]
+        public async Task WhenIndexExists_DeleteIfExists_ShouldReturnTrue()
+        {
+            var indexUid = "DeleteIndexTestUid";
+            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().BeNull();
+            var deleted = await index.DeleteIfExists();
+            deleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task WhenIndexNoLongerExists_DeleteIfExists_ShouldReturnFalse()
+        {
+            var indexUid = "DeleteIndexTestUid";
+            var index = await this.defaultClient.GetOrCreateIndex(indexUid);
+            index.Uid.Should().Be(indexUid);
+            index.PrimaryKey.Should().BeNull();
+            var deleted = await index.DeleteIfExists();
+            deleted.Should().BeTrue();
+            var deletedAgain = await index.DeleteIfExists();
+            deletedAgain.Should().BeFalse();
+        }
     }
 }
