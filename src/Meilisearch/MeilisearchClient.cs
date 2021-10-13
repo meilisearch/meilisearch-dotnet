@@ -1,9 +1,7 @@
 namespace Meilisearch
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
@@ -13,36 +11,28 @@ namespace Meilisearch
     /// </summary>
     public class MeilisearchClient
     {
-        private readonly HttpClient client;
+        private readonly HttpRequest http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
-        /// Default client for Meilisearch API.
+        /// Default client for MeiliSearch API.
         /// </summary>
-        /// <param name="url">URL to connect to meilisearch client.</param>
-        /// <param name="apiKey">API key for the usage.</param>
+        /// <param name="url">URL corresponding to MeiliSearch server.</param>
+        /// <param name="apiKey">API Key to connect to the MeiliSearch server.</param>
         public MeilisearchClient(string url, string apiKey = default)
         {
-            this.client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                this.client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
-            }
+            this.http = new HttpRequest(url, apiKey);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
-        /// Custom client for Meilisearch API. Use it with proper Http Client Factory.
+        /// Custom client for MeiliSearch API. Use it with proper Http Client Factory.
         /// </summary>
-        /// <param name="client">Injects the reusable Httpclient.</param>
-        /// <param name="apiKey">API Key for MeilisearchClient. Best practice is to use HttpClient default header rather than this parameter.</param>
+        /// <param name="client">Injects the reusable HttpClient.</param>
+        /// <param name="apiKey">API Key to connect to the MeiliSearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
         public MeilisearchClient(HttpClient client, string apiKey = default)
         {
-            this.client = client;
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                this.client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
-            }
+            this.http = new HttpRequest(client, apiKey);
         }
 
         /// <summary>
@@ -52,7 +42,7 @@ namespace Meilisearch
         /// <returns>Returns the MeiliSearch version with commit and build version.</returns>
         public async Task<MeiliSearchVersion> GetVersion()
         {
-            var response = await this.client.GetAsync("/version");
+            var response = await this.http.GetAsync("/version");
 
             return await response.Content.ReadFromJsonAsync<MeiliSearchVersion>();
         }
@@ -66,7 +56,7 @@ namespace Meilisearch
         public Index Index(string uid)
         {
             Index index = new Index(uid);
-            index.WithHttpClient(this.client);
+            index.WithHttpClient(this.http);
             return index;
         }
 
@@ -80,9 +70,9 @@ namespace Meilisearch
         public async Task<Index> CreateIndex(string uid, string primaryKey = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await this.client.PostAsJsonAsync("/indexes", index);
+            var response = await this.http.PostAsJsonAsync("/indexes", index);
 
-            return index.WithHttpClient(this.client);
+            return index.WithHttpClient(this.http);
         }
 
         /// <summary>
@@ -91,11 +81,11 @@ namespace Meilisearch
         /// <returns>Return Enumerable of Index.</returns>
         public async Task<IEnumerable<Index>> GetAllIndexes()
         {
-            var response = await this.client.GetAsync("/indexes");
+            var response = await this.http.GetAsync("/indexes");
 
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>();
             return content
-                .Select(p => p.WithHttpClient(this.client));
+                .Select(p => p.WithHttpClient(this.http));
         }
 
         /// <summary>
@@ -137,7 +127,7 @@ namespace Meilisearch
         /// <returns>Returns stats of all indexes.</returns>
         public Task<Stats> GetStats()
         {
-            return this.client.GetFromJsonAsync<Stats>("/stats");
+            return this.http.GetFromJsonAsync<Stats>("/stats");
         }
 
         /// <summary>
@@ -146,7 +136,7 @@ namespace Meilisearch
         /// <returns>Returns whether server is healthy or throw an error.</returns>
         public async Task<MeiliSearchHealth> Health()
         {
-            var response = await this.client.GetAsync("/health");
+            var response = await this.http.GetAsync("/health");
 
             return await response.Content.ReadFromJsonAsync<MeiliSearchHealth>();
         }
@@ -174,7 +164,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> CreateDump()
         {
-            var response = await this.client.PostAsync("/dumps", default, default);
+            var response = await this.http.PostAsync("/dumps");
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>();
         }
@@ -186,7 +176,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> GetDumpStatus(string uid)
         {
-            var response = await this.client.GetAsync($"/dumps/{uid}/status");
+            var response = await this.http.GetAsync($"/dumps/{uid}/status");
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>();
         }

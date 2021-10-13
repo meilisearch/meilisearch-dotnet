@@ -21,7 +21,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Try to override SendAsync.
+        /// Override SendAsync to handle errors.
         /// </summary>
         /// <param name="request">Request.</param>
         /// <param name="cancellationToken">Cancellation Token.</param>
