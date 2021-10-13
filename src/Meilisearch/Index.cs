@@ -385,6 +385,223 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the distinct attribute setting.
+        /// </summary>
+        /// <returns>Returns the distinct attribute setting.</returns>
+        public async Task<string> GetDistinctAttribute()
+        {
+            return await this.http.GetFromJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute");
+        }
+
+        /// <summary>
+        /// Updates the distinct attribute setting.
+        /// </summary>
+        /// <param name="distinctAttribute">Name of distinct attribute.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateDistinctAttribute(string distinctAttribute)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute", distinctAttribute, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the distinct attribute setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetDistinctAttribute()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/distinct-attribute");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the filterable attributes setting.
+        /// </summary>
+        /// <returns>Returns the filterable attributes setting.</returns>
+        public async Task<IEnumerable<string>> GetFilterableAttributes()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes");
+        }
+
+        /// <summary>
+        /// Updates the filterable attributes setting.
+        /// </summary>
+        /// <param name="filterableAttributes">Collection of filterable attributes.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateFilterableAttributes(IEnumerable<string> filterableAttributes)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes", filterableAttributes, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the filterable attributes setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetFilterableAttributes()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/filterable-attributes");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the ranking rules setting.
+        /// </summary>
+        /// <returns>Returns the ranking rules setting.</returns>
+        public async Task<IEnumerable<string>> GetRankingRules()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules");
+        }
+
+        /// <summary>
+        /// Updates the ranking rules setting.
+        /// </summary>
+        /// <param name="rankingRules">Collection of ranking rules.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateRankingRules(IEnumerable<string> rankingRules)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules", rankingRules, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the ranking rules setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetRankingRules()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/ranking-rules");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the searchable attributes setting.
+        /// </summary>
+        /// <returns>Returns the searchable attributes setting.</returns>
+        public async Task<IEnumerable<string>> GetSearchableAttributes()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes");
+        }
+
+        /// <summary>
+        /// Updates the searchable attributes setting.
+        /// </summary>
+        /// <param name="searchableAttributes">Collection of searchable attributes.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateSearchableAttributes(IEnumerable<string> searchableAttributes)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes", searchableAttributes, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the searchable attributes setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetSearchableAttributes()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/searchable-attributes");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the sortable attributes setting.
+        /// </summary>
+        /// <returns>Returns the sortable attributes setting.</returns>
+        public async Task<IEnumerable<string>> GetSortableAttributes()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes");
+        }
+
+        /// <summary>
+        /// Updates the sortable attributes setting.
+        /// </summary>
+        /// <param name="sortableAttributes">Collection of sortable attributes.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateSortableAttributes(IEnumerable<string> sortableAttributes)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes", sortableAttributes, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the sortable attributes setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetSortableAttributes()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/sortable-attributes");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the stop words setting.
+        /// </summary>
+        /// <returns>Returns the stop words setting.</returns>
+        public async Task<IEnumerable<string>> GetStopWords()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words");
+        }
+
+        /// <summary>
+        /// Updates the stop words setting.
+        /// </summary>
+        /// <param name="stopWords">Collection of stop words.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateStopWords(IEnumerable<string> stopWords)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words", stopWords, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the stop words setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetStopWords()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/stop-words");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Gets the synonyms setting.
+        /// </summary>
+        /// <returns>Returns the synonyms setting.</returns>
+        public async Task<Dictionary<string, IEnumerable<string>>> GetSynonyms()
+        {
+            return await this.http.GetFromJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms");
+        }
+
+        /// <summary>
+        /// Updates the synonyms setting.
+        /// </summary>
+        /// <param name="synonyms">Collection of synonyms.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateSynonyms(Dictionary<string, IEnumerable<string>> synonyms)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms", synonyms, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the synonyms setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetSynonyms()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/synonyms");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
         /// Get stats.
         /// </summary>
         /// <returns>Return index stats.</returns>
