@@ -83,6 +83,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
                 new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
+                new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
             };
             UpdateStatus update = await index.AddDocuments(movies);
 

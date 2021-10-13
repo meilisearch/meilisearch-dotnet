@@ -45,6 +45,8 @@ namespace Meilisearch.Tests
             Meilisearch.Index index = await ms.CreateIndex(indexUid);
             var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForPendingUpdate(updateStatus.UpdateId);
+            index.FetchPrimaryKey().Should().Equals("id"); // Check the JSON has been well serialized and the primary key is not equal to "Id"
         }
 
         [Fact]
