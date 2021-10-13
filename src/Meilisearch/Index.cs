@@ -325,6 +325,37 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the displayed attributes setting.
+        /// </summary>
+        /// <returns>Returns the displayed attributes setting.</returns>
+        public async Task<IEnumerable<string>> GetDisplayedAttributes()
+        {
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes");
+        }
+
+        /// <summary>
+        /// Updates the displayed attributes setting.
+        /// </summary>
+        /// <param name="displayedAttributes">Collection of displayed attributes.</param>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> UpdateDisplayedAttributes(IEnumerable<string> displayedAttributes)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            HttpResponseMessage responseMessage = await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, options);
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
+        /// Resets the displayed attributes setting.
+        /// </summary>
+        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        public async Task<UpdateStatus> ResetDisplayedAttributes()
+        {
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes");
+            return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
+        }
+
+        /// <summary>
         /// Get stats.
         /// </summary>
         /// <returns>Return index stats.</returns>
