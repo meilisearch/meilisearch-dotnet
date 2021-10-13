@@ -94,7 +94,7 @@ namespace Meilisearch
         {
             try
             {
-                var responseMessage = await this.client.DeleteAsync($"/indexes/{this.Uid}");
+                var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}");
                 if (responseMessage.StatusCode != HttpStatusCode.NoContent)
                 {
                     throw new HttpRequestException($"Client failed to delete index ${this.Uid}");
