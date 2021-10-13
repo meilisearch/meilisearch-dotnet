@@ -330,7 +330,7 @@ namespace Meilisearch
         /// <returns>Returns the displayed attributes setting.</returns>
         public async Task<IEnumerable<string>> GetDisplayedAttributes()
         {
-            return await this.client.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes");
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes");
         }
 
         /// <summary>
