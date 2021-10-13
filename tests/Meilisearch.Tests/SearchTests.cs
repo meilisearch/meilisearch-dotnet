@@ -154,7 +154,7 @@ namespace Meilisearch.Tests
                 null,
                 new SearchQuery
                 {
-                    Filter = "genre = sci fi",
+                    Filter = "genre = 'sci fi'",
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
