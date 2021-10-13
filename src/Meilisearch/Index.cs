@@ -351,7 +351,7 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetDisplayedAttributes()
         {
-            var httpresponse = await this.client.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes");
+            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes");
             return await httpresponse.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
