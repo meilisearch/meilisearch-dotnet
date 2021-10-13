@@ -46,12 +46,12 @@ namespace Meilisearch
         /// <summary>
         /// Gets the latest update date of the index.
         /// </summary>
-        public DateTimeOffset? UpdatedAt { get; internal set; } = DateTimeOffset.Now;
+        public DateTimeOffset? UpdatedAt { get; internal set; }
 
         /// <summary>
         /// Gets the creation date of the index.
         /// </summary>
-        public DateTimeOffset? CreatedAt { get; internal set; } = DateTimeOffset.Now;
+        public DateTimeOffset? CreatedAt { get; internal set; }
 
         /// <summary>
         /// Fetch the info of the index.
