@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meilisearch", "src\Meilisearch\Meilisearch.csproj", "{1876F5BB-672A-4440-88ED-D5E14DC507AC}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meilisearch", "src\Meilisearch\Meilisearch.csproj", "{1876F5BB-672A-4440-88ED-D5E14DC507AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meilisearch.Tests", "tests\Meilisearch.Tests\Meilisearch.Tests.csproj", "{CDAACB2F-0197-4266-B40C-D51F61136ABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meilisearch.Tests", "tests\Meilisearch.Tests\Meilisearch.Tests.csproj", "{CDAACB2F-0197-4266-B40C-D51F61136ABF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mellisearch-dev", "mellisearch-dev\mellisearch-dev.csproj", "{2D5764F7-D4D1-4303-82E6-0E6F1F71A88F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +23,15 @@ Global
 		{CDAACB2F-0197-4266-B40C-D51F61136ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDAACB2F-0197-4266-B40C-D51F61136ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDAACB2F-0197-4266-B40C-D51F61136ABF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D5764F7-D4D1-4303-82E6-0E6F1F71A88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D5764F7-D4D1-4303-82E6-0E6F1F71A88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D5764F7-D4D1-4303-82E6-0E6F1F71A88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D5764F7-D4D1-4303-82E6-0E6F1F71A88F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B5A2D7D-BD87-48A2-BA30-04624D3086E0}
 	EndGlobalSection
 EndGlobal
