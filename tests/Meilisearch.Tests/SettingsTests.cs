@@ -1,8 +1,8 @@
 namespace Meilisearch.Tests
 {
-    using FluentAssertions;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
@@ -12,7 +12,6 @@ namespace Meilisearch.Tests
         private MeilisearchClient client;
         private Index index;
         private IndexFixture fixture;
-
 
         public SettingsTests(IndexFixture fixture)
         {
@@ -40,16 +39,15 @@ namespace Meilisearch.Tests
             };
         }
 
+        private delegate Task<TValue> IndexGetMethod<TValue>();
+
         public async Task InitializeAsync()
         {
             await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
-            this.index = await fixture.SetUpBasicIndex("BasicIndex-SettingsTests");
-
+            this.index = await this.fixture.SetUpBasicIndex("BasicIndex-SettingsTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
-
-        private delegate Task<TValue> IndexGetMethod<TValue>();
 
         private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue);
 

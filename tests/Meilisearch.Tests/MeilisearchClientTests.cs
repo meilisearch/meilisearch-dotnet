@@ -1,10 +1,10 @@
 namespace Meilisearch.Tests
 {
-    using FluentAssertions;
-    using HttpClientFactoryLite;
     using System;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using FluentAssertions;
+    using HttpClientFactoryLite;
     using Xunit;
 
     [Collection("Sequential")]
@@ -23,6 +23,7 @@ namespace Meilisearch.Tests
         }
 
         public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+
         public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]

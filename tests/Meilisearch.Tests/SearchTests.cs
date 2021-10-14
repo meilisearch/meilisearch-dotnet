@@ -1,8 +1,8 @@
 namespace Meilisearch.Tests
 {
-    using FluentAssertions;
     using System.Linq;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
@@ -22,9 +22,9 @@ namespace Meilisearch.Tests
         public async Task InitializeAsync()
         {
             await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
-            this.basicIndex = await fixture.SetUpBasicIndex("BasicIndex-SearchTests");
-            this.indexForFaceting = await fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
-            this.indexWithIntId = await fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
+            this.basicIndex = await this.fixture.SetUpBasicIndex("BasicIndex-SearchTests");
+            this.indexForFaceting = await this.fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
+            this.indexWithIntId = await this.fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -166,7 +166,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
-            Assert.Equal(1, movies.Hits.Count());
+            Assert.Single(movies.Hits);
             Assert.Equal("1344", movies.Hits.First().Id);
             Assert.Equal("The Hobbit", movies.Hits.First().Name);
         }
