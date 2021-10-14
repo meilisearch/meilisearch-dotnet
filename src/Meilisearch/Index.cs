@@ -15,7 +15,7 @@ namespace Meilisearch
     /// </summary>
     public class Index
     {
-        private HttpRequest http;
+        private HttpClient http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Index"/> class.
@@ -399,7 +399,7 @@ namespace Meilisearch
         /// <param name="http">HttpRequest instance used.</param>
         /// <returns>The same object with the initialization.</returns>
         // internal Index WithHttpClient(HttpClient client)
-        internal Index WithHttpClient(HttpRequest http)
+        internal Index WithHttpClient(HttpClient http)
         {
             this.http = http;
             return this;
