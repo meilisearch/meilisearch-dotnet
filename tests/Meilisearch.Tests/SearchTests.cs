@@ -1,25 +1,33 @@
 namespace Meilisearch.Tests
 {
+    using FluentAssertions;
     using System.Linq;
     using System.Threading.Tasks;
-    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
-    public class SearchTests
+    public class SearchTests : IAsyncLifetime
     {
-        private readonly Index basicIndex;
-        private readonly Index indexForFaceting;
-        private readonly Index indexWithIntId;
+        private Index basicIndex;
+        private Index indexForFaceting;
+        private Index indexWithIntId;
+
+        private IndexFixture fixture;
 
         public SearchTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Context test cleaned for each [Fact]
-            var client = fixture.DefaultClient;
-            this.basicIndex = fixture.SetUpBasicIndex("BasicIndex-SearchTests").Result;
-            this.indexForFaceting = fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests").Result;
-            this.indexWithIntId = fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests").Result;
+            this.fixture = fixture;
         }
+
+        public async Task InitializeAsync()
+        {
+            await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            this.basicIndex = await fixture.SetUpBasicIndex("BasicIndex-SearchTests");
+            this.indexForFaceting = await fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
+            this.indexWithIntId = await fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
+        }
+
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task BasicSearch()

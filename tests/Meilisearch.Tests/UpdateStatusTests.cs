@@ -1,21 +1,28 @@
 namespace Meilisearch.Tests
 {
+    using FluentAssertions;
     using System.Linq;
     using System.Threading.Tasks;
-    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
-    public class UpdateStatusTests
+    public class UpdateStatusTests : IAsyncLifetime
     {
-        private readonly Meilisearch.Index index;
+        private Index index;
+        private IndexFixture fixture;
 
         public UpdateStatusTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
-            var client = fixture.DefaultClient;
-            this.index = fixture.SetUpBasicIndex("BasicIndex-UpdateStatusTests").Result;
+            this.fixture = fixture;
         }
+
+        public async Task InitializeAsync()
+        {
+            await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            this.index = await fixture.SetUpBasicIndex("BasicIndex-UpdateStatusTests");
+        }
+
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task GetAllUpdateStatus()

@@ -1,22 +1,25 @@
 namespace Meilisearch.Tests
 {
+    using FluentAssertions;
     using System.Linq;
     using System.Threading.Tasks;
-    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
-    public class DocumentTests
+    public class DocumentTests : IAsyncLifetime
     {
         private readonly MeilisearchClient client;
-        private readonly IndexFixture fixture;
+
+        private IndexFixture fixture;
 
         public DocumentTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Context test cleaned for each [Fact]
             this.fixture = fixture;
             this.client = fixture.DefaultClient;
         }
+
+        public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task BasicDocumentsAddition()
