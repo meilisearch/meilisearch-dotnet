@@ -5,6 +5,7 @@ namespace Meilisearch
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
 
@@ -100,6 +101,17 @@ namespace Meilisearch
         public async Task<Index> GetIndex(string uid)
         {
             return await this.Index(uid).FetchInfo();
+        }
+
+        /// <summary>
+        /// Gets an index in raw format.
+        /// </summary>
+        /// <param name="uid">UID of the index to get.</param>
+        /// <returns>A <see cref="JsonElement"/> which represents the raw index as a JSON object.</returns>
+        public async Task<JsonElement> GetRawIndex(string uid)
+        {
+            var json = await (await Meilisearch.Index.GetRaw(this.http, uid)).Content.ReadAsStringAsync();
+            return JsonDocument.Parse(json).RootElement;
         }
 
         /// <summary>
