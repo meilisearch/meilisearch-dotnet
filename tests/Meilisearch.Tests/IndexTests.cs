@@ -1,9 +1,9 @@
 namespace Meilisearch.Tests
 {
-    using FluentAssertions;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]

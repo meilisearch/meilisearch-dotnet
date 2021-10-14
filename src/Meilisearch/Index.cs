@@ -1,6 +1,5 @@
 namespace Meilisearch
 {
-    using Microsoft.AspNetCore.WebUtilities;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,6 +8,7 @@ namespace Meilisearch
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.WebUtilities;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
