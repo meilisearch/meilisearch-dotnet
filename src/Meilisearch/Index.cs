@@ -8,6 +8,7 @@ namespace Meilisearch
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Meilisearch.Extensions;
     using Microsoft.AspNetCore.WebUtilities;
 
     /// <summary>
@@ -129,7 +130,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.http.PostAsJsonAsync(uri, documents);
+            responseMessage = await this.http.PostJsonWithoutCharsetAsync(uri, documents);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -150,7 +151,7 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.http.PutAsJsonAsync(uri, filteredDocuments);
+            responseMessage = await this.http.PutJsonWithoutCharsetAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }

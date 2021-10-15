@@ -8,19 +8,19 @@ namespace Meilisearch.Extensions
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Class to communicate with the MeiliSearch server.
+    /// Class to communicate with the MeiliSearch server without charset-utf-8 as Content-Type.
     /// </summary>
     public static class HttpExtensions
     {
         /// <summary>
-        /// Sends JSON payload using POST without "charset=utf-8" as Content-Type.
+        /// Sends JSON payload using POST without "charset-utf-8" as Content-Type.
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, string uri, T body)
+        public static async Task<HttpResponseMessage> PostJsonWithoutCharsetAsync<T>(this HttpClient client, string uri, T body)
         {
             var payload = PrepareJsonPayload<T>(body);
 
@@ -28,7 +28,7 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Sends JSON payload using POST without "charset=utf-8" as Content-Type and using JSON serializer options.
+        /// Sends JSON payload using POST without "charset-utf-8" as Content-Type and using JSON serializer options.
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
@@ -36,7 +36,7 @@ namespace Meilisearch.Extensions
         /// <param name="options">Json options for serialization.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options)
+        public static async Task<HttpResponseMessage> PostJsonWithoutCharsetAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options)
         {
             var payload = PrepareJsonPayload<T>(body, options);
 
@@ -44,14 +44,14 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Sends JSON payload using PUT without "charset=utf-8" as Content-Type.
+        /// Sends JSON payload using PUT without "charset-utf-8" as Content-Type.
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PutAsJsonAsync<T>(this HttpClient client, string uri, T body)
+        public static async Task<HttpResponseMessage> PutJsonWithoutCharsetAsync<T>(this HttpClient client, string uri, T body)
         {
             var payload = PrepareJsonPayload<T>(body);
 
@@ -59,7 +59,7 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Sends JSON payload using PUT without "charset=utf-8" as Content-Type.
+        /// Add the API Key to the X-Meili-API-Key header
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="apiKey">API Key.</param>
