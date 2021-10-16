@@ -84,7 +84,7 @@ namespace Meilisearch.Tests
 
             var dumpStatus = await this.defaultClient.GetDumpStatus(dump.Uid);
 
-            dumpStatus.Status.Should().Be("done");
+            dumpStatus.Status.Should().BeOneOf("done", "in_progress");
             Assert.Equal(dump.Uid, dumpStatus.Uid);
         }
 
