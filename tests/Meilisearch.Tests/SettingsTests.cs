@@ -41,6 +41,10 @@ namespace Meilisearch.Tests
 
         private delegate Task<TValue> IndexGetMethod<TValue>();
 
+        private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue);
+
+        private delegate Task<UpdateStatus> IndexResetMethod();
+
         public async Task InitializeAsync()
         {
             await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
@@ -48,10 +52,6 @@ namespace Meilisearch.Tests
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
-
-        private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue);
-
-        private delegate Task<UpdateStatus> IndexResetMethod();
 
         [Fact]
         public async Task GetSettings()
