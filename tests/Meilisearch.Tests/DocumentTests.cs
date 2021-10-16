@@ -6,17 +6,21 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class DocumentTests
+    public class DocumentTests : IAsyncLifetime
     {
         private readonly MeilisearchClient client;
-        private readonly IndexFixture fixture;
+
+        private IndexFixture fixture;
 
         public DocumentTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Context test cleaned for each [Fact]
             this.fixture = fixture;
             this.client = fixture.DefaultClient;
         }
+
+        public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task BasicDocumentsAddition()
@@ -34,6 +38,35 @@ namespace Meilisearch.Tests
             Assert.Equal("1", docs.First().Id);
             Assert.Equal("Batman", docs.First().Name);
             docs.First().Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task BasicDocumentsAdditionInBatches()
+        {
+            var indexUID = "BasicDocumentsAdditionInBatchesTest";
+            Index index = this.client.Index(indexUID);
+
+            // Add the documents
+            Movie[] movies =
+            {
+                new Movie { Id = "1", Name = "Batman" },
+                new Movie { Id = "2", Name = "Reservoir Dogs" },
+                new Movie { Id = "3", Name = "Taxi Driver" },
+                new Movie { Id = "4", Name = "Interstellar" },
+            };
+            var updates = await index.AddDocumentsInBatches(movies, 2);
+            foreach (var u in updates)
+            {
+                u.UpdateId.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForPendingUpdate(u.UpdateId);
+            }
+
+            // Check the documents have been added (one movie from each batch)
+            var docs = (await index.GetDocuments<Movie>()).ToList();
+            Assert.Equal("1", docs.ElementAt(0).Id);
+            Assert.Equal("Batman", docs.ElementAt(0).Name);
+            Assert.Equal("3", docs.ElementAt(2).Id);
+            Assert.Equal("Taxi Driver", docs.ElementAt(2).Name);
         }
 
         [Fact]
@@ -122,6 +155,50 @@ namespace Meilisearch.Tests
             Assert.Equal("2", docs.ElementAt(1).Id);
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task BasicDocumentsUpdateInBatches()
+        {
+            var indexUID = "BasicDocumentsUpdateInBatchesTest";
+            Index index = this.client.Index(indexUID);
+
+            // Add the documents
+            Movie[] movies =
+            {
+                new Movie { Id = "1", Name = "Batman" },
+                new Movie { Id = "2", Name = "Reservoir Dogs" },
+                new Movie { Id = "3", Name = "Taxi Driver" },
+                new Movie { Id = "4", Name = "Interstellar" },
+            };
+            var updates = await index.AddDocumentsInBatches(movies, 2);
+            foreach (var u in updates)
+            {
+                u.UpdateId.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForPendingUpdate(u.UpdateId);
+            }
+
+            movies = new Movie[]
+            {
+                new Movie { Id = "1", Name = "Batman", Genre = "Action" },
+                new Movie { Id = "2", Name = "Reservoir Dogs", Genre = "Drama" },
+                new Movie { Id = "3", Name = "Taxi Driver", Genre = "Drama" },
+                new Movie { Id = "4", Name = "Interstellar", Genre = "Sci-Fi" },
+            };
+            updates = await index.UpdateDocumentsInBatches(movies, 2);
+            foreach (var u in updates)
+            {
+                u.UpdateId.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForPendingUpdate(u.UpdateId);
+            }
+
+            // Assert movies have genre after update
+            var docs = (await index.GetDocuments<Movie>()).ToList();
+            foreach (var movie in docs)
+            {
+                movie.Genre.Should().NotBeNull();
+                movie.Genre.Should().NotBeEmpty();
+            }
         }
 
         [Fact]
