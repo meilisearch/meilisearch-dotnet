@@ -8,17 +8,23 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class MeilisearchClientTests
+    public class MeilisearchClientTests : IAsyncLifetime
     {
         private MeilisearchClient defaultClient;
         private string defaultPrimaryKey;
 
+        private IndexFixture fixture;
+
         public MeilisearchClientTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
+            this.fixture = fixture;
             this.defaultClient = fixture.DefaultClient;
             this.defaultPrimaryKey = "movieId";
         }
+
+        public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task GetVersionWithCustomClient()
