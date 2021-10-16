@@ -59,7 +59,7 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Add the API Key to the X-Meili-API-Key header
+        /// Add the API Key to the X-Meili-API-Key header.
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="apiKey">API Key.</param>
