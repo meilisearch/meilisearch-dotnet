@@ -130,7 +130,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.http.PostJsonWithoutCharsetAsync(uri, documents);
+            responseMessage = await this.http.PostJsonCustomAsync(uri, documents);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -151,7 +151,7 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.http.PutJsonWithoutCharsetAsync(uri, filteredDocuments);
+            responseMessage = await this.http.PutJsonCustomAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
