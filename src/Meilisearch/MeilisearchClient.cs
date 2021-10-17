@@ -5,6 +5,7 @@ namespace Meilisearch
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Typed client for MeiliSearch.
@@ -73,6 +74,19 @@ namespace Meilisearch
             var response = await this.http.PostAsJsonAsync("/indexes", index);
 
             return index.WithHttpClient(this.http);
+        }
+
+        /// <summary>
+        /// Gets all the raw indexes for the instance as returned by the resposne of the Meilisearch server. Throws error if the index does not exist.
+        /// </summary>
+        /// <returns>An IEnumerable of index in Dictionary key, value format.
+        /// Ex: [{"uid": "movies", "name":"movies", "createdAt":"2021-10-17T08:24:15.222102668Z",updatedAt:"2021-10-17T08:24:15.222102668Z",primaryKey:"movieId"}]. </returns>
+        public async Task<IEnumerable<Dictionary<string, string>>> GetAllRawIndexes()
+        {
+            var response = await this.http.GetAsync("/indexes");
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<Dictionary<string, string>>>(content);
         }
 
         /// <summary>
