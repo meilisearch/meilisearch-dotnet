@@ -41,12 +41,23 @@ namespace Meilisearch
         public string PrimaryKey { get; internal set; }
 
         /// <summary>
+        /// Gets raw index call response.
+        /// </summary>
+        /// <param name="http">HTTP client to make the call.</param>
+        /// <param name="uid">Uid of the index to retrieve.</param>
+        /// <returns>Call response.</returns>
+        public static async Task<HttpResponseMessage> GetRaw(HttpClient http, string uid)
+        {
+            return await http.GetAsync($"indexes/{uid}");
+        }
+
+        /// <summary>
         /// Fetch the info of the index.
         /// </summary>
         /// <returns>An instance of the index fetch.</returns>
         public async Task<Index> FetchInfo()
         {
-            var response = await this.http.GetAsync($"indexes/{this.Uid}");
+            var response = await GetRaw(this.http, this.Uid);
             var content = await response.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = content.PrimaryKey;
             return this;

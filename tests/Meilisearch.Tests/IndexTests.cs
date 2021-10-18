@@ -4,15 +4,15 @@ namespace Meilisearch.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
+    using HttpClientFactoryLite;
     using Xunit;
 
     [Collection("Sequential")]
     public class IndexTests : IAsyncLifetime
     {
-        private MeilisearchClient defaultClient;
-        private string defaultPrimaryKey;
-
-        private IndexFixture fixture;
+        private readonly MeilisearchClient defaultClient;
+        private readonly string defaultPrimaryKey;
+        private readonly IndexFixture fixture;
 
         public IndexTests(IndexFixture fixture)
         {
@@ -216,6 +216,18 @@ namespace Meilisearch.Tests
             deleted.Should().BeTrue();
             var deletedAgain = await index.DeleteIfExists();
             deletedAgain.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task GetRawIndex()
+        {
+            await this.fixture.SetUpBasicIndex("BasicIndex");
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+
+            var rawIndex = await ms.GetRawIndex("BasicIndex");
+
+            rawIndex.GetProperty("uid").GetString().Should().Be("BasicIndex");
         }
     }
 }
