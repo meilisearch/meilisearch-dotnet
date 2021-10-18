@@ -95,7 +95,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdateIndex()
         {
-            var updatedPrimaryKey = "UpdatePrimaryKeyTest";
+            var updatedPrimaryKey = "UpdateIndexTest";
             await this.defaultClient.GetOrCreateIndex(updatedPrimaryKey);
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await this.defaultClient.UpdateIndex(updatedPrimaryKey, primarykey);
