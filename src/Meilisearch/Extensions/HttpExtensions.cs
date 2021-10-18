@@ -1,7 +1,5 @@
 namespace Meilisearch.Extensions
 {
-    using System;
-    using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
@@ -73,12 +71,15 @@ namespace Meilisearch.Extensions
 
         private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = default)
         {
-            if (options == null)
+            if (options == default)
             {
-                options = new JsonSerializerOptions();
+                options = new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                };
             }
 
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
 
