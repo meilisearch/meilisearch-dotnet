@@ -218,7 +218,6 @@ namespace Meilisearch.Tests
             var rawIndex = await ms.GetRawIndex("BasicIndex");
 
             rawIndex.GetProperty("uid").GetString().Should().Be("BasicIndex");
-            rawIndex.GetProperty("name").GetString().Should().Be("BasicIndex");
         }
     }
 }
