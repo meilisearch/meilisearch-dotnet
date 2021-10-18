@@ -6,15 +6,16 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class SettingsTests
+    public class SettingsTests : IAsyncLifetime
     {
         private readonly Settings defaultSettings;
         private MeilisearchClient client;
         private Index index;
+        private IndexFixture fixture;
 
         public SettingsTests(IndexFixture fixture)
         {
-            fixture.DeleteAllIndexes().Wait(); // Test context cleaned for each [Fact]
+            this.fixture = fixture;
             this.client = fixture.DefaultClient;
 
             this.defaultSettings = new Settings
@@ -36,8 +37,6 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { },
                 SortableAttributes = new string[] { },
             };
-
-            this.index = fixture.SetUpBasicIndex("BasicIndex-SettingsTests").Result;
         }
 
         private delegate Task<TValue> IndexGetMethod<TValue>();
@@ -45,6 +44,14 @@ namespace Meilisearch.Tests
         private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue);
 
         private delegate Task<UpdateStatus> IndexResetMethod();
+
+        public async Task InitializeAsync()
+        {
+            await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            this.index = await this.fixture.SetUpBasicIndex("BasicIndex-SettingsTests");
+        }
+
+        public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
         public async Task GetSettings()

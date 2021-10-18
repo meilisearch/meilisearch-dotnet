@@ -4,7 +4,7 @@ namespace Meilisearch.Tests
     using System.Threading.Tasks;
     using Xunit;
 
-    public class IndexFixture : IDisposable
+    public class IndexFixture : IAsyncLifetime
     {
         public IndexFixture()
         {
@@ -13,10 +13,9 @@ namespace Meilisearch.Tests
 
         public MeilisearchClient DefaultClient { get; private set; }
 
-        public void Dispose()
-        {
-            this.DeleteAllIndexes().Wait(); // Let a clean MeiliSearch instance, for maintainers convenience only.
-        }
+        public Task InitializeAsync() => Task.CompletedTask;
+
+        public async Task DisposeAsync() => await this.DeleteAllIndexes(); // Let a clean MeiliSearch instance, for maintainers convenience only.
 
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {

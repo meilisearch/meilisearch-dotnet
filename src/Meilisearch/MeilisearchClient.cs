@@ -1,18 +1,20 @@
 namespace Meilisearch
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Meilisearch.Extensions;
 
     /// <summary>
     /// Typed client for MeiliSearch.
     /// </summary>
     public class MeilisearchClient
     {
-        private readonly HttpRequest http;
+        private readonly HttpClient http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -22,7 +24,8 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the MeiliSearch server.</param>
         public MeilisearchClient(string url, string apiKey = default)
         {
-            this.http = new HttpRequest(url, apiKey);
+            this.http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
+            this.http.AddApiKeyToHeader(apiKey);
         }
 
         /// <summary>
@@ -33,7 +36,8 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the MeiliSearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
         public MeilisearchClient(HttpClient client, string apiKey = default)
         {
-            this.http = new HttpRequest(client, apiKey);
+            this.http = client;
+            this.http.AddApiKeyToHeader(apiKey);
         }
 
         /// <summary>
@@ -168,7 +172,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> CreateDump()
         {
-            var response = await this.http.PostAsync("/dumps");
+            var response = await this.http.PostAsync("/dumps", default, default);
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>();
         }

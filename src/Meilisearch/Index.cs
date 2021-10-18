@@ -8,6 +8,7 @@ namespace Meilisearch
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Meilisearch.Extensions;
     using Microsoft.AspNetCore.WebUtilities;
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace Meilisearch
     /// </summary>
     public class Index
     {
-        private HttpRequest http;
+        private HttpClient http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Index"/> class.
@@ -145,7 +146,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.http.PostAsJsonAsync(uri, documents);
+            responseMessage = await this.http.PostJsonCustomAsync(uri, documents);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -185,7 +186,7 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.http.PutAsJsonAsync(uri, filteredDocuments);
+            responseMessage = await this.http.PutJsonCustomAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
@@ -670,7 +671,7 @@ namespace Meilisearch
         /// <param name="http">HttpRequest instance used.</param>
         /// <returns>The same object with the initialization.</returns>
         // internal Index WithHttpClient(HttpClient client)
-        internal Index WithHttpClient(HttpRequest http)
+        internal Index WithHttpClient(HttpClient http)
         {
             this.http = http;
             return this;
