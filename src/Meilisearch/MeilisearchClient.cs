@@ -80,6 +80,17 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Changes the primary key of the index.
+        /// </summary>
+        /// <param name="uid">Unique Id.</param>
+        /// <param name="primarykeytoChange">Primary key set.</param>
+        /// <returns>Returns Index.</returns>
+        public async Task<Index> UpdateIndex(string uid, string primarykeytoChange)
+        {
+            return await this.Index(uid).Update(primarykeytoChange);
+        }
+
+        /// <summary>
         /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
         /// <returns>Return Enumerable of Index.</returns>
