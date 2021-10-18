@@ -93,6 +93,16 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task UpdateIndex()
+        {
+            var updatedPrimaryKey = "UpdateIndexTest";
+            await this.defaultClient.GetOrCreateIndex(updatedPrimaryKey);
+            var primarykey = "MovieId" + new Random().Next();
+            var modifiedIndex = await this.defaultClient.UpdateIndex(updatedPrimaryKey, primarykey);
+            modifiedIndex.PrimaryKey.Should().Be(primarykey);
+        }
+
+        [Fact]
         public async Task IndexNameWrongFormattedError()
         {
             var indexUid = "Wrong UID";
@@ -172,7 +182,7 @@ namespace Meilisearch.Tests
         {
             var index = await this.defaultClient.GetOrCreateIndex("UpdatePrimaryKeyTest");
             var primarykey = "MovieId" + new Random().Next();
-            var modifiedIndex = await index.UpdateIndex(primarykey);
+            var modifiedIndex = await index.Update(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
         }
 
