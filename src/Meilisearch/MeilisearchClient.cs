@@ -76,7 +76,7 @@ namespace Meilisearch
         {
             Index index = new Index(uid, primaryKey);
 
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
+            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
             var response = await this.http.PostAsJsonAsync("/indexes", index, options);
 
