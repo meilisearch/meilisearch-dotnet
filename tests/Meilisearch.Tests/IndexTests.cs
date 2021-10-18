@@ -1,9 +1,9 @@
 namespace Meilisearch.Tests
 {
+    using FluentAssertions;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using FluentAssertions;
     using Xunit;
 
     [Collection("Sequential")]
@@ -176,6 +176,8 @@ namespace Meilisearch.Tests
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await index.UpdateIndex(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
+            modifiedIndex.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+            modifiedIndex.UpdatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         }
 
         [Fact]

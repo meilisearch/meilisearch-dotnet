@@ -87,6 +87,8 @@ namespace Meilisearch
             var message = await this.http.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = responsecontent.PrimaryKey;
+            this.CreatedAt = responsecontent.CreatedAt;
+            this.UpdatedAt = responsecontent.UpdatedAt;
             return this;
         }
 
