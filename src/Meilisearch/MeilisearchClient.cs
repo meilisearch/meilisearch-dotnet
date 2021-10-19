@@ -4,8 +4,8 @@ namespace Meilisearch
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Text.Json;
     using System.Threading.Tasks;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Typed client for MeiliSearch.
@@ -81,12 +81,20 @@ namespace Meilisearch
         /// </summary>
         /// <returns>An IEnumerable of index in Dictionary key, value format.
         /// Ex: [{"uid": "movies", "name":"movies", "createdAt":"2021-10-17T08:24:15.222102668Z",updatedAt:"2021-10-17T08:24:15.222102668Z",primaryKey:"movieId"}]. </returns>
-        public async Task<IEnumerable<Dictionary<string, string>>> GetAllRawIndexes()
+        public async Task<IEnumerable<JsonElement>> GetAllRawIndexes()
         {
             var response = await this.http.GetAsync("/indexes");
 
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<Dictionary<string, string>>>(content);
+            var json = JsonDocument.Parse(content);
+            List<JsonElement> indexes = new List<JsonElement>();
+
+            foreach (var element in json.RootElement.EnumerateArray())
+            {
+                indexes.Add(element);
+            }
+
+            return indexes;
         }
 
         /// <summary>

@@ -108,9 +108,9 @@ namespace Meilisearch.Tests
             var indexes = await this.defaultClient.GetAllRawIndexes();
             indexes.Count().Should().BeGreaterOrEqualTo(1);
             var index = indexes.First();
-            Assert.Equal(index["uid"], indexUid);
-            Assert.Equal(index["name"], indexUid);
-            Assert.Equal(index["primaryKey"], this.defaultPrimaryKey);
+            Assert.Equal(index.GetProperty("uid").GetString(), indexUid);
+            Assert.Equal(index.GetProperty("name").GetString(), indexUid);
+            Assert.Equal(index.GetProperty("primaryKey").GetString(), this.defaultPrimaryKey);
         }
 
         [Fact]
