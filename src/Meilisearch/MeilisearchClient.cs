@@ -95,8 +95,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets all the raw indexes for the instance as returned by the resposne of the Meilisearch server. Throws error if the index does not exist.
         /// </summary>
-        /// <returns>An IEnumerable of indexes in JsonElement format.
-        /// Ex: [{"uid": "movies", "name":"movies", "createdAt":"2021-10-17T08:24:15.222102668Z",updatedAt:"2021-10-17T08:24:15.222102668Z",primaryKey:"movieId"}]. </returns>
+        /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
         public async Task<IEnumerable<JsonElement>> GetAllRawIndexes()
         {
             var response = await this.http.GetAsync("/indexes");
