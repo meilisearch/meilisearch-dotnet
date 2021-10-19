@@ -75,7 +75,8 @@ namespace Meilisearch
         public async Task<Index> CreateIndex(string uid, string primaryKey = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await this.http.PostAsJsonAsync("/indexes", index);
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
+            var response = await this.http.PostJsonCustomAsync("/indexes", index, options);
 
             return index.WithHttpClient(this.http);
         }

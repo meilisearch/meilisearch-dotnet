@@ -127,6 +127,8 @@ namespace Meilisearch.Tests
             var index = await this.defaultClient.GetIndex(indexUid);
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
+            index.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+            index.UpdatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         }
 
         [Fact]
@@ -184,6 +186,8 @@ namespace Meilisearch.Tests
             var primarykey = "MovieId" + new Random().Next();
             var modifiedIndex = await index.Update(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
+            modifiedIndex.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+            modifiedIndex.UpdatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         }
 
         [Fact]
