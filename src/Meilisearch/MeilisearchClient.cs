@@ -84,6 +84,17 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Changes the primary key of the index.
+        /// </summary>
+        /// <param name="uid">Unique Id.</param>
+        /// <param name="primarykeytoChange">Primary key set.</param>
+        /// <returns>Returns Index.</returns>
+        public async Task<Index> UpdateIndex(string uid, string primarykeytoChange)
+        {
+            return await this.Index(uid).Update(primarykeytoChange);
+        }
+
+        /// <summary>
         /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
         /// <returns>Return Enumerable of Index.</returns>
@@ -104,6 +115,17 @@ namespace Meilisearch
         public async Task<Index> GetIndex(string uid)
         {
             return await this.Index(uid).FetchInfo();
+        }
+
+        /// <summary>
+        /// Gets an index in raw format.
+        /// </summary>
+        /// <param name="uid">UID of the index to get.</param>
+        /// <returns>A <see cref="JsonElement"/> which represents the raw index as a JSON object.</returns>
+        public async Task<JsonElement> GetRawIndex(string uid)
+        {
+            var json = await (await Meilisearch.Index.GetRaw(this.http, uid)).Content.ReadAsStringAsync();
+            return JsonDocument.Parse(json).RootElement;
         }
 
         /// <summary>
