@@ -93,6 +93,26 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets all the raw indexes for the instance as returned by the resposne of the Meilisearch server. Throws error if the index does not exist.
+        /// </summary>
+        /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
+        public async Task<IEnumerable<JsonElement>> GetAllRawIndexes()
+        {
+            var response = await this.http.GetAsync("/indexes");
+
+            var content = await response.Content.ReadAsStringAsync();
+            var json = JsonDocument.Parse(content);
+            List<JsonElement> indexes = new List<JsonElement>();
+
+            foreach (var element in json.RootElement.EnumerateArray())
+            {
+                indexes.Add(element);
+            }
+
+            return indexes;
+        }
+
+        /// <summary>
         /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
         /// <returns>Return Enumerable of Index.</returns>

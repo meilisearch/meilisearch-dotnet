@@ -111,6 +111,19 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetAllRawIndexes()
+        {
+            var indexUid = "GetAllRawIndexesTest";
+            await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var indexes = await this.defaultClient.GetAllRawIndexes();
+            indexes.Count().Should().BeGreaterOrEqualTo(1);
+            var index = indexes.First();
+            Assert.Equal(index.GetProperty("uid").GetString(), indexUid);
+            Assert.Equal(index.GetProperty("name").GetString(), indexUid);
+            Assert.Equal(index.GetProperty("primaryKey").GetString(), this.defaultPrimaryKey);
+        }
+
+        [Fact]
         public async Task GetAllExistingIndexes()
         {
             var indexUid = "GetAllExistingIndexesTest";
