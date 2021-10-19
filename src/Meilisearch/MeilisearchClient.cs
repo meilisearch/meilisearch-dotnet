@@ -5,6 +5,7 @@ namespace Meilisearch
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
 
@@ -75,9 +76,9 @@ namespace Meilisearch
         {
             Index index = new Index(uid, primaryKey);
 
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
 
-            var response = await this.http.PostAsJsonAsync("/indexes", index, options);
+            var response = await this.http.PostJsonCustomAsync("/indexes", index, options);
 
             return index.WithHttpClient(this.http);
         }

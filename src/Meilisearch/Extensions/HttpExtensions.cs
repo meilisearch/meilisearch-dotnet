@@ -71,15 +71,12 @@ namespace Meilisearch.Extensions
 
         private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = default)
         {
-            if (options == default)
+            if (options == null)
             {
-                options = new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                };
+                options = new JsonSerializerOptions();
             }
 
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
 
