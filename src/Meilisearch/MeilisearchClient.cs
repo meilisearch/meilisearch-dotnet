@@ -1,18 +1,20 @@
 namespace Meilisearch
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Meilisearch.Extensions;
 
     /// <summary>
     /// Typed client for MeiliSearch.
     /// </summary>
     public class MeilisearchClient
     {
-        private readonly HttpRequest http;
+        private readonly HttpClient http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -22,7 +24,8 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the MeiliSearch server.</param>
         public MeilisearchClient(string url, string apiKey = default)
         {
-            this.http = new HttpRequest(url, apiKey);
+            this.http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
+            this.http.AddApiKeyToHeader(apiKey);
         }
 
         /// <summary>
@@ -33,7 +36,8 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the MeiliSearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
         public MeilisearchClient(HttpClient client, string apiKey = default)
         {
-            this.http = new HttpRequest(client, apiKey);
+            this.http = client;
+            this.http.AddApiKeyToHeader(apiKey);
         }
 
         /// <summary>
@@ -71,9 +75,21 @@ namespace Meilisearch
         public async Task<Index> CreateIndex(string uid, string primaryKey = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await this.http.PostAsJsonAsync("/indexes", index);
+            var options = new JsonSerializerOptions { IgnoreNullValues = true };
+            var response = await this.http.PostJsonCustomAsync("/indexes", index, options);
 
             return index.WithHttpClient(this.http);
+        }
+
+        /// <summary>
+        /// Changes the primary key of the index.
+        /// </summary>
+        /// <param name="uid">Unique Id.</param>
+        /// <param name="primarykeytoChange">Primary key set.</param>
+        /// <returns>Returns Index.</returns>
+        public async Task<Index> UpdateIndex(string uid, string primarykeytoChange)
+        {
+            return await this.Index(uid).Update(primarykeytoChange);
         }
 
         /// <summary>
@@ -118,6 +134,17 @@ namespace Meilisearch
         public async Task<Index> GetIndex(string uid)
         {
             return await this.Index(uid).FetchInfo();
+        }
+
+        /// <summary>
+        /// Gets an index in raw format.
+        /// </summary>
+        /// <param name="uid">UID of the index to get.</param>
+        /// <returns>A <see cref="JsonElement"/> which represents the raw index as a JSON object.</returns>
+        public async Task<JsonElement> GetRawIndex(string uid)
+        {
+            var json = await (await Meilisearch.Index.GetRaw(this.http, uid)).Content.ReadAsStringAsync();
+            return JsonDocument.Parse(json).RootElement;
         }
 
         /// <summary>
@@ -186,7 +213,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> CreateDump()
         {
-            var response = await this.http.PostAsync("/dumps");
+            var response = await this.http.PostAsync("/dumps", default, default);
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>();
         }

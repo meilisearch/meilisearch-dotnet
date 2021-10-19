@@ -8,6 +8,7 @@ namespace Meilisearch
     using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Meilisearch.Extensions;
     using Microsoft.AspNetCore.WebUtilities;
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace Meilisearch
     /// </summary>
     public class Index
     {
-        private HttpRequest http;
+        private HttpClient http;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Index"/> class.
@@ -23,10 +24,14 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uid">Unique index identifier.</param>
         /// <param name="primaryKey">Documents primary key.</param>
-        public Index(string uid, string primaryKey = default)
+        /// <param name="createdAt">The creation date of the index.</param>
+        /// <param name="updatedAt">The latest update of the index.</param>
+        public Index(string uid, string primaryKey = default, DateTimeOffset? createdAt = default, DateTimeOffset? updatedAt = default)
         {
             this.Uid = uid;
             this.PrimaryKey = primaryKey;
+            this.CreatedAt = createdAt;
+            this.UpdatedAt = updatedAt;
         }
 
         /// <summary>
@@ -40,14 +45,37 @@ namespace Meilisearch
         public string PrimaryKey { get; internal set; }
 
         /// <summary>
+        /// Gets the latest update date of the index.
+        /// </summary>
+        public DateTimeOffset? UpdatedAt { get; internal set; }
+
+        /// <summary>
+        /// Gets the creation date of the index.
+        /// </summary>
+        public DateTimeOffset? CreatedAt { get; internal set; }
+
+        /// <summary>
+        /// Gets raw index call response.
+        /// </summary>
+        /// <param name="http">HTTP client to make the call.</param>
+        /// <param name="uid">Uid of the index to retrieve.</param>
+        /// <returns>Call response.</returns>
+        public static async Task<HttpResponseMessage> GetRaw(HttpClient http, string uid)
+        {
+            return await http.GetAsync($"indexes/{uid}");
+        }
+
+        /// <summary>
         /// Fetch the info of the index.
         /// </summary>
         /// <returns>An instance of the index fetch.</returns>
         public async Task<Index> FetchInfo()
         {
-            var response = await this.http.GetAsync($"indexes/{this.Uid}");
+            var response = await GetRaw(this.http, this.Uid);
             var content = await response.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = content.PrimaryKey;
+            this.CreatedAt = content.CreatedAt;
+            this.UpdatedAt = content.UpdatedAt;
             return this;
         }
 
@@ -65,11 +93,13 @@ namespace Meilisearch
         /// </summary>
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <returns>Index with the updated Primary Key.</returns>
-        public async Task<Index> UpdateIndex(string primarykeytoChange)
+        public async Task<Index> Update(string primarykeytoChange)
         {
             var message = await this.http.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange });
             var responsecontent = await message.Content.ReadFromJsonAsync<Index>();
             this.PrimaryKey = responsecontent.PrimaryKey;
+            this.CreatedAt = responsecontent.CreatedAt;
+            this.UpdatedAt = responsecontent.UpdatedAt;
             return this;
         }
 
@@ -129,7 +159,7 @@ namespace Meilisearch
                 uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
             }
 
-            responseMessage = await this.http.PostAsJsonAsync(uri, documents);
+            responseMessage = await this.http.PostJsonCustomAsync(uri, documents);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
 
@@ -169,7 +199,7 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.http.PutAsJsonAsync(uri, filteredDocuments);
+            responseMessage = await this.http.PutJsonCustomAsync(uri, filteredDocuments);
 
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>();
         }
@@ -654,7 +684,7 @@ namespace Meilisearch
         /// <param name="http">HttpRequest instance used.</param>
         /// <returns>The same object with the initialization.</returns>
         // internal Index WithHttpClient(HttpClient client)
-        internal Index WithHttpClient(HttpRequest http)
+        internal Index WithHttpClient(HttpClient http)
         {
             this.http = http;
             return this;

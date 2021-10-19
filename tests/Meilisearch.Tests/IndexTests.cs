@@ -4,15 +4,15 @@ namespace Meilisearch.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
+    using HttpClientFactoryLite;
     using Xunit;
 
     [Collection("Sequential")]
     public class IndexTests : IAsyncLifetime
     {
-        private MeilisearchClient defaultClient;
-        private string defaultPrimaryKey;
-
-        private IndexFixture fixture;
+        private readonly MeilisearchClient defaultClient;
+        private readonly string defaultPrimaryKey;
+        private readonly IndexFixture fixture;
 
         public IndexTests(IndexFixture fixture)
         {
@@ -93,6 +93,16 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task UpdateIndex()
+        {
+            var updatedPrimaryKey = "UpdateIndexTest";
+            await this.defaultClient.GetOrCreateIndex(updatedPrimaryKey);
+            var primarykey = "MovieId" + new Random().Next();
+            var modifiedIndex = await this.defaultClient.UpdateIndex(updatedPrimaryKey, primarykey);
+            modifiedIndex.PrimaryKey.Should().Be(primarykey);
+        }
+
+        [Fact]
         public async Task IndexNameWrongFormattedError()
         {
             var indexUid = "Wrong UID";
@@ -130,6 +140,8 @@ namespace Meilisearch.Tests
             var index = await this.defaultClient.GetIndex(indexUid);
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().Be(this.defaultPrimaryKey);
+            index.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+            index.UpdatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         }
 
         [Fact]
@@ -185,8 +197,10 @@ namespace Meilisearch.Tests
         {
             var index = await this.defaultClient.GetOrCreateIndex("UpdatePrimaryKeyTest");
             var primarykey = "MovieId" + new Random().Next();
-            var modifiedIndex = await index.UpdateIndex(primarykey);
+            var modifiedIndex = await index.Update(primarykey);
             modifiedIndex.PrimaryKey.Should().Be(primarykey);
+            modifiedIndex.CreatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+            modifiedIndex.UpdatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         }
 
         [Fact]
@@ -219,6 +233,18 @@ namespace Meilisearch.Tests
             deleted.Should().BeTrue();
             var deletedAgain = await index.DeleteIfExists();
             deletedAgain.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task GetRawIndex()
+        {
+            await this.fixture.SetUpBasicIndex("BasicIndex");
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            MeilisearchClient ms = new MeilisearchClient(httpClient);
+
+            var rawIndex = await ms.GetRawIndex("BasicIndex");
+
+            rawIndex.GetProperty("uid").GetString().Should().Be("BasicIndex");
         }
     }
 }
