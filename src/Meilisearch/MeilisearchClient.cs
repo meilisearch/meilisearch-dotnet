@@ -160,7 +160,7 @@ namespace Meilisearch
             }
             catch (MeilisearchApiError e)
             {
-                if (e.ErrorCode != "index_not_found")
+                if (e.Code != "index_not_found")
                 {
                     throw e;
                 }
