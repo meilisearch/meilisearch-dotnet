@@ -14,21 +14,21 @@ namespace Meilisearch
         public string Message { get; set; }
 
         /// <summary>
-        /// Gets or sets the errorCode.
+        /// Gets or sets the code.
         /// </summary>
-        [JsonPropertyName("errorCode")]
-        public string ErrorCode { get; set; }
+        [JsonPropertyName("code")]
+        public string Code { get; set; }
 
         /// <summary>
-        /// Gets or sets the errorType.
+        /// Gets or sets the type.
         /// </summary>
-        [JsonPropertyName("errorType")]
-        public string ErrorType { get; set; }
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the errorLink.
+        /// Gets or sets the link.
         /// </summary>
-        [JsonPropertyName("errorLink")]
-        public string ErrorLink { get; set; }
+        [JsonPropertyName("link")]
+        public string Link { get; set; }
     }
 }

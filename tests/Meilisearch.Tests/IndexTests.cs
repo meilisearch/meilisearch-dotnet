@@ -51,7 +51,7 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().BeNull();
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.GetIndex(indexUid));
-            Assert.Equal("index_not_found", ex.ErrorCode);
+            Assert.Equal("index_not_found", ex.Code);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Meilisearch.Tests
             var indexUid = "IndexAlreadyExistsErrorTest";
             var index = await this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey);
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.CreateIndex(indexUid, this.defaultPrimaryKey));
-            Assert.Equal("index_already_exists", ex.ErrorCode);
+            Assert.Equal("index_already_exists", ex.Code);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Meilisearch.Tests
         {
             var indexUid = "Wrong UID";
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.CreateIndex(indexUid));
-            Assert.Equal("invalid_index_uid", ex.ErrorCode);
+            Assert.Equal("invalid_index_uid", ex.Code);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Meilisearch.Tests
         {
             var indexUid = "GetAnNonExistingIndexTest";
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.defaultClient.GetIndex(indexUid));
-            Assert.Equal("index_not_found", ex.ErrorCode);
+            Assert.Equal("index_not_found", ex.Code);
         }
 
         [Fact]

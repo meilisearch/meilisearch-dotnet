@@ -134,7 +134,7 @@ namespace Meilisearch
             }
             catch (MeilisearchApiError error)
             {
-                if (error.ErrorCode == "index_not_found")
+                if (error.Code == "index_not_found")
                 {
                     return false;
                 }
