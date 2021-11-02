@@ -73,11 +73,11 @@ documents_guide_add_movie_1: |-
 search_guide_1: |-
 search_guide_2: |-
 getting_started_add_documents_md: |-
-```sh
+```bash
 dotnet add package MeiliSearch
 ```
 
-```csharp
+```c#
 using System.IO;
 using System.Text.Json;
 using Meilisearch;
@@ -115,7 +115,7 @@ namespace meilisearch_demo
 }
 ```
 getting_started_search_md: |-
-```csharp
+```c#
 MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 var index = await client.Index("Movies");
 
