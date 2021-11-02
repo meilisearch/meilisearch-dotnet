@@ -44,8 +44,8 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 ### Tests <!-- omit in TOC -->
 
 ```bash
-docker pull getmeili/meilisearch:latest # Fetch the latest version of MeiliSearch image from Docker Hub
-docker run -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
+curl -L https://install.meilisearch.com | sh # download MeiliSearch
+./meilisearch --master-key=masterKey --no-analytics=true # run MeiliSearch
 dotnet restore
 dotnet test
 ```
