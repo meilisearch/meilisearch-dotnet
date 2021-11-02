@@ -73,58 +73,60 @@ documents_guide_add_movie_1: |-
 search_guide_1: |-
 search_guide_2: |-
 getting_started_add_documents_md: |-
-```bash
-dotnet add package MeiliSearch
-```
+  ```bash
+  dotnet add package MeiliSearch
+  ```
 
-```c#
-using System.IO;
-using System.Text.Json;
-using Meilisearch;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+  ```c#
+  using System.IO;
+  using System.Text.Json;
+  using Meilisearch;
+  using System.Threading.Tasks;
+  using System.Collections.Generic;
 
-namespace meilisearch_demo
-{
-    public class Movie
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Poster { get; set; }
-        public string Overview { get; set; }
-        public IEnumerable<string> Genres { get; set; }
-    }
+  namespace meilisearch_demo
+  {
+      public class Movie
+      {
+          public string Id { get; set; }
+          public string Title { get; set; }
+          public string Poster { get; set; }
+          public string Overview { get; set; }
+          public IEnumerable<string> Genres { get; set; }
+      }
 
-    internal class Program
-    {
-        static async Task Main(string[] args)
-        {
-            MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+      internal class Program
+      {
+          static async Task Main(string[] args)
+          {
+              MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+              var options = new JsonSerializerOptions
+              {
+                  PropertyNameCaseInsensitive = true
+              };
 
-            string jsonString = await File.ReadAllTextAsync("movies.json");
-            var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
+              string jsonString = await File.ReadAllTextAsync("movies.json");
+              var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
-            var index = await client.Index("Movies");
-            await index.AddDocuments<Movie>(movies);
-        }
-    }
-}
-```
+              var index = await client.Index("Movies");
+              await index.AddDocuments<Movie>(movies);
+          }
+      }
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 getting_started_search_md: |-
-```c#
-MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-var index = await client.Index("Movies");
+  ```c#
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = await client.Index("Movies");
 
-SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
-foreach (var movie in movies.Hits)
-{
-    Console.WriteLine(movie.Title);
-}
-```
+  SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
 faceted_search_facets_distribution_1: |-
