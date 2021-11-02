@@ -77,7 +77,7 @@ getting_started_add_documents_md: |-
   dotnet add package MeiliSearch
   ```
 
-  ```c#
+  ```csharp
   using System.IO;
   using System.Text.Json;
   using Meilisearch;
@@ -116,7 +116,7 @@ getting_started_add_documents_md: |-
   ```
   [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 getting_started_search_md: |-
-  ```c#
+  ```csharp
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var index = await client.Index("Movies");
 
