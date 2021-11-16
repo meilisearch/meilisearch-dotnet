@@ -63,7 +63,7 @@ namespace Meilisearch.Tests
             var indexUid = "ErrorHandlerOfCustomClientTest";
             var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndex(indexUid, this.defaultPrimaryKey));
-            Assert.Equal("index_already_exists", ex.ErrorCode);
+            Assert.Equal("index_already_exists", ex.Code);
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace Meilisearch.Tests
         {
             var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri("http://localhost:7700/") };
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
-            Assert.Equal("MeilisearchApiError, Message: Not Found, ErrorCode: 404", ex.Message);
+            Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
 
         [Fact]
