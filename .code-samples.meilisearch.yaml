@@ -18,6 +18,17 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = await client.Index("Movies");
+  
+  var updates = await index.GetAllUpdateStatus();
+  foreach (UpdateStatus update in updates)
+  {
+      Console.WriteLine(update.Status);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 get_keys_1: |-
 get_settings_1: |-
 update_settings_1: |-
@@ -32,14 +43,43 @@ get_ranking_rules_1: |-
 update_ranking_rules_1: |-
 reset_ranking_rules_1: |-
 get_distinct_attribute_1: |-
+  ```csharp
+  string result = await index.GetDistinctAttribute();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 update_distinct_attribute_1: |-
+  ```csharp
+  UpdateStatus result = await index.UpdateDistinctAttribute("skuid");
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 reset_distinct_attribute_1: |-
+  ```csharp
+  UpdateStatus result = await index.ResetDistinctAttribute();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
+  ```csharp
+  IEnumerable<string> attributes = await index.GetFilterableAttributes();
+  foreach (string attribute in attributes)
+  {
+      Console.WriteLine(attribute);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)    
 update_filterable_attributes_1: |-
+  ```csharp
+  List<string> attributes = new() { "genres", "director" };
+  UpdateStatus result = await index.UpdateFilterableAttributes(attributes);
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)  
 reset_filterable_attributes_1: |-
+  ```csharp
+  UpdateStatus result = await index.ResetFilterableAttributes();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)  
 get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
 reset_displayed_attributes_1: |-
