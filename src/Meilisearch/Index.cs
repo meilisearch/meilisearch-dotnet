@@ -9,7 +9,6 @@ namespace Meilisearch
     using System.Text.Json;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
-    using Microsoft.AspNetCore.WebUtilities;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
@@ -156,7 +155,7 @@ namespace Meilisearch
             string uri = $"/indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
-                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
             responseMessage = await this.http.PostJsonCustomAsync(uri, documents);
@@ -195,7 +194,7 @@ namespace Meilisearch
             string uri = $"/indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
-                uri = QueryHelpers.AddQueryString(uri, new { primaryKey = primaryKey }.AsDictionary());
+                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
             var filteredDocuments = documents.RemoveNullValues();
@@ -256,7 +255,7 @@ namespace Meilisearch
             string uri = $"/indexes/{this.Uid}/documents";
             if (query != null)
             {
-                uri = QueryHelpers.AddQueryString(uri, query.AsDictionary());
+                uri = $"{uri}?{query.ToQueryString()}";
             }
 
             return await this.http.GetFromJsonAsync<IEnumerable<T>>(uri);

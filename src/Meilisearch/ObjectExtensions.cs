@@ -1,5 +1,6 @@
 namespace Meilisearch
 {
+    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
@@ -21,6 +22,22 @@ namespace Meilisearch
             return source.GetType().GetProperties(bindingAttr).Where(p => p.GetValue(source, null) != null).ToDictionary(
                 propInfo => char.ToLowerInvariant(propInfo.Name[0]) + propInfo.Name.Substring(1),
                 propInfo => propInfo.GetValue(source, null).ToString());
+        }
+
+        /// <summary>
+        /// Transforms a MeiliSearch object into an URL encoded query string.
+        /// </summary>
+        /// <param name="source">Object to transform.</param>
+        /// <param name="bindingAttr">Binding flags.</param>
+        /// <returns>Returns an url encoded query string.</returns>
+        public static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        {
+            var values = source.GetType().GetProperties(bindingAttr)
+            .Where(p => p.GetValue(source, null) != null)
+            .Select(p =>
+                Uri.EscapeDataString(char.ToLowerInvariant(p.Name[0]) + p.Name.Substring(1)) + "=" + Uri.EscapeDataString(p.GetValue(source, null).ToString()));
+            var queryString = string.Join("&", values);
+            return queryString;
         }
 
         /// <summary>
