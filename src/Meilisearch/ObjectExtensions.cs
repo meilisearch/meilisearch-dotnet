@@ -25,7 +25,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Transforms an MeiliSearch object into an url encoded query string.
+        /// Transforms a MeiliSearch object into an URL encoded query string.
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
