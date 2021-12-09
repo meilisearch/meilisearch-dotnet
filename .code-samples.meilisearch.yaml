@@ -18,6 +18,17 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  var updates = await index.GetAllUpdateStatus();
+  foreach (UpdateStatus update in updates)
+  {
+      Console.WriteLine(update.Status);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 get_keys_1: |-
 get_settings_1: |-
 update_settings_1: |-
@@ -32,14 +43,43 @@ get_ranking_rules_1: |-
 update_ranking_rules_1: |-
 reset_ranking_rules_1: |-
 get_distinct_attribute_1: |-
+  ```csharp
+  string result = await index.GetDistinctAttribute();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 update_distinct_attribute_1: |-
+  ```csharp
+  UpdateStatus result = await index.UpdateDistinctAttribute("skuid");
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 reset_distinct_attribute_1: |-
+  ```csharp
+  UpdateStatus result = await index.ResetDistinctAttribute();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)      
 get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
+  ```csharp
+  IEnumerable<string> attributes = await index.GetFilterableAttributes();
+  foreach (string attribute in attributes)
+  {
+      Console.WriteLine(attribute);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)    
 update_filterable_attributes_1: |-
+  ```csharp
+  List<string> attributes = new() { "genres", "director" };
+  UpdateStatus result = await index.UpdateFilterableAttributes(attributes);
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)  
 reset_filterable_attributes_1: |-
+  ```csharp
+  UpdateStatus result = await index.ResetFilterableAttributes();
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)  
 get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
 reset_displayed_attributes_1: |-
@@ -51,9 +91,58 @@ distinct_attribute_guide_1: |-
 field_properties_guide_searchable_1: |-
 field_properties_guide_displayed_1: |-
 filtering_guide_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery() { Filter = "release_date > \"795484800\"" };
+  SearchResult<Movie> movies = await index.Search<Movie>("Avengers", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 filtering_guide_2: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery() { Filter = "release_date > 795484800 AND (director =
+  \"Tim Burton\" OR director = \"Christopher Nolan\")" };
+  SearchResult<Movie> movies = await index.Search<Movie>("Batman", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 filtering_guide_3: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery() { Filter = "director = \"Jordan Peele\"" };
+  SearchResult<Movie> movies = await index.Search<Movie>("horror", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 filtering_guide_4: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
+  SearchResult<Movie> movies = await index.Search<Movie>("Planet of the Apes", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 search_parameter_guide_query_1: |-
 search_parameter_guide_offset_1: |-
 search_parameter_guide_limit_1: |-
@@ -108,7 +197,7 @@ getting_started_add_documents_md: |-
               string jsonString = await File.ReadAllTextAsync("movies.json");
               var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
-              var index = await client.Index("Movies");
+              var index = client.Index("Movies");
               await index.AddDocuments<Movie>(movies);
           }
       }
@@ -118,7 +207,7 @@ getting_started_add_documents_md: |-
 getting_started_search_md: |-
   ```csharp
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  var index = await client.Index("Movies");
+  var index = client.Index("Movies");
 
   SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
   foreach (var movie in movies.Hits)
@@ -129,7 +218,43 @@ getting_started_search_md: |-
   [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery()
+  {
+      Filter = new string[][]
+      {
+          new string[] {"genres = Horror", "genres = Mystery"},
+          new string[] {"director = \"Jordan Peele\""}
+      }
+  };
+  
+  SearchResult<Movie> movies = await index.Search<Movie>("thriller", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 faceted_search_facets_distribution_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Movies");
+  
+  SearchQuery filters = new SearchQuery()
+  {
+      FacetsDistribution = new string[] { "genres" }
+  };
+  
+  SearchResult<Movie> movies = await index.Search<Movie>("Batman", filters);
+  foreach (var movie in movies.Hits)
+  {
+      Console.WriteLine(movie.Title);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 faceted_search_walkthrough_filterable_attributes_1: |-
 faceted_search_walkthrough_filter_1: |-
 faceted_search_walkthrough_facets_distribution_1: |-
@@ -146,8 +271,81 @@ update_sortable_attributes_1: |-
 reset_sortable_attributes_1: |-
 search_parameter_guide_sort_1: |-
 geosearch_guide_filter_settings_1: |-
+  ```csharp
+  List<string> attributes = new() { "_geo" };
+  UpdateStatus result = await index.UpdateFilterableAttributes(attributes);
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet) 
 geosearch_guide_filter_usage_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Restaurants");
+  
+  SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.4628328, 9.1076931, 2000)" };
+  SearchResult<Restaurant> restaurants = await index.Search<Restaurant>("", filters);
+  foreach (var restaurant in restaurants.Hits)
+  {
+      Console.WriteLine(restaurant.Name);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 geosearch_guide_filter_usage_2: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Restaurants");
+  
+  SearchQuery filters = new SearchQuery()
+  {
+      Filter = new string[] { "_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza" }
+  };
+  
+  SearchResult<Restaurant> restaurants = await index.Search<Restaurant>("restaurants", filters);
+  foreach (var restaurant in restaurants.Hits)
+  {
+      Console.WriteLine(restaurant.Name);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 geosearch_guide_sort_settings_1: |-
+  ```csharp
+  List<string> attributes = new() { "_geo" };
+  UpdateStatus result = await index.UpdateSortableAttributes(attributes);
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet) 
 geosearch_guide_sort_usage_1: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Restaurants");
+  
+  SearchQuery filters = new SearchQuery()
+  {
+      Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }
+  };
+  
+  SearchResult<Restaurant> restaurants = await index.Search<Restaurant>("", filters);
+  foreach (var restaurant in restaurants.Hits)
+  {
+      Console.WriteLine(restaurant.Name);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 geosearch_guide_sort_usage_2: |-
+  ```csharp
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  var index = client.Index("Restaurants");
+  
+  SearchQuery filters = new SearchQuery()
+  {
+      Sort = new string[] {
+            "_geoPoint(48.8583701,2.2922926):asc",
+            "rating:desc"
+      }
+  };
+  
+  SearchResult<Restaurant> restaurants = await index.Search<Restaurant>("restaurants", filters);
+  foreach (var restaurant in restaurants.Hits)
+  {
+      Console.WriteLine(restaurant.Name);
+  }
+  ```
+  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
