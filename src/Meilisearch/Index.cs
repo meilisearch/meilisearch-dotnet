@@ -696,7 +696,8 @@ namespace Meilisearch
             var result = new List<UpdateStatus>();
             for (var i = 0; i < numberOfBatches; i++)
             {
-                var batch = itemsList.GetRange(i * batchSize, batchSize);
+                var actualSize = Math.Min(batchSize, itemsList.Count - (i * batchSize));
+                var batch = itemsList.GetRange(i * batchSize, actualSize);
                 await action.Invoke(batch, result);
             }
 

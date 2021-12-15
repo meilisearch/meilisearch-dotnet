@@ -53,6 +53,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "2", Name = "Reservoir Dogs" },
                 new Movie { Id = "3", Name = "Taxi Driver" },
                 new Movie { Id = "4", Name = "Interstellar" },
+                new Movie { Id = "5", Name = "Titanic" },
             };
             var updates = await index.AddDocumentsInBatches(movies, 2);
             foreach (var u in updates)
@@ -170,6 +171,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "2", Name = "Reservoir Dogs" },
                 new Movie { Id = "3", Name = "Taxi Driver" },
                 new Movie { Id = "4", Name = "Interstellar" },
+                new Movie { Id = "5", Name = "Titanic" },
             };
             var updates = await index.AddDocumentsInBatches(movies, 2);
             foreach (var u in updates)
@@ -184,6 +186,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "2", Name = "Reservoir Dogs", Genre = "Drama" },
                 new Movie { Id = "3", Name = "Taxi Driver", Genre = "Drama" },
                 new Movie { Id = "4", Name = "Interstellar", Genre = "Sci-Fi" },
+                new Movie { Id = "5", Name = "Titanic", Genre = "Drama" },
             };
             updates = await index.UpdateDocumentsInBatches(movies, 2);
             foreach (var u in updates)
