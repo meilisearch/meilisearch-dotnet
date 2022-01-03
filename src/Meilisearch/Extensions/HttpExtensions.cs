@@ -3,6 +3,7 @@ namespace Meilisearch.Extensions
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -16,13 +17,14 @@ namespace Meilisearch.Extensions
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body)
+        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload<T>(body);
 
-            return await client.PostAsync(uri, payload);
+            return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -32,13 +34,14 @@ namespace Meilisearch.Extensions
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
         /// <param name="options">Json options for serialization.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options)
+        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload<T>(body, options);
 
-            return await client.PostAsync(uri, payload);
+            return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -47,13 +50,14 @@ namespace Meilisearch.Extensions
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the MeiliSearch server.</returns>
-        public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body)
+        public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload<T>(body);
 
-            return await client.PutAsync(uri, payload);
+            return await client.PutAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -31,14 +31,14 @@ namespace Meilisearch.Tests
         {
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             var client = new MeilisearchClient(httpClient);
-            var meilisearchversion = await client.GetVersion();
+            var meilisearchversion = await client.GetVersionAsync();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
         public async Task GetVersionWithDefaultClient()
         {
-            var meilisearchversion = await this.defaultClient.GetVersion();
+            var meilisearchversion = await this.defaultClient.GetVersionAsync();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
 
@@ -48,10 +48,10 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "BasicUsageOfCustomClientTest";
-            Meilisearch.Index index = await ms.CreateIndex(indexUid);
-            var updateStatus = await index.AddDocuments(new[] { new Movie { Id = "1", Name = "Batman" } });
+            Meilisearch.Index index = await ms.CreateIndexAsync(indexUid);
+            var updateStatus = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdate(updateStatus.UpdateId);
+            await index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
             index.FetchPrimaryKey().Should().Equals("id"); // Check the JSON has been well serialized and the primary key is not equal to "Id"
         }
 
@@ -61,8 +61,8 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "ErrorHandlerOfCustomClientTest";
-            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndex(indexUid, this.defaultPrimaryKey));
+            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey));
             Assert.Equal("index_already_exists", ex.Code);
         }
 
@@ -76,7 +76,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateDumps()
         {
-            var dumpResponse = await this.defaultClient.CreateDump();
+            var dumpResponse = await this.defaultClient.CreateDumpAsync();
 
             dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
@@ -85,10 +85,10 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetDumpStatusById()
         {
-            var dump = await this.defaultClient.CreateDump();
+            var dump = await this.defaultClient.CreateDumpAsync();
             Assert.NotNull(dump);
 
-            var dumpStatus = await this.defaultClient.GetDumpStatus(dump.Uid);
+            var dumpStatus = await this.defaultClient.GetDumpStatusAsync(dump.Uid);
 
             dumpStatus.Status.Should().BeOneOf("done", "in_progress");
             Assert.Equal(dump.Uid, dumpStatus.Uid);
@@ -97,7 +97,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Health()
         {
-            var health = await this.defaultClient.Health();
+            var health = await this.defaultClient.HealthAsync();
             health.Status.Should().Be("available");
         }
 
@@ -105,14 +105,14 @@ namespace Meilisearch.Tests
         public async Task HealthWithBadUrl()
         {
             var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
-            MeilisearchCommunicationError ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.Health());
+            MeilisearchCommunicationError ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.HealthAsync());
             Assert.Equal("CommunicationError", ex.Message);
         }
 
         [Fact]
         public async Task IsHealthy()
         {
-            var health = await this.defaultClient.IsHealthy();
+            var health = await this.defaultClient.IsHealthyAsync();
             health.Should().BeTrue();
         }
 
@@ -120,7 +120,7 @@ namespace Meilisearch.Tests
         public async Task IsHealthyWithBadUrl()
         {
             var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
-            var health = await client.IsHealthy();
+            var health = await client.IsHealthyAsync();
             health.Should().BeFalse();
         }
 
@@ -138,8 +138,8 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
-            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
-            var deletedResult = await ms.DeleteIndex(indexUid);
+            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            var deletedResult = await ms.DeleteIndexAsync(indexUid);
             deletedResult.Should().BeTrue();
         }
 
@@ -149,7 +149,7 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexIfExistsTest";
-            var index = await ms.CreateIndex(indexUid, this.defaultPrimaryKey);
+            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
             var deletedResult = await ms.DeleteIndexIfExists(indexUid);
             deletedResult.Should().BeTrue();
         }
