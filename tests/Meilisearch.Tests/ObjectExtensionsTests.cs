@@ -8,7 +8,7 @@ namespace Meilisearch.Tests
         [Theory]
         [InlineData("simple")]
         [InlineData("com pl <->& ex")]
-        void QueryStringsAreEqualsForPrimaryKey(string key)
+        public void QueryStringsAreEqualsForPrimaryKey(string key)
         {
             string uri = "/indexes/myindex/documents";
             var o = new { primaryKey = key };
@@ -17,7 +17,6 @@ namespace Meilisearch.Tests
             string actual = $"{uri}?{o.ToQueryString()}";
             Assert.Equal(expected, actual);
         }
-
 
         [Theory]
         [InlineData(null, null, "")]
@@ -28,7 +27,7 @@ namespace Meilisearch.Tests
         [InlineData(1, null, "attr")]
         [InlineData(null, 2, "attr")]
         [InlineData(1, 2, "attr")]
-        void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
+        public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
         {
             string uri = "/indexes/myindex/documents";
             var dq = new DocumentQuery { Offset = offset, Limit = limit, AttributesToRetrieve = attributesToRetrieve };
