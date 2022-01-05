@@ -92,7 +92,7 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAdditionWithTimeoutError()
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutError";
-            Index index = await this.client.GetOrCreateIndexAsync(indexUID);
+            Index index = this.client.Index(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
@@ -103,7 +103,7 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
-            Index index = await this.client.GetOrCreateIndexAsync(indexUID);
+            Index index = this.client.Index(indexUID);
 
             // Add the documents
             UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
