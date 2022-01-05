@@ -18,7 +18,7 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
-  var updates = await client.IndexAsync("movies").GetAllUpdateStatus();
+  var updates = await client.Index("movies").GetAllUpdateStatusAsync();
   foreach (UpdateStatus update in updates)
   {
       Console.WriteLine(update.Status);
@@ -37,16 +37,16 @@ get_ranking_rules_1: |-
 update_ranking_rules_1: |-
 reset_ranking_rules_1: |-
 get_distinct_attribute_1: |-
-  string result = await client.IndexAsync("shoes").GetDistinctAttribute();
+  string result = await client.Index("shoes").GetDistinctAttributeAsync();
 update_distinct_attribute_1: |-
-  UpdateStatus result = await client.IndexAsync("shoes").UpdateDistinctAttribute("skuid");
+  UpdateStatus result = await client.Index("shoes").UpdateDistinctAttributeAsync("skuid");
 reset_distinct_attribute_1: |-
-  UpdateStatus result = await client.IndexAsync("shoes").ResetDistinctAttribute();
+  UpdateStatus result = await client.Index("shoes").ResetDistinctAttributeAsync();
 get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
-  IEnumerable<string> attributes = await client.IndexAsync("movies").GetFilterableAttributes();
+  IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributesAsync();
   foreach (string attribute in attributes)
   {
       Console.WriteLine(attribute);
