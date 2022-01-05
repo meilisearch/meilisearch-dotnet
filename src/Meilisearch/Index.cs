@@ -122,36 +122,6 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Deletes the index if it exists.
-        /// It's not a recovery delete. You will also lose the documents within the index.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the status of the delete operation.
-        /// True if the index existed and was deleted. False if it did not exist. </returns>
-        public async Task<bool> DeleteIfExistsAsync(CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}", cancellationToken).ConfigureAwait(false);
-                if (responseMessage.StatusCode != HttpStatusCode.NoContent)
-                {
-                    throw new HttpRequestException($"Client failed to delete index ${this.Uid}");
-                }
-
-                return true;
-            }
-            catch (MeilisearchApiError error)
-            {
-                if (error.Code == "index_not_found")
-                {
-                    return false;
-                }
-
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Add documents.
         /// </summary>
         /// <param name="documents">Documents to add.</param>

@@ -233,18 +233,5 @@ namespace Meilisearch
         {
             return await this.Index(uid).DeleteAsync(cancellationToken).ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Deletes the index if it exists.
-        /// It's not a recovery delete. You will also lose the documents within the index.
-        /// </summary>
-        /// <param name="uid">unique dump identifier.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the status of the delete operation.
-        /// True if the index existed and was deleted. False if it did not exist. </returns>
-        public async Task<bool> DeleteIndexIfExists(string uid, CancellationToken cancellationToken = default)
-        {
-            return await this.Index(uid).DeleteIfExistsAsync(cancellationToken).ConfigureAwait(false);
-        }
     }
 }

@@ -183,30 +183,6 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task WhenIndexExists_DeleteIfExists_ShouldReturnTrue()
-        {
-            var indexUid = "DeleteIndexTestUid";
-            var index = await this.defaultClient.CreateIndexAsync(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-            var deleted = await index.DeleteIfExistsAsync();
-            deleted.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task WhenIndexNoLongerExists_DeleteIfExists_ShouldReturnFalse()
-        {
-            var indexUid = "DeleteIndexTestUid";
-            var index = await this.defaultClient.CreateIndexAsync(indexUid);
-            index.Uid.Should().Be(indexUid);
-            index.PrimaryKey.Should().BeNull();
-            var deleted = await index.DeleteIfExistsAsync();
-            deleted.Should().BeTrue();
-            var deletedAgain = await index.DeleteIfExistsAsync();
-            deletedAgain.Should().BeFalse();
-        }
-
-        [Fact]
         public async Task GetRawIndex()
         {
             await this.fixture.SetUpBasicIndex("BasicIndex");
