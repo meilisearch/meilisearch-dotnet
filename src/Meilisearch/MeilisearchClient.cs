@@ -19,8 +19,7 @@ namespace Meilisearch
         /// <summary>
         /// JsonSerializer options used when serializing objects.
         /// </summary>
-        public static readonly JsonSerializerOptions Options = new JsonSerializerOptions
-            { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+        public static readonly JsonSerializerOptions Options = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
         private readonly HttpClient http;
 
