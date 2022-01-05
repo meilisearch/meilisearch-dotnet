@@ -142,26 +142,5 @@ namespace Meilisearch.Tests
             var deletedResult = await ms.DeleteIndexAsync(indexUid);
             deletedResult.Should().BeTrue();
         }
-
-        [Fact]
-        public async Task GivenValidIndex_DeleteIndexIfExists_ShouldReturnTrue()
-        {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
-            var indexUid = "DeleteIndexIfExistsTest";
-            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
-            var deletedResult = await ms.DeleteIndexIfExists(indexUid);
-            deletedResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task GivenInvalidIndex_DeleteIndexIfExists_ShouldReturnFalse()
-        {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
-            var invalidIndexUid = "NonExistingIndexTest";
-            var deletedResult = await ms.DeleteIndexIfExists(invalidIndexUid);
-            deletedResult.Should().BeFalse();
-        }
     }
 }
