@@ -2,6 +2,7 @@ namespace Meilisearch.Tests
 {
     using System;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using HttpClientFactoryLite;
 
     public class ClientFactory
@@ -15,7 +16,7 @@ namespace Meilisearch.Tests
                         .ConfigureHttpClient(p =>
                             {
                                 p.BaseAddress = new Uri("http://localhost:7700/");
-                                p.DefaultRequestHeaders.Add("X-Meili-API-Key", "masterKey");
+                                p.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "masterKey");
                             })
                         .ConfigurePrimaryHttpMessageHandler(() => new MeilisearchMessageHandler(new HttpClientHandler())));
                     return httpClientFactory;
