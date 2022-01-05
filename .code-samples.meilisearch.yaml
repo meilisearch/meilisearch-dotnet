@@ -18,7 +18,7 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
-  var updates = await client.Index("movies").GetAllUpdateStatus();
+  var updates = await client.Index("movies").GetAllUpdateStatusAsync();
   foreach (UpdateStatus update in updates)
   {
       Console.WriteLine(update.Status);
@@ -37,25 +37,25 @@ get_ranking_rules_1: |-
 update_ranking_rules_1: |-
 reset_ranking_rules_1: |-
 get_distinct_attribute_1: |-
-  string result = await client.Index("shoes").GetDistinctAttribute();
+  string result = await client.Index("shoes").GetDistinctAttributeAsync();
 update_distinct_attribute_1: |-
-  UpdateStatus result = await client.Index("shoes").UpdateDistinctAttribute("skuid");
+  UpdateStatus result = await client.Index("shoes").UpdateDistinctAttributeAsync("skuid");
 reset_distinct_attribute_1: |-
-  UpdateStatus result = await client.Index("shoes").ResetDistinctAttribute();
+  UpdateStatus result = await client.Index("shoes").ResetDistinctAttributeAsync();
 get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
-  IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributes();
+  IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributesAsync();
   foreach (string attribute in attributes)
   {
       Console.WriteLine(attribute);
   }
 update_filterable_attributes_1: |-
   List<string> attributes = new() { "genres", "director" };
-  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributes(attributes);
+  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 reset_filterable_attributes_1: |-
-  UpdateStatus result = await client.Index("movies").ResetFilterableAttributes();
+  UpdateStatus result = await client.Index("movies").ResetFilterableAttributesAsync();
 get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
 reset_displayed_attributes_1: |-
@@ -68,7 +68,7 @@ field_properties_guide_searchable_1: |-
 field_properties_guide_displayed_1: |-
 filtering_guide_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > \"795484800\"" };
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("Avengers", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Avengers", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -76,21 +76,21 @@ filtering_guide_1: |-
 filtering_guide_2: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > 795484800 AND (director =
   \"Tim Burton\" OR director = \"Christopher Nolan\")" };
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("Batman", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
   }
 filtering_guide_3: |-
   SearchQuery filters = new SearchQuery() { Filter = "director = \"Jordan Peele\"" };
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("horror", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("horror", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
   }
 filtering_guide_4: |-
   SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("Planet of the Apes", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Planet of the Apes", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -150,7 +150,7 @@ getting_started_add_documents_md: |-
               var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
               var index = client.Index("movies");
-              await index.AddDocuments<Movie>(movies);
+              await index.AddDocumentsAsync<Movie>(movies);
           }
       }
   }
@@ -161,7 +161,7 @@ getting_started_search_md: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var index = client.Index("movies");
 
-  SearchResult<Movie> movies = await index.Search<Movie>("harry pottre");
+  SearchResult<Movie> movies = await index.SearchAsync<Movie>("harry pottre");
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -179,7 +179,7 @@ faceted_search_filter_1: |-
       }
   };
 
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("thriller", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("thriller", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -190,7 +190,7 @@ faceted_search_facets_distribution_1: |-
       FacetsDistribution = new string[] { "genres" }
   };
 
-  SearchResult<Movie> movies = await client.Index("movies").Search<Movie>("Batman", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -212,10 +212,10 @@ reset_sortable_attributes_1: |-
 search_parameter_guide_sort_1: |-
 geosearch_guide_filter_settings_1: |-
   List<string> attributes = new() { "_geo" };
-  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributes(attributes);
+  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 geosearch_guide_filter_usage_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.4628328, 9.1076931, 2000)" };
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").Search<Restaurant>("", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
   foreach (var restaurant in restaurants.Hits)
   {
       Console.WriteLine(restaurant.Name);
@@ -226,21 +226,21 @@ geosearch_guide_filter_usage_2: |-
       Filter = new string[] { "_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza" }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").Search<Restaurant>("restaurants", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
   foreach (var restaurant in restaurants.Hits)
   {
       Console.WriteLine(restaurant.Name);
   }
 geosearch_guide_sort_settings_1: |-
   List<string> attributes = new() { "_geo" };
-  UpdateStatus result = await client.Index("restaurants").UpdateSortableAttributes(attributes);
+  UpdateStatus result = await client.Index("restaurants").UpdateSortableAttributesAsync(attributes);
 geosearch_guide_sort_usage_1: |-
   SearchQuery filters = new SearchQuery()
   {
       Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").Search<Restaurant>("", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
   foreach (var restaurant in restaurants.Hits)
   {
       Console.WriteLine(restaurant.Name);
@@ -254,7 +254,7 @@ geosearch_guide_sort_usage_2: |-
       }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").Search<Restaurant>("restaurants", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
   foreach (var restaurant in restaurants.Hits)
   {
       Console.WriteLine(restaurant.Name);
