@@ -158,30 +158,6 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets the index instance or creates the index if it does not exist.
-        /// </summary>
-        /// <param name="uid">Unique Id.</param>
-        /// <param name="primaryKey">Primary key for documents.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns Index.</returns>
-        public async Task<Index> GetOrCreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await this.GetIndexAsync(uid, cancellationToken).ConfigureAwait(false);
-            }
-            catch (MeilisearchApiError e)
-            {
-                if (e.Code != "index_not_found")
-                {
-                    throw e;
-                }
-
-                return await this.CreateIndexAsync(uid, primaryKey, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        /// <summary>
         /// Gets stats of all indexes.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
