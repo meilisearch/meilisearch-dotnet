@@ -35,7 +35,7 @@ namespace Meilisearch
                 {
                     if (response.Content.Headers.ContentLength != 0)
                     {
-                        var content = await response.Content.ReadFromJsonAsync<MeilisearchApiErrorContent>();
+                        var content = await response.Content.ReadFromJsonAsync<MeilisearchApiErrorContent>(cancellationToken: cancellationToken).ConfigureAwait(false);
                         throw new MeilisearchApiError(content);
                     }
 

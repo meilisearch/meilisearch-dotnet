@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://res.cloudinary.com/meilisearch/image/upload/v1587402338/SDKs/meilisearch_dotnet.svg" alt="MeiliSearch-Dotnet" width="200" height="200" />
+  <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="MeiliSearch-Dotnet" width="200" height="200" />
 </p>
 
 <h1 align="center">MeiliSearch .NET</h1>
@@ -90,28 +90,29 @@ namespace GettingStarted
         {
             public string Id { get; set; }
             public string Title { get; set; }
-            public string Genre {get; set; }
+            public IEnumerable<string> Genres { get; set; }
         }
+
         static async Task Main(string[] args)
         {
             MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 
             // An index is where the documents are stored.
-            var index = await client.Index("movies");
+            var index = client.Index("movies");
             var documents = new Movie[] {
-                new Movie { id = "1", Title = "Carol", Genre = ['Romance', 'Drama']  },
-                new Movie { Id = "2", Title = "Wonder Woman", Genre = ['Action', 'Adventure']  },
-                new Movie { Id = "3", Title = "Life of Pi", Genre = ['Adventure', 'Drama'] },
-                new Movie { Id = "4", Title = "Mad Max: Fury Road", Genre = ['Adventure', 'Science Fiction'] },
-                new Movie { Id = "5", Title = "Moana", Genre = ['Fantasy', 'Action']},
-                new Movie { Id = "6", Title = "Philadelphia", Genre = ['Drama'] }
+                new Movie { Id = "1", Title = "Carol", Genres = new string[] { "Romance", "Drama" }  },
+                new Movie { Id = "2", Title = "Wonder Woman", Genres = new string[] { "Action", "Adventure" } },
+                new Movie { Id = "3", Title = "Life of Pi", Genres = new string[] { "Adventure", "Drama" } },
+                new Movie { Id = "4", Title = "Mad Max: Fury Road", Genres = new string[] { "Adventure", "Science Fiction"} },
+                new Movie { Id = "5", Title = "Moana", Genres = new string[] { "Fantasy", "Action" } },
+                new Movie { Id = "6", Title = "Philadelphia", Genres = new string[] { "Drama" } }
             };
+
             // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
-            var update = await index.AddDocuments<Movie>(documents); # => { "updateId": 0 }
+            var update = await index.AddDocumentsAsync<Movie>(documents); // # => { "updateId": 0 }
         }
     }
 }
-
 ```
 
 With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued`, `processing`, `processed` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
@@ -120,7 +121,7 @@ With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued
 
 ```c#
 # MeiliSearch is typo-tolerant:
-SearchResult<Movie> movies = await index.Search<Movie>("philadalphia");
+SearchResult<Movie> movies = await index.SearchAsync<Movie>("philadalphia");
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
 }
@@ -148,15 +149,16 @@ JSON Output:
 All the supported options are described in the [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html) section of the documentation.
 
 ```c#
-SearchResult<Movie> movies = await index.Search<Movie>(
+SearchResult<Movie> movies = await index.SearchAsync<Movie>(
     "car",
     new SearchQuery
     {
         AttributesToHighlight = new string[] { "title" },
     }
 );
+
 foreach(var prop in movies.Hits) {
-    Console.WriteLine (movies.Title);
+    Console.WriteLine (prop.Title);
 }
 ```
 
@@ -191,26 +193,26 @@ This package only guarantees the compatibility with the [version v0.25.0 of Meil
 
 #### Create an index <!-- omit in toc -->
 
- ```c#
-var index = client.CreateIndex("movies");
+```c#
+var index = await client.CreateIndexAsync("movies");
 ```
 
 #### Create an index and give the primary-key <!-- omit in toc -->
 
 ```c#
-var index = client.CreateIndex("movies", "id");
+var index = await client.CreateIndexAsync("movies", "id");
 ```
 
 #### List all an index <!-- omit in toc -->
 
 ```c#
-var indexes = await client.GetAllIndexes();
+var indexes = await client.GetAllIndexesAsync();
 ```
 
 #### Get an Index object <!-- omit in toc -->
 
 ```c#
-var index = await client.GetIndex("movies");
+var index = await client.GetIndexAsync("movies");
 ```
 
 ### Documents
@@ -218,8 +220,8 @@ var index = await client.GetIndex("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.AddDocuments(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
- var updateStatus = await index.UpdateDocuments(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var updateStatus = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var updateStatus = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
 Update Status has a reference `UpdateId` to get the status of the action.
@@ -227,31 +229,31 @@ Update Status has a reference `UpdateId` to get the status of the action.
 #### Get Documents <!-- omit in toc -->
 
 ```c#
- var documents = await index.GetDocuments<Movie>(new DocumentQuery {Limit = 1});
+var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery { Limit = 1 });
 ```
 
 #### Get Document by Id <!-- omit in toc -->
 
 ```c#
-var document = await index.GetDocument<Movie>("10");
+var document = await index.GetDocumentAsync<Movie>("10");
 ```
 
 #### Delete documents <!-- omit in toc -->
 
 ```c#
- var updateStatus = await index.DeleteOneDocument("11");
+var updateStatus = await index.DeleteOneDocumentAsync("11");
 ```
 
 #### Delete in Batch <!-- omit in toc -->
 
 ```c#
-var updateStatus = await index.DeleteDocuments(new []{"12","13","14"});
+var updateStatus = await index.DeleteDocumentsAsync(new [] {"12","13","14"});
 ```
 
 #### Delete all documents <!-- omit in toc -->
 
 ```c#
-var updateStatus = await indextoDelete.DeleteAllDocuments();
+var updateStatus = await indextoDelete.DeleteAllDocumentsAsync();
 ```
 
 ### Update Status
@@ -259,13 +261,13 @@ var updateStatus = await indextoDelete.DeleteAllDocuments();
 #### Get Update Status By Id <!-- omit in toc -->
 
 ```c#
-UpdateStatus individualStatus = await index.GetUpdateStatus(1);
+UpdateStatus individualStatus = await index.GetUpdateStatusAsync(1);
 ```
 
 #### Get All Update Status <!-- omit in toc -->
 
 ```c#
-var status = await index.GetAllUpdateStatus();
+var status = await index.GetAllUpdateStatusAsync();
 ```
 
 ### Search
@@ -273,13 +275,13 @@ var status = await index.GetAllUpdateStatus();
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.Search<Movie>("prince");
+var movies = await this.index.SearchAsync<Movie>("prince");
 ```
 
 #### Custom Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.Search<Movie>("prince", new SearchQuery {Limit = 100});
+var movies = await this.index.SearchAsync<Movie>("prince", new SearchQuery { Limit = 100 });
 ```
 
 ## 🧰 Use a Custom HTTP Client
