@@ -361,23 +361,23 @@ namespace Meilisearch.Tests
             value.Should().NotBeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertUpdateStatusProcessed(UpdateStatus updateStatus)
+        private async Task AssertUpdateStatusSucceeded(UpdateStatus updateStatus)
         {
             updateStatus.UpdateId.Should().BeGreaterThan(0);
             var updateWaitResponse = await this.index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
-            updateWaitResponse.Status.Should().BeEquivalentTo("processed");
+            updateWaitResponse.Status.Should().BeEquivalentTo("succeeded");
         }
 
         private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
         {
             var updateStatus = await updateMethod(newValue);
-            await this.AssertUpdateStatusProcessed(updateStatus);
+            await this.AssertUpdateStatusSucceeded(updateStatus);
         }
 
         private async Task AssertResetSuccess(IndexResetMethod resetMethod)
         {
             var updateStatus = await resetMethod();
-            await this.AssertUpdateStatusProcessed(updateStatus);
+            await this.AssertUpdateStatusSucceeded(updateStatus);
         }
     }
 }

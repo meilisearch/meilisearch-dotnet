@@ -48,7 +48,7 @@ namespace Meilisearch.Tests
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
             var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId);
             Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal("processed", response.Status);
+            Assert.Equal("succeeded", response.Status);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Meilisearch.Tests
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
             var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId, 10000.0, 20);
             Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal("processed", response.Status);
+            Assert.Equal("succeeded", response.Status);
         }
 
         [Fact]
