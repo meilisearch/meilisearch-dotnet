@@ -79,9 +79,9 @@ namespace Meilisearch.Extensions
             if (options == null)
             {
                 options = new JsonSerializerOptions();
+                options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             }
 
-            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
 

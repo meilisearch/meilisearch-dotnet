@@ -351,9 +351,7 @@ namespace Meilisearch
                 body.Q = query;
             }
 
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
-
-            var responseMessage = await this.http.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, options, cancellationToken: cancellationToken)
+            var responseMessage = await this.http.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -409,9 +407,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSettingsAsync(Settings settings, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -446,9 +443,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateDisplayedAttributesAsync(IEnumerable<string> displayedAttributes, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -484,9 +480,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateDistinctAttributeAsync(string distinctAttribute, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute", distinctAttribute, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute", distinctAttribute, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -522,9 +517,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes", filterableAttributes, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes", filterableAttributes, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -560,9 +554,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateRankingRulesAsync(IEnumerable<string> rankingRules, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules", rankingRules, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules", rankingRules, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -598,9 +591,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSearchableAttributesAsync(IEnumerable<string> searchableAttributes, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes", searchableAttributes, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes", searchableAttributes, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -637,9 +629,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSortableAttributesAsync(IEnumerable<string> sortableAttributes, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes", sortableAttributes, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes", sortableAttributes, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -676,9 +667,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateStopWordsAsync(IEnumerable<string> stopWords, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words", stopWords, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words", stopWords, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -714,9 +704,8 @@ namespace Meilisearch
         /// <returns>Returns the updateID of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSynonymsAsync(Dictionary<string, IEnumerable<string>> synonyms, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions { IgnoreNullValues = true };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms", synonyms, options, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms", synonyms, MeilisearchClient.JsonSerializerOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

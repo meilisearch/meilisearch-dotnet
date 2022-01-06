@@ -6,6 +6,7 @@ namespace Meilisearch
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
@@ -15,6 +16,15 @@ namespace Meilisearch
     /// </summary>
     public class MeilisearchClient
     {
+        /// <summary>
+        /// JsonSerializer options used when serializing objects.
+        /// </summary>
+        public static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+
         private readonly HttpClient http;
 
         /// <summary>
@@ -78,8 +88,7 @@ namespace Meilisearch
         public async Task<Index> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             Index index = new Index(uid, primaryKey);
-            var options = new JsonSerializerOptions { IgnoreNullValues = true };
-            var response = await this.http.PostJsonCustomAsync("/indexes", index, options, cancellationToken: cancellationToken)
+            var response = await this.http.PostJsonCustomAsync("/indexes", index, JsonSerializerOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return index.WithHttpClient(this.http);
