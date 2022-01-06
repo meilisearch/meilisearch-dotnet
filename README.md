@@ -109,13 +109,13 @@ namespace GettingStarted
             };
 
             // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
-            var update = await index.AddDocumentsAsync<Movie>(documents); // # => { "updateId": 0 }
+            var update = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
         }
     }
 }
 ```
 
-With the `updateId` (via `update.UpdateId`), you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+With the `uid` (via `task.Uid`), you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
 
 #### Basic Search <!-- omit in toc -->
 
