@@ -97,16 +97,13 @@ namespace Meilisearch
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Index with the updated Primary Key.</returns>
-        public async Task<Index> UpdateAsync(string primarykeytoChange, CancellationToken cancellationToken = default)
+        public async Task<UpdateStatus> UpdateAsync(string primarykeytoChange, CancellationToken cancellationToken = default)
         {
-            var message =
+            var responseMessage =
                 await this.http.PutAsJsonAsync($"indexes/{this.Uid}", new { primaryKey = primarykeytoChange }, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
-            var responsecontent = await message.Content.ReadFromJsonAsync<Index>(cancellationToken: cancellationToken).ConfigureAwait(false);
-            this.PrimaryKey = responsecontent.PrimaryKey;
-            this.CreatedAt = responsecontent.CreatedAt;
-            this.UpdatedAt = responsecontent.UpdatedAt;
-            return this;
+
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -115,10 +112,11 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<bool> DeleteAsync(CancellationToken cancellationToken = default)
+        public async Task<UpdateStatus> DeleteAsync(CancellationToken cancellationToken = default)
         {
             var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}", cancellationToken).ConfigureAwait(false);
-            return responseMessage.StatusCode == HttpStatusCode.NoContent;
+
+            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
