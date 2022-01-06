@@ -19,7 +19,11 @@ namespace Meilisearch
         /// <summary>
         /// JsonSerializer options used when serializing objects.
         /// </summary>
-        public static readonly JsonSerializerOptions Options = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+        public static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
 
         private readonly HttpClient http;
 
@@ -84,7 +88,7 @@ namespace Meilisearch
         public async Task<Index> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await this.http.PostJsonCustomAsync("/indexes", index, Options, cancellationToken: cancellationToken)
+            var response = await this.http.PostJsonCustomAsync("/indexes", index, JsonSerializerOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return index.WithHttpClient(this.http);
