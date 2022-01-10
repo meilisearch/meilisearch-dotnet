@@ -1,4 +1,4 @@
-﻿namespace Meilisearch.Extensions
+namespace Meilisearch.Extensions
 {
     using System;
     using System.Collections.Generic;

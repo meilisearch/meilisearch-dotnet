@@ -1,4 +1,4 @@
-﻿namespace Meilisearch.HttpContents
+namespace Meilisearch.HttpContents
 {
     using System;
     using System.IO;
