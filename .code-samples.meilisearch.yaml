@@ -150,7 +150,7 @@ getting_started_add_documents_md: |-
               var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
               var index = client.Index("movies");
-              await index.AddDocumentsAsync<Movie>(movies);
+              await index.AddDocumentsJsonAsync<Movie>(movies);
           }
       }
   }

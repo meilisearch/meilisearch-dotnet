@@ -6,10 +6,10 @@ namespace Meilisearch
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
+    using Meilisearch.HttpContents;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
@@ -159,16 +159,16 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<UpdateStatus> AddDocumentsJsonAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage responseMessage;
             string uri = $"/indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
-            responseMessage = await this.http.PostJsonCustomAsync(uri, documents, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var content = new JsonHttpContent(documents);
+            HttpResponseMessage responseMessage = await this.http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -181,15 +181,15 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<IEnumerable<UpdateStatus>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UpdateStatus>> AddDocumentsJsonInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            async Task AddActionAsync(List<T> items, List<UpdateStatus> updates, CancellationToken localCancellationToken)
+            var updates = new List<UpdateStatus>();
+            foreach (var chunk in documents.GetChunks(batchSize))
             {
-                updates.Add(await this.AddDocumentsAsync(items, primaryKey, localCancellationToken).ConfigureAwait(false));
+                updates.Add(await this.AddDocumentsJsonAsync(chunk, cancellationToken: cancellationToken).ConfigureAwait(false));
             }
 
-            var result = await BatchOperationAsync(documents, batchSize, AddActionAsync).ConfigureAwait(false);
-            return result;
+            return updates;
         }
 
         /// <summary>
@@ -200,9 +200,8 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<UpdateStatus> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<UpdateStatus> UpdateDocumentsJsonAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage responseMessage;
             string uri = $"/indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
@@ -210,8 +209,8 @@ namespace Meilisearch
             }
 
             var filteredDocuments = documents.RemoveNullValues();
-            responseMessage = await this.http.PutJsonCustomAsync(uri, filteredDocuments, cancellationToken: cancellationToken).ConfigureAwait(false);
-
+            var content = new JsonHttpContent(filteredDocuments);
+            HttpResponseMessage responseMessage = await this.http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -224,15 +223,15 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the updateID of this async operation.</returns>
-        public async Task<IEnumerable<UpdateStatus>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UpdateStatus>> UpdateDocumentsJsonInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            async Task UpdateActionAsync(List<T> items, List<UpdateStatus> updates, CancellationToken localCancellationToken)
+            var updates = new List<UpdateStatus>();
+            foreach (var chunk in documents.GetChunks(batchSize))
             {
-                updates.Add(await this.UpdateDocumentsAsync(items, primaryKey, localCancellationToken).ConfigureAwait(false));
+                updates.Add(await this.UpdateDocumentsJsonAsync(chunk, cancellationToken: cancellationToken).ConfigureAwait(false));
             }
 
-            var result = await BatchOperationAsync(documents, batchSize, UpdateActionAsync, cancellationToken).ConfigureAwait(false);
-            return result;
+            return updates;
         }
 
         /// <summary>
@@ -774,21 +773,6 @@ namespace Meilisearch
         {
             this.http = http;
             return this;
-        }
-
-        private static async Task<List<UpdateStatus>> BatchOperationAsync<T>(IEnumerable<T> items, int batchSize, Func<List<T>, List<UpdateStatus>, CancellationToken, Task> action, CancellationToken cancellationToken = default)
-        {
-            var itemsList = new List<T>(items);
-            var numberOfBatches = Math.Ceiling((double)itemsList.Count / batchSize);
-            var result = new List<UpdateStatus>();
-            for (var i = 0; i < numberOfBatches; i++)
-            {
-                var actualSize = Math.Min(batchSize, itemsList.Count - (i * batchSize));
-                var batch = itemsList.GetRange(i * batchSize, actualSize);
-                await action.Invoke(batch, result, cancellationToken).ConfigureAwait(false);
-            }
-
-            return result;
         }
     }
 }

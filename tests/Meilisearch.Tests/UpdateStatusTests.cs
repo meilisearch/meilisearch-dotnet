@@ -27,7 +27,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAllUpdateStatus()
         {
-            await this.index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
+            await this.index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1" } });
             var allUpdates = await this.index.GetAllUpdateStatusAsync();
             allUpdates.Count().Should().BeGreaterOrEqualTo(1);
         }
@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneUpdateStatus()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
+            var status = await this.index.AddDocumentsJsonAsync(new[] { new Movie { Id = "2" } });
             UpdateStatus individualStatus = await this.index.GetUpdateStatusAsync(status.UpdateId);
             individualStatus.Should().NotBeNull();
             individualStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -45,7 +45,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DefaultWaitForPendingUpdate()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
+            var status = await this.index.AddDocumentsJsonAsync(new[] { new Movie { Id = "3" } });
             var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId);
             Assert.Equal(response.UpdateId, status.UpdateId);
             Assert.Equal("processed", response.Status);
@@ -54,7 +54,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomWaitForPendingUpdate()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
+            var status = await this.index.AddDocumentsJsonAsync(new[] { new Movie { Id = "4" } });
             var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId, 10000.0, 20);
             Assert.Equal(response.UpdateId, status.UpdateId);
             Assert.Equal("processed", response.Status);
@@ -63,7 +63,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task WaitForPendingUpdateWithException()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
+            var status = await this.index.AddDocumentsJsonAsync(new[] { new Movie { Id = "5" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.index.WaitForPendingUpdateAsync(status.UpdateId, 0.0, 20));
         }
     }

@@ -65,7 +65,7 @@ namespace Meilisearch.Tests
             index = this.defaultClient.Index(indexUid);
             index.Uid.Should().Be(indexUid);
 
-            var document = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var document = await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
 
             document.UpdateId.Should().BeGreaterOrEqualTo(0);
         }

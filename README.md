@@ -109,7 +109,7 @@ namespace GettingStarted
             };
 
             // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
-            var update = await index.AddDocumentsAsync<Movie>(documents); // # => { "updateId": 0 }
+            var update = await index.AddDocumentsJsonAsync<Movie>(documents); // # => { "updateId": 0 }
         }
     }
 }
@@ -220,8 +220,9 @@ var index = await client.GetIndexAsync("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
-var updateStatus = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
-var updateStatus = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+// JSON
+var updateStatus = await index.AddDocumentsJsonAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var updateStatus = await index.UpdateDocumentsJsonAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
 Update Status has a reference `UpdateId` to get the status of the action.

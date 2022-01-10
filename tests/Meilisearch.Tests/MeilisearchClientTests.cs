@@ -49,7 +49,7 @@ namespace Meilisearch.Tests
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "BasicUsageOfCustomClientTest";
             Meilisearch.Index index = await ms.CreateIndexAsync(indexUid);
-            var updateStatus = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var updateStatus = await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
             index.FetchPrimaryKey().Should().Equals("id"); // Check the JSON has been well serialized and the primary key is not equal to "Id"

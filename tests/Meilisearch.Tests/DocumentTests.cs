@@ -1,5 +1,6 @@
 namespace Meilisearch.Tests
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
@@ -22,14 +23,20 @@ namespace Meilisearch.Tests
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        [Fact]
-        public async Task BasicDocumentsAddition()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsAddition(string format)
         {
             var indexUID = "BasicDocumentsAdditionTest";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            UpdateStatus update = format switch
+            {
+                "json" => await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdateAsync(update.UpdateId);
 
@@ -40,8 +47,9 @@ namespace Meilisearch.Tests
             docs.First().Genre.Should().BeNull();
         }
 
-        [Fact]
-        public async Task BasicDocumentsAdditionInBatches()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsAdditionInBatches(string format)
         {
             var indexUID = "BasicDocumentsAdditionInBatchesTest";
             Index index = this.client.Index(indexUID);
@@ -55,7 +63,13 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
-            var updates = await index.AddDocumentsInBatchesAsync(movies, 2);
+
+            IEnumerable<UpdateStatus> updates = format switch
+            {
+                "json" => await index.AddDocumentsJsonInBatchesAsync(movies, 2),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             foreach (var u in updates)
             {
                 u.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -70,14 +84,20 @@ namespace Meilisearch.Tests
             Assert.Equal("Taxi Driver", docs.ElementAt(2).Name);
         }
 
-        [Fact]
-        public async Task BasicDocumentsAdditionWithCreateIndex()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsAdditionWithCreateIndex(string format)
         {
             var indexUID = "BasicDocumentsAdditionWithCreateIndexTest";
             Index index = await this.client.CreateIndexAsync(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            UpdateStatus update = format switch
+            {
+                "json" => await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdateAsync(update.UpdateId);
 
@@ -88,37 +108,55 @@ namespace Meilisearch.Tests
             docs.First().Genre.Should().BeNull();
         }
 
-        [Fact]
-        public async Task BasicDocumentsAdditionWithTimeoutError()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsAdditionWithTimeoutError(string format)
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutError";
             Index index = await this.client.GetOrCreateIndexAsync(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            UpdateStatus update = format switch
+            {
+                "json" => await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForPendingUpdateAsync(update.UpdateId, 0));
         }
 
-        [Fact]
-        public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval(string format)
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
             Index index = await this.client.GetOrCreateIndexAsync(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            UpdateStatus update = format switch
+            {
+                "json" => await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForPendingUpdateAsync(update.UpdateId, 0, 10));
         }
 
-        [Fact]
-        public async Task DocumentsAdditionWithPrimaryKey()
+        [Theory]
+        [InlineData("json")]
+        public async Task DocumentsAdditionWithPrimaryKey(string format)
         {
             var indexUid = "DocumentsAdditionWithPrimaryKeyTest";
             var index = this.client.Index(indexUid);
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var update = await index.AddDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            UpdateStatus update = format switch
+            {
+                "json" => await index.AddDocumentsJsonAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key"),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             await index.WaitForPendingUpdateAsync(update.UpdateId);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
 
@@ -127,23 +165,33 @@ namespace Meilisearch.Tests
             Assert.Equal("key", index.PrimaryKey);
         }
 
-        [Fact]
-        public async Task BasicDocumentsUpdate()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsUpdate(string format)
         {
             var indexUID = "BasicDocumentsUpdateTest";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[]
+            UpdateStatus update = format switch
             {
-                new Movie { Id = "1", Name = "Batman", Genre = "Action" },
-                new Movie { Id = "2", Name = "Superman" },
-            });
+                "json" => await index.AddDocumentsJsonAsync(new[]
+                {
+                    new Movie { Id = "1", Name = "Batman", Genre = "Action" },
+                    new Movie { Id = "2", Name = "Superman" },
+                }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdateAsync(update.UpdateId);
 
             // Update the documents
-            update = await index.UpdateDocumentsAsync(new[] { new Movie { Id = "1", Name = "Ironman" } });
+            update = format switch
+            {
+                "json" => await index.UpdateDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Ironman" } }),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
             await index.WaitForPendingUpdateAsync(update.UpdateId);
 
@@ -158,8 +206,9 @@ namespace Meilisearch.Tests
             docs.ElementAt(1).Genre.Should().BeNull();
         }
 
-        [Fact]
-        public async Task BasicDocumentsUpdateInBatches()
+        [Theory]
+        [InlineData("json")]
+        public async Task BasicDocumentsUpdateInBatches(string format)
         {
             var indexUID = "BasicDocumentsUpdateInBatchesTest";
             Index index = this.client.Index(indexUID);
@@ -173,7 +222,12 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
-            var updates = await index.AddDocumentsInBatchesAsync(movies, 2);
+            IEnumerable<UpdateStatus> updates = format switch
+            {
+                "json" => await index.AddDocumentsJsonInBatchesAsync(movies, 2),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             foreach (var u in updates)
             {
                 u.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -188,7 +242,12 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar", Genre = "Sci-Fi" },
                 new Movie { Id = "5", Name = "Titanic", Genre = "Drama" },
             };
-            updates = await index.UpdateDocumentsInBatchesAsync(movies, 2);
+            updates = format switch
+            {
+                "json" => await index.UpdateDocumentsJsonInBatchesAsync(movies, 2),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             foreach (var u in updates)
             {
                 u.UpdateId.Should().BeGreaterOrEqualTo(0);
@@ -204,15 +263,21 @@ namespace Meilisearch.Tests
             }
         }
 
-        [Fact]
-        public async Task DocumentsUpdateWithPrimaryKey()
+        [Theory]
+        [InlineData("json")]
+        public async Task DocumentsUpdateWithPrimaryKey(string format)
         {
             var indexUid = "DocumentsUpdateWithPrimaryKeyTest";
             var index = this.client.Index(indexUid);
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var update = await index.UpdateDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            var update = format switch
+            {
+                "json" => await index.UpdateDocumentsJsonAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key"),
+                _ => throw new System.IndexOutOfRangeException($"Unsupported format: {format}")
+            };
+
             await index.WaitForPendingUpdateAsync(update.UpdateId);
             update.UpdateId.Should().BeGreaterOrEqualTo(0);
 
