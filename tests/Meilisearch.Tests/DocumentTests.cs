@@ -27,7 +27,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsAddition(string format)
         {
-            var indexUID = "BasicDocumentsAdditionTest";
+            var indexUID = $"BasicDocumentsAdditionTest_{format}";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
@@ -51,7 +51,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsAdditionInBatches(string format)
         {
-            var indexUID = "BasicDocumentsAdditionInBatchesTest";
+            var indexUID = $"BasicDocumentsAdditionInBatchesTest_{format}";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
@@ -88,7 +88,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsAdditionWithCreateIndex(string format)
         {
-            var indexUID = "BasicDocumentsAdditionWithCreateIndexTest";
+            var indexUID = $"BasicDocumentsAdditionWithCreateIndexTest_{format}";
             Index index = await this.client.CreateIndexAsync(indexUID);
 
             // Add the documents
@@ -112,7 +112,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsAdditionWithTimeoutError(string format)
         {
-            var indexUID = "BasicDocumentsAdditionWithTimeoutError";
+            var indexUID = $"BasicDocumentsAdditionWithTimeoutError_{format}";
             Index index = await this.client.GetOrCreateIndexAsync(indexUID);
 
             // Add the documents
@@ -129,7 +129,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval(string format)
         {
-            var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
+            var indexUID = $"BasicDocumentsAdditionWithTimeoutErrorByIntervalTest_{format}";
             Index index = await this.client.GetOrCreateIndexAsync(indexUID);
 
             // Add the documents
@@ -146,7 +146,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task DocumentsAdditionWithPrimaryKey(string format)
         {
-            var indexUid = "DocumentsAdditionWithPrimaryKeyTest";
+            var indexUid = $"DocumentsAdditionWithPrimaryKeyTest_{format}";
             var index = this.client.Index(indexUid);
             index.PrimaryKey.Should().BeNull();
 
@@ -169,7 +169,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsUpdate(string format)
         {
-            var indexUID = "BasicDocumentsUpdateTest";
+            var indexUID = $"BasicDocumentsUpdateTest_{format}";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
@@ -210,7 +210,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task BasicDocumentsUpdateInBatches(string format)
         {
-            var indexUID = "BasicDocumentsUpdateInBatchesTest";
+            var indexUID = $"BasicDocumentsUpdateInBatchesTest_{format}";
             Index index = this.client.Index(indexUID);
 
             // Add the documents
@@ -267,7 +267,7 @@ namespace Meilisearch.Tests
         [InlineData("json")]
         public async Task DocumentsUpdateWithPrimaryKey(string format)
         {
-            var indexUid = "DocumentsUpdateWithPrimaryKeyTest";
+            var indexUid = $"DocumentsUpdateWithPrimaryKeyTest_{format}";
             var index = this.client.Index(indexUid);
             index.PrimaryKey.Should().BeNull();
 
