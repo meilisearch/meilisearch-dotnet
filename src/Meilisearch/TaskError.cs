@@ -1,4 +1,4 @@
-﻿namespace Meilisearch
+namespace Meilisearch
 {
     /// <summary>
     /// Task error details.
