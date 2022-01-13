@@ -42,9 +42,9 @@ namespace Meilisearch.Tests
 
         private delegate Task<TValue> IndexGetMethod<TValue>(CancellationToken cancellationToken = default);
 
-        private delegate Task<UpdateStatus> IndexUpdateMethod<TValue>(TValue newValue, CancellationToken cancellationToken = default);
+        private delegate Task<Meilisearch.TaskInfo> IndexUpdateMethod<TValue>(TValue newValue, CancellationToken cancellationToken = default);
 
-        private delegate Task<UpdateStatus> IndexResetMethod(CancellationToken cancellationToken = default);
+        private delegate Task<Meilisearch.TaskInfo> IndexResetMethod(CancellationToken cancellationToken = default);
 
         public async Task InitializeAsync()
         {
@@ -361,23 +361,23 @@ namespace Meilisearch.Tests
             value.Should().NotBeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertUpdateStatusProcessed(UpdateStatus updateStatus)
+        private async Task AssertUpdateStatusSucceeded(Meilisearch.TaskInfo taskInfo)
         {
-            updateStatus.UpdateId.Should().BeGreaterThan(0);
-            var updateWaitResponse = await this.index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
-            updateWaitResponse.Status.Should().BeEquivalentTo("processed");
+            taskInfo.Uid.Should().BeGreaterThan(0);
+            var updateWaitResponse = await this.client.Tasks.WaitForPendingTaskAsync(taskInfo.Uid);
+            updateWaitResponse.Status.Should().BeEquivalentTo("succeeded");
         }
 
         private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
         {
             var updateStatus = await updateMethod(newValue);
-            await this.AssertUpdateStatusProcessed(updateStatus);
+            await this.AssertUpdateStatusSucceeded(updateStatus);
         }
 
         private async Task AssertResetSuccess(IndexResetMethod resetMethod)
         {
             var updateStatus = await resetMethod();
-            await this.AssertUpdateStatusProcessed(updateStatus);
+            await this.AssertUpdateStatusSucceeded(updateStatus);
         }
     }
 }

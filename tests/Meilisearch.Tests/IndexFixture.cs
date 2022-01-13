@@ -30,11 +30,11 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            TaskInfo finalTaskInfo = await this.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
+            if (finalTaskInfo.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
             }
@@ -55,11 +55,11 @@ namespace Meilisearch.Tests
                 new MovieWithIntId { Id = 15, Name = "Spider-Man", Genre = "Action" },
                 new MovieWithIntId { Id = 16, Name = "Amélie Poulain", Genre = "French movie" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            Meilisearch.TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            Meilisearch.TaskInfo finalTaskInfo = await this.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
+            if (finalTaskInfo.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
             }
@@ -84,11 +84,11 @@ namespace Meilisearch.Tests
                 new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
                 new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            Meilisearch.TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            Meilisearch.TaskInfo finalTaskInfo = await this.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
+            if (finalTaskInfo.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
@@ -98,11 +98,11 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "genre" },
             };
-            update = await index.UpdateSettingsAsync(settings);
+            task = await index.UpdateSettingsAsync(settings);
 
             // Check the settings have been added
-            finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            finalTaskInfo = await this.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
+            if (finalTaskInfo.Status != "succeeded")
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }

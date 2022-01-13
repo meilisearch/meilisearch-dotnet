@@ -28,7 +28,7 @@ namespace Meilisearch.Tests
         public async Task GetAllUpdateStatus()
         {
             await this.index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
-            var allUpdates = await this.index.GetAllUpdateStatusAsync();
+            var allUpdates = await this.fixture.DefaultClient.Tasks.GetAllTaskStatusAsync();
             allUpdates.Count().Should().BeGreaterOrEqualTo(1);
         }
 
@@ -36,35 +36,35 @@ namespace Meilisearch.Tests
         public async Task GetOneUpdateStatus()
         {
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
-            UpdateStatus individualStatus = await this.index.GetUpdateStatusAsync(status.UpdateId);
-            individualStatus.Should().NotBeNull();
-            individualStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
-            individualStatus.Status.Should().NotBeNull();
+            Meilisearch.TaskInfo individualInfo = await this.fixture.DefaultClient.Tasks.GetTaskStatusAsync(status.Uid);
+            individualInfo.Should().NotBeNull();
+            individualInfo.Uid.Should().BeGreaterOrEqualTo(0);
+            individualInfo.Status.Should().NotBeNull();
         }
 
         [Fact]
         public async Task DefaultWaitForPendingUpdate()
         {
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
-            var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId);
-            Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal("processed", response.Status);
+            var response = await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(status.Uid);
+            Assert.Equal(response.Uid, status.Uid);
+            Assert.Equal("succeeded", response.Status);
         }
 
         [Fact]
         public async Task CustomWaitForPendingUpdate()
         {
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
-            var response = await this.index.WaitForPendingUpdateAsync(status.UpdateId, 10000.0, 20);
-            Assert.Equal(response.UpdateId, status.UpdateId);
-            Assert.Equal("processed", response.Status);
+            var response = await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(status.Uid, 10000.0, 20);
+            Assert.Equal(response.Uid, status.Uid);
+            Assert.Equal("succeeded", response.Status);
         }
 
         [Fact]
         public async Task WaitForPendingUpdateWithException()
         {
             var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.index.WaitForPendingUpdateAsync(status.UpdateId, 0.0, 20));
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(status.Uid, 0.0, 20));
         }
     }
 }

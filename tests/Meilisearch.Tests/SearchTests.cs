@@ -76,9 +76,9 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "name" },
             };
-            UpdateStatus update = await this.basicIndex.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdateAsync(update.UpdateId);
+            TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newFilters);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
 
             var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
                 "man",
@@ -214,9 +214,9 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "id" },
             };
-            UpdateStatus update = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForPendingUpdateAsync(update.UpdateId);
+            Meilisearch.TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
 
             var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -239,9 +239,9 @@ namespace Meilisearch.Tests
             {
                 FilterableAttributes = new string[] { "genre", "id" },
             };
-            UpdateStatus update = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForPendingUpdateAsync(update.UpdateId);
+            Meilisearch.TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
 
             var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -293,9 +293,9 @@ namespace Meilisearch.Tests
             {
                 SortableAttributes = new string[] { "name" },
             };
-            UpdateStatus update = await this.basicIndex.UpdateSettingsAsync(newSortable);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdateAsync(update.UpdateId);
+            Meilisearch.TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newSortable);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.fixture.DefaultClient.Tasks.WaitForPendingTaskAsync(task.Uid);
 
             var movies = await this.basicIndex.SearchAsync<Movie>(
                 "man",

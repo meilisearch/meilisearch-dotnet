@@ -48,10 +48,13 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "BasicUsageOfCustomClientTest";
-            Meilisearch.Index index = await ms.CreateIndexAsync(indexUid);
+            var taskInfo = await this.defaultClient.CreateIndexAsync(indexUid);
+            await this.defaultClient.Tasks.WaitForPendingTaskAsync(taskInfo.Uid);
+            var index = await this.defaultClient.GetIndexAsync(indexUid);
+
             var updateStatus = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            updateStatus.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
+            updateStatus.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.defaultClient.Tasks.WaitForPendingTaskAsync(updateStatus.Uid);
             index.FetchPrimaryKey().Should().Equals("id"); // Check the JSON has been well serialized and the primary key is not equal to "Id"
         }
 
@@ -61,9 +64,11 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "ErrorHandlerOfCustomClientTest";
-            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey));
-            Assert.Equal("index_already_exists", ex.Code);
+            var taskInfo = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            var taskResult = await ms.Tasks.WaitForPendingTaskAsync(taskInfo.Uid);
+            var errorTaskInfo = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            var errorTaskResult = await ms.Tasks.WaitForPendingTaskAsync(errorTaskInfo.Uid);
+            Assert.Equal("index_already_exists", errorTaskResult.Error.Code);
         }
 
         [Fact]
@@ -76,19 +81,20 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateDumps()
         {
-            var dumpResponse = await this.defaultClient.CreateDumpAsync();
+            var dumpResponse = await this.defaultClient.Dumps.CreateDumpAsync();
 
             dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
+            var resp = await this.defaultClient.Dumps.WaitForPendingDumpAsync(dumpResponse.Uid);
         }
 
         [Fact]
         public async Task GetDumpStatusById()
         {
-            var dump = await this.defaultClient.CreateDumpAsync();
+            var dump = await this.defaultClient.Dumps.CreateDumpAsync();
             Assert.NotNull(dump);
-
-            var dumpStatus = await this.defaultClient.GetDumpStatusAsync(dump.Uid);
+            await this.defaultClient.Dumps.WaitForPendingDumpAsync(dump.Uid);
+            var dumpStatus = await this.defaultClient.Dumps.GetDumpStatusAsync(dump.Uid);
 
             dumpStatus.Status.Should().BeOneOf("done", "in_progress");
             Assert.Equal(dump.Uid, dumpStatus.Uid);
@@ -138,30 +144,11 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
-            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
-            var deletedResult = await ms.DeleteIndexAsync(indexUid);
-            deletedResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task GivenValidIndex_DeleteIndexIfExists_ShouldReturnTrue()
-        {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
-            var indexUid = "DeleteIndexIfExistsTest";
-            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
-            var deletedResult = await ms.DeleteIndexIfExists(indexUid);
-            deletedResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task GivenInvalidIndex_DeleteIndexIfExists_ShouldReturnFalse()
-        {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
-            var invalidIndexUid = "NonExistingIndexTest";
-            var deletedResult = await ms.DeleteIndexIfExists(invalidIndexUid);
-            deletedResult.Should().BeFalse();
+            var createTaskInfo = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            await ms.Tasks.WaitForPendingTaskAsync(createTaskInfo.Uid);
+            var deleteTaskInfo = await ms.DeleteIndexAsync(indexUid);
+            var deleteTaskResult = await ms.Tasks.WaitForPendingTaskAsync(deleteTaskInfo.Uid);
+            Assert.Equal("succeeded", deleteTaskResult.Status);
         }
     }
 }
