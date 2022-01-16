@@ -82,9 +82,9 @@ namespace Meilisearch
         /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
         /// <returns>Returns an Update instance.</returns>
-        private Update TaskEndpoint()
+        private TaskEndpoint TaskEndpoint()
         {
-            var task = new Update();
+            var task = new TaskEndpoint();
             task.WithHttpClient(this.http);
             return task;
         }

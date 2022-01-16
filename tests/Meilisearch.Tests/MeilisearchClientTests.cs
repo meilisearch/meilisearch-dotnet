@@ -79,24 +79,17 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task CreateDumps()
+        public async Task CreateAndGetDumps()
         {
             var dumpResponse = await this.defaultClient.CreateDumpAsync();
+            Assert.NotNull(dumpResponse);
 
             dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
-        }
 
-        [Fact]
-        public async Task GetDumpStatusById()
-        {
-            var dump = await this.defaultClient.CreateDumpAsync();
-            Assert.NotNull(dump);
-
-            var dumpStatus = await this.defaultClient.GetDumpStatusAsync(dump.Uid);
-
+            var dumpStatus = await this.defaultClient.GetDumpStatusAsync(dumpResponse.Uid);
             dumpStatus.Status.Should().BeOneOf("done", "in_progress");
-            Assert.Equal(dump.Uid, dumpStatus.Uid);
+            Assert.Equal(dumpResponse.Uid, dumpStatus.Uid);
         }
 
         [Fact]

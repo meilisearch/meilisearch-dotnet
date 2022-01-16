@@ -111,7 +111,7 @@ namespace Meilisearch
         /// It's not a recovery delete. You will also lose the documents within the index.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> DeleteAsync(CancellationToken cancellationToken = default)
         {
             var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}", cancellationToken).ConfigureAwait(false);
@@ -126,7 +126,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
@@ -148,7 +148,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<IEnumerable<UpdateStatus>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             async Task AddActionAsync(List<T> items, List<UpdateStatus> updates, CancellationToken localCancellationToken)
@@ -167,7 +167,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
@@ -191,7 +191,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<IEnumerable<UpdateStatus>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             async Task UpdateActionAsync(List<T> items, List<UpdateStatus> updates, CancellationToken localCancellationToken)
@@ -250,7 +250,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="documentId">Document identifier.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> DeleteOneDocumentAsync(string documentId, CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents/{documentId}", cancellationToken).ConfigureAwait(false);
@@ -273,7 +273,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="documentIds">List of documents identifier.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> DeleteDocumentsAsync(IEnumerable<string> documentIds, CancellationToken cancellationToken = default)
         {
             var httpresponse =
@@ -298,7 +298,7 @@ namespace Meilisearch
         /// Delete all the documents in the index.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of this async operation.</returns>
+        /// <returns>Returns the task Uid of this async operation.</returns>
         public async Task<UpdateStatus> DeleteAllDocumentsAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents", cancellationToken)
@@ -310,9 +310,9 @@ namespace Meilisearch
         /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
         /// <returns>Returns an Update instance.</returns>
-        private Update TaskEndpoint()
+        private TaskEndpoint TaskEndpoint()
         {
-            var task = new Update();
+            var task = new TaskEndpoint();
             task.WithHttpClient(this.http);
             return task;
         }
@@ -398,7 +398,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="settings">Settings object.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSettingsAsync(Settings settings, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -411,7 +411,7 @@ namespace Meilisearch
         /// Resets all the settings to their default values.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task UID of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetSettingsAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
@@ -434,7 +434,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="displayedAttributes">Collection of displayed attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateDisplayedAttributesAsync(IEnumerable<string> displayedAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -447,7 +447,7 @@ namespace Meilisearch
         /// Resets the displayed attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetDisplayedAttributesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes", cancellationToken)
@@ -471,7 +471,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="distinctAttribute">Name of distinct attribute.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateDistinctAttributeAsync(string distinctAttribute, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -484,7 +484,7 @@ namespace Meilisearch
         /// Resets the distinct attribute setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetDistinctAttributeAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/distinct-attribute", cancellationToken)
@@ -508,7 +508,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="filterableAttributes">Collection of filterable attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -521,7 +521,7 @@ namespace Meilisearch
         /// Resets the filterable attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetFilterableAttributesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/filterable-attributes", cancellationToken)
@@ -545,7 +545,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="rankingRules">Collection of ranking rules.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateRankingRulesAsync(IEnumerable<string> rankingRules, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -558,7 +558,7 @@ namespace Meilisearch
         /// Resets the ranking rules setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetRankingRulesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/ranking-rules", cancellationToken)
@@ -582,7 +582,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="searchableAttributes">Collection of searchable attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSearchableAttributesAsync(IEnumerable<string> searchableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -596,7 +596,7 @@ namespace Meilisearch
         /// Resets the searchable attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetSearchableAttributesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/searchable-attributes", cancellationToken)
@@ -620,7 +620,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="sortableAttributes">Collection of sortable attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSortableAttributesAsync(IEnumerable<string> sortableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -633,7 +633,7 @@ namespace Meilisearch
         /// Resets the sortable attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetSortableAttributesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/sortable-attributes", cancellationToken)
@@ -658,7 +658,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="stopWords">Collection of stop words.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateStopWordsAsync(IEnumerable<string> stopWords, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -671,7 +671,7 @@ namespace Meilisearch
         /// Resets the stop words setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetStopWordsAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/stop-words", cancellationToken)
@@ -695,7 +695,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="synonyms">Collection of synonyms.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> UpdateSynonymsAsync(Dictionary<string, IEnumerable<string>> synonyms, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
@@ -709,7 +709,7 @@ namespace Meilisearch
         /// Resets the synonyms setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the updateID of the asynchronous task.</returns>
+        /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<UpdateStatus> ResetSynonymsAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/synonyms", cancellationToken)

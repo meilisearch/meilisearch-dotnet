@@ -2,28 +2,17 @@ namespace Meilisearch
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
-    using Meilisearch.Extensions;
 
     /// <summary>
     /// MeiliSearch index to search and manage documents.
     /// </summary>
-    public class Update
+    public class TaskEndpoint
     {
         private HttpClient http;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Update"/> class.
-        /// </summary>
-        // public Update() {
-        //     this.http = new HttpClient();
-        // }
 
         /// <summary>
         /// Gets the tasks.
@@ -109,7 +98,7 @@ namespace Meilisearch
         /// <param name="http">HttpRequest instance used.</param>
         /// <returns>The same object with the initialization.</returns>
         // internal Index WithHttpClient(HttpClient client)
-        internal Update WithHttpClient(HttpClient http)
+        internal TaskEndpoint WithHttpClient(HttpClient http)
         {
             this.http = http;
             return this;
