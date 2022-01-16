@@ -18,7 +18,7 @@ namespace Meilisearch.Tests
         public MeilisearchClientTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.defaultClient = fixture.DefaultClient;
+            this.defaultClient = fixture.defaultClient;
             this.defaultPrimaryKey = "movieId";
         }
 
@@ -136,7 +136,7 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             MeilisearchClient ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
-            var index = await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
             var task = await ms.DeleteIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             var finishedTask = await this.defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);

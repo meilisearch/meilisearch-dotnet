@@ -17,7 +17,7 @@ namespace Meilisearch.Tests
         public SettingsTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.client = fixture.DefaultClient;
+            this.client = fixture.defaultClient;
 
             this.defaultSettings = new Settings
             {

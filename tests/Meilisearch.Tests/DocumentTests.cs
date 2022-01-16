@@ -15,7 +15,7 @@ namespace Meilisearch.Tests
         public DocumentTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.client = fixture.DefaultClient;
+            this.client = fixture.defaultClient;
         }
 
         public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
@@ -71,9 +71,9 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task BasicDocumentsAdditionWithCreateIndex()
+        public async Task BasicDocumentsAdditionWithAlreadyCreatedIndex()
         {
-            var indexUid = "BasicDocumentsAdditionWithCreateIndexTest";
+            var indexUid = "BasicDocumentsAdditionWithAlreadyCreatedIndexTest";
             var task = await this.client.CreateIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await this.client.Index(indexUid).WaitForTaskAsync(task.Uid);

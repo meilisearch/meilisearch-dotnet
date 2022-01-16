@@ -8,18 +8,31 @@ namespace Meilisearch.Tests
     {
         public IndexFixture()
         {
-            this.DefaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            this.defaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
         }
 
-        public MeilisearchClient DefaultClient { get; private set; }
+        public MeilisearchClient defaultClient { get; private set; }
 
         public Task InitializeAsync() => Task.CompletedTask;
 
         public async Task DisposeAsync() => await this.DeleteAllIndexes(); // Let a clean MeiliSearch instance, for maintainers convenience only.
 
+        public async Task<Meilisearch.Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
+        {
+            var task = await this.defaultClient.CreateIndexAsync(indexUid, primaryKey);
+
+            // Check the index has been created
+            TaskInfo finishedTask = await this.defaultClient.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
+            {
+                throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
+            }
+
+            return this.defaultClient.Index(indexUid);
+        }
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            Meilisearch.Index index = this.defaultClient.Index(indexUid);
             var movies = new[]
             {
                 new Movie { Id = "10", Name = "Gladiator" },
@@ -33,8 +46,8 @@ namespace Meilisearch.Tests
             TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finalTaskInfo = await index.WaitForTaskAsync(task.Uid);
-            if (finalTaskInfo.Status != "succeeded")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
             }
@@ -44,7 +57,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndexWithIntId(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            Meilisearch.Index index = this.defaultClient.Index(indexUid);
             var movies = new[]
             {
                 new MovieWithIntId { Id = 10, Name = "Gladiator" },
@@ -58,8 +71,8 @@ namespace Meilisearch.Tests
             TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finalTaskInfo = await index.WaitForTaskAsync(task.Uid);
-            if (finalTaskInfo.Status != "succeeded")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
             }
@@ -69,7 +82,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpIndexForFaceting(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            Meilisearch.Index index = this.defaultClient.Index(indexUid);
 
             // Add documents
             var movies = new[]
@@ -87,8 +100,8 @@ namespace Meilisearch.Tests
             TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finalTaskInfo = await index.WaitForTaskAsync(task.Uid);
-            if (finalTaskInfo.Status != "succeeded")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
@@ -101,8 +114,8 @@ namespace Meilisearch.Tests
             task = await index.UpdateSettingsAsync(settings);
 
             // Check the settings have been added
-            finalTaskInfo = await index.WaitForTaskAsync(task.Uid);
-            if (finalTaskInfo.Status != "succeeded")
+            finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
@@ -112,7 +125,7 @@ namespace Meilisearch.Tests
 
         public async Task DeleteAllIndexes()
         {
-            var indexes = await this.DefaultClient.GetAllIndexesAsync();
+            var indexes = await this.defaultClient.GetAllIndexesAsync();
             foreach (var index in indexes)
             {
                 await index.DeleteAsync();
