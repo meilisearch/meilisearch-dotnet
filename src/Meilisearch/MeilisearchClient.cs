@@ -80,20 +80,6 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Create a local reference to a task, without doing an HTTP call.
-        /// </summary>
-        /// <returns>Returns a Task instance.</returns>
-        private TaskEndpoint TaskEndpoint()
-        {
-            if (this.taskEndpoint == null) {
-                this.taskEndpoint = new TaskEndpoint();
-                this.taskEndpoint.WithHttpClient(this.http);
-            }
-
-            return this.taskEndpoint;
-        }
-
-        /// <summary>
         /// Creates and index with an UID and a primary key.
         /// BEWARE : Throws error if the index already exist. Use GetIndex before using Create.
         /// </summary>
@@ -295,6 +281,21 @@ namespace Meilisearch
             var response = await this.http.GetAsync($"/dumps/{uid}/status", cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Create a local reference to a task, without doing an HTTP call.
+        /// </summary>
+        /// <returns>Returns a Task instance.</returns>
+        private TaskEndpoint TaskEndpoint()
+        {
+            if (this.taskEndpoint == null)
+            {
+                this.taskEndpoint = new TaskEndpoint();
+                this.taskEndpoint.WithHttpClient(this.http);
+            }
+
+            return this.taskEndpoint;
         }
     }
 }

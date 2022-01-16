@@ -1,6 +1,7 @@
 namespace Meilisearch
 {
     using System.Collections.Generic;
+
     /// <summary>
     /// Update Status of the actions done.
     /// </summary>

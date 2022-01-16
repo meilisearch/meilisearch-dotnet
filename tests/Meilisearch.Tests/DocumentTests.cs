@@ -15,7 +15,7 @@ namespace Meilisearch.Tests
         public DocumentTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.client = fixture.defaultClient;
+            this.client = fixture.DefaultClient;
         }
 
         public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]

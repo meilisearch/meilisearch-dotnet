@@ -3,10 +3,8 @@ namespace Meilisearch
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Meilisearch.Extensions;
@@ -306,20 +304,6 @@ namespace Meilisearch
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Create a local reference to a task, without doing an HTTP call.
-        /// </summary>
-        /// <returns>Returns a TaskEndpoint instance.</returns>
-        private TaskEndpoint TaskEndpoint()
-        {
-            if (this.taskEndpoint == null) {
-                this.taskEndpoint = new TaskEndpoint();
-                this.taskEndpoint.WithHttpClient(this.http);
-            }
-
-            return this.taskEndpoint;
         }
 
         /// <summary>
@@ -758,6 +742,21 @@ namespace Meilisearch
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Create a local reference to a task, without doing an HTTP call.
+        /// </summary>
+        /// <returns>Returns a TaskEndpoint instance.</returns>
+        private TaskEndpoint TaskEndpoint()
+        {
+            if (this.taskEndpoint == null)
+            {
+                this.taskEndpoint = new TaskEndpoint();
+                this.taskEndpoint.WithHttpClient(this.http);
+            }
+
+            return this.taskEndpoint;
         }
     }
 }

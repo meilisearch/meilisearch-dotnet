@@ -18,7 +18,7 @@ namespace Meilisearch.Tests
         public MeilisearchClientTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.defaultClient = fixture.defaultClient;
+            this.defaultClient = fixture.DefaultClient;
             this.defaultPrimaryKey = "movieId";
         }
 

@@ -4,7 +4,6 @@ namespace Meilisearch.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using HttpClientFactoryLite;
     using Xunit;
 
     [Collection("Sequential")]
@@ -17,7 +16,7 @@ namespace Meilisearch.Tests
         public IndexTests(IndexFixture fixture)
         {
             this.fixture = fixture;
-            this.client = fixture.defaultClient;
+            this.client = fixture.DefaultClient;
             this.defaultPrimaryKey = "movieId";
         }
 
@@ -55,7 +54,7 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().BeNull();
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.client.GetIndexAsync(indexUid));
-            Assert.Equal("index_not_found", ex.Code);
+            Assert.Equal(ex.Code, "index_not_found");
         }
 
         [Fact]
@@ -99,7 +98,7 @@ namespace Meilisearch.Tests
             Assert.Equal("failed", finishedTask.Status);
             var error = finishedTask.Error;
             error.Should().NotBeNull();
-            Assert.Equal(error["code"], "index_already_exists");
+            Assert.Equal("index_already_exists", error["code"]);
         }
 
         [Fact]
@@ -116,7 +115,6 @@ namespace Meilisearch.Tests
 
             var index = await this.client.GetIndexAsync(indexUid);
             index.PrimaryKey.Should().Be(primarykey);
-
         }
 
         [Fact]

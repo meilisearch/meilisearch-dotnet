@@ -8,10 +8,10 @@ namespace Meilisearch.Tests
     {
         public IndexFixture()
         {
-            this.defaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            this.DefaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
         }
 
-        public MeilisearchClient defaultClient { get; private set; }
+        public MeilisearchClient DefaultClient { get; private set; }
 
         public Task InitializeAsync() => Task.CompletedTask;
 
@@ -19,20 +19,21 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
         {
-            var task = await this.defaultClient.CreateIndexAsync(indexUid, primaryKey);
+            var task = await this.DefaultClient.CreateIndexAsync(indexUid, primaryKey);
 
             // Check the index has been created
-            TaskInfo finishedTask = await this.defaultClient.WaitForTaskAsync(task.Uid);
+            TaskInfo finishedTask = await this.DefaultClient.WaitForTaskAsync(task.Uid);
             if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
             }
 
-            return this.defaultClient.Index(indexUid);
+            return this.DefaultClient.Index(indexUid);
         }
+
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {
-            Meilisearch.Index index = this.defaultClient.Index(indexUid);
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new Movie { Id = "10", Name = "Gladiator" },
@@ -57,7 +58,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndexWithIntId(string indexUid)
         {
-            Meilisearch.Index index = this.defaultClient.Index(indexUid);
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new MovieWithIntId { Id = 10, Name = "Gladiator" },
@@ -82,7 +83,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpIndexForFaceting(string indexUid)
         {
-            Meilisearch.Index index = this.defaultClient.Index(indexUid);
+            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
 
             // Add documents
             var movies = new[]
@@ -125,7 +126,7 @@ namespace Meilisearch.Tests
 
         public async Task DeleteAllIndexes()
         {
-            var indexes = await this.defaultClient.GetAllIndexesAsync();
+            var indexes = await this.DefaultClient.GetAllIndexesAsync();
             foreach (var index in indexes)
             {
                 await index.DeleteAsync();
