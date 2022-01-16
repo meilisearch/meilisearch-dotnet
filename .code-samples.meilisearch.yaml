@@ -18,7 +18,7 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
-  var updates = await client.Index("movies").GetAllUpdateStatusAsync();
+  var updates = await client.Index("movies").GetTasksAsync();
   foreach (UpdateStatus update in updates)
   {
       Console.WriteLine(update.Status);

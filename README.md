@@ -224,7 +224,7 @@ var updateStatus = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = 
 var updateStatus = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
-Update Status has a reference `UpdateId` to get the status of the action.
+Update Status has a reference `Uid` to get the status of the action.
 
 #### Get Documents <!-- omit in toc -->
 
@@ -261,13 +261,13 @@ var updateStatus = await indextoDelete.DeleteAllDocumentsAsync();
 #### Get Update Status By Id <!-- omit in toc -->
 
 ```c#
-UpdateStatus individualStatus = await index.GetUpdateStatusAsync(1);
+UpdateStatus individualStatus = await index.GetTaskAsync(1);
 ```
 
 #### Get All Update Status <!-- omit in toc -->
 
 ```c#
-var status = await index.GetAllUpdateStatusAsync();
+var status = await index.GetTasksAsync();
 ```
 
 ### Search

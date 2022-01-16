@@ -77,8 +77,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "name" },
             };
             UpdateStatus update = await this.basicIndex.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdateAsync(update.UpdateId);
+            update.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForTaskAsync(update.Uid);
 
             var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
                 "man",
@@ -215,8 +215,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "id" },
             };
             UpdateStatus update = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForPendingUpdateAsync(update.UpdateId);
+            update.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.indexWithIntId.WaitForTaskAsync(update.Uid);
 
             var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -240,8 +240,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "genre", "id" },
             };
             UpdateStatus update = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForPendingUpdateAsync(update.UpdateId);
+            update.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.indexWithIntId.WaitForTaskAsync(update.Uid);
 
             var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -294,8 +294,8 @@ namespace Meilisearch.Tests
                 SortableAttributes = new string[] { "name" },
             };
             UpdateStatus update = await this.basicIndex.UpdateSettingsAsync(newSortable);
-            update.UpdateId.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForPendingUpdateAsync(update.UpdateId);
+            update.Uid.Should().BeGreaterOrEqualTo(0);
+            await this.basicIndex.WaitForTaskAsync(update.Uid);
 
             var movies = await this.basicIndex.SearchAsync<Movie>(
                 "man",

@@ -33,7 +33,7 @@ namespace Meilisearch.Tests
             UpdateStatus update = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
+            UpdateStatus finalUpdateStatus = await index.WaitForTaskAsync(update.Uid);
             if (finalUpdateStatus.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
@@ -58,7 +58,7 @@ namespace Meilisearch.Tests
             UpdateStatus update = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
+            UpdateStatus finalUpdateStatus = await index.WaitForTaskAsync(update.Uid);
             if (finalUpdateStatus.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
@@ -87,7 +87,7 @@ namespace Meilisearch.Tests
             UpdateStatus update = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
+            UpdateStatus finalUpdateStatus = await index.WaitForTaskAsync(update.Uid);
             if (finalUpdateStatus.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
@@ -101,7 +101,7 @@ namespace Meilisearch.Tests
             update = await index.UpdateSettingsAsync(settings);
 
             // Check the settings have been added
-            finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
+            finalUpdateStatus = await index.WaitForTaskAsync(update.Uid);
             if (finalUpdateStatus.Status != "succeeded")
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");

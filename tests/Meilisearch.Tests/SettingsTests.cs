@@ -363,8 +363,8 @@ namespace Meilisearch.Tests
 
         private async Task AssertUpdateStatusSucceeded(UpdateStatus updateStatus)
         {
-            updateStatus.UpdateId.Should().BeGreaterThan(0);
-            var updateWaitResponse = await this.index.WaitForPendingUpdateAsync(updateStatus.UpdateId);
+            updateStatus.Uid.Should().BeGreaterThan(0);
+            var updateWaitResponse = await this.index.WaitForTaskAsync(updateStatus.Uid);
             updateWaitResponse.Status.Should().BeEquivalentTo("succeeded");
         }
 

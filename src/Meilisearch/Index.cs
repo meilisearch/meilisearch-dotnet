@@ -307,25 +307,35 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets the update status of all the asynchronous operations.
+        /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns a list of the operations status.</returns>
-        public async Task<IEnumerable<UpdateStatus>> GetAllUpdateStatusAsync(CancellationToken cancellationToken = default)
+        /// <returns>Returns an Update instance.</returns>
+        private Update TaskEndpoint()
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<UpdateStatus>>($"/indexes/{this.Uid}/updates", cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+            var task = new Update();
+            task.WithHttpClient(this.http);
+            return task;
         }
 
         /// <summary>
-        /// Get Update Status by Status Id.
+        /// Gets the tasks.
         /// </summary>
-        /// <param name="updateId">UpdateId for the operation.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns a list of the operations status.</returns>
+        public async Task<Result<IEnumerable<UpdateStatus>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.TaskEndpoint().GetIndexTasksAsync(this.Uid, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get on task.
+        /// </summary>
+        /// <param name="taskUid">Uid of the task.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return the current status of the operation.</returns>
-        public async Task<UpdateStatus> GetUpdateStatusAsync(int updateId, CancellationToken cancellationToken = default)
+        public async Task<UpdateStatus> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<UpdateStatus>($"/indexes/{this.Uid}/updates/{updateId}", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await this.TaskEndpoint().GetIndexTaskAsync(this.Uid, taskUid, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -357,32 +367,18 @@ namespace Meilisearch
         /// <summary>
         /// Waits until the asynchronous task was done.
         /// </summary>
-        /// <param name="updateId">Unique identifier of the asynchronous task.</param>
+        /// <param name="taskUid">Unique identifier of the asynchronous task.</param>
         /// <param name="timeoutMs">Timeout in millisecond.</param>
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the status of asynchronous task.</returns>
-        public async Task<UpdateStatus> WaitForPendingUpdateAsync(
-            int updateId,
+        public async Task<UpdateStatus> WaitForTaskAsync(
+            int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,
             CancellationToken cancellationToken = default)
         {
-            DateTime endingTime = DateTime.Now.AddMilliseconds(timeoutMs);
-
-            while (DateTime.Now < endingTime)
-            {
-                var response = await this.GetUpdateStatusAsync(updateId, cancellationToken).ConfigureAwait(false);
-
-                if (response.Status != "enqueued" && response.Status != "processing")
-                {
-                    return response;
-                }
-
-                await Task.Delay(intervalMs, cancellationToken).ConfigureAwait(false);
-            }
-
-            throw new MeilisearchTimeoutError("The task " + updateId.ToString() + " timed out.");
+            return await this.TaskEndpoint().WaitForTaskAsync(taskUid, timeoutMs, intervalMs, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
