@@ -4,10 +4,10 @@ namespace Meilisearch
     /// <summary>
     /// Update Status of the actions done.
     /// </summary>
-    public class UpdateStatus
+    public class TaskInfo
     {
         /// <summary>
-        /// Gets or sets update ID for the task.
+        /// Gets or sets Uid for the task.
         /// </summary>
         public int Uid { get; set; }
 

@@ -26,7 +26,6 @@ namespace Meilisearch
         };
 
         private readonly HttpClient http;
-        // private readonly Update taskEndpoint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -81,7 +80,7 @@ namespace Meilisearch
         /// <summary>
         /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
-        /// <returns>Returns an Update instance.</returns>
+        /// <returns>Returns a Task instance.</returns>
         private TaskEndpoint TaskEndpoint()
         {
             var task = new TaskEndpoint();
@@ -97,13 +96,13 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns Index.</returns>
-        public async Task<UpdateStatus> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             Index index = new Index(uid, primaryKey);
             var responseMessage = await this.http.PostJsonCustomAsync("/indexes", index, JsonSerializerOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            return await responseMessage.Content.ReadFromJsonAsync<UpdateStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,7 +112,7 @@ namespace Meilisearch
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns Index.</returns>
-        public async Task<UpdateStatus> UpdateIndexAsync(string uid, string primarykeytoChange, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> UpdateIndexAsync(string uid, string primarykeytoChange, CancellationToken cancellationToken = default)
         {
             return await this.Index(uid).UpdateAsync(primarykeytoChange, cancellationToken).ConfigureAwait(false);
         }
@@ -124,8 +123,8 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uid">unique dump identifier.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the status of delete operation.</returns>
-        public async Task<UpdateStatus> DeleteIndexAsync(string uid, CancellationToken cancellationToken = default)
+        /// <returns>Returns the task.</returns>
+        public async Task<TaskInfo> DeleteIndexAsync(string uid, CancellationToken cancellationToken = default)
         {
             return await this.Index(uid).DeleteAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -195,7 +194,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks.</returns>
-        public async Task<Result<IEnumerable<UpdateStatus>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
         {
             return await this.TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -206,7 +205,7 @@ namespace Meilisearch
         /// <param name="taskUid">Uid of the task.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return the task.</returns>
-        public async Task<UpdateStatus> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
             return await this.TaskEndpoint().GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
         }
@@ -218,8 +217,8 @@ namespace Meilisearch
         /// <param name="timeoutMs">Timeout in millisecond.</param>
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the status of asynchronous task.</returns>
-        public async Task<UpdateStatus> WaitForTaskAsync(
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,

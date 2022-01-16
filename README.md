@@ -35,7 +35,7 @@
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
   - [Documents](#documents)
-  - [Update Status](#update-status)
+  - [Get Task information](#get-task-information)
   - [Search](#search)
 - [🧰 Use a Custom HTTP Client](#-use-a-custom-http-client)
 - [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
@@ -109,13 +109,13 @@ namespace GettingStarted
             };
 
             // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
-            var update = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
+            var task = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
         }
     }
 }
 ```
 
-With the `uid` (via `task.Uid`), you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [update endpoint](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://docs.meilisearch.com/reference/api/tasks.html#get-task).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -220,11 +220,11 @@ var index = await client.GetIndexAsync("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
-var updateStatus = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
-var updateStatus = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var task = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var task = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
-Update Status has a reference `Uid` to get the status of the action.
+The returned `task` is a `TaskInfo` that can access to `Uid` to get the status of the task.
 
 #### Get Documents <!-- omit in toc -->
 
@@ -241,33 +241,37 @@ var document = await index.GetDocumentAsync<Movie>("10");
 #### Delete documents <!-- omit in toc -->
 
 ```c#
-var updateStatus = await index.DeleteOneDocumentAsync("11");
+var task = await index.DeleteOneDocumentAsync("11");
 ```
 
 #### Delete in Batch <!-- omit in toc -->
 
 ```c#
-var updateStatus = await index.DeleteDocumentsAsync(new [] {"12","13","14"});
+var task = await index.DeleteDocumentsAsync(new [] {"12","13","14"});
 ```
 
 #### Delete all documents <!-- omit in toc -->
 
 ```c#
-var updateStatus = await indextoDelete.DeleteAllDocumentsAsync();
+var task = await indextoDelete.DeleteAllDocumentsAsync();
 ```
 
-### Update Status
+### Get Task information
 
-#### Get Update Status By Id <!-- omit in toc -->
+#### Get one Task By Uid <!-- omit in toc -->
 
 ```c#
-UpdateStatus individualStatus = await index.GetTaskAsync(1);
+TaskInfo task = await index.GetTaskAsync(1);
+// Or
+TaskInfo task = await client.GetTaskAsync(1);
 ```
 
-#### Get All Update Status <!-- omit in toc -->
+#### Get All Tasks <!-- omit in toc -->
 
 ```c#
-var status = await index.GetTasksAsync();
+var task = await index.GetTasksAsync();
+// Or
+var task = await client.GetTasksAsync();
 ```
 
 ### Search

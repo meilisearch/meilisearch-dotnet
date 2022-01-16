@@ -29,9 +29,9 @@ namespace Meilisearch.Tests
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -55,8 +55,8 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
-            var updates = await index.AddDocumentsInBatchesAsync(movies, 2);
-            foreach (var u in updates)
+            var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
+            foreach (var u in tasks)
             {
                 u.Uid.Should().BeGreaterOrEqualTo(0);
                 await index.WaitForTaskAsync(u.Uid);
@@ -80,9 +80,9 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var index = this.client.Index(indexUid);
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -98,8 +98,8 @@ namespace Meilisearch.Tests
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(update.Uid, 0));
+            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0));
         }
 
         [Fact]
@@ -109,8 +109,8 @@ namespace Meilisearch.Tests
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(update.Uid, 0, 10));
+            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0, 10));
         }
 
         [Fact]
@@ -121,9 +121,9 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var update = await index.AddDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
-            await index.WaitForTaskAsync(update.Uid);
-            update.Uid.Should().BeGreaterOrEqualTo(0);
+            var task = await index.AddDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForTaskAsync(task.Uid);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
             await index.FetchPrimaryKey();
@@ -137,18 +137,18 @@ namespace Meilisearch.Tests
             Index index = this.client.Index(indexUID);
 
             // Add the documents
-            UpdateStatus update = await index.AddDocumentsAsync(new[]
+            TaskInfo task = await index.AddDocumentsAsync(new[]
             {
                 new Movie { Id = "1", Name = "Batman", Genre = "Action" },
                 new Movie { Id = "2", Name = "Superman" },
             });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Update the documents
-            update = await index.UpdateDocumentsAsync(new[] { new Movie { Id = "1", Name = "Ironman" } });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            task = await index.UpdateDocumentsAsync(new[] { new Movie { Id = "1", Name = "Ironman" } });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the documents have been updated and added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -176,8 +176,8 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
-            var updates = await index.AddDocumentsInBatchesAsync(movies, 2);
-            foreach (var u in updates)
+            var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
+            foreach (var u in tasks)
             {
                 u.Uid.Should().BeGreaterOrEqualTo(0);
                 await index.WaitForTaskAsync(u.Uid);
@@ -191,14 +191,14 @@ namespace Meilisearch.Tests
                 new Movie { Id = "4", Name = "Interstellar", Genre = "Sci-Fi" },
                 new Movie { Id = "5", Name = "Titanic", Genre = "Drama" },
             };
-            updates = await index.UpdateDocumentsInBatchesAsync(movies, 2);
-            foreach (var u in updates)
+            tasks = await index.UpdateDocumentsInBatchesAsync(movies, 2);
+            foreach (var u in tasks)
             {
                 u.Uid.Should().BeGreaterOrEqualTo(0);
                 await index.WaitForTaskAsync(u.Uid);
             }
 
-            // Assert movies have genre after update
+            // Assert movies have genre after updating
             var docs = (await index.GetDocumentsAsync<Movie>()).ToList();
             foreach (var movie in docs)
             {
@@ -215,9 +215,9 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             // Add the documents
-            var update = await index.UpdateDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
-            await index.WaitForTaskAsync(update.Uid);
-            update.Uid.Should().BeGreaterOrEqualTo(0);
+            var task = await index.UpdateDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
+            await index.WaitForTaskAsync(task.Uid);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
             await index.FetchPrimaryKey();
@@ -266,9 +266,9 @@ namespace Meilisearch.Tests
             Index index = await this.fixture.SetUpBasicIndex("DeleteOneExistingDocumentWithStringIdTest");
 
             // Delete the document
-            UpdateStatus update = await index.DeleteOneDocumentAsync("11");
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.DeleteOneDocumentAsync("11");
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -283,9 +283,9 @@ namespace Meilisearch.Tests
             Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteOneExistingDocumentWithIntIdTest");
 
             // Delete the document
-            UpdateStatus update = await index.DeleteOneDocumentAsync(11);
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.DeleteOneDocumentAsync(11);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
@@ -300,9 +300,9 @@ namespace Meilisearch.Tests
             Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithStringIdTest");
 
             // Delete the documents
-            UpdateStatus update = await index.DeleteDocumentsAsync(new[] { "12", "13", "14" });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.DeleteDocumentsAsync(new[] { "12", "13", "14" });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -322,9 +322,9 @@ namespace Meilisearch.Tests
             Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteMultipleDocumentsWithIntegerIdTest");
 
             // Delete the documents
-            UpdateStatus update = await index.DeleteDocumentsAsync(new[] { 12, 13, 14 });
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.DeleteDocumentsAsync(new[] { 12, 13, 14 });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
@@ -344,9 +344,9 @@ namespace Meilisearch.Tests
             Index index = await this.fixture.SetUpBasicIndex("DeleteAllExistingDocumentsTest");
 
             // Delete all the documents
-            UpdateStatus update = await index.DeleteAllDocumentsAsync();
-            update.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(update.Uid);
+            TaskInfo task = await index.DeleteAllDocumentsAsync();
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
 
             // Check all the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();

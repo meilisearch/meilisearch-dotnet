@@ -6,12 +6,12 @@ namespace Meilisearch.Tests
     using Xunit;
 
     [Collection("Sequential")]
-    public class UpdateStatusTests : IAsyncLifetime
+    public class TaskInfoTests : IAsyncLifetime
     {
         private Index index;
         private IndexFixture fixture;
 
-        public UpdateStatusTests(IndexFixture fixture)
+        public TaskInfoTests(IndexFixture fixture)
         {
             this.fixture = fixture;
         }
@@ -19,13 +19,13 @@ namespace Meilisearch.Tests
         public async Task InitializeAsync()
         {
             await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
-            this.index = await this.fixture.SetUpBasicIndex("BasicIndex-UpdateStatusTests");
+            this.index = await this.fixture.SetUpBasicIndex("BasicIndex-TaskInfoTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
-        public async Task GetAllUpdateStatus()
+        public async Task GetAllTaskInfo()
         {
             await this.index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
             var taskResponse = await this.index.GetTasksAsync();
@@ -34,38 +34,38 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task GetOneUpdateStatus()
+        public async Task GetOneTaskInfo()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
-            UpdateStatus individualStatus = await this.index.GetTaskAsync(status.Uid);
-            individualStatus.Should().NotBeNull();
-            individualStatus.Uid.Should().BeGreaterOrEqualTo(0);
-            individualStatus.Status.Should().NotBeNull();
+            var task = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
+            TaskInfo fetchedTask = await this.index.GetTaskAsync(task.Uid);
+            fetchedTask.Should().NotBeNull();
+            fetchedTask.Uid.Should().BeGreaterOrEqualTo(0);
+            fetchedTask.Status.Should().NotBeNull();
         }
 
         [Fact]
         public async Task DefaultWaitForTask()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
-            var response = await this.index.WaitForTaskAsync(status.Uid);
-            Assert.Equal(response.Uid, status.Uid);
-            Assert.Equal("succeeded", response.Status);
+            var task = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
+            var finishedTask = await this.index.WaitForTaskAsync(task.Uid);
+            Assert.Equal(finishedTask.Uid, task.Uid);
+            Assert.Equal("succeeded", finishedTask.Status);
         }
 
         [Fact]
         public async Task CustomWaitForTask()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
-            var response = await this.index.WaitForTaskAsync(status.Uid, 10000.0, 20);
-            Assert.Equal(response.Uid, status.Uid);
-            Assert.Equal("succeeded", response.Status);
+            var task = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
+            var finishedTask = await this.index.WaitForTaskAsync(task.Uid, 10000.0, 20);
+            Assert.Equal(finishedTask.Uid, task.Uid);
+            Assert.Equal("succeeded", finishedTask.Status);
         }
 
         [Fact]
         public async Task WaitForTaskWithException()
         {
-            var status = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.index.WaitForTaskAsync(status.Uid, 0.0, 20));
+            var task = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => this.index.WaitForTaskAsync(task.Uid, 0.0, 20));
         }
     }
 }
