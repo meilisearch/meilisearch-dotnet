@@ -15,7 +15,7 @@ namespace Meilisearch
     public class Index
     {
         private HttpClient http;
-        private TaskEndpoint taskEndpoint;
+        private TaskEndpoint _taskEndpoint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Index"/> class.
@@ -31,7 +31,7 @@ namespace Meilisearch
             this.PrimaryKey = primaryKey;
             this.CreatedAt = createdAt;
             this.UpdatedAt = updatedAt;
-            this.taskEndpoint = null;
+            this._taskEndpoint = null;
         }
 
         /// <summary>
@@ -750,13 +750,13 @@ namespace Meilisearch
         /// <returns>Returns a TaskEndpoint instance.</returns>
         private TaskEndpoint TaskEndpoint()
         {
-            if (this.taskEndpoint == null)
+            if (this._taskEndpoint == null)
             {
-                this.taskEndpoint = new TaskEndpoint();
-                this.taskEndpoint.WithHttpClient(this.http);
+                this._taskEndpoint = new TaskEndpoint();
+                this._taskEndpoint.WithHttpClient(this.http);
             }
 
-            return this.taskEndpoint;
+            return this._taskEndpoint;
         }
     }
 }
