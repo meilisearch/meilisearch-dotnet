@@ -403,7 +403,7 @@ namespace Meilisearch
         /// <returns>Returns the task UID of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSettingsAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
+            var httpResponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
             return await httpResponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
