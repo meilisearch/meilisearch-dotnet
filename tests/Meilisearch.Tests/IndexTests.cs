@@ -54,7 +54,7 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().BeNull();
             MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.client.GetIndexAsync(indexUid));
-            Assert.Equal(ex.Code, "index_not_found");
+            Assert.Equal("index_not_found", ex.Code);
         }
 
         [Fact]
