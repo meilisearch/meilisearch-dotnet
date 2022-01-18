@@ -21,7 +21,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>($"/tasks", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>("/tasks", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
