@@ -18,8 +18,8 @@ delete_documents_1: |-
 search_post_1: |-
 get_update_1: |-
 get_all_updates_1: |-
-  var updates = await client.Index("movies").GetAllUpdateStatusAsync();
-  foreach (UpdateStatus update in updates)
+  var updates = await client.Index("movies").GetTasksAsync();
+  foreach (TaskInfo update in updates)
   {
       Console.WriteLine(update.Status);
   }
@@ -39,9 +39,9 @@ reset_ranking_rules_1: |-
 get_distinct_attribute_1: |-
   string result = await client.Index("shoes").GetDistinctAttributeAsync();
 update_distinct_attribute_1: |-
-  UpdateStatus result = await client.Index("shoes").UpdateDistinctAttributeAsync("skuid");
+  TaskInfo result = await client.Index("shoes").UpdateDistinctAttributeAsync("skuid");
 reset_distinct_attribute_1: |-
-  UpdateStatus result = await client.Index("shoes").ResetDistinctAttributeAsync();
+  TaskInfo result = await client.Index("shoes").ResetDistinctAttributeAsync();
 get_searchable_attributes_1: |-
 update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
@@ -53,9 +53,9 @@ get_filterable_attributes_1: |-
   }
 update_filterable_attributes_1: |-
   List<string> attributes = new() { "genres", "director" };
-  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
+  TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 reset_filterable_attributes_1: |-
-  UpdateStatus result = await client.Index("movies").ResetFilterableAttributesAsync();
+  TaskInfo result = await client.Index("movies").ResetFilterableAttributesAsync();
 get_displayed_attributes_1: |-
 update_displayed_attributes_1: |-
 reset_displayed_attributes_1: |-
@@ -212,7 +212,7 @@ reset_sortable_attributes_1: |-
 search_parameter_guide_sort_1: |-
 geosearch_guide_filter_settings_1: |-
   List<string> attributes = new() { "_geo" };
-  UpdateStatus result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
+  TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 geosearch_guide_filter_usage_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.4628328, 9.1076931, 2000)" };
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
@@ -233,7 +233,7 @@ geosearch_guide_filter_usage_2: |-
   }
 geosearch_guide_sort_settings_1: |-
   List<string> attributes = new() { "_geo" };
-  UpdateStatus result = await client.Index("restaurants").UpdateSortableAttributesAsync(attributes);
+  TaskInfo result = await client.Index("restaurants").UpdateSortableAttributesAsync(attributes);
 geosearch_guide_sort_usage_1: |-
   SearchQuery filters = new SearchQuery()
   {

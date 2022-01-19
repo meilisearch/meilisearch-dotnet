@@ -26,6 +26,7 @@ namespace Meilisearch
         };
 
         private readonly HttpClient http;
+        private TaskEndpoint _taskEndpoint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -37,6 +38,7 @@ namespace Meilisearch
         {
             this.http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
             this.http.AddApiKeyToHeader(apiKey);
+            this._taskEndpoint = null;
         }
 
         /// <summary>
@@ -85,13 +87,13 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns Index.</returns>
-        public async Task<Index> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             Index index = new Index(uid, primaryKey);
-            var response = await this.http.PostJsonCustomAsync("/indexes", index, JsonSerializerOptions, cancellationToken: cancellationToken)
+            var responseMessage = await this.http.PostJsonCustomAsync("/indexes", index, JsonSerializerOptions, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            return index.WithHttpClient(this.http);
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -101,9 +103,21 @@ namespace Meilisearch
         /// <param name="primarykeytoChange">Primary key set.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns Index.</returns>
-        public async Task<Index> UpdateIndexAsync(string uid, string primarykeytoChange, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> UpdateIndexAsync(string uid, string primarykeytoChange, CancellationToken cancellationToken = default)
         {
             return await this.Index(uid).UpdateAsync(primarykeytoChange, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes the index.
+        /// It's not a recovery delete. You will also lose the documents within the index.
+        /// </summary>
+        /// <param name="uid">unique dump identifier.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task.</returns>
+        public async Task<TaskInfo> DeleteIndexAsync(string uid, CancellationToken cancellationToken = default)
+        {
+            return await this.Index(uid).DeleteAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -164,6 +178,44 @@ namespace Meilisearch
                 await Meilisearch.Index.GetRawAsync(this.http, uid, cancellationToken).ConfigureAwait(false))
                 .Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonDocument.Parse(json).RootElement;
+        }
+
+        /// <summary>
+        /// Gets the tasks.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns a list of tasks.</returns>
+        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        {
+            return await this.TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get on task.
+        /// </summary>
+        /// <param name="taskUid">Uid of the task.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Return the task.</returns>
+        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        {
+            return await this.TaskEndpoint().GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Waits until the asynchronous task was done.
+        /// </summary>
+        /// <param name="taskUid">Unique identifier of the asynchronous task.</param>
+        /// <param name="timeoutMs">Timeout in millisecond.</param>
+        /// <param name="intervalMs">Interval in millisecond between each check.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> WaitForTaskAsync(
+            int taskUid,
+            double timeoutMs = 5000.0,
+            int intervalMs = 50,
+            CancellationToken cancellationToken = default)
+        {
+            return await this.TaskEndpoint().WaitForTaskAsync(taskUid, timeoutMs, intervalMs, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -232,15 +284,18 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Deletes the index.
-        /// It's not a recovery delete. You will also lose the documents within the index.
+        /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
-        /// <param name="uid">unique dump identifier.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the status of delete operation.</returns>
-        public async Task<bool> DeleteIndexAsync(string uid, CancellationToken cancellationToken = default)
+        /// <returns>Returns a Task instance.</returns>
+        private TaskEndpoint TaskEndpoint()
         {
-            return await this.Index(uid).DeleteAsync(cancellationToken).ConfigureAwait(false);
+            if (this._taskEndpoint == null)
+            {
+                this._taskEndpoint = new TaskEndpoint();
+                this._taskEndpoint.WithHttpClient(this.http);
+            }
+
+            return this._taskEndpoint;
         }
     }
 }

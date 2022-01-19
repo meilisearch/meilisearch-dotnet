@@ -11,17 +11,17 @@ namespace Meilisearch
         public string Uid { get; set; }
 
         /// <summary>
-        /// Gets or sets state of the operation.
+        /// Gets or sets state of the dump process.
         /// </summary>
         public string Status { get; set; }
 
         /// <summary>
-        /// Gets or sets started at of the operation.
+        /// Gets or sets started at of the dump process.
         /// </summary>
         public string StartedAt { get; set; }
 
         /// <summary>
-        /// Gets or sets finished at of the operation.
+        /// Gets or sets finished at of the dump process.
         /// </summary>
         public string FinishedAt { get; set; }
     }
