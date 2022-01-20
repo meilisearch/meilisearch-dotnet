@@ -3,7 +3,7 @@ namespace Meilisearch
     using System.Collections.Generic;
 
     /// <summary>
-    /// Update Status of the actions done.
+    /// Information of the regarding a task.
     /// </summary>
     public class TaskInfo
     {
