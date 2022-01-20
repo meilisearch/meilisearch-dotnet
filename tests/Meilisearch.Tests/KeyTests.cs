@@ -9,8 +9,6 @@ namespace Meilisearch.Tests
     public class KeyTests : IAsyncLifetime
     {
         private IndexFixture fixture;
-        private Key searchKey;
-        private Key adminKey;
         private MeilisearchClient client;
 
         public KeyTests(IndexFixture fixture)
