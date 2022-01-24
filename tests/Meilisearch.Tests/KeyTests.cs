@@ -29,6 +29,7 @@ namespace Meilisearch.Tests
         {
             var keyResponse = await this.client.GetKeysAsync();
             var keys = keyResponse.Results;
+
             keys.Count().Should().BeGreaterOrEqualTo(2);
         }
 
