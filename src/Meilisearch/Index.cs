@@ -534,7 +534,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="rankingRules">Collection of ranking rules.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateRankingRulesAsync(IEnumerable<string> rankingRules, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
