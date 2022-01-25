@@ -59,7 +59,7 @@ namespace Meilisearch.Tests
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = "2042-04-02T00:42:42Z"
+                ExpiresAt = "2042-04-02T00:42:42Z",
             };
             Key createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
@@ -82,7 +82,7 @@ namespace Meilisearch.Tests
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = null
+                ExpiresAt = null,
             };
             Key createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
@@ -105,7 +105,7 @@ namespace Meilisearch.Tests
                 Description = "Key to delete document to all indexes.",
                 Actions = new string[] { "documents.delete" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = null
+                ExpiresAt = null,
             };
             Key createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
