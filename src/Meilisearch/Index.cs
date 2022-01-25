@@ -436,7 +436,7 @@ namespace Meilisearch
         /// Resets the displayed attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetDisplayedAttributesAsync(CancellationToken cancellationToken = default)
         {
             var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes", cancellationToken)
