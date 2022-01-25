@@ -17,6 +17,20 @@ namespace Meilisearch.Tests
 
         public async Task DisposeAsync() => await this.DeleteAllIndexes(); // Let a clean MeiliSearch instance, for maintainers convenience only.
 
+        public async Task<Meilisearch.Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
+        {
+            var task = await this.DefaultClient.CreateIndexAsync(indexUid, primaryKey);
+
+            // Check the index has been created
+            TaskInfo finishedTask = await this.DefaultClient.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
+            {
+                throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
+            }
+
+            return this.DefaultClient.Index(indexUid);
+        }
+
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {
             Meilisearch.Index index = this.DefaultClient.Index(indexUid);
@@ -30,11 +44,11 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
             }
@@ -55,11 +69,11 @@ namespace Meilisearch.Tests
                 new MovieWithIntId { Id = 15, Name = "Spider-Man", Genre = "Action" },
                 new MovieWithIntId { Id = 16, Name = "Amélie Poulain", Genre = "French movie" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
             }
@@ -84,25 +98,25 @@ namespace Meilisearch.Tests
                 new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
                 new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
             };
-            UpdateStatus update = await index.AddDocumentsAsync(movies);
+            TaskInfo task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            UpdateStatus finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
 
-            // Update settings
+            // task settings
             Settings settings = new Settings
             {
                 FilterableAttributes = new string[] { "genre" },
             };
-            update = await index.UpdateSettingsAsync(settings);
+            task = await index.UpdateSettingsAsync(settings);
 
             // Check the settings have been added
-            finalUpdateStatus = await index.WaitForPendingUpdateAsync(update.UpdateId);
-            if (finalUpdateStatus.Status != "processed")
+            finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }

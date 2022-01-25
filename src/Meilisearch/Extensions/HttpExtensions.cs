@@ -1,6 +1,7 @@
 namespace Meilisearch.Extensions
 {
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Text;
     using System.Text.Json;
     using System.Threading;
@@ -61,7 +62,7 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Add the API Key to the X-Meili-API-Key header.
+        /// Add the API Key to the Authorization header.
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="apiKey">API Key.</param>
@@ -69,7 +70,7 @@ namespace Meilisearch.Extensions
         {
             if (!string.IsNullOrEmpty(apiKey))
             {
-                client.DefaultRequestHeaders.Add("X-Meili-API-Key", apiKey);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             }
         }
 
