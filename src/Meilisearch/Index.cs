@@ -647,7 +647,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="stopWords">Collection of stop words.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateStopWordsAsync(IEnumerable<string> stopWords, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
