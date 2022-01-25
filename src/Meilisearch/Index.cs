@@ -609,7 +609,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="sortableAttributes">Collection of sortable attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateSortableAttributesAsync(IEnumerable<string> sortableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
