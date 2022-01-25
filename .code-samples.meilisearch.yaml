@@ -16,14 +16,16 @@ delete_all_documents_1: |-
 delete_one_document_1: |-
 delete_documents_1: |-
 search_post_1: |-
-get_update_1: |-
-get_all_updates_1: |-
-  var updates = await client.Index("movies").GetTasksAsync();
-  foreach (TaskInfo update in updates)
-  {
-      Console.WriteLine(update.Status);
-  }
-get_keys_1: |-
+get_task_by_index_1: |-
+  TaskInfo task = await client.Index("movies").GetTaskAsync(1);
+get_all_tasks_by_index_1: |-
+  Result taskResult = await client.Index("movies").GetTasksAsync();
+  var tasks = taskResult.Result;
+get_task_1: |
+  TaskInfo task = await client.GetTaskAsync(1);
+get_all_tasks_1: |
+  Result taskResult = await client.GetTasksAsync();
+  var tasks = taskResult.Result;
 get_settings_1: |-
 update_settings_1: |-
 reset_settings_1: |-
@@ -47,10 +49,6 @@ update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
   IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributesAsync();
-  foreach (string attribute in attributes)
-  {
-      Console.WriteLine(attribute);
-  }
 update_filterable_attributes_1: |-
   List<string> attributes = new() { "genres", "director" };
   TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
@@ -69,32 +67,16 @@ field_properties_guide_displayed_1: |-
 filtering_guide_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > \"795484800\"" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Avengers", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 filtering_guide_2: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > 795484800 AND (director =
   \"Tim Burton\" OR director = \"Christopher Nolan\")" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 filtering_guide_3: |-
   SearchQuery filters = new SearchQuery() { Filter = "director = \"Jordan Peele\"" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("horror", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 filtering_guide_4: |-
   SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Planet of the Apes", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 search_parameter_guide_query_1: |-
 search_parameter_guide_offset_1: |-
 search_parameter_guide_limit_1: |-
@@ -180,10 +162,6 @@ faceted_search_filter_1: |-
   };
 
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("thriller", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 faceted_search_facets_distribution_1: |-
   SearchQuery filters = new SearchQuery()
   {
@@ -191,10 +169,6 @@ faceted_search_facets_distribution_1: |-
   };
 
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
-  foreach (var movie in movies.Hits)
-  {
-      Console.WriteLine(movie.Title);
-  }
 faceted_search_walkthrough_filterable_attributes_1: |-
 faceted_search_walkthrough_filter_1: |-
 faceted_search_walkthrough_facets_distribution_1: |-
@@ -216,10 +190,6 @@ geosearch_guide_filter_settings_1: |-
 geosearch_guide_filter_usage_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.4628328, 9.1076931, 2000)" };
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
-  foreach (var restaurant in restaurants.Hits)
-  {
-      Console.WriteLine(restaurant.Name);
-  }
 geosearch_guide_filter_usage_2: |-
   SearchQuery filters = new SearchQuery()
   {
@@ -227,10 +197,6 @@ geosearch_guide_filter_usage_2: |-
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
-  foreach (var restaurant in restaurants.Hits)
-  {
-      Console.WriteLine(restaurant.Name);
-  }
 geosearch_guide_sort_settings_1: |-
   List<string> attributes = new() { "_geo" };
   TaskInfo result = await client.Index("restaurants").UpdateSortableAttributesAsync(attributes);
@@ -241,10 +207,6 @@ geosearch_guide_sort_usage_1: |-
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
-  foreach (var restaurant in restaurants.Hits)
-  {
-      Console.WriteLine(restaurant.Name);
-  }
 geosearch_guide_sort_usage_2: |-
   SearchQuery filters = new SearchQuery()
   {
@@ -255,7 +217,44 @@ geosearch_guide_sort_usage_2: |-
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
-  foreach (var restaurant in restaurants.Hits)
+authorization_header_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  var keys = await client.GetKeysAsync();
+get_one_key_1: |-
+  Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
+get_all_keys_1: |-
+  Result keyResult = await client.GetKeysAsync();
+  var keys = keyResult.Result;
+create_a_key_1: |-
+  Key keyOptions = new Key
   {
-      Console.WriteLine(restaurant.Name);
-  }
+      Description = "Add documents: Products API key",
+      Actions = new string[] { "documents.add" },
+      Indexes = new string[] { "products" },
+      ExpiresAt = "2042-04-02T00:42:42Z"
+  };
+  Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+update_a_key_1: |-
+delete_a_key_1: |-
+  client.DeleteKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4")
+security_guide_search_key_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "apiKey");
+  SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
+security_guide_update_key_1: |-
+security_guide_create_key_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  Key keyOptions = new Key
+  {
+      Description = "Search patient records key",
+      Actions = new string[] { "search" },
+      Indexes = new string[] { "patient_medical_records" },
+      ExpiresAt = "2023-01-01T00:00:00Z"
+  };
+  Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+security_guide_list_keys_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  Result keyResult = await client.GetKeysAsync();
+  var keys = keyResult.Result;
+security_guide_delete_key_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  client.DeleteKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4")
