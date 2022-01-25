@@ -400,7 +400,7 @@ namespace Meilisearch
         /// Resets all the settings to their default values.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task UID of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSettingsAsync(CancellationToken cancellationToken = default)
         {
             var httpResponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
