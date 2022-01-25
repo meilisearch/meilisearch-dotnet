@@ -571,7 +571,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="searchableAttributes">Collection of searchable attributes.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateSearchableAttributesAsync(IEnumerable<string> searchableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
