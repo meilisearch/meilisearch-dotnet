@@ -241,6 +241,7 @@ security_guide_search_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "apiKey");
   SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
 security_guide_update_key_1: |-
+  // Not implemented yet
 security_guide_create_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
   Key keyOptions = new Key
