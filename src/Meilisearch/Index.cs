@@ -684,7 +684,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="synonyms">Collection of synonyms.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the task Uid of the asynchronous task.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateSynonymsAsync(Dictionary<string, IEnumerable<string>> synonyms, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
