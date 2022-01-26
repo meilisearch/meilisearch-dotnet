@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="meilisearch-Dotnet" width="200" height="200" />
+  <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="Meilisearch-Dotnet" width="200" height="200" />
 </p>
 
-<h1 align="center">meilisearch .NET</h1>
+<h1 align="center">Meilisearch .NET</h1>
 
 <h4 align="center">
-  <a href="https://github.com/meilisearch/meilisearch">meilisearch</a> |
+  <a href="https://github.com/meilisearch/meilisearch">Meilisearch</a> |
   <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://slack.meilisearch.com">Slack</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
@@ -20,18 +20,18 @@
   <a href="https://app.bors.tech/repositories/28784"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
 </p>
 
-<p align="center">⚡ The meilisearch API client written for .NET</p>
+<p align="center">⚡ The Meilisearch API client written for .NET</p>
 
-**meilisearch .NET** is the meilisearch API client for C# developers.
+**Meilisearch .NET** is the Meilisearch API client for C# developers.
 
-**meilisearch** is an open-source search engine. [Discover what meilisearch is!](https://github.com/meilisearch/meilisearch)
+**Meilisearch** is an open-source search engine. [Discover what Meilisearch is!](https://github.com/meilisearch/meilisearch)
 
 ## Table of Contents <!-- omit in toc -->
 
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
 - [🚀 Getting Started](#-getting-started)
-- [🤖 Compatibility with meilisearch](#-compatibility-with-meilisearch)
+- [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
   - [Documents](#documents)
@@ -58,20 +58,20 @@ or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/too
 Install-Package MeiliSearch
 ```
 
-### Run meilisearch <!-- omit in toc -->
+### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a meilisearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a Meilisearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
 
 For example, using the `curl` command in [your Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
 ```bash
-# Install meilisearch
+# Install Meilisearch
 curl -L https://install.meilisearch.com | sh
-# Launch meilisearch
+# Launch Meilisearch
 ./meilisearch --master-key=masterKey
 ```
 
-NB: you can also download meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
+NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
 
 ## 🚀 Getting Started
 
@@ -108,7 +108,7 @@ namespace GettingStarted
                 new Movie { Id = "6", Title = "Philadelphia", Genres = new string[] { "Drama" } }
             };
 
-            // If the index 'movies' does not exist, meilisearch creates it when you first add the documents.
+            // If the index 'movies' does not exist, Meilisearch creates it when you first add the documents.
             var task = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
         }
     }
@@ -120,7 +120,7 @@ With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` 
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-# meilisearch is typo-tolerant:
+# Meilisearch is typo-tolerant:
 SearchResult<Movie> movies = await index.SearchAsync<Movie>("philadalphia");
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
@@ -183,9 +183,9 @@ JSON Output:
 }
 ```
 
-## 🤖 Compatibility with meilisearch
+## 🤖 Compatibility with Meilisearch
 
-This package only guarantees the compatibility with the [version v0.25.0 of meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.25.0).
+This package only guarantees the compatibility with the [version v0.25.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.25.0).
 
 ## 🎬 Examples
 
@@ -309,4 +309,4 @@ If you want to know more about the development workflow or want to contribute, p
 
 <hr>
 
-**meilisearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
+**Meilisearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.

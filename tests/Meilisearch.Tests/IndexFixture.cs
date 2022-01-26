@@ -15,7 +15,7 @@ namespace Meilisearch.Tests
 
         public Task InitializeAsync() => Task.CompletedTask;
 
-        public async Task DisposeAsync() => await this.DeleteAllIndexes(); // Let a clean meilisearch instance, for maintainers convenience only.
+        public async Task DisposeAsync() => await this.DeleteAllIndexes(); // Let a clean Meilisearch instance, for maintainers convenience only.
 
         public async Task<Meilisearch.Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
         {

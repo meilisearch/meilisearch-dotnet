@@ -6,7 +6,7 @@ namespace Meilisearch
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Typed http request for meilisearch.
+    /// Typed http request for Meilisearch.
     /// </summary>
     public class MeilisearchMessageHandler : DelegatingHandler
     {
