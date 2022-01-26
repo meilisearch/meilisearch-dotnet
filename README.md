@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="MeiliSearch-Dotnet" width="200" height="200" />
+  <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="meilisearch-Dotnet" width="200" height="200" />
 </p>
 
-<h1 align="center">MeiliSearch .NET</h1>
+<h1 align="center">meilisearch .NET</h1>
 
 <h4 align="center">
-  <a href="https://github.com/meilisearch/MeiliSearch">MeiliSearch</a> |
+  <a href="https://github.com/meilisearch/meilisearch">meilisearch</a> |
   <a href="https://docs.meilisearch.com">Documentation</a> |
   <a href="https://slack.meilisearch.com">Slack</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
@@ -14,24 +14,24 @@
 </h4>
 
 <p align="center">
-  <a href="https://www.nuget.org/packages/MeiliSearch"><img src="https://img.shields.io/nuget/v/MeiliSearch" alt="NuGet"></a>
+  <a href="https://www.nuget.org/packages/meilisearch"><img src="https://img.shields.io/nuget/v/meilisearch" alt="NuGet"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/actions"><img src="https://github.com/meilisearch/meilisearch-dotnet/workflows/Tests/badge.svg?branch=main" alt="GitHub Workflow Status"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
   <a href="https://app.bors.tech/repositories/28784"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
 </p>
 
-<p align="center">⚡ The MeiliSearch API client written for .NET</p>
+<p align="center">⚡ The meilisearch API client written for .NET</p>
 
-**MeiliSearch .NET** is the MeiliSearch API client for C# developers.
+**meilisearch .NET** is the meilisearch API client for C# developers.
 
-**MeiliSearch** is an open-source search engine. [Discover what MeiliSearch is!](https://github.com/meilisearch/MeiliSearch)
+**meilisearch** is an open-source search engine. [Discover what meilisearch is!](https://github.com/meilisearch/meilisearch)
 
 ## Table of Contents <!-- omit in toc -->
 
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
 - [🚀 Getting Started](#-getting-started)
-- [🤖 Compatibility with MeiliSearch](#-compatibility-with-meilisearch)
+- [🤖 Compatibility with meilisearch](#-compatibility-with-meilisearch)
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
   - [Documents](#documents)
@@ -49,29 +49,29 @@ See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_sta
 Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
 
 ```bash
-dotnet add package MeiliSearch
+dotnet add package meilisearch
 ```
 
 or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/tools/package-manager-console):
 
 ```bash
-Install-Package MeiliSearch
+Install-Package meilisearch
 ```
 
-### Run MeiliSearch <!-- omit in toc -->
+### Run meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a MeiliSearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a meilisearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
 
 For example, using the `curl` command in [your Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
 ```bash
-# Install MeiliSearch
+# Install meilisearch
 curl -L https://install.meilisearch.com | sh
-# Launch MeiliSearch
+# Launch meilisearch
 ./meilisearch --master-key=masterKey
 ```
 
-NB: you can also download MeiliSearch from **Homebrew** or **APT** or even run it using **Docker**.
+NB: you can also download meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
 
 ## 🚀 Getting Started
 
@@ -108,7 +108,7 @@ namespace GettingStarted
                 new Movie { Id = "6", Title = "Philadelphia", Genres = new string[] { "Drama" } }
             };
 
-            // If the index 'movies' does not exist, MeiliSearch creates it when you first add the documents.
+            // If the index 'movies' does not exist, meilisearch creates it when you first add the documents.
             var task = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
         }
     }
@@ -120,7 +120,7 @@ With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` 
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-# MeiliSearch is typo-tolerant:
+# meilisearch is typo-tolerant:
 SearchResult<Movie> movies = await index.SearchAsync<Movie>("philadalphia");
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
@@ -183,9 +183,9 @@ JSON Output:
 }
 ```
 
-## 🤖 Compatibility with MeiliSearch
+## 🤖 Compatibility with meilisearch
 
-This package only guarantees the compatibility with the [version v0.25.0 of MeiliSearch](https://github.com/meilisearch/MeiliSearch/releases/tag/v0.25.0).
+This package only guarantees the compatibility with the [version v0.25.0 of meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.25.0).
 
 ## 🎬 Examples
 
@@ -309,4 +309,4 @@ If you want to know more about the development workflow or want to contribute, p
 
 <hr>
 
-**MeiliSearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
+**meilisearch** provides and maintains many **SDKs and Integration tools** like this one. We want to provide everyone with an **amazing search experience for any kind of project**. If you want to contribute, make suggestions, or just know what's going on right now, visit us in the [integration-guides](https://github.com/meilisearch/integration-guides) repository.
