@@ -1,6 +1,6 @@
 # Contributing <!-- omit in TOC -->
 
-First of all, thank you for contributing to MeiliSearch! The goal of this document is to provide everything you need to know in order to contribute to MeiliSearch and its different integrations.
+First of all, thank you for contributing to meilisearch! The goal of this document is to provide everything you need to know in order to contribute to meilisearch and its different integrations.
 
 - [Assumptions](#assumptions)
 - [How to Contribute](#how-to-contribute)
@@ -11,8 +11,8 @@ First of all, thank you for contributing to MeiliSearch! The goal of this docume
 ## Assumptions
 
 1. **You're familiar with [GitHub](https://github.com) and the [Pull Request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)(PR) workflow.**
-2. **You've read the MeiliSearch [documentation](https://docs.meilisearch.com) and the [README](/README.md).**
-3. **You know about the [MeiliSearch community](https://docs.meilisearch.com/learn/what_is_meilisearch/contact.html). Please use this for help.**
+2. **You've read the meilisearch [documentation](https://docs.meilisearch.com) and the [README](/README.md).**
+3. **You know about the [meilisearch community](https://docs.meilisearch.com/learn/what_is_meilisearch/contact.html). Please use this for help.**
 
 ## How to Contribute
 
@@ -33,8 +33,8 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 ### Tests <!-- omit in TOC -->
 
 ```bash
-curl -L https://install.meilisearch.com | sh # download MeiliSearch
-./meilisearch --master-key=masterKey --no-analytics=true # run MeiliSearch
+curl -L https://install.meilisearch.com | sh # download meilisearch
+./meilisearch --master-key=masterKey --no-analytics=true # run meilisearch
 dotnet restore
 dotnet test
 ```
@@ -86,7 +86,7 @@ Some notes on GitHub PRs:
 
 ## Release Process (for internal team only)
 
-MeiliSearch tools follow the [Semantic Versioning Convention](https://semver.org/).
+meilisearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
 ### Automation to Rebase and Merge the PRs <!-- omit in TOC -->
 
@@ -110,7 +110,7 @@ Make a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https://gith
 
 Once the changes are merged on `main`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommandations](https://github.com/meilisearch/integration-guides/blob/main/resources/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
 
-GitHub Actions will be triggered and push the package to [NuGet](https://www.nuget.org/packages/MeiliSearch).
+GitHub Actions will be triggered and push the package to [NuGet](https://www.nuget.org/packages/meilisearch).
 
 <hr>
 
