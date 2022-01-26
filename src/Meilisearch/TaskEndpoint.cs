@@ -8,7 +8,7 @@ namespace Meilisearch
     using System.Threading.Tasks;
 
     /// <summary>
-    /// MeiliSearch index to search and manage documents.
+    /// meilisearch index to search and manage documents.
     /// </summary>
     public class TaskEndpoint
     {

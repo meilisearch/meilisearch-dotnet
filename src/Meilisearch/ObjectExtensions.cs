@@ -7,12 +7,12 @@ namespace Meilisearch
     using System.Reflection;
 
     /// <summary>
-    /// MeiliSearch objects manipulation.
+    /// meilisearch objects manipulation.
     /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>
-        /// Transforms an MeiliSearch object into a dictionary.
+        /// Transforms an meilisearch object into a dictionary.
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
@@ -25,7 +25,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Transforms a MeiliSearch object into an URL encoded query string.
+        /// Transforms a meilisearch object into an URL encoded query string.
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>

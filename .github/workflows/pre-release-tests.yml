@@ -1,4 +1,4 @@
-# Testing the code base against the MeiliSearch pre-releases
+# Testing the code base against the meilisearch pre-releases
 name: Pre-Release Tests
 
 # Will only run for PRs and pushes to bump-meilisearch-v*
@@ -18,9 +18,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Get the latest MeiliSearch RC
+    - name: Get the latest meilisearch RC
       run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
-    - name: MeiliSearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
+    - name: meilisearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:${{ env.MEILISEARCH_VERSION }} ./meilisearch --master-key=masterKey --no-analytics=true
     - name: Install dependencies
       run: dotnet restore

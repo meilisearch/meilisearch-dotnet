@@ -49,13 +49,13 @@ See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_sta
 Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
 
 ```bash
-dotnet add package meilisearch
+dotnet add package MeiliSearch
 ```
 
 or with the [Package Manager Console](https://docs.microsoft.com/en-us/nuget/tools/package-manager-console):
 
 ```bash
-Install-Package meilisearch
+Install-Package MeiliSearch
 ```
 
 ### Run meilisearch <!-- omit in toc -->

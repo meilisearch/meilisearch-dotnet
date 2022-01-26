@@ -13,7 +13,7 @@ namespace Meilisearch
     using Meilisearch.Extensions;
 
     /// <summary>
-    /// Typed client for MeiliSearch.
+    /// Typed client for meilisearch.
     /// </summary>
     public class MeilisearchClient
     {
@@ -31,10 +31,10 @@ namespace Meilisearch
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
-        /// Default client for MeiliSearch API.
+        /// Default client for meilisearch API.
         /// </summary>
-        /// <param name="url">URL corresponding to MeiliSearch server.</param>
-        /// <param name="apiKey">API Key to connect to the MeiliSearch server.</param>
+        /// <param name="url">URL corresponding to meilisearch server.</param>
+        /// <param name="apiKey">API Key to connect to the meilisearch server.</param>
         public MeilisearchClient(string url, string apiKey = default)
         {
             this.http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
@@ -44,10 +44,10 @@ namespace Meilisearch
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
-        /// Custom client for MeiliSearch API. Use it with proper Http Client Factory.
+        /// Custom client for meilisearch API. Use it with proper Http Client Factory.
         /// </summary>
         /// <param name="client">Injects the reusable HttpClient.</param>
-        /// <param name="apiKey">API Key to connect to the MeiliSearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
+        /// <param name="apiKey">API Key to connect to the meilisearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
         public MeilisearchClient(HttpClient client, string apiKey = default)
         {
             this.http = client;
@@ -55,11 +55,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets the current MeiliSearch version. For more details on response.
+        /// Gets the current meilisearch version. For more details on response.
         /// https://docs.meilisearch.com/reference/api/version.html#get-version-of-meilisearch.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the MeiliSearch version with commit and build version.</returns>
+        /// <returns>Returns the meilisearch version with commit and build version.</returns>
         public async Task<MeiliSearchVersion> GetVersionAsync(CancellationToken cancellationToken = default)
         {
             var response = await this.http.GetAsync("/version", cancellationToken).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace Meilisearch
 
         /// <summary>
         /// Create a local reference to an index identified by UID, without doing an HTTP call.
-        /// Calling this method doesn't create an index in the MeiliSearch instance, but grants access to all the other methods in the Index class.
+        /// Calling this method doesn't create an index in the meilisearch instance, but grants access to all the other methods in the Index class.
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
         /// <returns>Returns an Index instance.</returns>
@@ -307,7 +307,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Creates an API key for the MeiliSearch server.
+        /// Creates an API key for the meilisearch server.
         /// </summary>
         /// <param name="keyOptions">The options of the API key.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -326,7 +326,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Deletes an API key from the MeiliSearch server.
+        /// Deletes an API key from the meilisearch server.
         /// </summary>
         /// <param name="keyUid">Unique identifier of the API key.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>

@@ -4,7 +4,7 @@ namespace Meilisearch
     using System.Text.Json.Serialization;
 
     /// <summary>
-    /// Information regarding an API key for the MeiliSearch server.
+    /// Information regarding an API key for the meilisearch server.
     /// </summary>
     public class Key
     {
