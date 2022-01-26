@@ -3,7 +3,7 @@ namespace Meilisearch
     using System.Text.Json.Serialization;
 
     /// <summary>
-    /// Error sent by MeiliSearch API.
+    /// Error sent by meilisearch API.
     /// </summary>
     public class MeilisearchApiErrorContent
     {

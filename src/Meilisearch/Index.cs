@@ -10,7 +10,7 @@ namespace Meilisearch
     using Meilisearch.Extensions;
 
     /// <summary>
-    /// MeiliSearch index to search and manage documents.
+    /// meilisearch index to search and manage documents.
     /// </summary>
     public class Index
     {
@@ -125,7 +125,7 @@ namespace Meilisearch
         /// <param name="documents">Documents to add.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
@@ -147,7 +147,7 @@ namespace Meilisearch
         /// <param name="batchSize">Size of documents batches while adding them.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
@@ -166,7 +166,7 @@ namespace Meilisearch
         /// <param name="documents">Documents to update.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of document. Even though documents are schemaless in meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
@@ -190,7 +190,7 @@ namespace Meilisearch
         /// <param name="batchSize">Size of documents batches while updating them.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of the document. Even though documents are schemaless in MeiliSearch, making it typed helps in compile time.</typeparam>
+        /// <typeparam name="T">Type of the document. Even though documents are schemaless in meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {

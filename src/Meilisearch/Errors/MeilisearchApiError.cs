@@ -4,13 +4,13 @@ namespace Meilisearch
     using System.Net;
 
     /// <summary>
-    /// Error sent by MeiliSearch API.
+    /// Error sent by meilisearch API.
     /// </summary>
     public class MeilisearchApiError : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchApiError"/> class.
-        /// Handler Exception received from MeiliSearch API.
+        /// Handler Exception received from meilisearch API.
         /// </summary>
         /// <param name="apiError">Specific error message from Meilisearch Api.</param>
         public MeilisearchApiError(MeilisearchApiErrorContent apiError)
