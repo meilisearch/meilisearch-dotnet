@@ -4,7 +4,7 @@ namespace Meilisearch
     using System.Text.Json.Serialization;
 
     /// <summary>
-    /// Search Query for meilisearch class.
+    /// Search Query for Meilisearch class.
     /// </summary>
     public class SearchQuery
     {

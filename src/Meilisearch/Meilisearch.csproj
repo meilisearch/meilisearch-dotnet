@@ -5,7 +5,7 @@
         <OutputType>Library</OutputType>
         <PackageId>MeiliSearch</PackageId>
         <Version>0.9.0</Version>
-        <Description>.NET wrapper for meilisearch, an open-source search engine</Description>
+        <Description>.NET wrapper for Meilisearch, an open-source search engine</Description>
         <RepositoryUrl>https://github.com/meilisearch/meilisearch-dotnet</RepositoryUrl>
         <PackageTags>meilisearch;dotnet;sdk;search-engine;search;instant-search</PackageTags>
     </PropertyGroup>

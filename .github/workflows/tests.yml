@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: meilisearch (latest version) setup with Docker
+    - name: Meilisearch (latest version) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
     - name: Install dependencies
       run: dotnet restore
