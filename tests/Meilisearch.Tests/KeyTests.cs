@@ -1,5 +1,6 @@
 namespace Meilisearch.Tests
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using FluentAssertions;
@@ -59,7 +60,7 @@ namespace Meilisearch.Tests
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = "2042-04-02T00:42:42Z",
+                ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
             };
             Key createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;

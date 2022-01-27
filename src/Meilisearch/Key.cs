@@ -1,5 +1,6 @@
 namespace Meilisearch
 {
+    using System;
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
@@ -32,16 +33,16 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the date when the API key expires.
         /// </summary>
-        public string ExpiresAt { get; set; }
+        public DateTime? ExpiresAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date when the API key was created.
         /// </summary>
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date when the API key was updated.
         /// </summary>
-        public string UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
