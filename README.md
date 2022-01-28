@@ -46,6 +46,8 @@ See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_sta
 
 ## 🔧 Installation
 
+This package targets .NET Standard 2.1.
+
 Using the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/):
 
 ```bash
