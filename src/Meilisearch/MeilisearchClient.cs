@@ -27,7 +27,7 @@ namespace Meilisearch
         };
 
         private readonly HttpClient http;
-        private TaskEndpoint _taskEndpoint;
+        private TaskEndpoint taskEndpoint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -39,7 +39,7 @@ namespace Meilisearch
         {
             this.http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
             this.http.AddApiKeyToHeader(apiKey);
-            this._taskEndpoint = null;
+            this.taskEndpoint = null;
         }
 
         /// <summary>
@@ -344,13 +344,13 @@ namespace Meilisearch
         /// <returns>Returns a Task instance.</returns>
         private TaskEndpoint TaskEndpoint()
         {
-            if (this._taskEndpoint == null)
+            if (this.taskEndpoint == null)
             {
-                this._taskEndpoint = new TaskEndpoint();
-                this._taskEndpoint.WithHttpClient(this.http);
+                this.taskEndpoint = new TaskEndpoint();
+                this.taskEndpoint.WithHttpClient(this.http);
             }
 
-            return this._taskEndpoint;
+            return this.taskEndpoint;
         }
     }
 }
