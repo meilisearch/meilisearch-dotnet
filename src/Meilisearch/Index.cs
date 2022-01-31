@@ -151,13 +151,13 @@ namespace Meilisearch
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            async Task AddActionAsync(List<T> items, List<TaskInfo> tasks, CancellationToken localCancellationToken)
+            var tasks = new List<TaskInfo>();
+            foreach (var chunk in documents.GetChunks(batchSize))
             {
-                tasks.Add(await this.AddDocumentsAsync(items, primaryKey, localCancellationToken).ConfigureAwait(false));
+                tasks.Add(await this.AddDocumentsAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
-            var result = await BatchOperationAsync(documents, batchSize, AddActionAsync).ConfigureAwait(false);
-            return result;
+            return tasks;
         }
 
         /// <summary>
@@ -194,13 +194,13 @@ namespace Meilisearch
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            async Task UpdateActionAsync(List<T> items, List<TaskInfo> tasks, CancellationToken localCancellationToken)
+            var tasks = new List<TaskInfo>();
+            foreach (var chunk in documents.GetChunks(batchSize))
             {
-                tasks.Add(await this.UpdateDocumentsAsync(items, primaryKey, localCancellationToken).ConfigureAwait(false));
+                tasks.Add(await this.UpdateDocumentsAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
-            var result = await BatchOperationAsync(documents, batchSize, UpdateActionAsync, cancellationToken).ConfigureAwait(false);
-            return result;
+            return tasks;
         }
 
         /// <summary>
@@ -727,21 +727,6 @@ namespace Meilisearch
         {
             this.http = http;
             return this;
-        }
-
-        private static async Task<List<TaskInfo>> BatchOperationAsync<T>(IEnumerable<T> items, int batchSize, Func<List<T>, List<TaskInfo>, CancellationToken, Task> action, CancellationToken cancellationToken = default)
-        {
-            var itemsList = new List<T>(items);
-            var numberOfBatches = Math.Ceiling((double)itemsList.Count / batchSize);
-            var result = new List<TaskInfo>();
-            for (var i = 0; i < numberOfBatches; i++)
-            {
-                var actualSize = Math.Min(batchSize, itemsList.Count - (i * batchSize));
-                var batch = itemsList.GetRange(i * batchSize, actualSize);
-                await action.Invoke(batch, result, cancellationToken).ConfigureAwait(false);
-            }
-
-            return result;
         }
 
         /// <summary>
