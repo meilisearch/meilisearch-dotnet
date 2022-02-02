@@ -231,7 +231,7 @@ create_a_key_1: |-
       Description = "Add documents: Products API key",
       Actions = new string[] { "documents.add" },
       Indexes = new string[] { "products" },
-      ExpiresAt = "2042-04-02T00:42:42Z"
+      ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z")
   };
   Key createdKey = await this.client.CreateKeyAsync(keyOptions);
 update_a_key_1: |-
@@ -250,7 +250,7 @@ security_guide_create_key_1: |-
       Description = "Search patient records key",
       Actions = new string[] { "search" },
       Indexes = new string[] { "patient_medical_records" },
-      ExpiresAt = "2023-01-01T00:00:00Z"
+      ExpiresAt = DateTime.Parse("2023-01-01T00:00:00Z")
   };
   Key createdKey = await this.client.CreateKeyAsync(keyOptions);
 security_guide_list_keys_1: |-
