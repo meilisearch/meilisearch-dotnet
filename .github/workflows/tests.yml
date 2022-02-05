@@ -41,4 +41,4 @@ jobs:
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
     - name: Check with dotnet-format
-      run: dotnet format --check Meilisearch.sln
+      run: dotnet format --verify-no-changes Meilisearch.sln
