@@ -154,8 +154,8 @@ namespace Meilisearch.Tests
             var docs = await index.GetDocumentsAsync<Movie>();
             Assert.Equal("1", docs.First().Id);
             Assert.Equal("Ironman", docs.First().Name);
+            Assert.Null(docs.First().Genre);
 
-            Assert.Equal("Action", docs.First().Genre);
             Assert.Equal("2", docs.ElementAt(1).Id);
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();
