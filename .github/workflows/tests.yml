@@ -21,7 +21,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: "3.1.x"
     - name: Meilisearch (latest version) setup with Docker
       run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
     - name: Install dependencies
@@ -38,6 +38,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: "3.1.x"
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
     - name: Check with dotnet-format
