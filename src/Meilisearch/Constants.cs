@@ -1,4 +1,4 @@
-﻿namespace Meilisearch
+namespace Meilisearch
 {
     using System.Text.Json;
     using System.Text.Json.Serialization;
