@@ -19,7 +19,7 @@ namespace Meilisearch.Tests
             var qualifiedVersion = this.version.GetQualifiedVersion();
             var version = this.version.GetVersion();
 
-            Assert.Equal(qualifiedVersion, $"Meilisearch (v{version})");
+            Assert.Equal(qualifiedVersion, $"Meilisearch .NET (v{version})");
         }
 
         [Fact]
