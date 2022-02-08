@@ -39,27 +39,5 @@ namespace Meilisearch
             var queryString = string.Join("&", values);
             return queryString;
         }
-
-        /// <summary>
-        /// Iterates through Ienumerable and removes null keys.
-        /// </summary>
-        /// <param name="objectToTransform">Object to transform.</param>
-        /// <typeparam name="T">The element type of the IEnumerable.</typeparam>
-        /// <returns>Returns the same IEnumerable with null keys removed. </returns>
-        public static object RemoveNullValues<T>(this IEnumerable<T> objectToTransform)
-        {
-            var result = objectToTransform.Select(item =>
-            {
-                dynamic expando = new ExpandoObject();
-                var x = expando as IDictionary<string, object>;
-                foreach (var p in item.GetType().GetProperties().Where(p => p.GetValue(item) != null))
-                {
-                    x[p.Name.ToLower()] = p.GetValue(item, null);
-                }
-
-                return expando;
-            }).ToList().AsEnumerable();
-            return result;
-        }
     }
 }
