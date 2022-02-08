@@ -74,13 +74,9 @@ namespace Meilisearch.Extensions
             }
         }
 
-        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = default)
+        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
-            if (options == null)
-            {
-                options = new JsonSerializerOptions();
-                options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            }
+            options ??= Constants.JsonSerializerOptionsWriteNulls;
 
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
