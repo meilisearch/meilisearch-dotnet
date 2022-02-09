@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <LangVersion>7.3</LangVersion>
-	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
   
   <ItemGroup>
