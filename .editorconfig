@@ -14,6 +14,19 @@ indent_style             = space
 indent_size              = 4
 indent_style             = space
 
+# Sort using and Import directives with System.* appearing first
+dotnet_sort_system_directives_first = true
+
+# 'using' directive preferences
+csharp_using_directive_placement = outside_namespace:warning
+
+# Require var all the time.
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = true:warning
+
+dotnet_analyzer_diagnostic.category-Style.severity = warning
+
 [*{.csproj, .xml}]
 indent_size              = 4
 indent_style             = space
