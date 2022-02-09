@@ -53,7 +53,7 @@ namespace Meilisearch
         /// <returns>Returns the Meilisearch version with commit and build version.</returns>
         public async Task<MeiliSearchVersion> GetVersionAsync(CancellationToken cancellationToken = default)
         {
-            var response = await this.http.GetAsync("/version", cancellationToken).ConfigureAwait(false);
+            var response = await this.http.GetAsync("version", cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<MeiliSearchVersion>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -81,7 +81,7 @@ namespace Meilisearch
         public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             Index index = new Index(uid, primaryKey);
-            var responseMessage = await this.http.PostJsonCustomAsync("/indexes", index, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+            var responseMessage = await this.http.PostJsonCustomAsync("indexes", index, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -118,7 +118,7 @@ namespace Meilisearch
         /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
         public async Task<IEnumerable<JsonElement>> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
         {
-            var response = await this.http.GetAsync("/indexes", cancellationToken).ConfigureAwait(false);
+            var response = await this.http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var json = JsonDocument.Parse(content);
@@ -139,7 +139,7 @@ namespace Meilisearch
         /// <returns>Return Enumerable of Index.</returns>
         public async Task<IEnumerable<Index>> GetAllIndexesAsync(CancellationToken cancellationToken = default)
         {
-            var response = await this.http.GetAsync("/indexes", cancellationToken).ConfigureAwait(false);
+            var response = await this.http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>(cancellationToken: cancellationToken).ConfigureAwait(false);
             return content
@@ -216,7 +216,7 @@ namespace Meilisearch
         /// <returns>Returns stats of all indexes.</returns>
         public async Task<Stats> GetStats(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Stats>("/stats", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await this.http.GetFromJsonAsync<Stats>("stats", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace Meilisearch
         /// <returns>Returns whether server is healthy or throw an error.</returns>
         public async Task<MeiliSearchHealth> HealthAsync(CancellationToken cancellationToken = default)
         {
-            var response = await this.http.GetAsync("/health", cancellationToken).ConfigureAwait(false);
+            var response = await this.http.GetAsync("health", cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<MeiliSearchHealth>(cancellationToken: cancellationToken);
         }
@@ -256,7 +256,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> CreateDumpAsync(CancellationToken cancellationToken = default)
         {
-            var response = await this.http.PostAsync("/dumps", default, cancellationToken).ConfigureAwait(false);
+            var response = await this.http.PostAsync("dumps", default, cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -269,7 +269,7 @@ namespace Meilisearch
         /// <returns>Returns dump creation status with uid and processing status.</returns>
         public async Task<DumpStatus> GetDumpStatusAsync(string uid, CancellationToken cancellationToken = default)
         {
-            var response = await this.http.GetAsync($"/dumps/{uid}/status", cancellationToken).ConfigureAwait(false);
+            var response = await this.http.GetAsync($"dumps/{uid}/status", cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -281,7 +281,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the API keys.</returns>
         public async Task<Result<IEnumerable<Key>>> GetKeysAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Result<IEnumerable<Key>>>("/keys", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<Result<IEnumerable<Key>>>("keys", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -293,7 +293,7 @@ namespace Meilisearch
         /// <returns>Returns the API key information.</returns>
         public async Task<Key> GetKeyAsync(string keyUid, CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Key>($"/keys/{keyUid}", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<Key>($"keys/{keyUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -310,7 +310,7 @@ namespace Meilisearch
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<Key>("/keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<Key>("keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -325,7 +325,7 @@ namespace Meilisearch
         public async Task<bool> DeleteKeyAsync(string keyUid, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.DeleteAsync($"/keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
+                await this.http.DeleteAsync($"keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 

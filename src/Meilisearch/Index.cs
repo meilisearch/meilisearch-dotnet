@@ -114,7 +114,7 @@ namespace Meilisearch
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> DeleteAsync(CancellationToken cancellationToken = default)
         {
-            var responseMessage = await this.http.DeleteAsync($"/indexes/{this.Uid}", cancellationToken).ConfigureAwait(false);
+            var responseMessage = await this.http.DeleteAsync($"indexes/{this.Uid}", cancellationToken).ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -130,7 +130,7 @@ namespace Meilisearch
         public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
-            string uri = $"/indexes/{this.Uid}/documents";
+            string uri = $"indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
@@ -171,7 +171,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
-            string uri = $"/indexes/{this.Uid}/documents";
+            string uri = $"indexes/{this.Uid}/documents";
             if (primaryKey != default)
             {
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
@@ -211,7 +211,7 @@ namespace Meilisearch
         /// <returns>Returns the document, with the according type if the object is available.</returns>
         public async Task<T> GetDocumentAsync<T>(string documentId, CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<T>($"/indexes/{this.Uid}/documents/{documentId}", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await this.http.GetFromJsonAsync<T>($"indexes/{this.Uid}/documents/{documentId}", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Meilisearch
         /// <returns>Returns the list of documents.</returns>
         public async Task<IEnumerable<T>> GetDocumentsAsync<T>(DocumentQuery query = default, CancellationToken cancellationToken = default)
         {
-            string uri = $"/indexes/{this.Uid}/documents";
+            string uri = $"indexes/{this.Uid}/documents";
             if (query != null)
             {
                 uri = $"{uri}?{query.ToQueryString()}";
@@ -252,7 +252,7 @@ namespace Meilisearch
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> DeleteOneDocumentAsync(string documentId, CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents/{documentId}", cancellationToken).ConfigureAwait(false);
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/documents/{documentId}", cancellationToken).ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -276,7 +276,7 @@ namespace Meilisearch
         public async Task<TaskInfo> DeleteDocumentsAsync(IEnumerable<string> documentIds, CancellationToken cancellationToken = default)
         {
             var httpresponse =
-                await this.http.PostAsJsonAsync($"/indexes/{this.Uid}/documents/delete-batch", documentIds, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync($"indexes/{this.Uid}/documents/delete-batch", documentIds, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -300,7 +300,7 @@ namespace Meilisearch
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> DeleteAllDocumentsAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/documents", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/documents", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -347,7 +347,7 @@ namespace Meilisearch
                 body.Q = query;
             }
 
-            var responseMessage = await this.http.PostAsJsonAsync<SearchQuery>($"/indexes/{this.Uid}/search", body, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+            var responseMessage = await this.http.PostAsJsonAsync<SearchQuery>($"indexes/{this.Uid}/search", body, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -376,7 +376,7 @@ namespace Meilisearch
         /// <returns>Returns all the settings.</returns>
         public async Task<Settings> GetSettingsAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Settings>($"/indexes/{this.Uid}/settings", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<Settings>($"indexes/{this.Uid}/settings", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -390,7 +390,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateSettingsAsync(Settings settings, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<Settings>($"/indexes/{this.Uid}/settings", settings, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<Settings>($"indexes/{this.Uid}/settings", settings, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -402,7 +402,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSettingsAsync(CancellationToken cancellationToken = default)
         {
-            var httpResponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
+            var httpResponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings", cancellationToken).ConfigureAwait(false);
             return await httpResponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -413,7 +413,7 @@ namespace Meilisearch
         /// <returns>Returns the displayed attributes setting.</returns>
         public async Task<IEnumerable<string>> GetDisplayedAttributesAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/displayed-attributes", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -426,7 +426,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateDisplayedAttributesAsync(IEnumerable<string> displayedAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/displayed-attributes", displayedAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -438,7 +438,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetDisplayedAttributesAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/displayed-attributes", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/displayed-attributes", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -450,7 +450,7 @@ namespace Meilisearch
         /// <returns>Returns the distinct attribute setting.</returns>
         public async Task<string> GetDistinctAttributeAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<string>($"indexes/{this.Uid}/settings/distinct-attribute", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -463,7 +463,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateDistinctAttributeAsync(string distinctAttribute, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<string>($"/indexes/{this.Uid}/settings/distinct-attribute", distinctAttribute, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<string>($"indexes/{this.Uid}/settings/distinct-attribute", distinctAttribute, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -475,7 +475,7 @@ namespace Meilisearch
         /// <returns>Returns the task Uid of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetDistinctAttributeAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/distinct-attribute", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/distinct-attribute", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -487,7 +487,7 @@ namespace Meilisearch
         /// <returns>Returns the filterable attributes setting.</returns>
         public async Task<IEnumerable<string>> GetFilterableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/filterable-attributes", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -500,7 +500,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/filterable-attributes", filterableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/filterable-attributes", filterableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -512,7 +512,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetFilterableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/filterable-attributes", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/filterable-attributes", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -524,7 +524,7 @@ namespace Meilisearch
         /// <returns>Returns the ranking rules setting.</returns>
         public async Task<IEnumerable<string>> GetRankingRulesAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/ranking-rules", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -537,7 +537,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateRankingRulesAsync(IEnumerable<string> rankingRules, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/ranking-rules", rankingRules, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/ranking-rules", rankingRules, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -549,7 +549,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetRankingRulesAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/ranking-rules", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/ranking-rules", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -561,7 +561,7 @@ namespace Meilisearch
         /// <returns>Returns the searchable attributes setting.</returns>
         public async Task<IEnumerable<string>> GetSearchableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/searchable-attributes", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -574,7 +574,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateSearchableAttributesAsync(IEnumerable<string> searchableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/searchable-attributes", searchableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/searchable-attributes", searchableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -587,7 +587,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSearchableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/searchable-attributes", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/searchable-attributes", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -599,7 +599,7 @@ namespace Meilisearch
         /// <returns>Returns the sortable attributes setting.</returns>
         public async Task<IEnumerable<string>> GetSortableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/sortable-attributes", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -612,7 +612,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateSortableAttributesAsync(IEnumerable<string> sortableAttributes, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/sortable-attributes", sortableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/sortable-attributes", sortableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -624,7 +624,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSortableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/sortable-attributes", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/sortable-attributes", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -637,7 +637,7 @@ namespace Meilisearch
         /// <returns>Returns the stop words setting.</returns>
         public async Task<IEnumerable<string>> GetStopWordsAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/stop-words", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -650,7 +650,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateStopWordsAsync(IEnumerable<string> stopWords, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<IEnumerable<string>>($"/indexes/{this.Uid}/settings/stop-words", stopWords, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<IEnumerable<string>>($"indexes/{this.Uid}/settings/stop-words", stopWords, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -662,7 +662,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetStopWordsAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/stop-words", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/stop-words", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -674,7 +674,7 @@ namespace Meilisearch
         /// <returns>Returns the synonyms setting.</returns>
         public async Task<Dictionary<string, IEnumerable<string>>> GetSynonymsAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<Dictionary<string, IEnumerable<string>>>($"indexes/{this.Uid}/settings/synonyms", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -687,7 +687,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateSynonymsAsync(Dictionary<string, IEnumerable<string>> synonyms, CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage =
-                await this.http.PostAsJsonAsync<Dictionary<string, IEnumerable<string>>>($"/indexes/{this.Uid}/settings/synonyms", synonyms, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await this.http.PostAsJsonAsync<Dictionary<string, IEnumerable<string>>>($"indexes/{this.Uid}/settings/synonyms", synonyms, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -700,7 +700,7 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> ResetSynonymsAsync(CancellationToken cancellationToken = default)
         {
-            var httpresponse = await this.http.DeleteAsync($"/indexes/{this.Uid}/settings/synonyms", cancellationToken)
+            var httpresponse = await this.http.DeleteAsync($"indexes/{this.Uid}/settings/synonyms", cancellationToken)
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -712,7 +712,7 @@ namespace Meilisearch
         /// <returns>Return index stats.</returns>
         public async Task<IndexStats> GetStatsAsync(CancellationToken cancellationToken = default)
         {
-            return await this.http.GetFromJsonAsync<IndexStats>($"/indexes/{this.Uid}/stats", cancellationToken: cancellationToken)
+            return await this.http.GetFromJsonAsync<IndexStats>($"indexes/{this.Uid}/stats", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

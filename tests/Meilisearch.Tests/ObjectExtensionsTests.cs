@@ -10,7 +10,7 @@ namespace Meilisearch.Tests
         [InlineData("com pl <->& ex")]
         public void QueryStringsAreEqualsForPrimaryKey(string key)
         {
-            string uri = "/indexes/myindex/documents";
+            string uri = "indexes/myindex/documents";
             var o = new { primaryKey = key };
 
             string expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
@@ -29,7 +29,7 @@ namespace Meilisearch.Tests
         [InlineData(1, 2, "attr")]
         public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
         {
-            string uri = "/indexes/myindex/documents";
+            string uri = "indexes/myindex/documents";
             var dq = new DocumentQuery { Offset = offset, Limit = limit, AttributesToRetrieve = attributesToRetrieve };
 
             string expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
