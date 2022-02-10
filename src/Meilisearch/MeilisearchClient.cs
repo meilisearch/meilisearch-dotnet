@@ -1,17 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Meilisearch.Extensions;
+
 namespace Meilisearch
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Json;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Meilisearch.Extensions;
-
     /// <summary>
     /// Typed client for Meilisearch.
     /// </summary>
@@ -66,7 +65,7 @@ namespace Meilisearch
         /// <returns>Returns an Index instance.</returns>
         public Index Index(string uid)
         {
-            Index index = new Index(uid);
+            var index = new Index(uid);
             index.WithHttpClient(this.http);
             return index;
         }
@@ -80,7 +79,7 @@ namespace Meilisearch
         /// <returns>Returns the associated task.</returns>
         public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            Index index = new Index(uid, primaryKey);
+            var index = new Index(uid, primaryKey);
             var responseMessage = await this.http.PostJsonCustomAsync("/indexes", index, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
@@ -122,7 +121,7 @@ namespace Meilisearch
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var json = JsonDocument.Parse(content);
-            List<JsonElement> indexes = new List<JsonElement>();
+            var indexes = new List<JsonElement>();
 
             foreach (var element in json.RootElement.EnumerateArray())
             {
@@ -305,11 +304,11 @@ namespace Meilisearch
         /// <returns>Returns the created API key.</returns>
         public async Task<Key> CreateKeyAsync(Key keyOptions, CancellationToken cancellationToken = default)
         {
-            JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+            var jsonOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            HttpResponseMessage responseMessage =
+            var responseMessage =
                 await this.http.PostAsJsonAsync<Key>("/keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
@@ -324,7 +323,7 @@ namespace Meilisearch
         /// <returns>Returns true if the API key was deleted.</returns>
         public async Task<bool> DeleteKeyAsync(string keyUid, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage responseMessage =
+            var responseMessage =
                 await this.http.DeleteAsync($"/keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
