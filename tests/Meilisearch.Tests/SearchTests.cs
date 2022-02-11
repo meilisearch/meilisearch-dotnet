@@ -129,14 +129,16 @@ namespace Meilisearch.Tests
                     AttributesToRetrieve = new string[] { "name", "id" },
                     Offset = 1,
                 });
-            movies.Hits.Should().NotBeEmpty();
+            var firstHit = movies.Hits.First();
+
+            Assert.NotEmpty(movies.Hits);
             Assert.Single(movies.Hits);
-            movies.Hits.First().Name.Should().NotBeEmpty();
-            movies.Hits.First().Id.Should().NotBeEmpty();
-            movies.Hits.First().Genre.Should().BeNull();
-            movies.Hits.First()._Formatted.Name.Should().NotBeEmpty();
-            movies.Hits.First()._Formatted.Id.Should().Equals(15);
-            movies.Hits.First()._Formatted.Genre.Should().BeNull();
+            Assert.NotEmpty(firstHit.Name);
+            Assert.NotEmpty(firstHit.Id);
+            Assert.Null(firstHit.Genre);
+            Assert.NotEmpty(firstHit._Formatted.Name);
+            Assert.Equal("15", firstHit._Formatted.Id);
+            Assert.Null(firstHit._Formatted.Genre);
         }
 
         [Fact]
