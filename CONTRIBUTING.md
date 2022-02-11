@@ -50,12 +50,12 @@ dotnet format --check Meilisearch.sln
 dotnet format Meilisearch.sln
 ```
 
-[StyleCop Analyzers](https://www.nuget.org/packages/StyleCop.Analyzers) is also installed in this package.<br>
-The warnings are visible when building the project:
+Styles are the ones commonly used by the .NET Community. Due to `.NET Standard 2` we are using `C# 7.3`.
 
-```bash
-dotnet build
-```
+You can check this two projects to have an idea how the code should looks like :
+* [Dapper](https://github.com/DapperLib/Dapper)
+* [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis)
+
 
 ## Git Guidelines
 
