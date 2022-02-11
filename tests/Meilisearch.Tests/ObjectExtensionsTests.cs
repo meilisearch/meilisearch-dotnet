@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.WebUtilities;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using Microsoft.AspNetCore.WebUtilities;
-    using Xunit;
-
     public class ObjectExtensionsTests
     {
         [Theory]

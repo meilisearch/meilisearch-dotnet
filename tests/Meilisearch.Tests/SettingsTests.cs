@@ -1,11 +1,13 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+using FluentAssertions;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using Xunit;
-
     [Collection("Sequential")]
     public class SettingsTests : IAsyncLifetime
     {

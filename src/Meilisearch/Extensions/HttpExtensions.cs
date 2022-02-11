@@ -1,12 +1,12 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Meilisearch.Extensions
 {
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Class to communicate with the Meilisearch server without charset-utf-8 as Content-Type.
     /// </summary>

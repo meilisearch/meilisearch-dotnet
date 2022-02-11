@@ -1,9 +1,10 @@
+using System.IO;
+using System.Xml;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System.IO;
-    using System.Xml;
-    using Xunit;
-
     public class VersionTests
     {
         private Version version;

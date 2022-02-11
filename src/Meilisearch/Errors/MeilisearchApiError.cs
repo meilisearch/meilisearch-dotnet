@@ -1,8 +1,8 @@
+using System;
+using System.Net;
+
 namespace Meilisearch
 {
-    using System;
-    using System.Net;
-
     /// <summary>
     /// Error sent by Meilisearch API.
     /// </summary>

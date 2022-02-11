@@ -1,9 +1,10 @@
+using System;
+using System.Threading.Tasks;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System;
-    using System.Threading.Tasks;
-    using Xunit;
-
     public class IndexFixture : IAsyncLifetime
     {
         public IndexFixture()

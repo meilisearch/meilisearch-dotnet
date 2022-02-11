@@ -1,7 +1,7 @@
+using System.Text.Json.Serialization;
+
 namespace Meilisearch
 {
-    using System.Text.Json.Serialization;
-
     /// <summary>
     /// Error sent by Meilisearch API.
     /// </summary>

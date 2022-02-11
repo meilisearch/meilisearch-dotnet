@@ -1,12 +1,15 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using FluentAssertions;
+
+using HttpClientFactoryLite;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using HttpClientFactoryLite;
-    using Xunit;
-
     [Collection("Sequential")]
     public class MeilisearchClientTests : IAsyncLifetime
     {

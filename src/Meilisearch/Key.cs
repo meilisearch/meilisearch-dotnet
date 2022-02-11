@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 namespace Meilisearch
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text.Json.Serialization;
-
     /// <summary>
     /// Information regarding an API key for the Meilisearch server.
     /// </summary>
