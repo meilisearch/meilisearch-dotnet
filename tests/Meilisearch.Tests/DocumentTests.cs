@@ -28,10 +28,10 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAddition()
         {
             var indexUID = "BasicDocumentsAdditionTest";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
-            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
@@ -46,7 +46,7 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAdditionInBatches()
         {
             var indexUID = "BasicDocumentsAdditionInBatchesTest";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
             Movie[] movies =
@@ -97,10 +97,10 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAdditionWithTimeoutError()
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutError";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
-            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0));
         }
 
@@ -108,10 +108,10 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsAdditionWithTimeoutErrorByInterval()
         {
             var indexUID = "BasicDocumentsAdditionWithTimeoutErrorByIntervalTest";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
-            TaskInfo task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0, 10));
         }
 
@@ -136,10 +136,10 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsUpdate()
         {
             var indexUID = "BasicDocumentsUpdateTest";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
-            TaskInfo task = await index.AddDocumentsAsync(new[]
+            var task = await index.AddDocumentsAsync(new[]
             {
                 new Movie { Id = "1", Name = "Batman", Genre = "Action" },
                 new Movie { Id = "2", Name = "Superman" },
@@ -167,7 +167,7 @@ namespace Meilisearch.Tests
         public async Task BasicDocumentsUpdateInBatches()
         {
             var indexUID = "BasicDocumentsUpdateInBatchesTest";
-            Index index = this.client.Index(indexUID);
+            var index = this.client.Index(indexUID);
 
             // Add the documents
             Movie[] movies =
@@ -229,7 +229,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneExistingDocumentWithStringId()
         {
-            Index index = await this.fixture.SetUpBasicIndex("GetOneExistingDocumentWithStringIdTest");
+            var index = await this.fixture.SetUpBasicIndex("GetOneExistingDocumentWithStringIdTest");
             var documents = await index.GetDocumentAsync<Movie>("10");
             documents.Id.Should().Be("10");
         }
@@ -237,7 +237,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneExistingDocumentWithIntegerId()
         {
-            Index index = await this.fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
+            var index = await this.fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
             var documents = await index.GetDocumentAsync<MovieWithIntId>(10);
             documents.Id.Should().Be(10);
         }
@@ -245,7 +245,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetMultipleExistingDocuments()
         {
-            Index index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentTest");
+            var index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentTest");
             var documents = await index.GetDocumentsAsync<Movie>();
             Assert.Equal(7, documents.Count());
             documents.First().Id.Should().Be("10");
@@ -255,7 +255,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetMultipleExistingDocumentsWithLimit()
         {
-            Index index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
+            var index = await this.fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
             var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2 });
             Assert.Equal(2, documents.Count());
             documents.First().Id.Should().Be("10");
@@ -265,44 +265,44 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteOneExistingDocumentWithStringId()
         {
-            Index index = await this.fixture.SetUpBasicIndex("DeleteOneExistingDocumentWithStringIdTest");
+            var index = await this.fixture.SetUpBasicIndex("DeleteOneExistingDocumentWithStringIdTest");
 
             // Delete the document
-            TaskInfo task = await index.DeleteOneDocumentAsync("11");
+            var task = await index.DeleteOneDocumentAsync("11");
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
             Assert.Equal(6, docs.Count());
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("11"));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("11"));
             Assert.Equal("document_not_found", ex.Code);
         }
 
         [Fact]
         public async Task DeleteOneExistingDocumentWithIntId()
         {
-            Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteOneExistingDocumentWithIntIdTest");
+            var index = await this.fixture.SetUpBasicIndexWithIntId("DeleteOneExistingDocumentWithIntIdTest");
 
             // Delete the document
-            TaskInfo task = await index.DeleteOneDocumentAsync(11);
+            var task = await index.DeleteOneDocumentAsync(11);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
             Assert.Equal(6, docs.Count());
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>(11));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>(11));
             Assert.Equal("document_not_found", ex.Code);
         }
 
         [Fact]
         public async Task DeleteMultipleDocumentsWithStringId()
         {
-            Index index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithStringIdTest");
+            var index = await this.fixture.SetUpBasicIndex("DeleteMultipleDocumentsWithStringIdTest");
 
             // Delete the documents
-            TaskInfo task = await index.DeleteDocumentsAsync(new[] { "12", "13", "14" });
+            var task = await index.DeleteDocumentsAsync(new[] { "12", "13", "14" });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
@@ -321,10 +321,10 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteMultipleDocumentsWithIntegerId()
         {
-            Index index = await this.fixture.SetUpBasicIndexWithIntId("DeleteMultipleDocumentsWithIntegerIdTest");
+            var index = await this.fixture.SetUpBasicIndexWithIntId("DeleteMultipleDocumentsWithIntegerIdTest");
 
             // Delete the documents
-            TaskInfo task = await index.DeleteDocumentsAsync(new[] { 12, 13, 14 });
+            var task = await index.DeleteDocumentsAsync(new[] { 12, 13, 14 });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
@@ -343,10 +343,10 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteAllExistingDocuments()
         {
-            Index index = await this.fixture.SetUpBasicIndex("DeleteAllExistingDocumentsTest");
+            var index = await this.fixture.SetUpBasicIndex("DeleteAllExistingDocumentsTest");
 
             // Delete all the documents
-            TaskInfo task = await index.DeleteAllDocumentsAsync();
+            var task = await index.DeleteAllDocumentsAsync();
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 

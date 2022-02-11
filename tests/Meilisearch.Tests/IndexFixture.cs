@@ -23,7 +23,7 @@ namespace Meilisearch.Tests
             var task = await this.DefaultClient.CreateIndexAsync(indexUid, primaryKey);
 
             // Check the index has been created
-            TaskInfo finishedTask = await this.DefaultClient.WaitForTaskAsync(task.Uid);
+            var finishedTask = await this.DefaultClient.WaitForTaskAsync(task.Uid);
             if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
@@ -34,7 +34,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            var index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new Movie { Id = "10", Name = "Gladiator" },
@@ -45,10 +45,10 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
             };
-            TaskInfo task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.Uid);
             if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
@@ -59,7 +59,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpBasicIndexWithIntId(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            var index = this.DefaultClient.Index(indexUid);
             var movies = new[]
             {
                 new MovieWithIntId { Id = 10, Name = "Gladiator" },
@@ -70,10 +70,10 @@ namespace Meilisearch.Tests
                 new MovieWithIntId { Id = 15, Name = "Spider-Man", Genre = "Action" },
                 new MovieWithIntId { Id = 16, Name = "Amélie Poulain", Genre = "French movie" },
             };
-            TaskInfo task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.Uid);
             if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
@@ -84,7 +84,7 @@ namespace Meilisearch.Tests
 
         public async Task<Meilisearch.Index> SetUpIndexForFaceting(string indexUid)
         {
-            Meilisearch.Index index = this.DefaultClient.Index(indexUid);
+            var index = this.DefaultClient.Index(indexUid);
 
             // Add documents
             var movies = new[]
@@ -99,17 +99,17 @@ namespace Meilisearch.Tests
                 new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
                 new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
             };
-            TaskInfo task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            TaskInfo finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.Uid);
             if (finishedTask.Status != "succeeded")
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
 
             // task settings
-            Settings settings = new Settings
+            var settings = new Settings
             {
                 FilterableAttributes = new string[] { "genre" },
             };

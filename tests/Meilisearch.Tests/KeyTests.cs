@@ -57,14 +57,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKey()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
             var fetchedKey = await this.client.GetKeyAsync(createdKeyUid);
 
@@ -80,14 +80,14 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKeyWithNullExpiresAt()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
             var fetchedKey = await this.client.GetKeyAsync(createdKeyUid);
 
@@ -103,20 +103,20 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteOneKey()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to delete document to all indexes.",
                 Actions = new string[] { "documents.delete" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await this.client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
 
             var success = await this.client.DeleteKeyAsync(createdKeyUid);
             success.Should().BeTrue();
 
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.client.GetKeyAsync(createdKeyUid));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.client.GetKeyAsync(createdKeyUid));
             Assert.Equal("api_key_not_found", ex.Code);
         }
     }

@@ -74,11 +74,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "name" },
             };
-            TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newFilters);
+            var task = await this.basicIndex.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await this.basicIndex.WaitForTaskAsync(task.Uid);
 
@@ -212,11 +212,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithNumberFilter()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "id" },
             };
-            TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            var task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await this.indexWithIntId.WaitForTaskAsync(task.Uid);
 
@@ -237,11 +237,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMultipleFilter()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "genre", "id" },
             };
-            TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            var task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await this.indexWithIntId.WaitForTaskAsync(task.Uid);
 
@@ -291,11 +291,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithSort()
         {
-            Settings newSortable = new Settings
+            var newSortable = new Settings
             {
                 SortableAttributes = new string[] { "name" },
             };
-            TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newSortable);
+            var task = await this.basicIndex.UpdateSettingsAsync(newSortable);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await this.basicIndex.WaitForTaskAsync(task.Uid);
 

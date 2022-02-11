@@ -39,7 +39,7 @@ namespace Meilisearch.Tests
         public async Task GetOneTaskInfo()
         {
             var task = await this.index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
-            TaskInfo fetchedTask = await this.index.GetTaskAsync(task.Uid);
+            var fetchedTask = await this.index.GetTaskAsync(task.Uid);
             fetchedTask.Should().NotBeNull();
             fetchedTask.Uid.Should().BeGreaterOrEqualTo(0);
             fetchedTask.Status.Should().NotBeNull();

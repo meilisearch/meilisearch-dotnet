@@ -51,7 +51,7 @@ namespace Meilisearch.Tests
             var indexUid = "BasicUsageOfCustomClientTest";
 
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var ms = new MeilisearchClient(httpClient);
 
             var task = await ms.CreateIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
@@ -68,9 +68,9 @@ namespace Meilisearch.Tests
         public async Task ErrorHandlerOfCustomClient()
         {
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var ms = new MeilisearchClient(httpClient);
             var indexUid = "wrong UID";
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey));
             Assert.Equal("invalid_index_uid", ex.Code);
         }
 
@@ -106,7 +106,7 @@ namespace Meilisearch.Tests
         public async Task HealthWithBadUrl()
         {
             var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
-            MeilisearchCommunicationError ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.HealthAsync());
+            var ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.HealthAsync());
             Assert.Equal("CommunicationError", ex.Message);
         }
 
@@ -129,7 +129,7 @@ namespace Meilisearch.Tests
         public async Task ExceptionWithBadPath()
         {
             var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri("http://localhost:7700/") };
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("/wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
 
@@ -137,7 +137,7 @@ namespace Meilisearch.Tests
         public async Task DeleteIndex()
         {
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            MeilisearchClient ms = new MeilisearchClient(httpClient);
+            var ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
             await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
             var task = await ms.DeleteIndexAsync(indexUid);

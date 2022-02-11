@@ -75,7 +75,7 @@ namespace Meilisearch
             int intervalMs = 50,
             CancellationToken cancellationToken = default)
         {
-            DateTime endingTime = DateTime.Now.AddMilliseconds(timeoutMs);
+            var endingTime = DateTime.Now.AddMilliseconds(timeoutMs);
 
             while (DateTime.Now < endingTime)
             {
