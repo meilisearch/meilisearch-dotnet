@@ -18,7 +18,7 @@ namespace Meilisearch.Tests
 
         public async Task DisposeAsync() => await DeleteAllIndexes(); // Let a clean Meilisearch instance, for maintainers convenience only.
 
-        public async Task<Meilisearch.Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
+        public async Task<Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
         {
             var task = await DefaultClient.CreateIndexAsync(indexUid, primaryKey);
 
@@ -32,7 +32,7 @@ namespace Meilisearch.Tests
             return DefaultClient.Index(indexUid);
         }
 
-        public async Task<Meilisearch.Index> SetUpBasicIndex(string indexUid)
+        public async Task<Index> SetUpBasicIndex(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
             var movies = new[]
@@ -57,7 +57,7 @@ namespace Meilisearch.Tests
             return index;
         }
 
-        public async Task<Meilisearch.Index> SetUpBasicIndexWithIntId(string indexUid)
+        public async Task<Index> SetUpBasicIndexWithIntId(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
             var movies = new[]
@@ -82,7 +82,7 @@ namespace Meilisearch.Tests
             return index;
         }
 
-        public async Task<Meilisearch.Index> SetUpIndexForFaceting(string indexUid)
+        public async Task<Index> SetUpIndexForFaceting(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
 

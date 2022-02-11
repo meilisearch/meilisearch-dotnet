@@ -23,7 +23,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body);
+            var payload = PrepareJsonPayload(body);
 
             return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -40,7 +40,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body, options);
+            var payload = PrepareJsonPayload(body, options);
 
             return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -56,7 +56,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body);
+            var payload = PrepareJsonPayload(body);
 
             return await client.PutAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }

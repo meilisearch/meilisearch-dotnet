@@ -310,7 +310,7 @@ namespace Meilisearch
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
             var responseMessage =
-                await _http.PostAsJsonAsync<Key>("/keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
+                await _http.PostAsJsonAsync("/keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
