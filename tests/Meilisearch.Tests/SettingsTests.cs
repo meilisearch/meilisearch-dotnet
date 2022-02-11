@@ -18,10 +18,10 @@ namespace Meilisearch.Tests
 
         public SettingsTests(IndexFixture fixture)
         {
-            this._fixture = fixture;
-            this._client = fixture.DefaultClient;
+            _fixture = fixture;
+            _client = fixture.DefaultClient;
 
-            this._defaultSettings = new Settings
+            _defaultSettings = new Settings
             {
                 RankingRules = new string[]
                 {
@@ -50,8 +50,8 @@ namespace Meilisearch.Tests
 
         public async Task InitializeAsync()
         {
-            await this._fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
-            this._index = await this._fixture.SetUpBasicIndex("BasicIndex-SettingsTests");
+            await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            _index = await _fixture.SetUpBasicIndex("BasicIndex-SettingsTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -59,7 +59,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetSettings()
         {
-            await this.AssertGetEquality(this._index.GetSettingsAsync, this._defaultSettings);
+            await AssertGetEquality(_index.GetSettingsAsync, _defaultSettings);
         }
 
         [Fact]
@@ -71,9 +71,9 @@ namespace Meilisearch.Tests
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSettingsAsync, newSettings);
-            await this.AssertGetInequality(this._index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
-            await this.AssertGetEquality(this._index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, this._defaultSettings));
+            await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
+            await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
         }
 
         [Fact]
@@ -90,22 +90,22 @@ namespace Meilisearch.Tests
                     { "harry potter", new string[] { "hp" } },
                 },
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSettingsAsync, newSettingsOne);
+            await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsOne);
 
-            var expectedSettingsOne = SettingsWithDefaultedNullFields(newSettingsOne, this._defaultSettings);
-            await this.AssertGetInequality(this._index.GetSettingsAsync, newSettingsOne); // fields omitted in newSettingsOne shouldn't have changed
-            await this.AssertGetEquality(this._index.GetSettingsAsync, expectedSettingsOne);
+            var expectedSettingsOne = SettingsWithDefaultedNullFields(newSettingsOne, _defaultSettings);
+            await AssertGetInequality(_index.GetSettingsAsync, newSettingsOne); // fields omitted in newSettingsOne shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync, expectedSettingsOne);
 
             // Second update: this one should not overwritten StopWords and DistinctAttribute.
             var newSettingsTwo = new Settings
             {
                 SearchableAttributes = new string[] { "name" },
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSettingsAsync, newSettingsTwo);
+            await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsTwo);
 
             var expectedSettingsTwo = SettingsWithDefaultedNullFields(newSettingsTwo, expectedSettingsOne);
-            await this.AssertGetInequality(this._index.GetSettingsAsync, newSettingsTwo); // fields omitted in newSettingsTwo shouldn't have changed
-            await this.AssertGetEquality(this._index.GetSettingsAsync, expectedSettingsTwo);
+            await AssertGetInequality(_index.GetSettingsAsync, newSettingsTwo); // fields omitted in newSettingsTwo shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync, expectedSettingsTwo);
         }
 
         [Fact]
@@ -120,193 +120,193 @@ namespace Meilisearch.Tests
                 RankingRules = new string[] { "typo" },
                 FilterableAttributes = new string[] { "genre" },
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSettingsAsync, newSettings);
-            await this.AssertGetInequality(this._index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
-            await this.AssertGetEquality(this._index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, this._defaultSettings));
+            await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
+            await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
 
-            await this.AssertResetSuccess(this._index.ResetSettingsAsync);
-            await this.AssertGetEquality(this._index.GetSettingsAsync, this._defaultSettings);
+            await AssertResetSuccess(_index.ResetSettingsAsync);
+            await AssertGetEquality(_index.GetSettingsAsync, _defaultSettings);
         }
 
         [Fact]
         public async Task GetDisplayedAttributes()
         {
-            await this.AssertGetEquality(this._index.GetDisplayedAttributesAsync, this._defaultSettings.DisplayedAttributes);
+            await AssertGetEquality(_index.GetDisplayedAttributesAsync, _defaultSettings.DisplayedAttributes);
         }
 
         [Fact]
         public async Task UpdateDisplayedAttributes()
         {
             IEnumerable<string> newDisplayedAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateDisplayedAttributesAsync, newDisplayedAttributes);
-            await this.AssertGetEquality(this._index.GetDisplayedAttributesAsync, newDisplayedAttributes);
+            await AssertUpdateSuccess(_index.UpdateDisplayedAttributesAsync, newDisplayedAttributes);
+            await AssertGetEquality(_index.GetDisplayedAttributesAsync, newDisplayedAttributes);
         }
 
         [Fact]
         public async Task ResetDisplayedAttributes()
         {
             IEnumerable<string> newDisplayedAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateDisplayedAttributesAsync, newDisplayedAttributes);
-            await this.AssertGetEquality(this._index.GetDisplayedAttributesAsync, newDisplayedAttributes);
+            await AssertUpdateSuccess(_index.UpdateDisplayedAttributesAsync, newDisplayedAttributes);
+            await AssertGetEquality(_index.GetDisplayedAttributesAsync, newDisplayedAttributes);
 
-            await this.AssertResetSuccess(this._index.ResetDisplayedAttributesAsync);
-            await this.AssertGetEquality(this._index.GetDisplayedAttributesAsync, this._defaultSettings.DisplayedAttributes);
+            await AssertResetSuccess(_index.ResetDisplayedAttributesAsync);
+            await AssertGetEquality(_index.GetDisplayedAttributesAsync, _defaultSettings.DisplayedAttributes);
         }
 
         [Fact]
         public async Task GetDistinctAttribute()
         {
-            await this.AssertGetEquality(this._index.GetDistinctAttributeAsync, this._defaultSettings.DistinctAttribute);
+            await AssertGetEquality(_index.GetDistinctAttributeAsync, _defaultSettings.DistinctAttribute);
         }
 
         [Fact]
         public async Task UpdateDistinctAttribute()
         {
             var newDistinctAttribute = "name";
-            await this.AssertUpdateSuccess(this._index.UpdateDistinctAttributeAsync, newDistinctAttribute);
-            await this.AssertGetEquality(this._index.GetDistinctAttributeAsync, newDistinctAttribute);
+            await AssertUpdateSuccess(_index.UpdateDistinctAttributeAsync, newDistinctAttribute);
+            await AssertGetEquality(_index.GetDistinctAttributeAsync, newDistinctAttribute);
         }
 
         [Fact]
         public async Task ResetDistinctAttribute()
         {
             var newDistinctAttribute = "name";
-            await this.AssertUpdateSuccess(this._index.UpdateDistinctAttributeAsync, newDistinctAttribute);
-            await this.AssertGetEquality(this._index.GetDistinctAttributeAsync, newDistinctAttribute);
+            await AssertUpdateSuccess(_index.UpdateDistinctAttributeAsync, newDistinctAttribute);
+            await AssertGetEquality(_index.GetDistinctAttributeAsync, newDistinctAttribute);
 
-            await this.AssertResetSuccess(this._index.ResetDistinctAttributeAsync);
-            await this.AssertGetEquality(this._index.GetDistinctAttributeAsync, this._defaultSettings.DistinctAttribute);
+            await AssertResetSuccess(_index.ResetDistinctAttributeAsync);
+            await AssertGetEquality(_index.GetDistinctAttributeAsync, _defaultSettings.DistinctAttribute);
         }
 
         [Fact]
         public async Task GetFilterableAttributes()
         {
-            await this.AssertGetEquality(this._index.GetFilterableAttributesAsync, this._defaultSettings.FilterableAttributes);
+            await AssertGetEquality(_index.GetFilterableAttributesAsync, _defaultSettings.FilterableAttributes);
         }
 
         [Fact]
         public async Task UpdateFilterableAttributes()
         {
             var newFilterableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateFilterableAttributesAsync, newFilterableAttributes);
-            await this.AssertGetEquality(this._index.GetFilterableAttributesAsync, newFilterableAttributes);
+            await AssertUpdateSuccess(_index.UpdateFilterableAttributesAsync, newFilterableAttributes);
+            await AssertGetEquality(_index.GetFilterableAttributesAsync, newFilterableAttributes);
         }
 
         [Fact]
         public async Task ResetFilterableAttributes()
         {
             var newFilterableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateFilterableAttributesAsync, newFilterableAttributes);
-            await this.AssertGetEquality(this._index.GetFilterableAttributesAsync, newFilterableAttributes);
+            await AssertUpdateSuccess(_index.UpdateFilterableAttributesAsync, newFilterableAttributes);
+            await AssertGetEquality(_index.GetFilterableAttributesAsync, newFilterableAttributes);
 
-            await this.AssertResetSuccess(this._index.ResetFilterableAttributesAsync);
-            await this.AssertGetEquality(this._index.GetFilterableAttributesAsync, this._defaultSettings.FilterableAttributes);
+            await AssertResetSuccess(_index.ResetFilterableAttributesAsync);
+            await AssertGetEquality(_index.GetFilterableAttributesAsync, _defaultSettings.FilterableAttributes);
         }
 
         [Fact]
         public async Task GetRankingRules()
         {
-            await this.AssertGetEquality(this._index.GetRankingRulesAsync, this._defaultSettings.RankingRules);
+            await AssertGetEquality(_index.GetRankingRulesAsync, _defaultSettings.RankingRules);
         }
 
         [Fact]
         public async Task UpdateRankingRules()
         {
             var newRankingRules = new string[] { "words", "typo" };
-            await this.AssertUpdateSuccess(this._index.UpdateRankingRulesAsync, newRankingRules);
-            await this.AssertGetEquality(this._index.GetRankingRulesAsync, newRankingRules);
+            await AssertUpdateSuccess(_index.UpdateRankingRulesAsync, newRankingRules);
+            await AssertGetEquality(_index.GetRankingRulesAsync, newRankingRules);
         }
 
         [Fact]
         public async Task ResetRankingRules()
         {
             var newRankingRules = new string[] { "words", "typo" };
-            await this.AssertUpdateSuccess(this._index.UpdateRankingRulesAsync, newRankingRules);
-            await this.AssertGetEquality(this._index.GetRankingRulesAsync, newRankingRules);
+            await AssertUpdateSuccess(_index.UpdateRankingRulesAsync, newRankingRules);
+            await AssertGetEquality(_index.GetRankingRulesAsync, newRankingRules);
 
-            await this.AssertResetSuccess(this._index.ResetRankingRulesAsync);
-            await this.AssertGetEquality(this._index.GetRankingRulesAsync, this._defaultSettings.RankingRules);
+            await AssertResetSuccess(_index.ResetRankingRulesAsync);
+            await AssertGetEquality(_index.GetRankingRulesAsync, _defaultSettings.RankingRules);
         }
 
         [Fact]
         public async Task GetSearchableAttributes()
         {
-            await this.AssertGetEquality(this._index.GetSearchableAttributesAsync, this._defaultSettings.SearchableAttributes);
+            await AssertGetEquality(_index.GetSearchableAttributesAsync, _defaultSettings.SearchableAttributes);
         }
 
         [Fact]
         public async Task UpdateSearchableAttributes()
         {
             var newSearchableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateSearchableAttributesAsync, newSearchableAttributes);
-            await this.AssertGetEquality(this._index.GetSearchableAttributesAsync, newSearchableAttributes);
+            await AssertUpdateSuccess(_index.UpdateSearchableAttributesAsync, newSearchableAttributes);
+            await AssertGetEquality(_index.GetSearchableAttributesAsync, newSearchableAttributes);
         }
 
         [Fact]
         public async Task ResetSearchableAttributes()
         {
             var newSearchableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateSearchableAttributesAsync, newSearchableAttributes);
-            await this.AssertGetEquality(this._index.GetSearchableAttributesAsync, newSearchableAttributes);
+            await AssertUpdateSuccess(_index.UpdateSearchableAttributesAsync, newSearchableAttributes);
+            await AssertGetEquality(_index.GetSearchableAttributesAsync, newSearchableAttributes);
 
-            await this.AssertResetSuccess(this._index.ResetSearchableAttributesAsync);
-            await this.AssertGetEquality(this._index.GetSearchableAttributesAsync, this._defaultSettings.SearchableAttributes);
+            await AssertResetSuccess(_index.ResetSearchableAttributesAsync);
+            await AssertGetEquality(_index.GetSearchableAttributesAsync, _defaultSettings.SearchableAttributes);
         }
 
         [Fact]
         public async Task GetSortableAttributes()
         {
-            await this.AssertGetEquality(this._index.GetSortableAttributesAsync, this._defaultSettings.SortableAttributes);
+            await AssertGetEquality(_index.GetSortableAttributesAsync, _defaultSettings.SortableAttributes);
         }
 
         [Fact]
         public async Task UpdateSortableAttributes()
         {
             var newSortableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateSortableAttributesAsync, newSortableAttributes);
-            await this.AssertGetEquality(this._index.GetSortableAttributesAsync, newSortableAttributes);
+            await AssertUpdateSuccess(_index.UpdateSortableAttributesAsync, newSortableAttributes);
+            await AssertGetEquality(_index.GetSortableAttributesAsync, newSortableAttributes);
         }
 
         [Fact]
         public async Task ResetSortableAttributes()
         {
             var newSortableAttributes = new string[] { "name", "genre" };
-            await this.AssertUpdateSuccess(this._index.UpdateSortableAttributesAsync, newSortableAttributes);
-            await this.AssertGetEquality(this._index.GetSortableAttributesAsync, newSortableAttributes);
+            await AssertUpdateSuccess(_index.UpdateSortableAttributesAsync, newSortableAttributes);
+            await AssertGetEquality(_index.GetSortableAttributesAsync, newSortableAttributes);
 
-            await this.AssertResetSuccess(this._index.ResetSortableAttributesAsync);
-            await this.AssertGetEquality(this._index.GetSortableAttributesAsync, this._defaultSettings.SortableAttributes);
+            await AssertResetSuccess(_index.ResetSortableAttributesAsync);
+            await AssertGetEquality(_index.GetSortableAttributesAsync, _defaultSettings.SortableAttributes);
         }
 
         [Fact]
         public async Task GetStopWords()
         {
-            await this.AssertGetEquality(this._index.GetStopWordsAsync, this._defaultSettings.StopWords);
+            await AssertGetEquality(_index.GetStopWordsAsync, _defaultSettings.StopWords);
         }
 
         [Fact]
         public async Task UpdateStopWords()
         {
             var newStopWords = new string[] { "the", "and", "of" };
-            await this.AssertUpdateSuccess(this._index.UpdateStopWordsAsync, newStopWords);
-            await this.AssertGetEquality(this._index.GetStopWordsAsync, newStopWords);
+            await AssertUpdateSuccess(_index.UpdateStopWordsAsync, newStopWords);
+            await AssertGetEquality(_index.GetStopWordsAsync, newStopWords);
         }
 
         [Fact]
         public async Task ResetStopWords()
         {
             var newStopWords = new string[] { "the", "and", "of" };
-            await this.AssertUpdateSuccess(this._index.UpdateStopWordsAsync, newStopWords);
-            await this.AssertGetEquality(this._index.GetStopWordsAsync, newStopWords);
+            await AssertUpdateSuccess(_index.UpdateStopWordsAsync, newStopWords);
+            await AssertGetEquality(_index.GetStopWordsAsync, newStopWords);
 
-            await this.AssertResetSuccess(this._index.ResetStopWordsAsync);
-            await this.AssertGetEquality(this._index.GetStopWordsAsync, this._defaultSettings.StopWords);
+            await AssertResetSuccess(_index.ResetStopWordsAsync);
+            await AssertGetEquality(_index.GetStopWordsAsync, _defaultSettings.StopWords);
         }
 
         [Fact]
         public async Task GetSynonyms()
         {
-            await this.AssertGetEquality(this._index.GetSynonymsAsync, this._defaultSettings.Synonyms);
+            await AssertGetEquality(_index.GetSynonymsAsync, _defaultSettings.Synonyms);
         }
 
         [Fact]
@@ -317,8 +317,8 @@ namespace Meilisearch.Tests
                 { "hp", new string[] { "harry potter" } },
                 { "harry potter", new string[] { "hp" } },
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSynonymsAsync, newSynonyms);
-            await this.AssertGetEquality(this._index.GetSynonymsAsync, newSynonyms);
+            await AssertUpdateSuccess(_index.UpdateSynonymsAsync, newSynonyms);
+            await AssertGetEquality(_index.GetSynonymsAsync, newSynonyms);
         }
 
         [Fact]
@@ -329,11 +329,11 @@ namespace Meilisearch.Tests
                 { "hp", new string[] { "harry potter" } },
                 { "harry potter", new string[] { "hp" } },
             };
-            await this.AssertUpdateSuccess(this._index.UpdateSynonymsAsync, newSynonyms);
-            await this.AssertGetEquality(this._index.GetSynonymsAsync, newSynonyms);
+            await AssertUpdateSuccess(_index.UpdateSynonymsAsync, newSynonyms);
+            await AssertGetEquality(_index.GetSynonymsAsync, newSynonyms);
 
-            await this.AssertResetSuccess(this._index.ResetSynonymsAsync);
-            await this.AssertGetEquality(this._index.GetSynonymsAsync, this._defaultSettings.Synonyms);
+            await AssertResetSuccess(_index.ResetSynonymsAsync);
+            await AssertGetEquality(_index.GetSynonymsAsync, _defaultSettings.Synonyms);
         }
 
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
@@ -366,20 +366,20 @@ namespace Meilisearch.Tests
         private async Task AssertTaskInfoSucceeded(TaskInfo task)
         {
             task.Uid.Should().BeGreaterThan(0);
-            task = await this._index.WaitForTaskAsync(task.Uid);
+            task = await _index.WaitForTaskAsync(task.Uid);
             task.Status.Should().BeEquivalentTo("succeeded");
         }
 
         private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
         {
             var task = await updateMethod(newValue);
-            await this.AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task);
         }
 
         private async Task AssertResetSuccess(IndexResetMethod resetMethod)
         {
             var task = await resetMethod();
-            await this.AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task);
         }
     }
 }

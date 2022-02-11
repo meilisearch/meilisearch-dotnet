@@ -16,13 +16,13 @@ namespace Meilisearch.Tests
 
         public KeyTests(IndexFixture fixture)
         {
-            this._fixture = fixture;
-            this._client = fixture.DefaultClient;
+            _fixture = fixture;
+            _client = fixture.DefaultClient;
         }
 
         public async Task InitializeAsync()
         {
-            await this._fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -30,7 +30,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAllKeys()
         {
-            var keyResponse = await this._client.GetKeysAsync();
+            var keyResponse = await _client.GetKeysAsync();
             var keys = keyResponse.Results;
 
             keys.Count().Should().BeGreaterOrEqualTo(2);
@@ -39,11 +39,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneKeyUsingKeyUid()
         {
-            var keyResponse = await this._client.GetKeysAsync();
+            var keyResponse = await _client.GetKeysAsync();
             var keys = keyResponse.Results;
             var firstKey = keys.First();
 
-            var fetchedKey = await this._client.GetKeyAsync(firstKey.KeyUid);
+            var fetchedKey = await _client.GetKeyAsync(firstKey.KeyUid);
 
             fetchedKey.KeyUid.Should().Equals(firstKey.KeyUid);
             fetchedKey.Description.Should().Equals(firstKey.Description);
@@ -64,9 +64,9 @@ namespace Meilisearch.Tests
                 Indexes = new string[] { "*" },
                 ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
             };
-            var createdKey = await this._client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
-            var fetchedKey = await this._client.GetKeyAsync(createdKeyUid);
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
             fetchedKey.Description.Should().Equals(createdKey.Description);
@@ -87,9 +87,9 @@ namespace Meilisearch.Tests
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            var createdKey = await this._client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
-            var fetchedKey = await this._client.GetKeyAsync(createdKeyUid);
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
             fetchedKey.Description.Should().Equals(createdKey.Description);
@@ -110,13 +110,13 @@ namespace Meilisearch.Tests
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            var createdKey = await this._client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
 
-            var success = await this._client.DeleteKeyAsync(createdKeyUid);
+            var success = await _client.DeleteKeyAsync(createdKeyUid);
             success.Should().BeTrue();
 
-            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this._client.GetKeyAsync(createdKeyUid));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.GetKeyAsync(createdKeyUid));
             Assert.Equal("api_key_not_found", ex.Code);
         }
     }

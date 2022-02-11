@@ -11,14 +11,14 @@ namespace Meilisearch.Tests
 
         public VersionTests()
         {
-            this._version = new Version();
+            _version = new Version();
         }
 
         [Fact]
         public void GetQualifiedVersion()
         {
-            var qualifiedVersion = this._version.GetQualifiedVersion();
-            var version = this._version.GetVersion();
+            var qualifiedVersion = _version.GetQualifiedVersion();
+            var version = _version.GetVersion();
 
             Assert.Equal(qualifiedVersion, $"Meilisearch .NET (v{version})");
         }
@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
             mgr.AddNamespace("x", "http://schemas.microsoft.com/developer/msbuild/2003");
             var versionFromCsproj = xmldoc.FirstChild.FirstChild.SelectSingleNode("Version").InnerText;
 
-            var value = this._version.GetVersion();
+            var value = _version.GetVersion();
 
             Assert.NotNull(value);
             Assert.Equal(versionFromCsproj, value);

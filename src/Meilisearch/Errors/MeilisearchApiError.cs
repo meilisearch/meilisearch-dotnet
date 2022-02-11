@@ -16,7 +16,7 @@ namespace Meilisearch
         public MeilisearchApiError(MeilisearchApiErrorContent apiError)
             : base(string.Format("MeilisearchApiError, Message: {0}, Code: {1}, Type: {2}, Link: {3}", apiError.Message, apiError.Code, apiError.Type, apiError.Link))
         {
-            this.Code = apiError.Code;
+            Code = apiError.Code;
         }
 
         /// <summary>
