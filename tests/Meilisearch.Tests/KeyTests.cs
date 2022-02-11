@@ -1,26 +1,28 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using FluentAssertions;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using Xunit;
-
     [Collection("Sequential")]
     public class KeyTests : IAsyncLifetime
     {
-        private IndexFixture fixture;
-        private MeilisearchClient client;
+        private readonly IndexFixture _fixture;
+        private readonly MeilisearchClient _client;
 
         public KeyTests(IndexFixture fixture)
         {
-            this.fixture = fixture;
-            this.client = fixture.DefaultClient;
+            _fixture = fixture;
+            _client = fixture.DefaultClient;
         }
 
         public async Task InitializeAsync()
         {
-            await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -28,7 +30,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAllKeys()
         {
-            var keyResponse = await this.client.GetKeysAsync();
+            var keyResponse = await _client.GetKeysAsync();
             var keys = keyResponse.Results;
 
             keys.Count().Should().BeGreaterOrEqualTo(2);
@@ -37,11 +39,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneKeyUsingKeyUid()
         {
-            var keyResponse = await this.client.GetKeysAsync();
+            var keyResponse = await _client.GetKeysAsync();
             var keys = keyResponse.Results;
             var firstKey = keys.First();
 
-            var fetchedKey = await this.client.GetKeyAsync(firstKey.KeyUid);
+            var fetchedKey = await _client.GetKeyAsync(firstKey.KeyUid);
 
             fetchedKey.KeyUid.Should().Equals(firstKey.KeyUid);
             fetchedKey.Description.Should().Equals(firstKey.Description);
@@ -55,16 +57,16 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKey()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
-            var fetchedKey = await this.client.GetKeyAsync(createdKeyUid);
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
             fetchedKey.Description.Should().Equals(createdKey.Description);
@@ -78,16 +80,16 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKeyWithNullExpiresAt()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
-            var fetchedKey = await this.client.GetKeyAsync(createdKeyUid);
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
             fetchedKey.Description.Should().Equals(createdKey.Description);
@@ -101,20 +103,20 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteOneKey()
         {
-            Key keyOptions = new Key
+            var keyOptions = new Key
             {
                 Description = "Key to delete document to all indexes.",
                 Actions = new string[] { "documents.delete" },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
-            Key createdKey = await this.client.CreateKeyAsync(keyOptions);
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
 
-            var success = await this.client.DeleteKeyAsync(createdKeyUid);
+            var success = await _client.DeleteKeyAsync(createdKeyUid);
             success.Should().BeTrue();
 
-            MeilisearchApiError ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => this.client.GetKeyAsync(createdKeyUid));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.GetKeyAsync(createdKeyUid));
             Assert.Equal("api_key_not_found", ex.Code);
         }
     }

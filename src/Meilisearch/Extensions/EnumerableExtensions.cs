@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Meilisearch.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>
     /// Extensions methods for IEnumerable.
     /// </summary>
@@ -30,8 +30,8 @@ namespace Meilisearch.Extensions
                 throw new ArgumentException("chunkSize value must be greater than 0", nameof(chunkSize));
             }
 
-            int total = fullList.Count();
-            int sent = 0;
+            var total = fullList.Count();
+            var sent = 0;
             while (sent < total)
             {
                 yield return fullList.Skip(sent).Take(chunkSize);

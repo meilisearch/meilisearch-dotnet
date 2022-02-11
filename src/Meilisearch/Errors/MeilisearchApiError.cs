@@ -1,8 +1,8 @@
+using System;
+using System.Net;
+
 namespace Meilisearch
 {
-    using System;
-    using System.Net;
-
     /// <summary>
     /// Error sent by Meilisearch API.
     /// </summary>
@@ -16,7 +16,7 @@ namespace Meilisearch
         public MeilisearchApiError(MeilisearchApiErrorContent apiError)
             : base(string.Format("MeilisearchApiError, Message: {0}, Code: {1}, Type: {2}, Link: {3}", apiError.Message, apiError.Code, apiError.Type, apiError.Link))
         {
-            this.Code = apiError.Code;
+            Code = apiError.Code;
         }
 
         /// <summary>

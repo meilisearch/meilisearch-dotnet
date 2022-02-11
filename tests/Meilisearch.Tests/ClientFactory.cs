@@ -1,10 +1,11 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+
+using HttpClientFactoryLite;
+
 namespace Meilisearch.Tests
 {
-    using System;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using HttpClientFactoryLite;
-
     public class ClientFactory
     {
         private static readonly Lazy<HttpClientFactory>

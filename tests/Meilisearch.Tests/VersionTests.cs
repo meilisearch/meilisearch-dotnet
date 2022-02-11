@@ -1,23 +1,24 @@
+using System.IO;
+using System.Xml;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System.IO;
-    using System.Xml;
-    using Xunit;
-
     public class VersionTests
     {
-        private Version version;
+        private readonly Version _version;
 
         public VersionTests()
         {
-            this.version = new Version();
+            _version = new Version();
         }
 
         [Fact]
         public void GetQualifiedVersion()
         {
-            var qualifiedVersion = this.version.GetQualifiedVersion();
-            var version = this.version.GetVersion();
+            var qualifiedVersion = _version.GetQualifiedVersion();
+            var version = _version.GetVersion();
 
             Assert.Equal(qualifiedVersion, $"Meilisearch .NET (v{version})");
         }
@@ -34,7 +35,7 @@ namespace Meilisearch.Tests
             mgr.AddNamespace("x", "http://schemas.microsoft.com/developer/msbuild/2003");
             var versionFromCsproj = xmldoc.FirstChild.FirstChild.SelectSingleNode("Version").InnerText;
 
-            var value = this.version.GetVersion();
+            var value = _version.GetVersion();
 
             Assert.NotNull(value);
             Assert.Equal(versionFromCsproj, value);

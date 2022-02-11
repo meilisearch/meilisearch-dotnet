@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.WebUtilities;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using Microsoft.AspNetCore.WebUtilities;
-    using Xunit;
-
     public class ObjectExtensionsTests
     {
         [Theory]
@@ -10,11 +11,11 @@ namespace Meilisearch.Tests
         [InlineData("com pl <->& ex")]
         public void QueryStringsAreEqualsForPrimaryKey(string key)
         {
-            string uri = "/indexes/myindex/documents";
+            var uri = "/indexes/myindex/documents";
             var o = new { primaryKey = key };
 
-            string expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
-            string actual = $"{uri}?{o.ToQueryString()}";
+            var expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
+            var actual = $"{uri}?{o.ToQueryString()}";
             Assert.Equal(expected, actual);
         }
 
@@ -29,11 +30,11 @@ namespace Meilisearch.Tests
         [InlineData(1, 2, "attr")]
         public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
         {
-            string uri = "/indexes/myindex/documents";
+            var uri = "/indexes/myindex/documents";
             var dq = new DocumentQuery { Offset = offset, Limit = limit, AttributesToRetrieve = attributesToRetrieve };
 
-            string expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
-            string actual = $"{uri}?{dq.ToQueryString()}";
+            var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
+            var actual = $"{uri}?{dq.ToQueryString()}";
             Assert.Equal(expected, actual);
         }
     }

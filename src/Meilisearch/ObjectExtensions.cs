@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
+
 namespace Meilisearch
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Reflection;
-
     /// <summary>
     /// Meilisearch objects manipulation.
     /// </summary>
