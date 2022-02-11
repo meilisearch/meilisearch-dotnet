@@ -13,19 +13,19 @@ namespace Meilisearch.Tests
     [Collection("Sequential")]
     public class MeilisearchClientTests : IAsyncLifetime
     {
-        private MeilisearchClient defaultClient;
-        private string defaultPrimaryKey;
+        private readonly MeilisearchClient _defaultClient;
+        private readonly string _defaultPrimaryKey;
 
-        private IndexFixture fixture;
+        private readonly IndexFixture _fixture;
 
         public MeilisearchClientTests(IndexFixture fixture)
         {
-            this.fixture = fixture;
-            this.defaultClient = fixture.DefaultClient;
-            this.defaultPrimaryKey = "movieId";
+            this._fixture = fixture;
+            this._defaultClient = fixture.DefaultClient;
+            this._defaultPrimaryKey = "movieId";
         }
 
-        public async Task InitializeAsync() => await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+        public async Task InitializeAsync() => await this._fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
 
         public Task DisposeAsync() => Task.CompletedTask;
 
@@ -41,7 +41,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetVersionWithDefaultClient()
         {
-            var meilisearchversion = await this.defaultClient.GetVersionAsync();
+            var meilisearchversion = await this._defaultClient.GetVersionAsync();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
 
@@ -55,9 +55,9 @@ namespace Meilisearch.Tests
 
             var task = await ms.CreateIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            await this.defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
+            await this._defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
 
-            var index = this.defaultClient.Index(indexUid);
+            var index = this._defaultClient.Index(indexUid);
             task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
@@ -70,27 +70,27 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             var ms = new MeilisearchClient(httpClient);
             var indexUid = "wrong UID";
-            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, this._defaultPrimaryKey));
             Assert.Equal("invalid_index_uid", ex.Code);
         }
 
         [Fact]
         public async Task GetStats()
         {
-            var stats = await this.defaultClient.GetStats();
+            var stats = await this._defaultClient.GetStats();
             stats.Should().NotBeNull();
         }
 
         [Fact]
         public async Task CreateAndGetDumps()
         {
-            var dumpResponse = await this.defaultClient.CreateDumpAsync();
+            var dumpResponse = await this._defaultClient.CreateDumpAsync();
             Assert.NotNull(dumpResponse);
 
             dumpResponse.Status.Should().Be("in_progress");
             Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
 
-            var dumpStatus = await this.defaultClient.GetDumpStatusAsync(dumpResponse.Uid);
+            var dumpStatus = await this._defaultClient.GetDumpStatusAsync(dumpResponse.Uid);
             dumpStatus.Status.Should().BeOneOf("done", "in_progress");
             Assert.Equal(dumpResponse.Uid, dumpStatus.Uid);
         }
@@ -98,7 +98,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task Health()
         {
-            var health = await this.defaultClient.HealthAsync();
+            var health = await this._defaultClient.HealthAsync();
             health.Status.Should().Be("available");
         }
 
@@ -113,7 +113,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task IsHealthy()
         {
-            var health = await this.defaultClient.IsHealthyAsync();
+            var health = await this._defaultClient.IsHealthyAsync();
             health.Should().BeTrue();
         }
 
@@ -139,10 +139,10 @@ namespace Meilisearch.Tests
             var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
             var ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
-            await ms.CreateIndexAsync(indexUid, this.defaultPrimaryKey);
+            await ms.CreateIndexAsync(indexUid, this._defaultPrimaryKey);
             var task = await ms.DeleteIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            var finishedTask = await this.defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
+            var finishedTask = await this._defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
             Assert.Equal("succeeded", finishedTask.Status);
         }
     }
