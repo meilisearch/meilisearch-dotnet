@@ -305,12 +305,8 @@ namespace Meilisearch
         /// <returns>Returns the created API key.</returns>
         public async Task<Key> CreateKeyAsync(Key keyOptions, CancellationToken cancellationToken = default)
         {
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            };
             var responseMessage =
-                await _http.PostAsJsonAsync("/keys", keyOptions, jsonOptions, cancellationToken: cancellationToken)
+                await _http.PostAsJsonAsync("/keys", keyOptions, Constants.JsonSerializerOptionsWriteNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
