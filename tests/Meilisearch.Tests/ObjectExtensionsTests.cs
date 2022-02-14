@@ -1,5 +1,6 @@
-    using Microsoft.AspNetCore.WebUtilities;
-    using Xunit;
+using Microsoft.AspNetCore.WebUtilities;
+
+using Xunit;
 namespace Meilisearch.Tests
 {
 

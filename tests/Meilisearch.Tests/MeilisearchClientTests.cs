@@ -1,8 +1,10 @@
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using Xunit;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using FluentAssertions;
+
+using Xunit;
 namespace Meilisearch.Tests
 {
 
