@@ -26,8 +26,9 @@ namespace Meilisearch
         /// </summary>
         /// <param name="url">URL corresponding to Meilisearch server.</param>
         /// <param name="apiKey">API Key to connect to the Meilisearch server.</param>
-        public MeilisearchClient(string url, string apiKey = default, HttpClient client = null)
+        public MeilisearchClient(string url, string apiKey = default)
         {
+            url = url.Trim().EndsWith("/") ? url : $"{url}/";
             _http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
             _http.AddApiKeyToHeader(apiKey);
             _http.AddDefaultUserAgent();
@@ -42,6 +43,7 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the Meilisearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
         public MeilisearchClient(HttpClient client, string apiKey = default)
         {
+            client.BaseAddress = client.BaseAddress.OriginalString.Trim().EndsWith("/") ? client.BaseAddress : new Uri($"{client.BaseAddress.OriginalString}/");
             _http = client;
             _http.AddApiKeyToHeader(apiKey);
             _http.AddDefaultUserAgent();

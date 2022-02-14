@@ -95,7 +95,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task HealthWithBadUrl()
         {
-            var client = new MeilisearchClient("http://wrongurl:1234", "masterKey");
+            var client = new MeilisearchClient(_fixture.MeilisearchAddress.Replace("localhost", "badhost"), "masterKey");
             var ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.HealthAsync());
             Assert.Equal("CommunicationError", ex.Message);
         }
