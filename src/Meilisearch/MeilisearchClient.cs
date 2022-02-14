@@ -26,10 +26,11 @@ namespace Meilisearch
         /// </summary>
         /// <param name="url">URL corresponding to Meilisearch server.</param>
         /// <param name="apiKey">API Key to connect to the Meilisearch server.</param>
-        public MeilisearchClient(string url, string apiKey = default)
+        public MeilisearchClient(string url, string apiKey = default, HttpClient client = null)
         {
             _http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(url) };
             _http.AddApiKeyToHeader(apiKey);
+            _http.AddDefaultUserAgent();
             _taskEndpoint = null;
         }
 
@@ -43,6 +44,7 @@ namespace Meilisearch
         {
             _http = client;
             _http.AddApiKeyToHeader(apiKey);
+            _http.AddDefaultUserAgent();
         }
 
         /// <summary>
