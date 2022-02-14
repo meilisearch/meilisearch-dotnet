@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 
 using Xunit;
+
 namespace Meilisearch.Tests
 {
     public abstract class MeilisearchClientTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
