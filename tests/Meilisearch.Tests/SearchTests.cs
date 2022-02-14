@@ -1,30 +1,32 @@
+using System.Linq;
+using System.Threading.Tasks;
+
+using FluentAssertions;
+
+using Xunit;
+
 namespace Meilisearch.Tests
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-    using FluentAssertions;
-    using Xunit;
-
     [Collection("Sequential")]
     public class SearchTests : IAsyncLifetime
     {
-        private Index basicIndex;
-        private Index indexForFaceting;
-        private Index indexWithIntId;
+        private Index _basicIndex;
+        private Index _indexForFaceting;
+        private Index _indexWithIntId;
 
-        private IndexFixture fixture;
+        private readonly IndexFixture _fixture;
 
         public SearchTests(IndexFixture fixture)
         {
-            this.fixture = fixture;
+            _fixture = fixture;
         }
 
         public async Task InitializeAsync()
         {
-            await this.fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
-            this.basicIndex = await this.fixture.SetUpBasicIndex("BasicIndex-SearchTests");
-            this.indexForFaceting = await this.fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
-            this.indexWithIntId = await this.fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
+            await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+            _basicIndex = await _fixture.SetUpBasicIndex("BasicIndex-SearchTests");
+            _indexForFaceting = await _fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
+            _indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -32,7 +34,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearch()
         {
-            var movies = await this.basicIndex.SearchAsync<Movie>("man");
+            var movies = await _basicIndex.SearchAsync<Movie>("man");
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
             movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
@@ -41,7 +43,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithNoQuery()
         {
-            var movies = await this.basicIndex.SearchAsync<Movie>(null);
+            var movies = await _basicIndex.SearchAsync<Movie>(null);
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -50,7 +52,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithEmptyQuery()
         {
-            var movies = await this.basicIndex.SearchAsync<Movie>(string.Empty);
+            var movies = await _basicIndex.SearchAsync<Movie>(string.Empty);
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -59,7 +61,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithLimit()
         {
-            var movies = await this.basicIndex.SearchAsync<Movie>(
+            var movies = await _basicIndex.SearchAsync<Movie>(
                 "man",
                 new SearchQuery { Limit = 1 });
             movies.Hits.Should().NotBeEmpty();
@@ -72,15 +74,15 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "name" },
             };
-            TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newFilters);
+            var task = await _basicIndex.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForTaskAsync(task.Uid);
+            await _basicIndex.WaitForTaskAsync(task.Uid);
 
-            var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
                 "man",
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -93,7 +95,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithNoQuery()
         {
-            var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
                 null,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -106,7 +108,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithEmptyQuery()
         {
-            var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
                 string.Empty,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
@@ -119,7 +121,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMultipleOptions()
         {
-            var movies = await this.basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
                 "man",
                 new SearchQuery
                 {
@@ -140,7 +142,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilter()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>(
+            var movies = await _indexForFaceting.SearchAsync<Movie>(
                 null,
                 new SearchQuery
                 {
@@ -158,7 +160,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilterWithSpaces()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>(
+            var movies = await _indexForFaceting.SearchAsync<Movie>(
                 null,
                 new SearchQuery
                 {
@@ -174,7 +176,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilterArray()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>(
+            var movies = await _indexForFaceting.SearchAsync<Movie>(
                 null,
                 new SearchQuery
                 {
@@ -192,7 +194,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFilterMultipleArray()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>(
+            var movies = await _indexForFaceting.SearchAsync<Movie>(
                 null,
                 new SearchQuery
                 {
@@ -210,15 +212,15 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithNumberFilter()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "id" },
             };
-            TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForTaskAsync(task.Uid);
+            await _indexWithIntId.WaitForTaskAsync(task.Uid);
 
-            var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
+            var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
                 new SearchQuery
                 {
@@ -235,15 +237,15 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMultipleFilter()
         {
-            Settings newFilters = new Settings
+            var newFilters = new Settings
             {
                 FilterableAttributes = new string[] { "genre", "id" },
             };
-            TaskInfo task = await this.indexWithIntId.UpdateSettingsAsync(newFilters);
+            var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            await this.indexWithIntId.WaitForTaskAsync(task.Uid);
+            await _indexWithIntId.WaitForTaskAsync(task.Uid);
 
-            var movies = await this.indexWithIntId.SearchAsync<MovieWithIntId>(
+            var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
                 new SearchQuery
                 {
@@ -260,7 +262,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithPhraseSearch()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>("coco \"harry\"");
+            var movies = await _indexForFaceting.SearchAsync<Movie>("coco \"harry\"");
             movies.Hits.Should().NotBeEmpty();
             movies.FacetsDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
@@ -272,7 +274,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithFacetsDistribution()
         {
-            var movies = await this.indexForFaceting.SearchAsync<Movie>(
+            var movies = await _indexForFaceting.SearchAsync<Movie>(
                 null,
                 new SearchQuery
                 {
@@ -289,15 +291,15 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithSort()
         {
-            Settings newSortable = new Settings
+            var newSortable = new Settings
             {
                 SortableAttributes = new string[] { "name" },
             };
-            TaskInfo task = await this.basicIndex.UpdateSettingsAsync(newSortable);
+            var task = await _basicIndex.UpdateSettingsAsync(newSortable);
             task.Uid.Should().BeGreaterOrEqualTo(0);
-            await this.basicIndex.WaitForTaskAsync(task.Uid);
+            await _basicIndex.WaitForTaskAsync(task.Uid);
 
-            var movies = await this.basicIndex.SearchAsync<Movie>(
+            var movies = await _basicIndex.SearchAsync<Movie>(
                 "man",
                 new SearchQuery
                 {

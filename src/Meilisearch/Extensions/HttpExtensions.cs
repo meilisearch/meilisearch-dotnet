@@ -1,12 +1,12 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Meilisearch.Extensions
 {
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Class to communicate with the Meilisearch server without charset-utf-8 as Content-Type.
     /// </summary>
@@ -23,7 +23,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body);
+            var payload = PrepareJsonPayload(body);
 
             return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -40,7 +40,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body, options);
+            var payload = PrepareJsonPayload(body, options);
 
             return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -56,7 +56,7 @@ namespace Meilisearch.Extensions
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
         public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload<T>(body);
+            var payload = PrepareJsonPayload(body);
 
             return await client.PutAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -76,8 +76,7 @@ namespace Meilisearch.Extensions
 
         private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
-            options ??= Constants.JsonSerializerOptionsWriteNulls;
-
+            options = options ?? Constants.JsonSerializerOptionsWriteNulls;
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
 

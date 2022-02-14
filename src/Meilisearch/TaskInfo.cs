@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+
 namespace Meilisearch
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Information of the regarding a task.
     /// </summary>

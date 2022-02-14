@@ -1,7 +1,7 @@
+using System;
+
 namespace Meilisearch
 {
-    using System;
-
     /// <summary>
     /// Error sent when request not processed in expected time.
     /// </summary>

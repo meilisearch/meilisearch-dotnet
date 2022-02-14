@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageId>MeiliSearch</PackageId>
         <Version>0.9.0</Version>
@@ -15,15 +15,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
       <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
     </ItemGroup>
-
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>..\_stylecop\StyleCopRules.ruleset</CodeAnalysisRuleSet>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
 </Project>

@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+
 namespace Meilisearch
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Wrapper for index stats.
     /// </summary>

@@ -1,7 +1,7 @@
+using System.Text.Json.Serialization;
+
 namespace Meilisearch
 {
-    using System.Text.Json.Serialization;
-
     /// <summary>
     /// Deserialized response of the Meilisearch health.
     /// </summary>

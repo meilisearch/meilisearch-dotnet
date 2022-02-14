@@ -1,7 +1,7 @@
+using System;
+
 namespace Meilisearch
 {
-    using System;
-
     /// <summary>
     /// Error sent when trying to connecting to Meilisearch.
     /// </summary>

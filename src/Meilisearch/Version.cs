@@ -11,7 +11,7 @@ namespace Meilisearch
         /// <returns>Returns a formatted version.</returns>
         public string GetQualifiedVersion()
         {
-            return $"Meilisearch .NET (v{this.GetVersion()})";
+            return $"Meilisearch .NET (v{GetVersion()})";
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Meilisearch
         /// <returns>Returns a version from the GetType as String.</returns>
         public string GetVersion()
         {
-            return this.GetType().Assembly.GetName().Version.ToString(3);
+            return GetType().Assembly.GetName().Version.ToString(3);
         }
     }
 }

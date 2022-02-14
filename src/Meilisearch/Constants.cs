@@ -1,8 +1,8 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace Meilisearch
 {
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
-
     /// <summary>
     /// This class adds some defaults to work with Meilisearch client.
     /// </summary>
