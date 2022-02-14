@@ -44,13 +44,13 @@ namespace Meilisearch.Tests
 
             var fetchedKey = await _client.GetKeyAsync(firstKey.KeyUid);
 
-            fetchedKey.KeyUid.Should().Equals(firstKey.KeyUid);
-            fetchedKey.Description.Should().Equals(firstKey.Description);
-            fetchedKey.Indexes.Should().Equals(firstKey.Indexes);
-            fetchedKey.Actions.Should().Equals(firstKey.Actions);
-            fetchedKey.ExpiresAt.Should().Equals(firstKey.ExpiresAt);
-            fetchedKey.CreatedAt.Should().Equals(firstKey.CreatedAt);
-            fetchedKey.UpdatedAt.Should().Equals(firstKey.UpdatedAt);
+            Assert.Equal(fetchedKey.KeyUid, firstKey.KeyUid);
+            Assert.Equal(fetchedKey.Description, firstKey.Description);
+            Assert.Equal(fetchedKey.Indexes, firstKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, firstKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, firstKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, firstKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, firstKey.UpdatedAt);
         }
 
         [Fact]
@@ -67,13 +67,13 @@ namespace Meilisearch.Tests
             var createdKeyUid = createdKey.KeyUid;
             var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
-            fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
-            fetchedKey.Description.Should().Equals(createdKey.Description);
-            fetchedKey.Indexes.Should().Equals(createdKey.Indexes);
-            fetchedKey.Actions.Should().Equals(createdKey.Actions);
-            fetchedKey.ExpiresAt.Should().Equals(createdKey.ExpiresAt);
-            fetchedKey.CreatedAt.Should().Equals(createdKey.CreatedAt);
-            fetchedKey.UpdatedAt.Should().Equals(createdKey.UpdatedAt);
+            Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal(fetchedKey.Description, createdKey.Description);
+            Assert.Equal(fetchedKey.Indexes, createdKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, createdKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, createdKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, createdKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, createdKey.UpdatedAt);
         }
 
         [Fact]
@@ -90,13 +90,13 @@ namespace Meilisearch.Tests
             var createdKeyUid = createdKey.KeyUid;
             var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
-            fetchedKey.KeyUid.Should().Equals(createdKey.KeyUid);
-            fetchedKey.Description.Should().Equals(createdKey.Description);
-            fetchedKey.Indexes.Should().Equals(createdKey.Indexes);
-            fetchedKey.Actions.Should().Equals(createdKey.Actions);
-            fetchedKey.ExpiresAt.Should().Equals(createdKey.ExpiresAt);
-            fetchedKey.CreatedAt.Should().Equals(createdKey.CreatedAt);
-            fetchedKey.UpdatedAt.Should().Equals(createdKey.UpdatedAt);
+            Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal(fetchedKey.Description, createdKey.Description);
+            Assert.Equal(fetchedKey.Indexes, createdKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, createdKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, createdKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, createdKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, createdKey.UpdatedAt);
         }
 
         [Fact]
