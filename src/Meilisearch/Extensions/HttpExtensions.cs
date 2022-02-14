@@ -74,6 +74,13 @@ namespace Meilisearch.Extensions
             }
         }
 
+        public static void AddDefaultUserAgent(this HttpClient client)
+        {
+            var version = new Version();
+
+            client.DefaultRequestHeaders.Add("User-Agent", version.GetQualifiedVersion());
+        }
+
         private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
             options = options ?? Constants.JsonSerializerOptionsWriteNulls;

@@ -145,5 +145,16 @@ namespace Meilisearch.Tests
             var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
             Assert.Equal("succeeded", finishedTask.Status);
         }
+
+        [Fact]
+        public void GetDefaultUserAgentHeader()
+        {
+            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
+            var client = new MeilisearchClient(httpClient);
+            var userAgent = string.Join(' ', httpClient.DefaultRequestHeaders.GetValues("User-Agent"));
+            var version = new Version();
+
+            Assert.Equal(version.GetQualifiedVersion(), userAgent);
+        }
     }
 }
