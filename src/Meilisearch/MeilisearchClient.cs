@@ -305,7 +305,7 @@ namespace Meilisearch
         public async Task<Key> CreateKeyAsync(Key keyOptions, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.PostAsJsonAsync("/keys", keyOptions, Constants.JsonSerializerOptionsWriteNulls, cancellationToken: cancellationToken)
+                await _http.PostAsJsonAsync("keys", keyOptions, Constants.JsonSerializerOptionsWriteNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);

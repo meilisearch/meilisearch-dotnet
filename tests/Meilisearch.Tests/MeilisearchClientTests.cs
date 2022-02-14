@@ -2,7 +2,6 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using FluentAssertions;
-    using HttpClientFactoryLite;
     using Xunit;
 namespace Meilisearch.Tests
 {
@@ -29,9 +28,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetVersionWithCustomClient()
         {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var client = new MeilisearchClient(httpClient);
-            var meilisearchversion = await client.GetVersionAsync();
+            var meilisearchversion = await _fixture.ClientWithCustomHttpClient.GetVersionAsync();
             meilisearchversion.Version.Should().NotBeNullOrEmpty();
         }
 
@@ -47,10 +44,7 @@ namespace Meilisearch.Tests
         {
             var indexUid = "BasicUsageOfCustomClientTest";
 
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var ms = new MeilisearchClient(httpClient);
-
-            var task = await ms.CreateIndexAsync(indexUid);
+            var task = await _fixture.ClientWithCustomHttpClient.CreateIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
 
@@ -64,10 +58,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ErrorHandlerOfCustomClient()
         {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var ms = new MeilisearchClient(httpClient);
             var indexUid = "wrong UID";
-            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => ms.CreateIndexAsync(indexUid, _defaultPrimaryKey));
+            var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => _fixture.ClientWithCustomHttpClient.CreateIndexAsync(indexUid, _defaultPrimaryKey));
             Assert.Equal("invalid_index_uid", ex.Code);
         }
 
@@ -125,7 +117,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ExceptionWithBadPath()
         {
-            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri("http://localhost:7700/") };
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(IndexFixture.MeilisearchAddress) };
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
@@ -133,11 +125,9 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteIndex()
         {
-            var httpClient = ClientFactory.Instance.CreateClient<MeilisearchClient>();
-            var ms = new MeilisearchClient(httpClient);
             var indexUid = "DeleteIndexTest";
-            await ms.CreateIndexAsync(indexUid, _defaultPrimaryKey);
-            var task = await ms.DeleteIndexAsync(indexUid);
+            await _fixture.ClientWithCustomHttpClient.CreateIndexAsync(indexUid, _defaultPrimaryKey);
+            var task = await _fixture.ClientWithCustomHttpClient.DeleteIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
             Assert.Equal("succeeded", finishedTask.Status);

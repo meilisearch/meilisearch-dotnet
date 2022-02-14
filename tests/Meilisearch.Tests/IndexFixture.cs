@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -9,10 +10,15 @@ namespace Meilisearch.Tests
     {
         public IndexFixture()
         {
-            DefaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            DefaultClient = new MeilisearchClient(MeilisearchAddress, ApiKey);
+            var httpClient = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(MeilisearchAddress) };
+            ClientWithCustomHttpClient = new MeilisearchClient(httpClient, ApiKey);
         }
 
+        private const string ApiKey = "masterKey";
+        public const string MeilisearchAddress = "http://localhost:7700";
         public MeilisearchClient DefaultClient { get; private set; }
+        public MeilisearchClient ClientWithCustomHttpClient { get; private set; }
 
         public Task InitializeAsync() => Task.CompletedTask;
 
