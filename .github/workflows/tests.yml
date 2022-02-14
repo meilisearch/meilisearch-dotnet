@@ -23,7 +23,8 @@ jobs:
       with:
         dotnet-version: "3.1.x"
     - name: Meilisearch (latest version) setup with Docker
-      run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
+    #   run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true --master-key=masterKey
+      run: docker compose up -d
     - name: Install dependencies
       run: dotnet restore
     - name: Build
