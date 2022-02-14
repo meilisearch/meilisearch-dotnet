@@ -61,7 +61,9 @@ namespace Meilisearch.Tests
             task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
-            index.FetchPrimaryKey().Should().Equals("id"); // Check the JSON has been well serialized and the primary key is not equal to "Id"
+
+            // Check the JSON has been well serialized and the primary key is equal to "id"
+            Assert.Equal("id", await index.FetchPrimaryKey());
         }
 
         [Fact]
