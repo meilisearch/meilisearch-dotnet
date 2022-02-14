@@ -118,7 +118,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ExceptionWithBadPath()
         {
-            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(_fixture.MeilisearchAddress) };
+            var uri = _fixture.MeilisearchAddress.Trim().EndsWith("/") ? _fixture.MeilisearchAddress : $"{_fixture.MeilisearchAddress}/";
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(uri) };
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
