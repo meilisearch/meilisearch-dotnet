@@ -7,16 +7,14 @@ using FluentAssertions;
 using Xunit;
 namespace Meilisearch.Tests
 {
-
-    [Collection("Sequential")]
-    public class MeilisearchClientTests : IAsyncLifetime
+    public abstract class MeilisearchClientTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private readonly MeilisearchClient _defaultClient;
         private readonly string _defaultPrimaryKey;
 
-        private readonly IndexFixture _fixture;
+        private readonly TFixture _fixture;
 
-        public MeilisearchClientTests(IndexFixture fixture)
+        public MeilisearchClientTests(TFixture fixture)
         {
             _fixture = fixture;
             _defaultClient = fixture.DefaultClient;
@@ -119,7 +117,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ExceptionWithBadPath()
         {
-            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(IndexFixture.MeilisearchAddress) };
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(_fixture.MeilisearchAddress) };
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }

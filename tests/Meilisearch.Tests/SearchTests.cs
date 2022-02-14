@@ -7,16 +7,15 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    [Collection("Sequential")]
-    public class SearchTests : IAsyncLifetime
+    public abstract class SearchTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private Index _basicIndex;
         private Index _indexForFaceting;
         private Index _indexWithIntId;
 
-        private readonly IndexFixture _fixture;
+        private readonly TFixture _fixture;
 
-        public SearchTests(IndexFixture fixture)
+        public SearchTests(TFixture fixture)
         {
             _fixture = fixture;
         }
