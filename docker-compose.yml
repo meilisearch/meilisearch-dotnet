@@ -12,7 +12,7 @@ services:
       - meilisearch
 
   meilisearch:
-    image: getmeili/meilisearch:v0.25.2
+    image: getmeili/meilisearch:latest
     container_name: meilisearch
     ports:
       - "7700:7700"
