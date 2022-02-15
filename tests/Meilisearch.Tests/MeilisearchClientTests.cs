@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.Extensions;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -120,8 +122,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ExceptionWithBadPath()
         {
-            var uri = _fixture.MeilisearchAddress.Trim().EndsWith("/") ? _fixture.MeilisearchAddress : $"{_fixture.MeilisearchAddress}/";
-            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(uri) };
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = _fixture.MeilisearchAddress.ToSafeUri() };
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
