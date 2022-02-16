@@ -33,6 +33,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the date when the API key expires.
         /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public DateTime? ExpiresAt { get; set; }
 
         /// <summary>

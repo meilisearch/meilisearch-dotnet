@@ -99,6 +99,48 @@ namespace Meilisearch.Tests
             Assert.Equal(fetchedKey.UpdatedAt, createdKey.UpdatedAt);
         }
 
+        [Theory]
+        [InlineData("NewDesc", null, null, null)]
+        [InlineData(null, new[] { "documents.add", "search" }, null, null)]
+        [InlineData(null, null, new[] { "TestIdx" } , null)]
+        [InlineData(null, null, null , "2100-01-01")]
+        [InlineData("NewDesc", new[] { "search" }, new[] { "*" } , "2100-01-01")]
+        public async Task UpdateOneKey(string description, string[] actions, string[] indexes, string expiresAt)
+        {
+            var keyOptions = new Key
+            {
+                Description = "Key to add document to all indexes.",
+                Actions = new string[] { "documents.add" },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var createdKeyUid = createdKey.KeyUid;
+
+            keyOptions.Description = description;
+            keyOptions.Actions = actions;
+            keyOptions.Indexes = indexes;
+            if (expiresAt != null)
+            {
+                keyOptions.ExpiresAt = DateTime.Parse(expiresAt);
+            }
+            else
+            {
+                keyOptions.ExpiresAt = null;
+            }
+
+            var updatedKey = await _client.UpdateKeyAsync(createdKeyUid, keyOptions);
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
+
+            Assert.Equal(fetchedKey.KeyUid, updatedKey.KeyUid);
+            Assert.Equal(fetchedKey.Description, updatedKey.Description);
+            Assert.Equal(fetchedKey.Indexes, updatedKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, updatedKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, updatedKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, updatedKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, updatedKey.UpdatedAt);
+        }
+
         [Fact]
         public async Task DeleteOneKey()
         {

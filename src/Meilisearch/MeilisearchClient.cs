@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -311,6 +312,22 @@ namespace Meilisearch
                 await _http.PostAsJsonAsync("keys", keyOptions, Constants.JsonSerializerOptionsWriteNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
+            return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Updates an API key for the Meilisearch server.
+        /// </summary>
+        /// <param name="keyUid">Unique identifier of the API key.</param>
+        /// <param name="keyOptions">The options of the API key.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the created API key.</returns>
+        public async Task<Key> UpdateKeyAsync(string keyUid, Key keyOptions, CancellationToken cancellationToken = default)
+        {
+            var json = JsonSerializer.Serialize(keyOptions, Constants.JsonSerializerOptionsRemoveNulls);
+            var request = new HttpRequestMessage(new HttpMethod("PATCH"), $"keys/{keyUid}");
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            var responseMessage = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
