@@ -1,16 +1,6 @@
 version: "3.7"
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: production_nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - 8080:80
-    depends_on:
-      - meilisearch
-
   meilisearch:
     image: getmeili/meilisearch:${MEILISEARCH_VERSION}
     container_name: meilisearch
@@ -19,3 +9,22 @@ services:
     environment:
       - MEILI_MASTER_KEY=masterKey
       - MEILI_NO_ANALYTICS=true
+
+  meilisearchproxy:
+    image: getmeili/meilisearch:${MEILISEARCH_VERSION}
+    container_name: meilisearchproxy
+    ports:
+    - "7701:7700"
+    environment:
+    - MEILI_MASTER_KEY=masterKey
+    - MEILI_NO_ANALYTICS=true
+
+  nginx:
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8080:80
+    depends_on:
+      - meilisearchproxy

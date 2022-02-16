@@ -2,10 +2,10 @@ using Xunit;
 
 namespace Meilisearch.Tests.ServerConfigs
 {
-    public class ProxiedUriWithTrailingSlash
+    public class BaseUriServer
     {
-        const string CollectionFixtureName = nameof(ProxiedUriWithTrailingSlash);
-        private const string MeilisearchTestAddress = "http://localhost:8080/api/";
+        const string CollectionFixtureName = nameof(BaseUriServer);
+        private const string MeilisearchTestAddress = "http://localhost:7700/";
         public class ConfigFixture : IndexFixture
         {
             public override string MeilisearchAddress => MeilisearchTestAddress;
