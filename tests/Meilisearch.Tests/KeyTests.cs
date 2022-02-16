@@ -102,9 +102,9 @@ namespace Meilisearch.Tests
         [Theory]
         [InlineData("NewDesc", null, null, null)]
         [InlineData(null, new[] { "documents.add", "search" }, null, null)]
-        [InlineData(null, null, new[] { "TestIdx" } , null)]
-        [InlineData(null, null, null , "2100-01-01")]
-        [InlineData("NewDesc", new[] { "search" }, new[] { "*" } , "2100-01-01")]
+        [InlineData(null, null, new[] { "TestIdx" }, null)]
+        [InlineData(null, null, null, "2100-01-01")]
+        [InlineData("NewDesc", new[] { "search" }, new[] { "*" }, "2100-01-01")]
         public async Task UpdateOneKey(string description, string[] actions, string[] indexes, string expiresAt)
         {
             var keyOptions = new Key
