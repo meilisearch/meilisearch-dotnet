@@ -8,15 +8,14 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    [Collection("Sequential")]
-    public class SettingsTests : IAsyncLifetime
+    public abstract class SettingsTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private readonly Settings _defaultSettings;
         private readonly MeilisearchClient _client;
         private Index _index;
-        private readonly IndexFixture _fixture;
+        private readonly TFixture _fixture;
 
-        public SettingsTests(IndexFixture fixture)
+        public SettingsTests(TFixture fixture)
         {
             _fixture = fixture;
             _client = fixture.DefaultClient;

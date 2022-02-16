@@ -1,5 +1,8 @@
 using System.IO;
+using System.Net.Http;
 using System.Xml;
+
+using Meilisearch.Extensions;
 
 using Xunit;
 
@@ -39,6 +42,17 @@ namespace Meilisearch.Tests
 
             Assert.NotNull(value);
             Assert.Equal(versionFromCsproj, value);
+        }
+
+        [Fact]
+        public void GetDefaultUserAgentHeader()
+        {
+            var httpClient = new HttpClient();
+            httpClient.AddDefaultUserAgent();
+            var userAgent = string.Join(' ', httpClient.DefaultRequestHeaders.GetValues("User-Agent"));
+            var version = new Version();
+
+            Assert.Equal(version.GetQualifiedVersion(), userAgent);
         }
     }
 }

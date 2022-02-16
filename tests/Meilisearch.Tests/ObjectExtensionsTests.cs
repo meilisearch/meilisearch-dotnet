@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.WebUtilities;
 
 using Xunit;
-
 namespace Meilisearch.Tests
 {
+
     public class ObjectExtensionsTests
     {
         [Theory]
@@ -11,7 +11,7 @@ namespace Meilisearch.Tests
         [InlineData("com pl <->& ex")]
         public void QueryStringsAreEqualsForPrimaryKey(string key)
         {
-            var uri = "/indexes/myindex/documents";
+            var uri = "indexes/myindex/documents";
             var o = new { primaryKey = key };
 
             var expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
@@ -30,7 +30,7 @@ namespace Meilisearch.Tests
         [InlineData(1, 2, "attr")]
         public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
         {
-            var uri = "/indexes/myindex/documents";
+            var uri = "indexes/myindex/documents";
             var dq = new DocumentQuery { Offset = offset, Limit = limit, AttributesToRetrieve = attributesToRetrieve };
 
             var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());

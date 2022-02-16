@@ -1,18 +1,27 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Xunit;
 
 namespace Meilisearch.Tests
 {
-    public class IndexFixture : IAsyncLifetime
+    public abstract class IndexFixture : IAsyncLifetime
     {
         public IndexFixture()
         {
-            DefaultClient = new MeilisearchClient("http://localhost:7700", "masterKey");
+            DefaultClient = new MeilisearchClient(MeilisearchAddress, ApiKey);
+            var httpClient = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(MeilisearchAddress) };
+            ClientWithCustomHttpClient = new MeilisearchClient(httpClient, ApiKey);
         }
 
+        private const string ApiKey = "masterKey";
+
+        public virtual string MeilisearchAddress =>
+            throw new InvalidOperationException("Please override the MeilisearchAddress property in inhereted class.");
+
         public MeilisearchClient DefaultClient { get; private set; }
+        public MeilisearchClient ClientWithCustomHttpClient { get; private set; }
 
         public Task InitializeAsync() => Task.CompletedTask;
 
@@ -132,24 +141,6 @@ namespace Meilisearch.Tests
             {
                 await index.DeleteAsync();
             }
-        }
-
-        [CollectionDefinition("Sequential")]
-        public class IndexCollection : ICollectionFixture<IndexFixture>
-        {
-            // This class has no code, and is never created. Its purpose is simply
-            // to be the place to apply [CollectionDefinition] and all the
-            // ICollectionFixture<> interfaces.
-
-            // It makes the collections be executed sequentially because
-            // the fixture and the tests are under the same collection named "Sequential"
-
-            // Without using the fixture collection, this fixture would be called at the beginning of each
-            // test class. We could control the execution order of the test classes but we could not control
-            // the creation order of the fixture, which means the DeleteAllIndexes method would be called when
-            // it's not expected.
-
-            // cf https://xunit.net/docs/shared-context#collection-fixture
         }
     }
 }

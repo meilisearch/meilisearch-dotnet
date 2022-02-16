@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace Meilisearch
 {
+
     /// <summary>
     /// Meilisearch index to search and manage documents.
     /// </summary>
@@ -21,7 +21,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>("/tasks", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>("tasks", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -33,7 +33,7 @@ namespace Meilisearch
         /// <returns>Returns the task.</returns>
         public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TaskInfo>($"/tasks/{taskUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TaskInfo>($"tasks/{taskUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -45,7 +45,7 @@ namespace Meilisearch
         /// <returns>Returns a list of tasks of an index.</returns>
         public async Task<Result<IEnumerable<TaskInfo>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>($"/indexes/{indexUid}/tasks", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>($"indexes/{indexUid}/tasks", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -58,7 +58,7 @@ namespace Meilisearch
         /// <returns>Return the task of the index.</returns>
         public async Task<TaskInfo> GetIndexTaskAsync(string indexUid, int taskUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TaskInfo>($"/indexes/{indexUid}/tasks/{taskUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await _http.GetFromJsonAsync<TaskInfo>($"indexes/{indexUid}/tasks/{taskUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
