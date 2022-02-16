@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 using Xunit;
 
 namespace Meilisearch.Tests.ServerConfigs
@@ -8,68 +6,68 @@ namespace Meilisearch.Tests.ServerConfigs
     {
         const string CollectionFixtureName = nameof(ProxiedUriWithTrailingSlash);
         private const string MeilisearchTestAddress = "http://localhost:8080/api/";
-        public class LocalConfigFixture : IndexFixture
+        public class ConfigFixture : IndexFixture
         {
             public override string MeilisearchAddress => MeilisearchTestAddress;
         }
 
         [CollectionDefinition(CollectionFixtureName)]
-        public class LocalIndexCollection : ICollectionFixture<LocalConfigFixture>
+        public class IndexCollection : ICollectionFixture<ConfigFixture>
         {
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalDocumentTests : DocumentTests<LocalConfigFixture>
+        public class DocumentTests : DocumentTests<ConfigFixture>
         {
-            public LocalDocumentTests(LocalConfigFixture fixture) : base(fixture)
+            public DocumentTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalIndexTests : IndexTests<LocalConfigFixture>
+        public class IndexTests : IndexTests<ConfigFixture>
         {
-            public LocalIndexTests(LocalConfigFixture fixture) : base(fixture)
+            public IndexTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalKeyTests : KeyTests<LocalConfigFixture>
+        public class KeyTests : KeyTests<ConfigFixture>
         {
-            public LocalKeyTests(LocalConfigFixture fixture) : base(fixture)
+            public KeyTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalMeilisearchClientTests : MeilisearchClientTests<LocalConfigFixture>
+        public class MeilisearchClientTests : MeilisearchClientTests<ConfigFixture>
         {
-            public LocalMeilisearchClientTests(LocalConfigFixture fixture) : base(fixture)
+            public MeilisearchClientTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalSearchTests : SearchTests<LocalConfigFixture>
+        public class SearchTests : SearchTests<ConfigFixture>
         {
-            public LocalSearchTests(LocalConfigFixture fixture) : base(fixture)
+            public SearchTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalSettingsTests : SettingsTests<LocalConfigFixture>
+        public class SettingsTests : SettingsTests<ConfigFixture>
         {
-            public LocalSettingsTests(LocalConfigFixture fixture) : base(fixture)
+            public SettingsTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
 
         [Collection(CollectionFixtureName)]
-        public class LocalTaskInfoTests : TaskInfoTests<LocalConfigFixture>
+        public class TaskInfoTests : TaskInfoTests<ConfigFixture>
         {
-            public LocalTaskInfoTests(LocalConfigFixture fixture) : base(fixture)
+            public TaskInfoTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }
