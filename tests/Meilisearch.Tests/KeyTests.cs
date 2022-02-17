@@ -59,7 +59,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key(DateTime.Parse("2042-04-02T00:42:42Z"))
             {
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new string[] { ApiActions.DocumentsAdd },
                 Indexes = new string[] { "*" }
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
@@ -81,7 +81,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key(null)
             {
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new string[] { ApiActions.DocumentsAdd },
                 Indexes = new string[] { "*" }
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
@@ -99,16 +99,16 @@ namespace Meilisearch.Tests
 
         [Theory]
         [InlineData("NewDesc", null, null, null)]
-        [InlineData(null, new[] { "documents.add", "search" }, null, null)]
+        [InlineData(null, new[] { ApiActions.DocumentsAdd, ApiActions.Search }, null, null)]
         [InlineData(null, null, new[] { "TestIdx" }, null)]
         [InlineData(null, null, null, "2100-01-01")]
-        [InlineData("NewDesc", new[] { "search" }, new[] { "*" }, "2100-01-01")]
+        [InlineData("NewDesc", new[] { "search" }, new[] { ApiActions.All }, "2100-01-01")]
         public async Task UpdateOneKey(string description, string[] actions, string[] indexes, string expiresAt)
         {
             var keyOptions = new Key(null)
             {
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new string[] { ApiActions.DocumentsAdd },
                 Indexes = new string[] { "*" },
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
@@ -144,7 +144,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key(null)
             {
                 Description = "Key to delete document to all indexes.",
-                Actions = new string[] { "documents.delete" },
+                Actions = new string[] { ApiActions.DocumentsAdd },
                 Indexes = new string[] { "*" },
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
