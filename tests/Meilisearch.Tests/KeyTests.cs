@@ -56,12 +56,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKey()
         {
-            var keyOptions = new Key
+            var keyOptions = new Key(DateTime.Parse("2042-04-02T00:42:42Z"))
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
-                Indexes = new string[] { "*" },
-                ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
+                Indexes = new string[] { "*" }
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
@@ -79,12 +78,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKeyWithNullExpiresAt()
         {
-            var keyOptions = new Key
+            var keyOptions = new Key(null)
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
-                Indexes = new string[] { "*" },
-                ExpiresAt = null,
+                Indexes = new string[] { "*" }
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
@@ -107,12 +105,11 @@ namespace Meilisearch.Tests
         [InlineData("NewDesc", new[] { "search" }, new[] { "*" }, "2100-01-01")]
         public async Task UpdateOneKey(string description, string[] actions, string[] indexes, string expiresAt)
         {
-            var keyOptions = new Key
+            var keyOptions = new Key(null)
             {
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = null,
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
@@ -122,11 +119,11 @@ namespace Meilisearch.Tests
             keyOptions.Indexes = indexes;
             if (expiresAt != null)
             {
-                keyOptions.ExpiresAt = DateTime.Parse(expiresAt);
+                keyOptions.SetExpiresAt(DateTime.Parse(expiresAt));
             }
             else
             {
-                keyOptions.ExpiresAt = null;
+                keyOptions.SetExpiresAt(null);
             }
 
             var updatedKey = await _client.UpdateKeyAsync(createdKeyUid, keyOptions);
@@ -144,12 +141,11 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DeleteOneKey()
         {
-            var keyOptions = new Key
+            var keyOptions = new Key(null)
             {
                 Description = "Key to delete document to all indexes.",
                 Actions = new string[] { "documents.delete" },
                 Indexes = new string[] { "*" },
-                ExpiresAt = null,
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var createdKeyUid = createdKey.KeyUid;
