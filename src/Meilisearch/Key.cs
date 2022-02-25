@@ -10,7 +10,7 @@ namespace Meilisearch
     public class Key
     {
         /// <summary>
-        /// Create a key whith an expiry date. Pass null if it's not expiring.
+        /// Create a key with an expiry date. Pass null if it's not expiring.
         /// </summary>
         /// <param name="expiresAt">Expiry date.</param>
         public Key(DateTime? expiresAt)
