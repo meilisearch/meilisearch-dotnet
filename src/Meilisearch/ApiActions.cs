@@ -6,7 +6,7 @@ namespace Meilisearch
     public static class ApiActions
     {
         /// <summary>
-        /// Authorize all actions
+        /// Authorize all actions.
         /// </summary>
         public const string All = "*";
 
