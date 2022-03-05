@@ -18,6 +18,7 @@ namespace Meilisearch
     {
         private readonly HttpClient _http;
         private TaskEndpoint _taskEndpoint;
+        public string ApiKey { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchClient"/> class.
@@ -31,6 +32,7 @@ namespace Meilisearch
             _http.AddApiKeyToHeader(apiKey);
             _http.AddDefaultUserAgent();
             _taskEndpoint = null;
+            ApiKey = apiKey;
         }
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Meilisearch
             _http = client;
             _http.AddApiKeyToHeader(apiKey);
             _http.AddDefaultUserAgent();
+            ApiKey = apiKey;
         }
 
         /// <summary>
