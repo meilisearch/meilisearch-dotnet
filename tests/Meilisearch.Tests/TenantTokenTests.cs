@@ -89,5 +89,73 @@ namespace Meilisearch.Tests
             Assert.Equal(claims["apiKeyPrefix"], _key.Substring(0, 8));
             Assert.Equal(claims["searchRules"], _searchRules.ToClaim());
         }
+
+        [Fact]
+        public void ClientDecodesSuccessfullyUsingApiKeyFromInstance()
+        {
+            var token = _client.GenerateTenantToken(_searchRules);
+
+            _builder.WithSecret(_client.ApiKey).Decode(token);
+        }
+
+        [Fact]
+        public void ClientDecodesSuccessfullyUsingApiKeyFromArgument()
+        {
+            var token = _client.GenerateTenantToken(_searchRules, apiKey: _key);
+
+            _builder.WithSecret(_key).Decode(token);
+        }
+
+        [Fact]
+        public void ClientThrowsIfNoKeyIsAvailable()
+        {
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress);
+
+            Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
+                () => customClient.GenerateTenantToken(_searchRules)
+            );
+        }
+
+        [Theory]
+        [MemberData(nameof(PossibleSearchRules))]
+        public async void SearchesSuccessfullyWithTheNewToken(dynamic data)
+        {
+            var keyOptions = new Key
+            {
+                Description = "Key generate a tenant token",
+                Actions = new string[] { "*" },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var admClient = new MeilisearchClient(_fixture.MeilisearchAddress, createdKey.KeyUid);
+            var task = await admClient.Index(_indexName).UpdateFilterableAttributesAsync(new string[] { "tag", "book_id" });
+            await admClient.Index(_indexName).WaitForTaskAsync(task.Uid);
+
+            var token = admClient.GenerateTenantToken(new TenantTokenRules(data));
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress, token);
+
+            await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
+        }
+
+        public static IEnumerable<object[]> PossibleSearchRules()
+        {
+            // {'*': {}}
+            yield return new object[] { new Dictionary<string, object> { { "*", new Dictionary<string, object> { } } } };
+            // {'books': {}}
+            yield return new object[] { new Dictionary<string, object> { { "books", new Dictionary<string, object> { } } } };
+            // {'*': null}
+            yield return new object[] { new Dictionary<string, object> { { "*", null } } };
+            // {'books': null}
+            yield return new object[] { new Dictionary<string, object> { { "books", null } } };
+            // ['*']
+            yield return new object[] { new string[] { "*" } };
+            // ['books']
+            yield return new object[] { new string[] { "books" } };
+            // {'*': {"filter": 'tag = Tale'}}
+            yield return new object[] { new Dictionary<string, object> { { "*", new Dictionary<string, object> { { "filter", "tag = Tale" } } } } };
+            // {'books': {"filter": 'tag = Tale'}}
+            yield return new object[] { new Dictionary<string, object> { { "books", new Dictionary<string, object> { { "filter", "tag = Tale" } } } } };
+        }
     }
 }

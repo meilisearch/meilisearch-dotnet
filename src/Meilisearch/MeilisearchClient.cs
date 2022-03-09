@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -328,6 +329,20 @@ namespace Meilisearch
             var responseMessage =
                 await _http.DeleteAsync($"keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        /// <summary>
+        /// Generate a tenant token to be used during search.
+        /// </summary>
+        /// <param name="searchRules">Object with the rules to be inject in the search call.</param>
+        /// <param name="apiKey">API Key which signs the generated token.</param>
+        /// <param name="expiresAt">Date to express how long the generated token will last. If null the token will last forever.</param>
+        /// <exception cref="MeilisearchTenantTokenApiKeyInvalid">When there is no <paramref name="apiKey"/> defined in the client or as argument.</exception>
+        /// <exception cref="MeilisearchTenantTokenExpired">When the sent <paramref name="expiresAt"/> param is in the past</exception>
+        /// <returns>Responds with the generated token.</returns>
+        public string GenerateTenantToken(TenantTokenRules searchRules, string apiKey = null, DateTime? expiresAt = null)
+        {
+            return TenantToken.GenerateToken(searchRules, apiKey ?? ApiKey, expiresAt);
         }
 
         /// <summary>
