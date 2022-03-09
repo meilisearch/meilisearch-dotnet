@@ -260,3 +260,18 @@ security_guide_list_keys_1: |-
 security_guide_delete_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
   client.DeleteKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4")
+tenant_token_guide_generate_sdk_1: |-
+  var apiKey = "B5KdX2MY2jV6EXfUs6scSfmC...";
+  var expiresAt = new DateTime(2025, 12, 20);
+  var searchRules = new TenantTokenRules(new Dictionary<string, object> {
+    { "patient_medical_records", new Dictionary<string, object> { { "filter", "user_id = 1" } } }
+  });
+
+  token = client.GenerateTenantToken(
+    searchRules,
+    apiKey: apiKey // optional,
+    expiresAt: expiresAt // optional
+  );
+tenant_token_guide_search_sdk_1: |-
+  frontEndClient = new MeilisearchClient("http://127.0.0.1:7700", token);
+  SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
