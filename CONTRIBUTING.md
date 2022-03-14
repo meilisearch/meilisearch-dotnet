@@ -34,7 +34,7 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 
 ```bash
 curl -L https://install.meilisearch.com | sh # download Meilisearch
-./meilisearch --master-key=masterKey --no-analytics=true # run Meilisearch
+./meilisearch --master-key=masterKey --no-analytics # run Meilisearch
 dotnet restore
 dotnet test
 ```
