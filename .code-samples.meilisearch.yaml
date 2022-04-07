@@ -249,6 +249,7 @@ landing_getting_started_1: |-
       new Movie { Id = "5", Title = "Moana", ", "Action" },
       new Movie { Id = "6", Title = "Philadelphia" }
   };
+
   var task = await client.Index("movies").AddDocumentsAsync<Movie>(documents);
 post_dump_1: |-
 get_dump_status_1: |-
