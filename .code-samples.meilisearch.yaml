@@ -72,9 +72,6 @@ filtering_guide_2: |-
   \"Tim Burton\" OR director = \"Christopher Nolan\")" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
 filtering_guide_3: |-
-  SearchQuery filters = new SearchQuery() { Filter = "director = \"Jordan Peele\"" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("horror", filters);
-filtering_guide_4: |-
   SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Planet of the Apes", filters);
 search_parameter_guide_query_1: |-
@@ -83,8 +80,6 @@ search_parameter_guide_limit_1: |-
 search_parameter_guide_retrieve_1: |-
 search_parameter_guide_crop_1: |-
 search_parameter_guide_highlight_1: |-
-search_parameter_guide_filter_1: |-
-search_parameter_guide_filter_2: |-
 search_parameter_guide_matches_1: |-
 settings_guide_synonyms_1: |-
 settings_guide_stop_words_1: |-
@@ -93,8 +88,6 @@ settings_guide_distinct_1: |-
 settings_guide_searchable_1: |-
 settings_guide_displayed_1: |-
 documents_guide_add_movie_1: |-
-search_guide_1: |-
-search_guide_2: |-
 getting_started_add_documents_md: |-
   ```bash
   dotnet add package MeiliSearch
@@ -169,9 +162,7 @@ faceted_search_facets_distribution_1: |-
   };
 
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
-faceted_search_walkthrough_filterable_attributes_1: |-
 faceted_search_walkthrough_filter_1: |-
-faceted_search_walkthrough_facets_distribution_1: |-
 add_movies_json_1: |-
 post_dump_1: |-
 get_dump_status_1: |-
