@@ -215,6 +215,7 @@ getting_started_configure_settings: |-
   await client.Index("meteorites").UpdateSettingsAsync(newSettings);
 getting_started_communicating_with_a_protected_instance: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
+  
   await client.Index("Movies").SearchAsync<Movie>("");
 faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
