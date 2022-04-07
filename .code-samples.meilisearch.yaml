@@ -237,6 +237,18 @@ faceted_search_facets_distribution_1: |-
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
 faceted_search_walkthrough_filter_1: |-
 add_movies_json_1: |-
+landing_getting_started_1: |-
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+
+  var documents = new Movie[] {
+      new Movie { Id = "1", Title = "Carol" },
+      new Movie { Id = "2", Title = "Wonder Woman" },
+      new Movie { Id = "3", Title = "Life of Pi" },
+      new Movie { Id = "4", Title = "Mad Max: Fury Road" },
+      new Movie { Id = "5", Title = "Moana", ", "Action" },
+      new Movie { Id = "6", Title = "Philadelphia" }
+  };
+  var task = await client.Index("movies").AddDocumentsAsync<Movie>(documents);
 post_dump_1: |-
 get_dump_status_1: |-
 phrase_search_1: |-
