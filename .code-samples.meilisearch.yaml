@@ -89,6 +89,12 @@ settings_guide_ranking_rules_1: |-
 settings_guide_distinct_1: |-
 settings_guide_searchable_1: |-
 settings_guide_displayed_1: |-
+settings_guide_sortable_1: |-
+  var newSettings = new Settings
+  {
+      SortableAttributes = new string[] { "price", "author" },
+  };
+  await client.Index("meteorites").UpdateSettingsAsync(newSettings);
 documents_guide_add_movie_1: |-
 getting_started_add_documents_md: |-
   ```bash
