@@ -188,12 +188,12 @@ geosearch_guide_filter_settings_1: |-
   List<string> attributes = new() { "_geo" };
   TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 geosearch_guide_filter_usage_1: |-
-  SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.4628328, 9.1076931, 2000)" };
+  SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.472735, 9.184019, 2000)" };
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
 geosearch_guide_filter_usage_2: |-
   SearchQuery filters = new SearchQuery()
   {
-      Filter = new string[] { "_geoRadius(45.4628328, 9.1076931, 2000) AND type = pizza" }
+      Filter = new string[] { "_geoRadius(45.472735, 9.184019, 2000) AND type = pizza" }
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
@@ -203,7 +203,7 @@ geosearch_guide_sort_settings_1: |-
 geosearch_guide_sort_usage_1: |-
   SearchQuery filters = new SearchQuery()
   {
-      Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }
+      Sort = new string[] { "_geoPoint(48.8561446,2.2978204):asc" }
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
@@ -211,7 +211,7 @@ geosearch_guide_sort_usage_2: |-
   SearchQuery filters = new SearchQuery()
   {
       Sort = new string[] {
-            "_geoPoint(48.8583701,2.2922926):asc",
+            "_geoPoint(48.8561446,2.2978204):asc",
             "rating:desc"
       }
   };
