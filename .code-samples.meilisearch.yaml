@@ -147,6 +147,69 @@ getting_started_search_md: |-
   }
   ```
   [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
+getting_started_add_meteorites: |-
+  import json
+
+  json_file = open('meteorites.json')
+  meteorites = json.load(json_file)
+  client.index('meteorites').add_documents(meteorites)
+getting_started_update_rankingRules: |-
+  await client.Index("movies").UpdateRankingRulesAsync(new string[] {
+    "exactness",
+    "words",
+    "typo",
+    "proximity",
+    "attribute",
+    "sort",
+    "release_date:asc",
+    "rank:desc"
+  });
+getting_started_update_displayedAttributes: |-
+  await client.Index("movies").UpdateDisplayedAttributesAsync(new string[] {
+    "title",
+    "overview",
+    "poster"
+  });
+getting_started_update_searchableAttributes: |-
+  await client.Index("movies").UpdateSearchableAttributesAsync(new string[] {
+    "title"
+  });
+getting_started_update_stop_words: |-
+  await client.Index("movies").UpdateStopWordsAsync(new string[] {
+    "the"
+  });
+getting_started_synonyms: |-
+  var newSynonyms = new Dictionary<string, IEnumerable<string>>
+  {
+      { "winnie", new string[] { "piglet" } },
+      { "piglet", new string[] { "winnie" } },
+  };
+  await client.Index("movies").UpdateSynonymsAsync(newSynonyms);
+getting_started_filtering: |-
+  SearchQuery filter = new SearchQuery() { Filter = "mass < 200" };
+  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+getting_started_geoRadius: |-
+  SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
+   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+getting_started_geoPoint: |-
+  SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
+  await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
+getting_started_sorting: |-
+  SearchQuery searchQuery); = new SearchQuery() {
+    Sort = new string[] { "mass:asc" },
+    Filter = "mass < 200",
+  };
+  await client.Index("meteorites").SearchAsync<Meteorite>("", searchQuery);
+getting_started_configure_settings: |-
+  var newSettings = new Settings
+  {
+      FilterableAttributes = new string[] { "mass", "_geo" },
+      SortableAttributes = new string[] { "mass", "_geo" },
+  };
+  await client.Index("meteorites").UpdateSettingsAsync(newSettings);
+getting_started_communicating_with_a_protected_instance: |-
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
+  await client.Index("Movies").SearchAsync<Movie>("");
 faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
   SearchQuery filters = new SearchQuery()
