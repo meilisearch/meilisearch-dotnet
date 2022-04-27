@@ -16,6 +16,6 @@
 
     <ItemGroup>
       <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-      <PackageReference Include="JWT" Version="8.9.0" />
+      <PackageReference Include="JWT" Version="9.0.0" />
     </ItemGroup>
 </Project>
