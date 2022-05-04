@@ -134,6 +134,66 @@ namespace Meilisearch.Tests
             return index;
         }
 
+        public async Task<Index> SetUpIndexForNestedSearch(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+            var movies = new[]
+            {
+                new MovieWithInfo
+                {
+                    Id = "10",
+                    Name = "Gladiator",
+                    Info = new MovieInfo { Comment = "a movie about old times", ReviewNb = 700 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "11",
+                    Name = "Interstellar",
+                    Info = new MovieInfo { Comment = "the best movie", ReviewNb = 1000 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "12",
+                    Name = "Star Wars",
+                    Info = new MovieInfo { Comment = "a lot of wars in the stars", ReviewNb = 900 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "13",
+                    Name = "Harry Potter",
+                    Info = new MovieInfo { Comment = "a movie about a wizard boy", ReviewNb = 900 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "14",
+                    Name = "Iron Man",
+                    Info = new MovieInfo { Comment = "a movie about a rich man", ReviewNb = 800 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "15",
+                    Name = "Spider-Man",
+                    Info = new MovieInfo { Comment = "the spider bit the boy", ReviewNb = 900 }
+                },
+                new MovieWithInfo
+                {
+                    Id = "16",
+                    Name = "Amélie Poulain",
+                    Info = new MovieInfo { Comment = "talks about hapiness", ReviewNb = 800 }
+                },
+            };
+            var task = await index.AddDocumentsAsync(movies);
+
+            // Check the documents have been added
+            var finishedTask = await index.WaitForTaskAsync(task.Uid);
+            if (finishedTask.Status != "succeeded")
+            {
+                throw new Exception("The documents were not added during SetUpIndexForNestedSearch. Impossible to run the tests.");
+            }
+
+            return index;
+        }
+
         public async Task DeleteAllIndexes()
         {
             var indexes = await DefaultClient.GetAllIndexesAsync();
