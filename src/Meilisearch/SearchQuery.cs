@@ -57,6 +57,24 @@ namespace Meilisearch
         public IEnumerable<string> AttributesToHighlight { get; set; }
 
         /// <summary>
+        /// Gets or sets the crop marker to apply before and/or after cropped part selected within an attribute defined in `attributesToCrop` parameter.
+        /// </summary>
+        [JsonPropertyName("cropMarker")]
+        public string CropMarker { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tag to put before the highlighted query terms.
+        /// </summary>
+        [JsonPropertyName("highlightPreTag")]
+        public string HighlightPreTag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tag to put after the highlighted query terms.
+        /// </summary>
+        [JsonPropertyName("highlightPostTag")]
+        public string HighlightPostTag { get; set; }
+
+        /// <summary>
         /// Gets or sets the facets distribution for the query.
         /// </summary>
         [JsonPropertyName("facetsDistribution")]

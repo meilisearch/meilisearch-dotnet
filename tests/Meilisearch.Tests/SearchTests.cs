@@ -311,5 +311,46 @@ namespace Meilisearch.Tests
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("14", movies.Hits.First().Id);
         }
+
+        [Fact]
+        public async Task CustomSearchWithCroppingParameters()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" } }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("…Man", movies.Hits.First()._Formatted.Name);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithCropMarker()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" }, CropMarker = "[…] " }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("[…] Man", movies.Hits.First()._Formatted.Name);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithCustomHighlightTags()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery
+                {
+                    AttributesToHighlight = new string[] { "*" },
+                    HighlightPreTag = "<mark>",
+                    HighlightPostTag = "</mark>"
+                }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("Iron <mark>Man</mark>", movies.Hits.First()._Formatted.Name);
+        }
     }
 }
