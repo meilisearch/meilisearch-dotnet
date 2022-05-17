@@ -57,7 +57,7 @@ namespace Meilisearch
         public IEnumerable<string> SortableAttributes { get; set; }
 
         /// <summary>
-        /// Gets or sets the typo tolerance configuration attributes.
+        /// Gets or sets the typo tolerance attributes.
         /// </summary>
         [JsonPropertyName("typoTolerance")]
         public TypoTolerance TypoTolerance { get; set; }

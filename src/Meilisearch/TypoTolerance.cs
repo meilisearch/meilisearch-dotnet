@@ -21,13 +21,13 @@ namespace Meilisearch
         public IEnumerable<string> DisableOnAttributes { get; set; }
 
         /// <summary>
-        /// Disable the typo tolerance feature for a set of query terms given during a search query.
+        /// Disable the typo tolerance feature for a given set of terms in a search query.
         /// </summary>
         [JsonPropertyName("disableOnWords")]
         public IEnumerable<string> DisableOnWords { get; set; }
 
         /// <summary>
-        /// Customize the minimum size for a word to tolerate typos
+        /// Customize the minimum word size to tolerate typos.
         /// </summary>
         [JsonPropertyName("minWordSizeForTypos")]
         public TypoSize MinWordSizeForTypos { get; set; }
@@ -35,13 +35,13 @@ namespace Meilisearch
         public class TypoSize
         {
             /// <summary>
-            /// Customize the minimum size for a word to tolerate 1 typo.
+            /// Customize the minimum word size to tolerate 1 typo.
             /// </summary>
             [JsonPropertyName("oneTypo")]
             public int? OneTypo { get; set; }
 
             /// <summary>
-            /// Customize the minimum size for a word to tolerate 2 typos.
+            /// Customize the minimum word size to tolerate 2 typos.
             /// </summary>
             [JsonPropertyName("twoTypos")]
             public int? TwoTypos { get; set; }
