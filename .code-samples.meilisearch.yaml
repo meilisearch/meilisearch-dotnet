@@ -373,3 +373,53 @@ tenant_token_guide_generate_sdk_1: |-
 tenant_token_guide_search_sdk_1: |-
   frontEndClient = new MeilisearchClient("http://127.0.0.1:7700", token);
   SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
+get_typo_tolerance_1:
+  await client.Index("books").GetTypoTolerance();
+update_typo_tolerance_1: |-
+  var typoTolerance = new TypoTolerance {
+    DisableOnAttributes = new string[] { "title" },
+    MinWordSizeTypos = new TypoTolerance.TypoSize {
+        OneTypo = 4,
+        TwoTypos = 10
+    }
+  };
+
+  await client.Index("books").UpdateTypoTolerance(typoTolerance);
+reset_typo_tolerance_1: |-
+  await client.Index("books").ResetTypoTolerance();
+typo_tolerance_guide_1: |-
+  var typoTolerance = new TypoTolerance {
+    Enabled = false
+  };
+
+  await client.Index("mvoies").UpdateTypoTolerance(typoTolerance);
+typo_tolerance_guide_2: |-
+  var typoTolerance = new TypoTolerance {
+    DisableOnAttributes = new string[] { "title" }
+  };
+
+  await client.Index("mvoies").UpdateTypoTolerance(typoTolerance);
+typo_tolerance_guide_3: |-
+  var typoTolerance = new TypoTolerance {
+    DisableOnWords = new string[] { "shrek" }
+  };
+
+  await client.Index("mvoies").UpdateTypoTolerance(typoTolerance);
+typo_tolerance_guide_4: |-
+  var typoTolerance = new TypoTolerance {
+    MinWordSizeTypos = new TypoTolerance.TypoSize {
+      OneTypo = 4,
+      TwoTypos = 10
+    }
+  };
+
+  await client.Index("mvoies").UpdateTypoTolerance(typoTolerance);
+settings_guide_typo_tolerance_1: |-
+  var typoTolerance = new TypoTolerance {
+    DisableOnAttributes = new string[] { "title" },
+    MinWordSizeTypos = new TypoTolerance.TypoSize {
+      TwoTypos = 12
+    }
+  };
+
+  await client.Index("mvoies").UpdateTypoTolerance(typoTolerance);
