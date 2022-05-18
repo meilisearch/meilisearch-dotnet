@@ -6,7 +6,7 @@ namespace Meilisearch
 {
     public partial class Index
     {
-/// <summary>
+        /// <summary>
         /// Gets the typo tolerance setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
