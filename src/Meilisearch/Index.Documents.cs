@@ -11,7 +11,7 @@ namespace Meilisearch
 {
     public partial class Index
     {
-/// <summary>
+        /// <summary>
         /// Add documents.
         /// </summary>
         /// <param name="documents">Documents to add.</param>

@@ -7,7 +7,7 @@ namespace Meilisearch
 {
     public partial class Index
     {
-                /// <summary>
+        /// <summary>
         /// Gets the displayed attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -118,7 +118,7 @@ namespace Meilisearch
                 .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
-        
+
         /// <summary>
         /// Gets the searchable attributes setting.
         /// </summary>

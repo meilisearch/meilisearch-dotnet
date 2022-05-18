@@ -7,7 +7,7 @@ namespace Meilisearch
 {
     public partial class Index
     {
-/// <summary>
+        /// <summary>
         /// Gets the stop words setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
