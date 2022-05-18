@@ -71,5 +71,13 @@ namespace Meilisearch.Tests.ServerConfigs
             {
             }
         }
+
+        [Collection(CollectionFixtureName)]
+        public class TenantTokenTests : TenantTokenTests<ConfigFixture>
+        {
+            public TenantTokenTests(ConfigFixture fixture) : base(fixture)
+            {
+            }
+        }
     }
 }

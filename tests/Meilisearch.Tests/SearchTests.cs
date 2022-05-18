@@ -10,6 +10,7 @@ namespace Meilisearch.Tests
     public abstract class SearchTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private Index _basicIndex;
+        private Index _nestedIndex;
         private Index _indexForFaceting;
         private Index _indexWithIntId;
 
@@ -26,6 +27,7 @@ namespace Meilisearch.Tests
             _basicIndex = await _fixture.SetUpBasicIndex("BasicIndex-SearchTests");
             _indexForFaceting = await _fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
             _indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
+            _nestedIndex = await _fixture.SetUpIndexForNestedSearch("IndexForNestedDocs-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -310,6 +312,89 @@ namespace Meilisearch.Tests
             movies.FacetsDistribution.Should().BeNull();
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("14", movies.Hits.First().Id);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithCroppingParameters()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" } }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("…Man", movies.Hits.First()._Formatted.Name);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithCropMarker()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" }, CropMarker = "[…] " }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("[…] Man", movies.Hits.First()._Formatted.Name);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithCustomHighlightTags()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "man",
+                new SearchQuery
+                {
+                    AttributesToHighlight = new string[] { "*" },
+                    HighlightPreTag = "<mark>",
+                    HighlightPostTag = "</mark>"
+                }
+            );
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("Iron <mark>Man</mark>", movies.Hits.First()._Formatted.Name);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithinNestedDocuments()
+        {
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("wizard");
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("Harry Potter", movies.Hits.First().Name);
+            Assert.Equal("13", movies.Hits.First().Id);
+            Assert.Equal("a movie about a wizard boy", movies.Hits.First().Info.Comment);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithinNestedDocumentsWithSearchableAttributesSettings()
+        {
+            var task = await _nestedIndex.UpdateSearchableAttributesAsync(new string[] { "name", "info.comment" });
+            await _nestedIndex.WaitForTaskAsync(task.Uid);
+
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("rich");
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("Iron Man", movies.Hits.First().Name);
+            Assert.Equal("14", movies.Hits.First().Id);
+            Assert.Equal("a movie about a rich man", movies.Hits.First().Info.Comment);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithinNestedDocumentsWithSearchableAndSortableAttributesSettings()
+        {
+            var searchTask = await _nestedIndex.UpdateSearchableAttributesAsync(new string[] { "name", "info.comment" });
+            await _nestedIndex.WaitForTaskAsync(searchTask.Uid);
+            var sortTask = await _nestedIndex.UpdateSortableAttributesAsync(new string[] { "info.reviewNb" });
+            await _nestedIndex.WaitForTaskAsync(sortTask.Uid);
+
+            var query = new SearchQuery { Sort = new string[] { "info.reviewNb:desc" } };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("", query);
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Equal("Interstellar", movies.Hits.First().Name);
+            Assert.Equal("11", movies.Hits.First().Id);
+            Assert.Equal(1000, movies.Hits.First().Info.ReviewNb);
         }
     }
 }
