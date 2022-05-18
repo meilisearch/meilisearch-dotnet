@@ -13,22 +13,6 @@ namespace Meilisearch.Extensions
     public static class HttpExtensions
     {
         /// <summary>
-        /// Sends JSON payload using POST without "charset-utf-8" as Content-Type.
-        /// </summary>
-        /// <param name="client">HttpClient.</param>
-        /// <param name="uri">Endpoint.</param>
-        /// <param name="body">Body sent.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of the body to send.</typeparam>
-        /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
-        {
-            var payload = PrepareJsonPayload(body);
-
-            return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Sends JSON payload using POST without "charset-utf-8" as Content-Type and using JSON serializer options.
         /// </summary>
         /// <param name="client">HttpClient.</param>
@@ -43,22 +27,6 @@ namespace Meilisearch.Extensions
             var payload = PrepareJsonPayload(body, options);
 
             return await client.PostAsync(uri, payload, cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Sends JSON payload using PUT without "charset-utf-8" as Content-Type.
-        /// </summary>
-        /// <param name="client">HttpClient.</param>
-        /// <param name="uri">Endpoint.</param>
-        /// <param name="body">Body sent.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type of the body to send.</typeparam>
-        /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
-        {
-            var payload = PrepareJsonPayload(body);
-
-            return await client.PutAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

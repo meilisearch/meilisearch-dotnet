@@ -28,7 +28,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetAllTaskInfo()
         {
-            await _index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
+            await _index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1" } });
             var taskResponse = await _index.GetTasksAsync();
             var tasks = taskResponse.Results;
             tasks.Count().Should().BeGreaterOrEqualTo(1);
@@ -37,7 +37,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetOneTaskInfo()
         {
-            var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "2" } });
+            var task = await _index.AddDocumentsJsonAsync(new[] { new Movie { Id = "2" } });
             var fetchedTask = await _index.GetTaskAsync(task.Uid);
             fetchedTask.Should().NotBeNull();
             fetchedTask.Uid.Should().BeGreaterOrEqualTo(0);
@@ -47,7 +47,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task DefaultWaitForTask()
         {
-            var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
+            var task = await _index.AddDocumentsJsonAsync(new[] { new Movie { Id = "3" } });
             var finishedTask = await _index.WaitForTaskAsync(task.Uid);
             Assert.Equal(finishedTask.Uid, task.Uid);
             Assert.Equal("succeeded", finishedTask.Status);
@@ -56,7 +56,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomWaitForTask()
         {
-            var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
+            var task = await _index.AddDocumentsJsonAsync(new[] { new Movie { Id = "4" } });
             var finishedTask = await _index.WaitForTaskAsync(task.Uid, 10000.0, 20);
             Assert.Equal(finishedTask.Uid, task.Uid);
             Assert.Equal("succeeded", finishedTask.Status);
@@ -65,7 +65,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task WaitForTaskWithException()
         {
-            var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
+            var task = await _index.AddDocumentsJsonAsync(new[] { new Movie { Id = "5" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => _index.WaitForTaskAsync(task.Uid, 0.0, 20));
         }
     }

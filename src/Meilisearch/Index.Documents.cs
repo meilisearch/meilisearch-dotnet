@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Meilisearch.Extensions;
+using Meilisearch.HttpContents;
 
 namespace Meilisearch
 {
@@ -19,9 +19,8 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> AddDocumentsJsonAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage responseMessage;
             var uri = $"indexes/{Uid}/documents";
 
             if (primaryKey != default)
@@ -29,7 +28,8 @@ namespace Meilisearch
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
-            responseMessage = await _http.PostJsonCustomAsync(uri, documents, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var content = new JsonHttpContent(documents);
+            var responseMessage = await _http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -42,12 +42,12 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
-        public async Task<IEnumerable<TaskInfo>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TaskInfo>> AddDocumentsJsonInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetChunks(batchSize))
             {
-                tasks.Add(await AddDocumentsAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
+                tasks.Add(await AddDocumentsJsonAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
             return tasks;
@@ -61,9 +61,8 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
-        public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> UpdateDocumentsJsonAsync<T>(IEnumerable<T> documents, string primaryKey = default, CancellationToken cancellationToken = default)
         {
-            HttpResponseMessage responseMessage;
             var uri = $"indexes/{Uid}/documents";
 
             if (primaryKey != default)
@@ -71,8 +70,8 @@ namespace Meilisearch
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
-            responseMessage = await _http.PutJsonCustomAsync(uri, documents, cancellationToken).ConfigureAwait(false);
-
+            var content = new JsonHttpContent(documents);
+            var responseMessage = await _http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
@@ -85,12 +84,12 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
-        public async Task<IEnumerable<TaskInfo>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TaskInfo>> UpdateDocumentsJsonInBatchesAsync<T>(IEnumerable<T> documents, int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetChunks(batchSize))
             {
-                tasks.Add(await UpdateDocumentsAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
+                tasks.Add(await UpdateDocumentsJsonAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
             return tasks;

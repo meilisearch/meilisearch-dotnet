@@ -133,7 +133,7 @@ getting_started_add_documents_md: |-
               var movies = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
 
               var index = client.Index("movies");
-              await index.AddDocumentsAsync<Movie>(movies);
+              await index.AddDocumentsJsonAsync<Movie>(movies);
           }
       }
   }
@@ -164,7 +164,7 @@ getting_started_add_meteorites: |-
   var meteorites = JsonSerializer.Deserialize<IEnumerable<Meteorite>>(jsonString, options);
 
   var index = client.Index("meteorites");
-  await index.AddDocumentsAsync<Meteorite>(meteorites);
+  await index.AddDocumentsJsonAsync<Meteorite>(meteorites);
 getting_started_update_rankingRules: |-
   await client.Index("movies").UpdateRankingRulesAsync(new string[] {
     "exactness",
@@ -256,7 +256,7 @@ landing_getting_started_1: |-
       new Movie { Id = "6", Title = "Philadelphia" }
   };
 
-  var task = await client.Index("movies").AddDocumentsAsync<Movie>(documents);
+  var task = await client.Index("movies").AddDocumentsJsonAsync<Movie>(documents);
 post_dump_1: |-
 get_dump_status_1: |-
 phrase_search_1: |-
@@ -304,7 +304,7 @@ geosearch_guide_sort_usage_2: |-
 document_guide_create_index_primary_key: |-
   TaskInfo task = await client.CreateIndexAsync("movies", "reference_number");
 document_guide_add_document_primary_key: |-
-  await index.AddDocumentsAsync(
+  await index.AddDocumentsJsonAsync(
     new[] {
         new Movie {
             ReferenceNumber: 287947,

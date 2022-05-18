@@ -111,7 +111,7 @@ namespace GettingStarted
             };
 
             // If the index 'movies' does not exist, Meilisearch creates it when you first add the documents.
-            var task = await index.AddDocumentsAsync<Movie>(documents); // # => { "uid": 0 }
+            var task = await index.AddDocumentsJsonAsync<Movie>(documents); // # => { "uid": 0 }
         }
     }
 }
@@ -222,8 +222,8 @@ var index = await client.GetIndexAsync("movies");
 #### Add or Update Documents <!-- omit in toc -->
 
 ```c#
-var task = await index.AddDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
-var task = await index.UpdateDocumentsAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var task = await index.AddDocumentsJsonAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
+var task = await index.UpdateDocumentsJsonAsync(new Movie[] { new Movie { Id = "1", Title = "Carol" } } );
 ```
 
 The returned `task` is a `TaskInfo` that can access to `Uid` to get the status of the task.

@@ -54,7 +54,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
                 new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
             };
-            var task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsJsonAsync(movies);
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
@@ -79,7 +79,7 @@ namespace Meilisearch.Tests
                 new MovieWithIntId { Id = 15, Name = "Spider-Man", Genre = "Action" },
                 new MovieWithIntId { Id = 16, Name = "Amélie Poulain", Genre = "French movie" },
             };
-            var task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsJsonAsync(movies);
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
@@ -108,7 +108,7 @@ namespace Meilisearch.Tests
                 new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
                 new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
             };
-            var task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsJsonAsync(movies);
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
@@ -182,7 +182,7 @@ namespace Meilisearch.Tests
                     Info = new MovieInfo { Comment = "talks about hapiness", ReviewNb = 800 }
                 },
             };
-            var task = await index.AddDocumentsAsync(movies);
+            var task = await index.AddDocumentsJsonAsync(movies);
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);

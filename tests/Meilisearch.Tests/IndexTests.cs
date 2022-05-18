@@ -66,7 +66,7 @@ namespace Meilisearch.Tests
             index.Uid.Should().Be(indexUid);
             index.PrimaryKey.Should().BeNull();
 
-            var document = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            var document = await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             document.Uid.Should().BeGreaterOrEqualTo(0);
         }
 

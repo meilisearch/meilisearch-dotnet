@@ -51,7 +51,7 @@ namespace Meilisearch.Tests
             await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
 
             var index = _defaultClient.Index(indexUid);
-            task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
+            task = await index.AddDocumentsJsonAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
             task.Uid.Should().BeGreaterOrEqualTo(0);
             await index.WaitForTaskAsync(task.Uid);
 
