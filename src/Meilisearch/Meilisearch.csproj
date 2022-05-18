@@ -18,4 +18,31 @@
       <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
       <PackageReference Include="JWT" Version="9.0.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Index.Documents.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.Tasks.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.StopWords.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.Attributes.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.Synonyms.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.RankingRules.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.Settings.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Index.TypoTolerance.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
