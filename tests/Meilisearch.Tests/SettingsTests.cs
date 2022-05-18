@@ -38,6 +38,17 @@ namespace Meilisearch.Tests
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
                 FilterableAttributes = new string[] { },
                 SortableAttributes = new string[] { },
+                TypoTolerance = new TypoTolerance
+                {
+                    Enabled = true,
+                    DisableOnAttributes = new string[] { },
+                    DisableOnWords = new string[] { },
+                    MinWordSizeForTypos = new TypoTolerance.TypoSize
+                    {
+                        OneTypo = 5,
+                        TwoTypos = 9
+                    }
+                }
             };
         }
 
@@ -117,7 +128,7 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 DisplayedAttributes = new string[] { "name" },
                 RankingRules = new string[] { "typo" },
-                FilterableAttributes = new string[] { "genre" },
+                FilterableAttributes = new string[] { "genre" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -335,6 +346,98 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetSynonymsAsync, _defaultSettings.Synonyms);
         }
 
+        [Fact]
+        public async Task GetTypoTolerance()
+        {
+            await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
+        }
+
+        [Fact]
+        public async Task UpdateTypoTolerance()
+        {
+            var newTypoTolerance = new TypoTolerance
+            {
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12
+                }
+            };
+
+            var returnedTypoTolerance = new TypoTolerance
+            {
+                DisableOnAttributes = new string[] { },
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12,
+                    OneTypo = 5
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
+        }
+
+        [Fact]
+        public async Task UpdateTypoTolerancePartially()
+        {
+            var newTypoTolerance = new TypoTolerance
+            {
+                DisableOnWords = new string[] { "harry", "potter" },
+            };
+
+            var otherUpdateTypoTolerance = new TypoTolerance
+            {
+                DisableOnAttributes = new string[] { "title" },
+            };
+
+            var returnedTypoTolerance = new TypoTolerance
+            {
+                DisableOnAttributes = new string[] { "title" },
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 9,
+                    OneTypo = 5
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, otherUpdateTypoTolerance);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
+        }
+
+        [Fact]
+        public async Task ResetTypoTolerance()
+        {
+            var newTypoTolerance = new TypoTolerance
+            {
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12
+                }
+            };
+
+            var returnedTypoTolerance = new TypoTolerance
+            {
+                DisableOnAttributes = new string[] { },
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12,
+                    OneTypo = 5
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
+
+            await AssertResetSuccess(_index.ResetTypoToleranceAsync);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -347,6 +450,7 @@ namespace Meilisearch.Tests
                 Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
+                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance
             };
         }
 
