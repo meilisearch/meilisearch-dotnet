@@ -6,7 +6,7 @@ namespace Meilisearch
     /// <summary>
     /// This class adds some defaults to work with Meilisearch client.
     /// </summary>
-    public static class Constants
+    internal static class Constants
     {
         /// <summary>
         /// JsonSerializer options used when serializing objects that needs to remove null values.
