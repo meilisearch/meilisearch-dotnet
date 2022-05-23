@@ -11,7 +11,7 @@ namespace Meilisearch.HttpContents
     /// <summary>
     /// Send and receive HTTP content as JSON.
     /// </summary>
-    public class JsonHttpContent : HttpContent
+    internal class JsonHttpContent : HttpContent
     {
         private readonly JsonSerializerOptions jsonSerializerOptions;
         private readonly object values;
