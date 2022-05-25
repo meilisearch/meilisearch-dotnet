@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,6 +40,26 @@ namespace Meilisearch.Tests
             Assert.Equal("1", docs.First().Id);
             Assert.Equal("Batman", docs.First().Name);
             docs.First().Genre.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task BasicDocumentAdditionFromJsonString()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromJsonString);
+            var index = _client.Index(indexUID);
+
+            var jsonDocuments = await File.ReadAllTextAsync(Datasets.SmallMoviesJson);
+            var task = await index.AddDocumentsJsonAsync(jsonDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been added
+            var docs = (await index.GetDocumentsAsync<DatasetSmallMovie>()).ToList();
+            Assert.NotEmpty(docs);
+            var doc = docs.First();
+            Assert.Equal("287947", doc.Id);
+            Assert.Equal("Shazam!", doc.Title);
+            Assert.Equal("action", doc.Genre);
         }
 
         [Fact]
@@ -161,6 +182,34 @@ namespace Meilisearch.Tests
             Assert.Equal("Superman", docs.ElementAt(1).Name);
             docs.ElementAt(1).Genre.Should().BeNull();
         }
+
+        [Fact]
+        public async Task BasicDocumentsUpdateFromJsonString()
+        {
+            var indexUID = nameof(BasicDocumentsUpdateFromJsonString);
+            var index = _client.Index(indexUID);
+
+            // Add the documents
+            var task = await index.AddDocumentsAsync(new[]
+            {
+                new DatasetSmallMovie { Id = "287947", Title = "NOT A TITLE", Genre = "NO GENRE" },
+            });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Update the documents
+            var jsonDocuments = await File.ReadAllTextAsync(Datasets.SmallMoviesJson);
+            task = await index.UpdateDocumentsJsonAsync(jsonDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been updated and added
+            var doc = await index.GetDocumentAsync<DatasetSmallMovie>("287947");
+            Assert.Equal("287947", doc.Id);
+            Assert.Equal("Shazam!", doc.Title);
+            Assert.Equal("action", doc.Genre);
+        }
+
 
         [Fact]
         public async Task BasicDocumentsUpdateInBatches()

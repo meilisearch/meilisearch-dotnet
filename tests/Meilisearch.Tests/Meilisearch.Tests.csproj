@@ -18,4 +18,8 @@
       <ProjectReference Include="..\..\src\Meilisearch\Meilisearch.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>
