@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest" />
+      <None Update="Datasets\songs.csv" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

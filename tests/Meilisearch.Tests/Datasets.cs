@@ -9,6 +9,7 @@ namespace Meilisearch.Tests
     {
         private static readonly string BasePath = Path.Combine(Directory.GetCurrentDirectory(), "Datasets");
         public static readonly string SmallMoviesJson = Path.Combine(BasePath, "small_movies.json");
+        public static readonly string SongsCsv = Path.Combine(BasePath, "songs.csv");
     }
 
     public class DatasetSmallMovie
@@ -21,6 +22,22 @@ namespace Meilisearch.Tests
         [JsonConverter(typeof(UnixEpochDateTimeConverter))]
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
+    }
+
+    public class DatasetSong
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Album { get; set; }
+        public string Artist { get; set; }
+        public string Genre { get; set; }
+        public string Country { get; set; }
+        public string Released { get; set; }
+        public string Duration { get; set; }
+        [JsonPropertyName("released-timestamp")]
+        public long? ReleasedTimestamp { get; set; }
+        [JsonPropertyName("duration-float")]
+        public double? DurationFloat { get; set; }
     }
 
     sealed class UnixEpochDateTimeConverter : JsonConverter<DateTime>

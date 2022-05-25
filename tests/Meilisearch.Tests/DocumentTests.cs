@@ -63,6 +63,26 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicDocumentAdditionFromCsvString()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromCsvString);
+            var index = _client.Index(indexUID);
+
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
+            var task = await index.AddDocumentsCsvAsync(csvDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been added
+            var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
+            Assert.NotEmpty(docs);
+            var doc = docs.First();
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+        }
+
+        [Fact]
         public async Task BasicDocumentsAdditionInBatches()
         {
             var indexUID = "BasicDocumentsAdditionInBatchesTest";
@@ -90,6 +110,34 @@ namespace Meilisearch.Tests
             Assert.Equal("Batman", docs.ElementAt(0).Name);
             Assert.Equal("3", docs.ElementAt(2).Id);
             Assert.Equal("Taxi Driver", docs.ElementAt(2).Name);
+        }
+
+        [Fact]
+        public async Task BasicDocumentAdditionFromCsvStringInBatches()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromCsvStringInBatches);
+            var index = _client.Index(indexUID);
+
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
+            var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
+            Assert.Equal(2, tasks.Count());
+            foreach (var u in tasks)
+            {
+                u.Uid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.Uid);
+            }
+
+            // Check the documents have been added from first chunk
+            var doc = await index.GetDocumentAsync<DatasetSong>("702481615");
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+
+            // Check the documents have been added from second chunk
+            doc = await index.GetDocumentAsync<DatasetSong>("128391318");
+            Assert.Equal("128391318", doc.Id);
+            Assert.Equal("For What It's Worth", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
         }
 
         [Fact]
@@ -210,6 +258,32 @@ namespace Meilisearch.Tests
             Assert.Equal("action", doc.Genre);
         }
 
+        [Fact]
+        public async Task BasicDocumentsUpdateFromCsvString()
+        {
+            var indexUID = nameof(BasicDocumentsUpdateFromCsvString);
+            var index = _client.Index(indexUID);
+
+            // Add the documents
+            var task = await index.AddDocumentsAsync(new[]
+            {
+                new DatasetSong { Id = "702481615", Title = "NOT A TITLE", Genre = "NO GENRE" },
+            });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Update the documents
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
+            task = await index.UpdateDocumentsCsvAsync(csvDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been updated and added
+            var doc = await index.GetDocumentAsync<DatasetSmallMovie>("702481615");
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+        }
 
         [Fact]
         public async Task BasicDocumentsUpdateInBatches()
@@ -255,6 +329,42 @@ namespace Meilisearch.Tests
                 movie.Genre.Should().NotBeNull();
                 movie.Genre.Should().NotBeEmpty();
             }
+        }
+
+        [Fact]
+        public async Task BasicDocumentUpdateFromCsvStringInBatches()
+        {
+            var indexUID = nameof(BasicDocumentUpdateFromCsvStringInBatches);
+            var index = _client.Index(indexUID);
+
+            // Add the documents
+            var task = await index.AddDocumentsAsync(new[]
+            {
+                new DatasetSong { Id = "702481615", Title = "NOT A TITLE", Genre = "NO GENRE" },
+                new DatasetSong { Id = "128391318", Title = "NOT A TITLE", Genre = "NO GENRE" },
+            });
+            await index.WaitForTaskAsync(task.Uid);
+
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
+            var tasks = (await index.UpdateDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
+            Assert.Equal(2, tasks.Count());
+            foreach (var u in tasks)
+            {
+                u.Uid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.Uid);
+            }
+
+            // Check the documents have been added from first chunk
+            var doc = await index.GetDocumentAsync<DatasetSong>("702481615");
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+
+            // Check the documents have been added from second chunk
+            doc = await index.GetDocumentAsync<DatasetSong>("128391318");
+            Assert.Equal("128391318", doc.Id);
+            Assert.Equal("For What It's Worth", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
         }
 
         [Fact]
