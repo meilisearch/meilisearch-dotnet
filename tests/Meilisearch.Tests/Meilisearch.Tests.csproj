@@ -19,11 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Datasets\movies.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\nested_movies.json" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\songs.csv" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\songs.ndjson" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>
