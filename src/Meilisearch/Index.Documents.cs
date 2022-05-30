@@ -84,6 +84,29 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Add documents from NDJSON string.
+        /// </summary>
+        /// <param name="documents">Documents to add as NDJSON string.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info.</returns>
+        public async Task<TaskInfo> AddDocumentsNdjsonAsync(string documents, string primaryKey = default,
+            CancellationToken cancellationToken = default)
+        {
+            var uri = $"indexes/{Uid}/documents";
+
+            if (primaryKey != default)
+            {
+                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
+            }
+
+            var content = new StringContent(documents, Encoding.UTF8, ContentType.Ndjson);
+            var responseMessage = await _http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Adds documents in batches with size specified with <paramref name="batchSize"/>.
         /// </summary>
         /// <param name="documents">Documents to add.</param>
@@ -107,7 +130,7 @@ namespace Meilisearch
         /// <summary>
         /// Adds documents from CSV string in batches with size specified with <paramref name="batchSize"/>.
         /// </summary>
-        /// <param name="documents">Documents to add.</param>
+        /// <param name="documents">Documents to add as CSV string.</param>
         /// <param name="batchSize">Size of documents batches while adding them.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -119,6 +142,26 @@ namespace Meilisearch
             foreach (var chunk in documents.GetCsvChunks(batchSize))
             {
                 tasks.Add(await AddDocumentsCsvAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
+            }
+
+            return tasks;
+        }
+
+        /// <summary>
+        /// Adds documents from NDJSON string in batches with size specified with <paramref name="batchSize"/>.
+        /// </summary>
+        /// <param name="documents">Documents to add as NDJSON string.</param>
+        /// <param name="batchSize">Size of documents batches while adding them.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task list.</returns>
+        public async Task<IEnumerable<TaskInfo>> AddDocumentsNdjsonInBatchesAsync(string documents,
+            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        {
+            var tasks = new List<TaskInfo>();
+            foreach (var chunk in documents.GetNdjsonChunks(batchSize))
+            {
+                tasks.Add(await AddDocumentsNdjsonAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
             return tasks;
@@ -196,6 +239,29 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Update documents from NDJSON string.
+        /// </summary>
+        /// <param name="documents">Documents to add as NDJSON string.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info.</returns>
+        public async Task<TaskInfo> UpdateDocumentsNdjsonAsync(string documents, string primaryKey = default,
+            CancellationToken cancellationToken = default)
+        {
+            var uri = $"indexes/{Uid}/documents";
+
+            if (primaryKey != default)
+            {
+                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
+            }
+
+            var content = new StringContent(documents, Encoding.UTF8, ContentType.Ndjson);
+            var responseMessage = await _http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Updates documents in batches with size specified with <paramref name="batchSize"/>.
         /// </summary>
         /// <param name="documents">Documents to update.</param>
@@ -231,6 +297,26 @@ namespace Meilisearch
             foreach (var chunk in documents.GetCsvChunks(batchSize))
             {
                 tasks.Add(await UpdateDocumentsCsvAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
+            }
+
+            return tasks;
+        }
+
+        /// <summary>
+        /// Updates documents as NDJSON string in batches with size specified with <paramref name="batchSize"/>.
+        /// </summary>
+        /// <param name="documents">Documents to update from NDJSON string.</param>
+        /// <param name="batchSize">Size of documents batches while updating them.</param>
+        /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task list.</returns>
+        public async Task<IEnumerable<TaskInfo>> UpdateDocumentsNdjsonInBatchesAsync(string documents,
+            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+        {
+            var tasks = new List<TaskInfo>();
+            foreach (var chunk in documents.GetNdjsonChunks(batchSize))
+            {
+                tasks.Add(await UpdateDocumentsNdjsonAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
             }
 
             return tasks;

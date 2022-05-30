@@ -83,6 +83,26 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicDocumentAdditionFromNdjsonString()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromNdjsonString);
+            var index = _client.Index(indexUID);
+
+            var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
+            var task = await index.AddDocumentsNdjsonAsync(ndjsonDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been added
+            var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
+            Assert.NotEmpty(docs);
+            var doc = docs.First();
+            Assert.Equal("412559401", doc.Id);
+            Assert.Equal("BEETHOVEN", doc.Title);
+            Assert.Equal("Classical", doc.Genre);
+        }
+
+        [Fact]
         public async Task BasicDocumentsAdditionInBatches()
         {
             var indexUID = "BasicDocumentsAdditionInBatchesTest";
@@ -138,6 +158,34 @@ namespace Meilisearch.Tests
             Assert.Equal("128391318", doc.Id);
             Assert.Equal("For What It's Worth", doc.Title);
             Assert.Equal("Rock", doc.Genre);
+        }
+
+        [Fact]
+        public async Task BasicDocumentAdditionFromNdjsonStringInBatches()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromNdjsonStringInBatches);
+            var index = _client.Index(indexUID);
+
+            var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
+            var tasks = (await index.AddDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
+            Assert.Equal(2, tasks.Count());
+            foreach (var u in tasks)
+            {
+                u.Uid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.Uid);
+            }
+
+            // Check the documents have been added from first chunk
+            var doc = await index.GetDocumentAsync<DatasetSong>("412559401");
+            Assert.Equal("412559401", doc.Id);
+            Assert.Equal("BEETHOVEN", doc.Title);
+            Assert.Equal("Classical", doc.Genre);
+
+            // Check the documents have been added from second chunk
+            doc = await index.GetDocumentAsync<DatasetSong>("276177902");
+            Assert.Equal("276177902", doc.Id);
+            Assert.Equal("But The Shadow Marred The Master Plan", doc.Title);
+            Assert.Equal("Jazz", doc.Genre);
         }
 
         [Fact]
@@ -286,6 +334,33 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicDocumentsUpdateFromNdjsonString()
+        {
+            var indexUID = nameof(BasicDocumentsUpdateFromNdjsonString);
+            var index = _client.Index(indexUID);
+
+            // Add the documents
+            var task = await index.AddDocumentsAsync(new[]
+            {
+                new DatasetSong { Id = "412559401", Title = "NOT A TITLE", Genre = "NO GENRE" },
+            });
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Update the documents
+            var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
+            task = await index.UpdateDocumentsNdjsonAsync(ndjsonDocuments);
+            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.Uid);
+
+            // Check the documents have been updated and added
+            var doc = await index.GetDocumentAsync<DatasetSmallMovie>("412559401");
+            Assert.Equal("412559401", doc.Id);
+            Assert.Equal("BEETHOVEN", doc.Title);
+            Assert.Equal("Classical", doc.Genre);
+        }
+
+        [Fact]
         public async Task BasicDocumentsUpdateInBatches()
         {
             var indexUID = "BasicDocumentsUpdateInBatchesTest";
@@ -365,6 +440,42 @@ namespace Meilisearch.Tests
             Assert.Equal("128391318", doc.Id);
             Assert.Equal("For What It's Worth", doc.Title);
             Assert.Equal("Rock", doc.Genre);
+        }
+
+        [Fact]
+        public async Task BasicDocumentUpdateFromNdjsonStringInBatches()
+        {
+            var indexUID = nameof(BasicDocumentUpdateFromNdjsonStringInBatches);
+            var index = _client.Index(indexUID);
+
+            // Add the documents
+            var task = await index.AddDocumentsAsync(new[]
+            {
+                new DatasetSong { Id = "412559401", Title = "NOT A TITLE", Genre = "NO GENRE" },
+                new DatasetSong { Id = "276177902", Title = "NOT A TITLE", Genre = "NO GENRE" },
+            });
+            await index.WaitForTaskAsync(task.Uid);
+
+            var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
+            var tasks = (await index.UpdateDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
+            Assert.Equal(2, tasks.Count());
+            foreach (var u in tasks)
+            {
+                u.Uid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.Uid);
+            }
+
+            // Check the documents have been added from first chunk
+            var doc = await index.GetDocumentAsync<DatasetSong>("412559401");
+            Assert.Equal("412559401", doc.Id);
+            Assert.Equal("BEETHOVEN", doc.Title);
+            Assert.Equal("Classical", doc.Genre);
+
+            // Check the documents have been added from second chunk
+            doc = await index.GetDocumentAsync<DatasetSong>("276177902");
+            Assert.Equal("276177902", doc.Id);
+            Assert.Equal("But The Shadow Marred The Master Plan", doc.Title);
+            Assert.Equal("Jazz", doc.Genre);
         }
 
         [Fact]

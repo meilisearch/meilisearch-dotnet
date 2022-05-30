@@ -76,5 +76,51 @@ namespace Meilisearch.Extensions
                 }
             }
         }
+
+        /// <summary>
+        /// Returns chunks from a NDJSON string.
+        /// </summary>
+        /// <param name="ndjsonString">The NDJSON string to split.</param>
+        /// <param name="chunkSize">Size of the chunks.</param>
+        /// <returns>List of NDJSON string.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if ndjsonString is null.</exception>
+        /// <exception cref="ArgumentException">Throw if chunkSize is lower than 1.</exception>
+        internal static IEnumerable<string> GetNdjsonChunks(this string ndjsonString, int chunkSize)
+        {
+            if (string.IsNullOrWhiteSpace(ndjsonString))
+            {
+                throw new ArgumentNullException(nameof(ndjsonString));
+            }
+
+            if (chunkSize < 1)
+            {
+                throw new ArgumentException("chunkSize value must be greater than 0", nameof(chunkSize));
+            }
+
+            using (var sr = new StringReader(ndjsonString))
+            {
+                var sb = new StringBuilder();
+                var line = "";
+                var lineNumber = 0;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    sb.AppendLine(line);
+                    ++lineNumber;
+
+                    if (lineNumber % chunkSize == 0)
+                    {
+                        // We return our chunk, we clear our string builder
+                        yield return sb.ToString();
+                        sb.Clear();
+                    }
+                }
+
+                // After the last line we check if we have something to send
+                if (lineNumber % chunkSize != 0)
+                {
+                    yield return sb.ToString();
+                }
+            }
+        }
     }
 }
