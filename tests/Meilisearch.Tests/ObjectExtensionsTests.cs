@@ -1,10 +1,11 @@
 using Meilisearch.Extensions;
+
 using Microsoft.AspNetCore.WebUtilities;
 
 using Xunit;
+
 namespace Meilisearch.Tests
 {
-
     public class ObjectExtensionsTests
     {
         [Theory]
