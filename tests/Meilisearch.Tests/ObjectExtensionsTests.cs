@@ -1,3 +1,4 @@
+using Meilisearch.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 
 using Xunit;

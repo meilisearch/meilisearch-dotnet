@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
-namespace Meilisearch
+namespace Meilisearch.Extensions
 {
     /// <summary>
     /// Meilisearch objects manipulation.
     /// </summary>
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         /// <summary>
         /// Transforms an Meilisearch object into a dictionary.
@@ -17,7 +16,7 @@ namespace Meilisearch
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
         /// <returns>Returns a dictionary.</returns>
-        public static IDictionary<string, string> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        internal static IDictionary<string, string> AsDictionary(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
             return source.GetType().GetProperties(bindingAttr).Where(p => p.GetValue(source, null) != null).ToDictionary(
                 propInfo => char.ToLowerInvariant(propInfo.Name[0]) + propInfo.Name.Substring(1),
@@ -30,7 +29,7 @@ namespace Meilisearch
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
         /// <returns>Returns an url encoded query string.</returns>
-        public static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
             var values = source.GetType().GetProperties(bindingAttr)
             .Where(p => p.GetValue(source, null) != null)
