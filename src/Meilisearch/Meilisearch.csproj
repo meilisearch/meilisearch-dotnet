@@ -20,6 +20,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Meilisearch.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    <ItemGroup>
       <Compile Update="Index.Documents.cs">
         <DependentUpon>Index.cs</DependentUpon>
       </Compile>

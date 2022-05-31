@@ -11,7 +11,7 @@ namespace Meilisearch
         /// <summary>
         /// JsonSerializer options used when serializing objects that needs to remove null values.
         /// </summary>
-        public static readonly JsonSerializerOptions JsonSerializerOptionsRemoveNulls = new JsonSerializerOptions
+        internal static readonly JsonSerializerOptions JsonSerializerOptionsRemoveNulls = new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -20,7 +20,7 @@ namespace Meilisearch
         /// <summary>
         /// JsonSerializer options used when serializing objects that keeps null values.
         /// </summary>
-        public static readonly JsonSerializerOptions JsonSerializerOptionsWriteNulls = new JsonSerializerOptions
+        internal static readonly JsonSerializerOptions JsonSerializerOptionsWriteNulls = new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.Never,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

@@ -7,7 +7,7 @@ namespace Meilisearch.Extensions
     /// <summary>
     /// Extensions methods for IEnumerable.
     /// </summary>
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         /// <summary>
         /// Returns chunks of a list.
@@ -18,7 +18,7 @@ namespace Meilisearch.Extensions
         /// <returns>List of chunks.</returns>
         /// <exception cref="ArgumentNullException">Thrown if fullList is null.</exception>
         /// <exception cref="ArgumentException">Throw if chunkSize is lower than 1.</exception>
-        public static IEnumerable<IEnumerable<T>> GetChunks<T>(this IEnumerable<T> fullList, int chunkSize)
+        internal static IEnumerable<IEnumerable<T>> GetChunks<T>(this IEnumerable<T> fullList, int chunkSize)
         {
             if (fullList is null)
             {

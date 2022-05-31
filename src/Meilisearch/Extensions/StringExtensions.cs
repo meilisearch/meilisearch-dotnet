@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Meilisearch.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         /// <summary>
         /// This method makes sure that the uri has a trailing slash.
@@ -14,7 +14,7 @@ namespace Meilisearch.Extensions
         /// <param name="uri">uri to Meilisearch server.</param>
         /// <returns>A well formatted Uri</returns>
         /// <exception cref="ArgumentNullException">Thrown when uri is not or whitespace.</exception>
-        public static Uri ToSafeUri(this string uri)
+        internal static Uri ToSafeUri(this string uri)
         {
             if (string.IsNullOrWhiteSpace(uri))
             {
