@@ -32,7 +32,7 @@ namespace Meilisearch
         /// <summary>
         /// Detailed information on the task payload.
         /// </summary>
-        public Dictionary<string, string> Details { get; set; }
+        public Dictionary<string, object> Details { get; set; }
 
         /// <summary>
         /// Gets or sets the error raised.
