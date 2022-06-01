@@ -134,7 +134,7 @@ namespace Meilisearch.Tests
             var task = await _fixture.ClientWithCustomHttpClient.DeleteIndexAsync(indexUid);
             task.Uid.Should().BeGreaterOrEqualTo(0);
             var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
-            Assert.Equal("succeeded", finishedTask.Status);
+            Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
         }
     }
 }
