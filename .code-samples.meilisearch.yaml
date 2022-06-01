@@ -3,6 +3,16 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+updating_guide_get_displayed_attributes_old: |- 
+updating_guide_reset_displayed_attributes_old: |-
+updating_guide_check_version: |-
+updating_guide_create_dump: |-
+updating_guide_get_dump_status: |-
+updating_guide_get_settings: |-
+updating_guide_retrieve_documents: |-
+updating_guide_update_settings: |-
+updating_guide_add_documents: |-
+
 get_one_index_1: |-
 list_all_indexes_1: |-
 create_an_index_1: |-
@@ -165,7 +175,7 @@ getting_started_add_meteorites: |-
 
   var index = client.Index("meteorites");
   await index.AddDocumentsAsync<Meteorite>(meteorites);
-getting_started_update_rankingRules: |-
+getting_started_update_ranking_rules: |-
   await client.Index("movies").UpdateRankingRulesAsync(new string[] {
     "exactness",
     "words",
@@ -176,13 +186,13 @@ getting_started_update_rankingRules: |-
     "release_date:asc",
     "rank:desc"
   });
-getting_started_update_displayedAttributes: |-
+getting_started_update_displayed_attributes: |-
   await client.Index("movies").UpdateDisplayedAttributesAsync(new string[] {
     "title",
     "overview",
     "poster"
   });
-getting_started_update_searchableAttributes: |-
+getting_started_update_searchable_attributes: |-
   await client.Index("movies").UpdateSearchableAttributesAsync(new string[] {
     "title"
   });
@@ -200,10 +210,10 @@ getting_started_synonyms: |-
 getting_started_filtering: |-
   SearchQuery filter = new SearchQuery() { Filter = "mass < 200" };
   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geoRadius: |-
+getting_started_geo_radius: |-
   SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
    await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geoPoint: |-
+getting_started_geo_point: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
   await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
 getting_started_sorting: |-
@@ -301,9 +311,9 @@ geosearch_guide_sort_usage_2: |-
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
-document_guide_create_index_primary_key: |-
+primary_field_guide_create_index_primary_key: |-
   TaskInfo task = await client.CreateIndexAsync("movies", "reference_number");
-document_guide_add_document_primary_key: |-
+primary_field_guide_add_document_primary_key: |-
   await index.AddDocumentsAsync(
     new[] {
         new Movie {
