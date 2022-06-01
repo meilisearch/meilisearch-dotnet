@@ -28,6 +28,20 @@ First of all, thank you for contributing to Meilisearch! The goal of this docume
 
 ### Setup <!-- omit in TOC -->
 
+You can set up your local environment natively or using `docker`, check out the [`docker-compose.yml`](/docker-compose.yml).
+
+Example of running all the checks with docker:
+```bash
+docker-compose run --rm package bash -c "list of the commands required to build + run tests + run linters"
+```
+
+To install dependencies:
+
+```bash
+dotnet restore
+```
+
+
 You need to install the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/).
 
 ### Tests <!-- omit in TOC -->
