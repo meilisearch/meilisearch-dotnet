@@ -3,16 +3,6 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
-updating_guide_get_displayed_attributes_old: |- 
-updating_guide_reset_displayed_attributes_old: |-
-updating_guide_check_version: |-
-updating_guide_create_dump: |-
-updating_guide_get_dump_status: |-
-updating_guide_get_settings: |-
-updating_guide_retrieve_documents: |-
-updating_guide_update_settings: |-
-updating_guide_add_documents: |-
-
 get_one_index_1: |-
 list_all_indexes_1: |-
 create_an_index_1: |-
@@ -312,16 +302,18 @@ geosearch_guide_sort_usage_2: |-
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
 primary_field_guide_create_index_primary_key: |-
-  TaskInfo task = await client.CreateIndexAsync("movies", "reference_number");
+  TaskInfo task = await client.CreateIndexAsync("books", "reference_number");
+primary_field_guide_update_document_primary_key: |-
+  TaskInfo task = await client.UpdateIndexAsync("books", "title");
 primary_field_guide_add_document_primary_key: |-
   await index.AddDocumentsAsync(
     new[] {
-        new Movie {
-            ReferenceNumber: 287947,
-            Title: "Shazam",
-            Poster: "https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg",
-            Overview: "A boy is given the ability to become an adult superhero in times of need with a single magic word.",
-            ReleaseDate: "2019-03-23"
+        new Book {
+            ReferenceNumber = 287947,
+            Title = "Diary of a Wimpy Kid",
+            Author = "Jeff Kinney",
+            Genres = new string[] { "comedy", "humor" },
+            Price = 5.00
         }
     },
     "reference_number");
@@ -403,7 +395,7 @@ typo_tolerance_guide_1: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
-typo_tolerance_guide_2: |-  
+typo_tolerance_guide_2: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" }
   };
