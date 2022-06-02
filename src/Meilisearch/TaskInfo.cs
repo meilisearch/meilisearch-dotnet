@@ -9,55 +9,72 @@ namespace Meilisearch
     /// </summary>
     public class TaskInfo
     {
-        /// <summary>
-        /// Gets or sets Uid for the task.
-        /// </summary>
-        public int Uid { get; set; }
+        public TaskInfo(int uid, string indexUid, TaskInfoStatus status, TaskInfoType type,
+            Dictionary<string, object> details, Dictionary<string, string> error, string duration, DateTime enqueuedAt,
+            DateTime? startedAt, DateTime? finishedAt)
+        {
+            Uid = uid;
+            IndexUid = indexUid;
+            Status = status;
+            Type = type;
+            Details = details;
+            Error = error;
+            Duration = duration;
+            EnqueuedAt = enqueuedAt;
+            StartedAt = startedAt;
+            FinishedAt = finishedAt;
+        }
 
         /// <summary>
-        /// Gets or sets the index UID related to the task.
+        /// The unique sequential identifier of the task.
         /// </summary>
-        public string IndexUid { get; set; }
+        public int Uid { get; }
 
         /// <summary>
-        /// Gets or sets state of the task.
+        /// The unique index identifier.
         /// </summary>
-        public TaskInfoStatus Status { get; set; }
+        public string IndexUid { get; }
 
         /// <summary>
-        /// Gets or sets type of the task.
+        /// The status of the task. Possible values are enqueued, processing, succeeded, failed.
         /// </summary>
-        public TaskInfoType Type { get; set; }
+        public TaskInfoStatus Status { get; }
+
+        /// <summary>
+        /// The type of task. Possible values are indexCreation, indexUpdate, indexDeletion, documentAddition,
+        /// documentPartial, documentDeletion, settingsUpdate, clearAll.
+        /// </summary>
+        public TaskInfoType Type { get; }
 
         /// <summary>
         /// Detailed information on the task payload.
         /// </summary>
-        public Dictionary<string, object> Details { get; set; }
+        public Dictionary<string, object> Details { get; }
 
         /// <summary>
-        /// Gets or sets the error raised.
+        /// Error details and context. Only present when a task has the failed status.
         /// </summary>
-        public Dictionary<string, string> Error { get; set; }
+        public Dictionary<string, string> Error { get; }
 
         /// <summary>
         /// The total elapsed time the task spent in the processing state, in ISO 8601 format.
         /// </summary>
-        public string Duration { get; set; }
+        public string Duration { get; }
 
         /// <summary>
         /// The date and time when the task was first enqueued, in RFC 3339 format.
         /// </summary>
-        public DateTime EnqueuedAt { get; set; }
+        public DateTime EnqueuedAt { get; }
 
         /// <summary>
         /// The date and time when the task began processing, in RFC 3339 format.
         /// </summary>
-        public DateTime? StartedAt { get; set; }
+        public DateTime? StartedAt { get; }
 
         /// <summary>
         /// The date and time when the task finished processing, whether failed or succeeded, in RFC 3339 format.
         /// </summary>
-        public DateTime? FinishedAt { get; set; }
+        public DateTime? FinishedAt { get; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
