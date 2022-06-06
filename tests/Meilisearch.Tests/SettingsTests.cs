@@ -470,7 +470,7 @@ namespace Meilisearch.Tests
         {
             task.Uid.Should().BeGreaterThan(0);
             task = await _index.WaitForTaskAsync(task.Uid);
-            task.Status.Should().BeEquivalentTo("succeeded");
+            task.Status.Should().Be(TaskInfoStatus.Succeeded);
         }
 
         private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)

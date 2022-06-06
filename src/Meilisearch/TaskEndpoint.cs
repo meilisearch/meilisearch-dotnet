@@ -81,7 +81,7 @@ namespace Meilisearch
             {
                 var task = await GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
 
-                if (task.Status != "enqueued" && task.Status != "processing")
+                if (task.Status != TaskInfoStatus.Enqueued && task.Status != TaskInfoStatus.Processing)
                 {
                     return task;
                 }
