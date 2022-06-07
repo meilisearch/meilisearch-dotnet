@@ -41,7 +41,6 @@ namespace Meilisearch.Tests
             var fetchedTask = await _index.GetTaskAsync(task.Uid);
             fetchedTask.Should().NotBeNull();
             fetchedTask.Uid.Should().BeGreaterOrEqualTo(0);
-            fetchedTask.Status.Should().NotBeNull();
         }
 
         [Fact]
@@ -50,7 +49,7 @@ namespace Meilisearch.Tests
             var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "3" } });
             var finishedTask = await _index.WaitForTaskAsync(task.Uid);
             Assert.Equal(finishedTask.Uid, task.Uid);
-            Assert.Equal("succeeded", finishedTask.Status);
+            Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
         }
 
         [Fact]
@@ -59,7 +58,7 @@ namespace Meilisearch.Tests
             var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "4" } });
             var finishedTask = await _index.WaitForTaskAsync(task.Uid, 10000.0, 20);
             Assert.Equal(finishedTask.Uid, task.Uid);
-            Assert.Equal("succeeded", finishedTask.Status);
+            Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
         }
 
         [Fact]

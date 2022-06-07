@@ -33,7 +33,7 @@ namespace Meilisearch.Tests
 
             // Check the index has been created
             var finishedTask = await DefaultClient.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
             }
@@ -58,7 +58,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
             }
@@ -83,7 +83,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
             }
@@ -112,7 +112,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
@@ -126,7 +126,7 @@ namespace Meilisearch.Tests
 
             // Check the settings have been added
             finishedTask = await index.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
             }
@@ -186,7 +186,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var finishedTask = await index.WaitForTaskAsync(task.Uid);
-            if (finishedTask.Status != "succeeded")
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpIndexForNestedSearch. Impossible to run the tests.");
             }
