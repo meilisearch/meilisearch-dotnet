@@ -8,44 +8,64 @@ namespace Meilisearch
     /// <typeparam name="T">Hit type.</typeparam>
     public class SearchResult<T>
     {
-        /// <summary>
-        /// Gets or sets the total count of search results.
-        /// </summary>
-        public IEnumerable<T> Hits { get; set; }
+        public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int nbHits, bool exhaustiveNbHits,
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetsDistribution, bool exhaustiveFacetsCount,
+            int processingTimeMs, string query)
+        {
+            Hits = hits;
+            Offset = offset;
+            Limit = limit;
+            NbHits = nbHits;
+            ExhaustiveNbHits = exhaustiveNbHits;
+            FacetsDistribution = facetsDistribution;
+            ExhaustiveFacetsCount = exhaustiveFacetsCount;
+            ProcessingTimeMs = processingTimeMs;
+            Query = query;
+        }
 
         /// <summary>
-        /// Gets or sets the offset of the initial search.
+        /// Results of the query.
         /// </summary>
-        public int Offset { get; set; }
+        public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
-        /// Gets or sets the limit of the initial search.
+        /// Number of documents skipped.
         /// </summary>
-        public int Limit { get; set; }
+        public int Offset { get; }
 
         /// <summary>
-        /// Gets or sets the query sent.
+        /// Number of documents to take.
         /// </summary>
-        public string Query { get; set; }
+        public int Limit { get; }
 
         /// <summary>
-        /// Gets or sets the facets distribution.
+        /// Total number of matches.
         /// </summary>
-        public Dictionary<string, Dictionary<string, int>> FacetsDistribution { get; set; }
+        public int NbHits { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the facets distribution is exhaustive or not.
+        /// Whether nbHits is exhaustive.
         /// </summary>
-        public bool ExhaustiveFacetsCount { get; set; }
+        public bool ExhaustiveNbHits { get; }
 
         /// <summary>
-        /// Gets or sets the nbHits returned by the search.
+        /// Returns the number of documents matching the current search query for each given facet.
         /// </summary>
-        public int NbHits { get; set; }
+        public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> FacetsDistribution { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the nbHits number returned by the search is exhaustive or not.
+        /// Whether facetsDistribution is exhaustive.
         /// </summary>
-        public bool ExhaustiveNbHits { get; set; }
+        public bool ExhaustiveFacetsCount { get; }
+
+        /// <summary>
+        /// Processing time of the query.
+        /// </summary>
+        public int ProcessingTimeMs { get; }
+
+        /// <summary>
+        /// Query originating the response.
+        /// </summary>
+        public string Query { get; }
     }
 }
