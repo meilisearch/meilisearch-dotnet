@@ -152,7 +152,7 @@ namespace Meilisearch.Tests
                     Filter = "genre = SF",
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
@@ -170,7 +170,7 @@ namespace Meilisearch.Tests
                     Filter = "genre = 'sci fi'",
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
             Assert.Equal("1344", movies.Hits.First().Id);
             Assert.Equal("The Hobbit", movies.Hits.First().Name);
@@ -186,7 +186,7 @@ namespace Meilisearch.Tests
                     Filter = new string[] { "genre = SF" },
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
@@ -204,7 +204,7 @@ namespace Meilisearch.Tests
                     Filter = new string[][] { new string[] { "genre = SF", "genre = SF" }, new string[] { "genre = SF" } },
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
@@ -230,7 +230,7 @@ namespace Meilisearch.Tests
                     Filter = "id = 12",
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
             Assert.Equal(12, movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
@@ -255,7 +255,7 @@ namespace Meilisearch.Tests
                     Filter = "genre = SF AND id > 12",
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
             Assert.Equal(13, movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
@@ -267,7 +267,7 @@ namespace Meilisearch.Tests
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>("coco \"harry\"");
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
             Assert.Equal("13", movies.Hits.First().Id);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
@@ -284,11 +284,11 @@ namespace Meilisearch.Tests
                     FacetsDistribution = new string[] { "genre" },
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().NotBeEmpty();
-            movies.FacetsDistribution["genre"].Should().NotBeEmpty();
-            Assert.Equal(3, movies.FacetsDistribution["genre"]["Action"]);
-            Assert.Equal(2, movies.FacetsDistribution["genre"]["SF"]);
-            Assert.Equal(1, movies.FacetsDistribution["genre"]["French movie"]);
+            movies.FacetDistribution.Should().NotBeEmpty();
+            movies.FacetDistribution["genre"].Should().NotBeEmpty();
+            Assert.Equal(3, movies.FacetDistribution["genre"]["Action"]);
+            Assert.Equal(2, movies.FacetDistribution["genre"]["SF"]);
+            Assert.Equal(1, movies.FacetDistribution["genre"]["French movie"]);
         }
 
         [Fact]
@@ -309,7 +309,7 @@ namespace Meilisearch.Tests
                     Sort = new string[] { "name:asc" },
                 });
             movies.Hits.Should().NotBeEmpty();
-            movies.FacetsDistribution.Should().BeNull();
+            movies.FacetDistribution.Should().BeNull();
             Assert.Equal(2, movies.Hits.Count());
             Assert.Equal("14", movies.Hits.First().Id);
         }
