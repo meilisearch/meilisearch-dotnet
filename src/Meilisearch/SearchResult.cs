@@ -29,23 +29,13 @@ namespace Meilisearch
         public string Query { get; set; }
 
         /// <summary>
-        /// Gets or sets the facets distribution.
+        /// Gets or sets the facet distribution.
         /// </summary>
-        public Dictionary<string, Dictionary<string, int>> FacetsDistribution { get; set; }
+        public Dictionary<string, Dictionary<string, int>> FacetDistribution { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the facets distribution is exhaustive or not.
+        /// Gets or sets the estimated total number of hits returned by the search.
         /// </summary>
-        public bool ExhaustiveFacetsCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the nbHits returned by the search.
-        /// </summary>
-        public int NbHits { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the nbHits number returned by the search is exhaustive or not.
-        /// </summary>
-        public bool ExhaustiveNbHits { get; set; }
+        public int EstimatedTotalHits { get; set; }
     }
 }

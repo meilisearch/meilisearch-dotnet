@@ -238,7 +238,7 @@ faceted_search_filter_1: |-
 faceted_search_facets_distribution_1: |-
   SearchQuery filters = new SearchQuery()
   {
-      FacetsDistribution = new string[] { "genres" }
+      Facets = new string[] { "genres" }
   };
 
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
