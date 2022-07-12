@@ -27,7 +27,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateStopWordsAsync(IEnumerable<string> stopWords, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.PostAsJsonAsync($"indexes/{Uid}/settings/stop-words", stopWords, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await _http.PutAsJsonAsync($"indexes/{Uid}/settings/stop-words", stopWords, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
