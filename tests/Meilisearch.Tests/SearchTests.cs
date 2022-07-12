@@ -80,8 +80,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "name" },
             };
             var task = await _basicIndex.UpdateSettingsAsync(newFilters);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _basicIndex.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _basicIndex.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
                 "man",
@@ -220,8 +220,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "id" },
             };
             var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _indexWithIntId.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -245,8 +245,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = new string[] { "genre", "id" },
             };
             var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _indexWithIntId.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
                 null,
@@ -299,8 +299,8 @@ namespace Meilisearch.Tests
                 SortableAttributes = new string[] { "name" },
             };
             var task = await _basicIndex.UpdateSettingsAsync(newSortable);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _basicIndex.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _basicIndex.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _basicIndex.SearchAsync<Movie>(
                 "man",
@@ -370,7 +370,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithinNestedDocumentsWithSearchableAttributesSettings()
         {
             var task = await _nestedIndex.UpdateSearchableAttributesAsync(new string[] { "name", "info.comment" });
-            await _nestedIndex.WaitForTaskAsync(task.Uid);
+            await _nestedIndex.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("rich");
 
@@ -384,9 +384,9 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithinNestedDocumentsWithSearchableAndSortableAttributesSettings()
         {
             var searchTask = await _nestedIndex.UpdateSearchableAttributesAsync(new string[] { "name", "info.comment" });
-            await _nestedIndex.WaitForTaskAsync(searchTask.Uid);
+            await _nestedIndex.WaitForTaskAsync(searchTask.TaskUid);
             var sortTask = await _nestedIndex.UpdateSortableAttributesAsync(new string[] { "info.reviewNb" });
-            await _nestedIndex.WaitForTaskAsync(sortTask.Uid);
+            await _nestedIndex.WaitForTaskAsync(sortTask.TaskUid);
 
             var query = new SearchQuery { Sort = new string[] { "info.reviewNb:desc" } };
             var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("", query);

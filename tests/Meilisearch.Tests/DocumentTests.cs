@@ -32,8 +32,8 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -50,8 +50,8 @@ namespace Meilisearch.Tests
 
             var jsonDocuments = await File.ReadAllTextAsync(Datasets.SmallMoviesJson);
             var task = await index.AddDocumentsJsonAsync(jsonDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
             var docs = (await index.GetDocumentsAsync<DatasetSmallMovie>()).ToList();
@@ -70,8 +70,8 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
             var task = await index.AddDocumentsCsvAsync(csvDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
             var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
@@ -90,8 +90,8 @@ namespace Meilisearch.Tests
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
             var task = await index.AddDocumentsNdjsonAsync(ndjsonDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
             var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
@@ -120,8 +120,8 @@ namespace Meilisearch.Tests
             var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Check the documents have been added (one movie from each batch)
@@ -143,8 +143,8 @@ namespace Meilisearch.Tests
             Assert.Equal(2, tasks.Count());
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Check the documents have been added from first chunk
@@ -171,8 +171,8 @@ namespace Meilisearch.Tests
             Assert.Equal(2, tasks.Count());
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Check the documents have been added from first chunk
@@ -193,14 +193,14 @@ namespace Meilisearch.Tests
         {
             var indexUid = "BasicDocumentsAdditionWithAlreadyCreatedIndexTest";
             var task = await _client.CreateIndexAsync(indexUid);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             // Add the documents
             var index = _client.Index(indexUid);
             task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -217,7 +217,7 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0));
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.TaskUid, 0));
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.Uid, 0, 10));
+            await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => index.WaitForTaskAsync(task.TaskUid, 0, 10));
         }
 
         [Fact]
@@ -240,8 +240,8 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var task = await index.AddDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
-            await index.WaitForTaskAsync(task.Uid);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
             await index.FetchPrimaryKey();
@@ -260,13 +260,13 @@ namespace Meilisearch.Tests
                 new Movie { Id = "1", Name = "Batman", Genre = "Action" },
                 new Movie { Id = "2", Name = "Superman" },
             });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Update the documents
             task = await index.UpdateDocumentsAsync(new[] { new Movie { Id = "1", Name = "Ironman" } });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been updated and added
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -290,14 +290,14 @@ namespace Meilisearch.Tests
             {
                 new DatasetSmallMovie { Id = "287947", Title = "NOT A TITLE", Genre = "NO GENRE" },
             });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Update the documents
             var jsonDocuments = await File.ReadAllTextAsync(Datasets.SmallMoviesJson);
             task = await index.UpdateDocumentsJsonAsync(jsonDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been updated and added
             var doc = await index.GetDocumentAsync<DatasetSmallMovie>("287947");
@@ -317,14 +317,14 @@ namespace Meilisearch.Tests
             {
                 new DatasetSong { Id = "702481615", Title = "NOT A TITLE", Genre = "NO GENRE" },
             });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Update the documents
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
             task = await index.UpdateDocumentsCsvAsync(csvDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been updated and added
             var doc = await index.GetDocumentAsync<DatasetSmallMovie>("702481615");
@@ -344,14 +344,14 @@ namespace Meilisearch.Tests
             {
                 new DatasetSong { Id = "412559401", Title = "NOT A TITLE", Genre = "NO GENRE" },
             });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Update the documents
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
             task = await index.UpdateDocumentsNdjsonAsync(ndjsonDocuments);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been updated and added
             var doc = await index.GetDocumentAsync<DatasetSmallMovie>("412559401");
@@ -378,8 +378,8 @@ namespace Meilisearch.Tests
             var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             movies = new Movie[]
@@ -393,8 +393,8 @@ namespace Meilisearch.Tests
             tasks = await index.UpdateDocumentsInBatchesAsync(movies, 2);
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Assert movies have genre after updating
@@ -418,15 +418,15 @@ namespace Meilisearch.Tests
                 new DatasetSong { Id = "702481615", Title = "NOT A TITLE", Genre = "NO GENRE" },
                 new DatasetSong { Id = "128391318", Title = "NOT A TITLE", Genre = "NO GENRE" },
             });
-            await index.WaitForTaskAsync(task.Uid);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsv);
             var tasks = (await index.UpdateDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
             Assert.Equal(2, tasks.Count());
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Check the documents have been added from first chunk
@@ -454,15 +454,15 @@ namespace Meilisearch.Tests
                 new DatasetSong { Id = "412559401", Title = "NOT A TITLE", Genre = "NO GENRE" },
                 new DatasetSong { Id = "276177902", Title = "NOT A TITLE", Genre = "NO GENRE" },
             });
-            await index.WaitForTaskAsync(task.Uid);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjson);
             var tasks = (await index.UpdateDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
             Assert.Equal(2, tasks.Count());
             foreach (var u in tasks)
             {
-                u.Uid.Should().BeGreaterOrEqualTo(0);
-                await index.WaitForTaskAsync(u.Uid);
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
             }
 
             // Check the documents have been added from first chunk
@@ -487,8 +487,8 @@ namespace Meilisearch.Tests
 
             // Add the documents
             var task = await index.UpdateDocumentsAsync(new[] { new { Key = "1", Name = "Ironman" } }, "key");
-            await index.WaitForTaskAsync(task.Uid);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
 
             // Check the primary key has been set
             await index.FetchPrimaryKey();
@@ -538,8 +538,8 @@ namespace Meilisearch.Tests
 
             // Delete the document
             var task = await index.DeleteOneDocumentAsync("11");
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -555,8 +555,8 @@ namespace Meilisearch.Tests
 
             // Delete the document
             var task = await index.DeleteOneDocumentAsync(11);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
@@ -572,8 +572,8 @@ namespace Meilisearch.Tests
 
             // Delete the documents
             var task = await index.DeleteDocumentsAsync(new[] { "12", "13", "14" });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
@@ -594,8 +594,8 @@ namespace Meilisearch.Tests
 
             // Delete the documents
             var task = await index.DeleteDocumentsAsync(new[] { 12, 13, 14 });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
@@ -616,8 +616,8 @@ namespace Meilisearch.Tests
 
             // Delete all the documents
             var task = await index.DeleteAllDocumentsAsync();
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check all the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
