@@ -80,12 +80,11 @@ namespace Meilisearch.Tests
             var dumpResponse = await _defaultClient.CreateDumpAsync();
             Assert.NotNull(dumpResponse);
 
-            dumpResponse.Status.Should().Be("in_progress");
-            Assert.Matches("\\d+-\\d+", dumpResponse.Uid);
+            dumpResponse.Status.Should().Be(TaskInfoStatus.Enqueued);
 
-            var dumpStatus = await _defaultClient.GetDumpStatusAsync(dumpResponse.Uid);
-            dumpStatus.Status.Should().BeOneOf("done", "in_progress");
-            Assert.Equal(dumpResponse.Uid, dumpStatus.Uid);
+            var dumpTask = await _defaultClient.GetTaskAsync(dumpResponse.TaskUid);
+            dumpTask.Status.Should().BeOneOf(TaskInfoStatus.Succeeded, TaskInfoStatus.Processing, TaskInfoStatus.Enqueued);
+            Assert.Equal(dumpResponse.TaskUid, dumpTask.Uid);
         }
 
         [Fact]
