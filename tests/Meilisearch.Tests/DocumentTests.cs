@@ -37,9 +37,9 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal("1", docs.First().Id);
-            Assert.Equal("Batman", docs.First().Name);
-            docs.First().Genre.Should().BeNull();
+            Assert.Equal("1", docs.Results.First().Id);
+            Assert.Equal("Batman", docs.Results.First().Name);
+            docs.Results.First().Genre.Should().BeNull();
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Meilisearch.Tests
             await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
-            var docs = (await index.GetDocumentsAsync<DatasetSmallMovie>()).ToList();
+            var docs = (await index.GetDocumentsAsync<DatasetSmallMovie>()).Results.ToList();
             Assert.NotEmpty(docs);
             var doc = docs.First();
             Assert.Equal("287947", doc.Id);
@@ -74,7 +74,7 @@ namespace Meilisearch.Tests
             await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
-            var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
+            var docs = (await index.GetDocumentsAsync<DatasetSong>()).Results.ToList();
             Assert.NotEmpty(docs);
             var doc = docs.First();
             Assert.Equal("702481615", doc.Id);
@@ -94,7 +94,7 @@ namespace Meilisearch.Tests
             await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the documents have been added
-            var docs = (await index.GetDocumentsAsync<DatasetSong>()).ToList();
+            var docs = (await index.GetDocumentsAsync<DatasetSong>()).Results.ToList();
             Assert.NotEmpty(docs);
             var doc = docs.First();
             Assert.Equal("412559401", doc.Id);
@@ -125,7 +125,7 @@ namespace Meilisearch.Tests
             }
 
             // Check the documents have been added (one movie from each batch)
-            var docs = (await index.GetDocumentsAsync<Movie>()).ToList();
+            var docs = (await index.GetDocumentsAsync<Movie>()).Results.ToList();
             Assert.Equal("1", docs.ElementAt(0).Id);
             Assert.Equal("Batman", docs.ElementAt(0).Name);
             Assert.Equal("3", docs.ElementAt(2).Id);
@@ -204,9 +204,9 @@ namespace Meilisearch.Tests
 
             // Check the documents have been added
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal("1", docs.First().Id);
-            Assert.Equal("Batman", docs.First().Name);
-            docs.First().Genre.Should().BeNull();
+            Assert.Equal("1", docs.Results.First().Id);
+            Assert.Equal("Batman", docs.Results.First().Name);
+            docs.Results.First().Genre.Should().BeNull();
         }
 
         [Fact]
@@ -270,13 +270,13 @@ namespace Meilisearch.Tests
 
             // Check the documents have been updated and added
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal("1", docs.First().Id);
-            Assert.Equal("Ironman", docs.First().Name);
-            Assert.Null(docs.First().Genre);
+            Assert.Equal("1", docs.Results.First().Id);
+            Assert.Equal("Ironman", docs.Results.First().Name);
+            Assert.Null(docs.Results.First().Genre);
 
-            Assert.Equal("2", docs.ElementAt(1).Id);
-            Assert.Equal("Superman", docs.ElementAt(1).Name);
-            docs.ElementAt(1).Genre.Should().BeNull();
+            Assert.Equal("2", docs.Results.ElementAt(1).Id);
+            Assert.Equal("Superman", docs.Results.ElementAt(1).Name);
+            docs.Results.ElementAt(1).Genre.Should().BeNull();
         }
 
         [Fact]
@@ -398,7 +398,7 @@ namespace Meilisearch.Tests
             }
 
             // Assert movies have genre after updating
-            var docs = (await index.GetDocumentsAsync<Movie>()).ToList();
+            var docs = (await index.GetDocumentsAsync<Movie>()).Results.ToList();
             foreach (var movie in docs)
             {
                 movie.Genre.Should().NotBeNull();
@@ -516,9 +516,9 @@ namespace Meilisearch.Tests
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentTest");
             var documents = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal(7, documents.Count());
-            documents.First().Id.Should().Be("10");
-            documents.Last().Id.Should().Be("16");
+            Assert.Equal(7, documents.Results.Count());
+            documents.Results.First().Id.Should().Be("10");
+            documents.Results.Last().Id.Should().Be("16");
         }
 
         [Fact]
@@ -526,9 +526,9 @@ namespace Meilisearch.Tests
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
             var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2 });
-            Assert.Equal(2, documents.Count());
-            documents.First().Id.Should().Be("10");
-            documents.Last().Id.Should().Be("11");
+            Assert.Equal(2, documents.Results.Count());
+            documents.Results.First().Id.Should().Be("10");
+            documents.Results.Last().Id.Should().Be("11");
         }
 
         [Fact]
@@ -543,7 +543,7 @@ namespace Meilisearch.Tests
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal(6, docs.Count());
+            Assert.Equal(6, docs.Results.Count());
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("11"));
             Assert.Equal("document_not_found", ex.Code);
         }
@@ -560,7 +560,7 @@ namespace Meilisearch.Tests
 
             // Check the document has been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
-            Assert.Equal(6, docs.Count());
+            Assert.Equal(6, docs.Results.Count());
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>(11));
             Assert.Equal("document_not_found", ex.Code);
         }
@@ -577,7 +577,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal(4, docs.Count());
+            Assert.Equal(4, docs.Results.Count());
             MeilisearchApiError ex;
             ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("12"));
             Assert.Equal("document_not_found", ex.Code);
@@ -599,7 +599,7 @@ namespace Meilisearch.Tests
 
             // Check the documents have been deleted
             var docs = await index.GetDocumentsAsync<MovieWithIntId>();
-            Assert.Equal(4, docs.Count());
+            Assert.Equal(4, docs.Results.Count());
             MeilisearchApiError ex;
             ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>("12"));
             Assert.Equal("document_not_found", ex.Code);
@@ -621,7 +621,7 @@ namespace Meilisearch.Tests
 
             // Check all the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
-            docs.Should().BeEmpty();
+            docs.Results.Should().BeEmpty();
         }
     }
 }

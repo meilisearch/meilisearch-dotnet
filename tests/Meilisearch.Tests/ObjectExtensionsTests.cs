@@ -30,10 +30,10 @@ namespace Meilisearch.Tests
         [InlineData(1, null, "attr")]
         [InlineData(null, 2, "attr")]
         [InlineData(1, 2, "attr")]
-        public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string attributesToRetrieve)
+        public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string fields)
         {
             var uri = "indexes/myindex/documents";
-            var dq = new DocumentQuery { Offset = offset, Limit = limit, AttributesToRetrieve = attributesToRetrieve };
+            var dq = new DocumentQuery { Offset = offset, Limit = limit, Fields = fields };
 
             var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
             var actual = $"{uri}?{dq.ToQueryString()}";
