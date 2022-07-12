@@ -16,9 +16,23 @@ namespace Meilisearch
         public string KeyUid { get; set; }
 
         /// <summary>
+        /// Gets or sets unique identifier of the API key.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Uid { get; set; }
+
+        /// <summary>
         /// Gets or sets the description of the API key.
         /// </summary>
-        public string Description { get; set; }
+        // [JsonIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the API key.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Description { get; set; }
 
         /// <summary>
         /// Gets or sets list of actions available for the API key.

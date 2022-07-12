@@ -285,21 +285,21 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the API keys.</returns>
-        public async Task<Result<IEnumerable<Key>>> GetKeysAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<Key>>>("keys", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<Key>>>("keys", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets one API key.
         /// </summary>
-        /// <param name="keyUid">Unique identifier of the API key.</param>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the API key information.</returns>
-        public async Task<Key> GetKeyAsync(string keyUid, CancellationToken cancellationToken = default)
+        public async Task<Key> GetKeyAsync(string keyOrUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Key>($"keys/{keyUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<Key>($"keys/{keyOrUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -321,13 +321,13 @@ namespace Meilisearch
         /// <summary>
         /// Deletes an API key from the Meilisearch server.
         /// </summary>
-        /// <param name="keyUid">Unique identifier of the API key.</param>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns true if the API key was deleted.</returns>
-        public async Task<bool> DeleteKeyAsync(string keyUid, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteKeyAsync(string keyOrUid, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.DeleteAsync($"keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
+                await _http.DeleteAsync($"keys/{keyOrUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 
