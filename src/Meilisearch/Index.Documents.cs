@@ -20,7 +20,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default,
+        public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
@@ -44,7 +44,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsJsonAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> AddDocumentsJsonAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -67,7 +67,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsCsvAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> AddDocumentsCsvAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -90,7 +90,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsNdjsonAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> AddDocumentsNdjsonAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -116,7 +116,7 @@ namespace Meilisearch
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsInBatchesAsync<T>(IEnumerable<T> documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetChunks(batchSize))
@@ -136,7 +136,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsCsvInBatchesAsync(string documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetCsvChunks(batchSize))
@@ -156,7 +156,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsNdjsonInBatchesAsync(string documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetNdjsonChunks(batchSize))
@@ -175,7 +175,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
-        public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default,
+        public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             HttpResponseMessage responseMessage;
@@ -199,7 +199,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> UpdateDocumentsJsonAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> UpdateDocumentsJsonAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -222,7 +222,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> UpdateDocumentsCsvAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> UpdateDocumentsCsvAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -245,7 +245,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for the documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> UpdateDocumentsNdjsonAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> UpdateDocumentsNdjsonAsync(string documents, string? primaryKey = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -271,7 +271,7 @@ namespace Meilisearch
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> UpdateDocumentsInBatchesAsync<T>(IEnumerable<T> documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetChunks(batchSize))
@@ -291,7 +291,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> UpdateDocumentsCsvInBatchesAsync(string documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetCsvChunks(batchSize))
@@ -311,7 +311,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> UpdateDocumentsNdjsonInBatchesAsync(string documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string? primaryKey = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetNdjsonChunks(batchSize))
@@ -355,7 +355,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the list of documents.</returns>
-        public async Task<IEnumerable<T>> GetDocumentsAsync<T>(DocumentQuery query = default,
+        public async Task<IEnumerable<T>> GetDocumentsAsync<T>(DocumentQuery? query = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -447,7 +447,7 @@ namespace Meilisearch
         /// <typeparam name="T">Type parameter to return.</typeparam>
         /// <returns>Returns Enumerable of items.</returns>
         public async Task<SearchResult<T>> SearchAsync<T>(string query,
-            SearchQuery searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
+            SearchQuery? searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
         {
             SearchQuery body;
             if (searchAttributes == null)

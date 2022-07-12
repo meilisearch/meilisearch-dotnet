@@ -1,5 +1,7 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -81,13 +83,49 @@ namespace Meilisearch.Extensions
             client.DefaultRequestHeaders.Add("User-Agent", version.GetQualifiedVersion());
         }
 
-        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
+        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions? options = null)
         {
             options = options ?? Constants.JsonSerializerOptionsWriteNulls;
             var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
             payload.Headers.ContentType.CharSet = string.Empty;
 
             return payload;
+        }
+
+        private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, string? requestUri, HttpContent content, CancellationToken cancellationToken)
+        {
+            var uri = string.IsNullOrEmpty(requestUri) ? null : new Uri(requestUri, UriKind.RelativeOrAbsolute);
+            return client.PatchAsync(uri, content, cancellationToken);
+        }
+
+        private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri? requestUri, HttpContent content, CancellationToken cancellationToken)
+        {
+            // HttpClient.PatchAsync is not available in .NET standard and NET462
+            var method = new HttpMethod("PATCH");
+            var request = new HttpRequestMessage(method, requestUri) { Content = content };
+            return client.SendAsync(request, cancellationToken);
+        }
+
+        internal static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, string? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+        {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            var content = JsonContent.Create(value, mediaType: null, options);
+            return client.PatchAsync(requestUri, content, cancellationToken);
+        }
+
+        internal static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+        {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            var content = JsonContent.Create(value, mediaType: null, options);
+            return client.PatchAsync(requestUri, content, cancellationToken);
         }
     }
 }

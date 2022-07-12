@@ -23,7 +23,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Documents primary key.</param>
         /// <param name="createdAt">The creation date of the index.</param>
         /// <param name="updatedAt">The latest update of the index.</param>
-        public Index(string uid, string primaryKey = default, DateTimeOffset? createdAt = default, DateTimeOffset? updatedAt = default)
+        public Index(string uid, string? primaryKey = default, DateTimeOffset? createdAt = default, DateTimeOffset? updatedAt = default)
         {
             Uid = uid;
             PrimaryKey = primaryKey;
