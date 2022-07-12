@@ -122,20 +122,12 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
-        public async Task<IEnumerable<JsonElement>> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<JsonDocument> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
         {
             var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var json = JsonDocument.Parse(content);
-            var indexes = new List<JsonElement>();
-
-            foreach (var element in json.RootElement.EnumerateArray())
-            {
-                indexes.Add(element);
-            }
-
-            return indexes;
+            return JsonDocument.Parse(content);
         }
 
         /// <summary>
@@ -143,13 +135,14 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return Enumerable of Index.</returns>
-        public async Task<IEnumerable<Index>> GetAllIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Index>>> GetAllIndexesAsync(CancellationToken cancellationToken = default)
         {
             var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
 
-            var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>(cancellationToken: cancellationToken).ConfigureAwait(false);
-            return content
+            var content = await response.Content.ReadFromJsonAsync<ResourceResults<IEnumerable<Index>>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            content.Results
                 .Select(p => p.WithHttpClient(_http));
+            return content;
         }
 
         /// <summary>

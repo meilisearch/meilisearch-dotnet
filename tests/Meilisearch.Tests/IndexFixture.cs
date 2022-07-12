@@ -197,9 +197,9 @@ namespace Meilisearch.Tests
         public async Task DeleteAllIndexes()
         {
             var indexes = await DefaultClient.GetAllIndexesAsync();
-            foreach (var index in indexes)
+            foreach (var index in indexes.Results)
             {
-                await index.DeleteAsync();
+                await DefaultClient.Index(index.Uid).DeleteAsync();
             }
         }
     }
