@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Meilisearch.Extensions;
 namespace Meilisearch
 {
 
@@ -98,7 +99,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateAsync(string primarykeytoChange, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.PutAsJsonAsync($"indexes/{Uid}", new { primaryKey = primarykeytoChange }, cancellationToken: cancellationToken)
+                await _http.PatchAsJsonAsync($"indexes/{Uid}", new { primaryKey = primarykeytoChange }, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
