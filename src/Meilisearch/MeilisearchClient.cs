@@ -260,24 +260,11 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns dump creation status with uid and processing status.</returns>
-        public async Task<DumpStatus> CreateDumpAsync(CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateDumpAsync(CancellationToken cancellationToken = default)
         {
             var response = await _http.PostAsync("dumps", default, cancellationToken).ConfigureAwait(false);
 
-            return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Gets a dump creation status.
-        /// </summary>
-        /// <param name="uid">Unique identifier of the dump.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns dump creation status with uid and processing status.</returns>
-        public async Task<DumpStatus> GetDumpStatusAsync(string uid, CancellationToken cancellationToken = default)
-        {
-            var response = await _http.GetAsync($"dumps/{uid}/status", cancellationToken).ConfigureAwait(false);
-
-            return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
