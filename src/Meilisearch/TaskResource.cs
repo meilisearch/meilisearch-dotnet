@@ -7,9 +7,9 @@ namespace Meilisearch
     /// <summary>
     /// Information of the regarding a task.
     /// </summary>
-    public class TaskRessource
+    public class TaskResource
     {
-        public TaskRessource(int uid, string? indexUid, TaskInfoStatus status, TaskInfoType type,
+        public TaskResource(int uid, string? indexUid, TaskInfoStatus status, TaskInfoType type,
             Dictionary<string, object> details, Dictionary<string, string> error, string duration, DateTime enqueuedAt,
             DateTime? startedAt, DateTime? finishedAt)
         {
@@ -41,15 +41,14 @@ namespace Meilisearch
         public TaskInfoStatus Status { get; }
 
         /// <summary>
-        /// The type of task. Possible values are indexCreation, indexUpdate, indexDeletion,
-        /// documentAdditionOrUpdate, documentDeletion, settingsUpdate.
+        /// The type of task.
         /// </summary>
         public TaskInfoType Type { get; }
 
         /// <summary>
         /// Detailed information on the task payload.
         /// </summary>
-        public Dictionary<string, object> Details { get; }
+        public Dictionary<string, dynamic> Details { get; }
 
         /// <summary>
         /// Error details and context. Only present when a task has the failed status.

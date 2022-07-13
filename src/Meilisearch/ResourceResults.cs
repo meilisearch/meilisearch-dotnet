@@ -7,16 +7,16 @@ namespace Meilisearch
     /// When returning a list, Meilisearch stores the data in the "results" field, to allow better pagination.
     /// </summary>
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, indexes, ...</typeparam>
-    public class TasksResults<T> : Result<T>
+    public class ResourceResults<T> : Result<T>
     {
         /// <summary>
-        /// Gets or sets from size.
+        /// Gets or sets offset size.
         /// </summary>
-        public int? From { get; set; }
+        public int Offset { get; set; }
 
         /// <summary>
-        /// Gets or sets next size.
+        /// Gets or sets total size.
         /// </summary>
-        public int? Next { get; set; }
+        public int Total { get; set; }
     }
 }

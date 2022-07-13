@@ -19,9 +19,9 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the tasks.</returns>
-        public async Task<TasksResults<IEnumerable<TaskRessource>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskRessource>>>("tasks", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>("tasks", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -31,9 +31,9 @@ namespace Meilisearch
         /// <param name="taskUid">Uid of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task.</returns>
-        public async Task<TaskRessource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskResource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TaskRessource>($"tasks/{taskUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TaskResource>($"tasks/{taskUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -43,9 +43,9 @@ namespace Meilisearch
         /// <param name="indexUid">Uid of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks of an index.</returns>
-        public async Task<TasksResults<IEnumerable<TaskRessource>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskRessource>>>($"tasks?indexUid={indexUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>($"tasks?indexUid={indexUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -57,7 +57,7 @@ namespace Meilisearch
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of finished task.</returns>
-        public async Task<TaskRessource> WaitForTaskAsync(
+        public async Task<TaskResource> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,

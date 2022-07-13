@@ -41,8 +41,7 @@ namespace Meilisearch
         public TaskInfoStatus Status { get; }
 
         /// <summary>
-        /// The type of task. Possible values are indexCreation, indexUpdate, indexDeletion,
-        /// documentAdditionOrUpdate, documentDeletion, settingsUpdate.
+        /// The type of task.
         /// </summary>
         public TaskInfoType Type { get; }
 
