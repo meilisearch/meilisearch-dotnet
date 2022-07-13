@@ -68,7 +68,7 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             var document = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            document.Uid.Should().BeGreaterOrEqualTo(0);
+            document.TaskUid.Should().BeGreaterOrEqualTo(0);
         }
 
         [Fact]
@@ -92,10 +92,10 @@ namespace Meilisearch.Tests
 
             await _client.CreateIndexAsync(indexUid, _defaultPrimaryKey);
             var task = await _client.CreateIndexAsync(indexUid, _defaultPrimaryKey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            var finishedTask = await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            var finishedTask = await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
-            Assert.Equal(task.Uid, finishedTask.Uid);
+            Assert.Equal(task.TaskUid, finishedTask.Uid);
             Assert.Equal(indexUid, finishedTask.IndexUid);
             Assert.Equal(TaskInfoStatus.Failed, finishedTask.Status);
             var error = finishedTask.Error;
@@ -112,8 +112,8 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid);
 
             var task = await _client.UpdateIndexAsync(indexUid, primarykey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             var index = await _client.GetIndexAsync(indexUid);
             index.PrimaryKey.Should().Be(primarykey);
@@ -193,8 +193,8 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid);
 
             var task = await _client.Index(indexUid).UpdateAsync(primarykey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             var index = await _client.GetIndexAsync(indexUid);
             index.PrimaryKey.Should().Be(primarykey);

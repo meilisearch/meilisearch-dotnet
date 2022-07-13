@@ -175,7 +175,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks.</returns>
-        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<Result<IEnumerable<TaskResource>>> GetTasksAsync(CancellationToken cancellationToken = default)
         {
             return await TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -186,7 +186,7 @@ namespace Meilisearch
         /// <param name="taskUid">Unique identifier of the task.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return the task.</returns>
-        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskResource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
             return await TaskEndpoint().GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
         }
@@ -199,7 +199,7 @@ namespace Meilisearch
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of finished task.</returns>
-        public async Task<TaskInfo> WaitForTaskAsync(
+        public async Task<TaskResource> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,

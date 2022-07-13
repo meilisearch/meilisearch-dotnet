@@ -47,13 +47,13 @@ namespace Meilisearch.Tests
             var indexUid = "BasicUsageOfCustomClientTest";
 
             var task = await _fixture.ClientWithCustomHttpClient.CreateIndexAsync(indexUid);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _defaultClient.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             var index = _defaultClient.Index(indexUid);
             task = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
 
             // Check the JSON has been well serialized and the primary key is equal to "id"
             Assert.Equal("id", await index.FetchPrimaryKey());
@@ -131,8 +131,8 @@ namespace Meilisearch.Tests
             var indexUid = "DeleteIndexTest";
             await _fixture.ClientWithCustomHttpClient.CreateIndexAsync(indexUid, _defaultPrimaryKey);
             var task = await _fixture.ClientWithCustomHttpClient.DeleteIndexAsync(indexUid);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.TaskUid);
             Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
         }
     }
