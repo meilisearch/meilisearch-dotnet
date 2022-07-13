@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
@@ -134,10 +135,9 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid, _defaultPrimaryKey);
 
             var indexes = await _client.GetAllRawIndexesAsync();
-            indexes.Count().Should().BeGreaterOrEqualTo(1);
-            var index = indexes.First();
+            var results = indexes.RootElement.GetProperty("results");
+            var index = results[0];
             Assert.Equal(index.GetProperty("uid").GetString(), indexUid);
-            Assert.Equal(index.GetProperty("name").GetString(), indexUid);
             Assert.Equal(index.GetProperty("primaryKey").GetString(), _defaultPrimaryKey);
         }
 
@@ -148,7 +148,7 @@ namespace Meilisearch.Tests
             var index = await _fixture.SetUpEmptyIndex(indexUid, _defaultPrimaryKey);
 
             var indexes = await _client.GetAllIndexesAsync();
-            indexes.Count().Should().BeGreaterOrEqualTo(1);
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
         }
 
         [Fact]
