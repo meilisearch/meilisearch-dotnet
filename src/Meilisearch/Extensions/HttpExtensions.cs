@@ -108,22 +108,12 @@ namespace Meilisearch.Extensions
 
         internal static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, string? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var content = JsonContent.Create(value, mediaType: null, options);
             return client.PatchAsync(requestUri, content, cancellationToken);
         }
 
         internal static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, Uri? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-
             var content = JsonContent.Create(value, mediaType: null, options);
             return client.PatchAsync(requestUri, content, cancellationToken);
         }
