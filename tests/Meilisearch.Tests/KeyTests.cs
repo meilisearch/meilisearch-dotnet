@@ -54,10 +54,30 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetOneKeyUsingUid()
+        {
+            var keyResponse = await _client.GetKeysAsync();
+            var firstKey = keyResponse.Results.First();
+
+            var fetchedKey = await _client.GetKeyAsync(firstKey.Uid);
+
+            Assert.Equal(fetchedKey.KeyUid, firstKey.KeyUid);
+            Assert.Equal(fetchedKey.Uid, firstKey.Uid);
+            Assert.Equal(fetchedKey.Name, firstKey.Name);
+            Assert.Equal(fetchedKey.Description, firstKey.Description);
+            Assert.Equal(fetchedKey.Indexes, firstKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, firstKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, firstKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, firstKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, firstKey.UpdatedAt);
+        }
+
+        [Fact]
         public async Task CreateOneKey()
         {
             var keyOptions = new Key
             {
+                Name = "AddDocumentToAllIndexes",
                 Description = "Key to add document to all indexes.",
                 Actions = new string[] { "documents.add" },
                 Indexes = new string[] { "*" },
