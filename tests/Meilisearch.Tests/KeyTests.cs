@@ -57,8 +57,7 @@ namespace Meilisearch.Tests
         public async Task GetOneKeyUsingUid()
         {
             var keyResponse = await _client.GetKeysAsync();
-            var keys = keyResponse.Results;
-            var firstKey = keys.First();
+            var firstKey = keyResponse.Results.First();
 
             var fetchedKey = await _client.GetKeyAsync(firstKey.Uid);
 
