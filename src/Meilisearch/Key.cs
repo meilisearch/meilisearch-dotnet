@@ -24,7 +24,6 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the description of the API key.
         /// </summary>
-        // [JsonIgnore]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Name { get; set; }
 
