@@ -92,9 +92,18 @@ namespace Meilisearch.Extensions
             return payload;
         }
 
-        private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, HttpContent content, CancellationToken cancellationToken)
+        private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, string? requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            return client.PatchAsync(requestUri, content, cancellationToken);
+            var uri = new Uri(requestUri, UriKind.RelativeOrAbsolute);
+            return client.PatchAsync(uri, content, cancellationToken);
+        }
+
+        private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, Uri? requestUri, HttpContent content, CancellationToken cancellationToken)
+        {
+            // HttpClient.PatchAsync is not available in .NET standard and NET462
+            var method = new HttpMethod("PATCH");
+            var request = new HttpRequestMessage(method, requestUri) { Content = content };
+            return client.SendAsync(request, cancellationToken);
         }
 
         internal static Task<HttpResponseMessage> PatchAsJsonAsync<TValue>(this HttpClient client, string? requestUri, TValue value, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
