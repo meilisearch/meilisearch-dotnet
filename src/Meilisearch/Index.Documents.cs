@@ -334,7 +334,7 @@ namespace Meilisearch
             var uri = $"indexes/{Uid}/documents/{documentId}";
             if (fields != null)
             {
-                uri = $"{uri}?fields={fields.ToQueryString()}";
+                uri = $"{uri}?fields={string.Join( ",", fields)}";
             }
 
             return await _http
@@ -367,7 +367,12 @@ namespace Meilisearch
             var uri = $"indexes/{Uid}/documents";
             if (query != null)
             {
-                uri = $"{uri}?{query.ToQueryString()}";
+                var request = new { Limit = query.Limit, Offset = query.Offset };
+                uri = $"{uri}?{request.ToQueryString()}";
+                if (query.Fields != null)
+                {
+                    uri = $"{uri}&fields={string.Join( ",", query.Fields)}";
+                }
             }
 
             return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Meilisearch.Extensions;
 
 using Microsoft.AspNetCore.WebUtilities;
@@ -22,18 +24,18 @@ namespace Meilisearch.Tests
         }
 
         [Theory]
-        [InlineData(null, null, "")]
-        [InlineData(1, null, "")]
-        [InlineData(null, 3, "")]
+        [InlineData(null, null, null)]
+        [InlineData(1, null, null)]
+        [InlineData(null, 3, null)]
         [InlineData(null, null, "attr")]
-        [InlineData(1, 2, "")]
+        [InlineData(1, 2, null)]
         [InlineData(1, null, "attr")]
         [InlineData(null, 2, "attr")]
         [InlineData(1, 2, "attr")]
         public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string fields)
         {
             var uri = "indexes/myindex/documents";
-            var dq = new DocumentQuery { Offset = offset, Limit = limit, Fields = fields };
+            var dq = new DocumentQuery { Offset = offset, Limit = limit, Fields = new List<string>{ fields } };
 
             var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
             var actual = $"{uri}?{dq.ToQueryString()}";
