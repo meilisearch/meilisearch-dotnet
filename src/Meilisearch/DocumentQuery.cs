@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -16,8 +18,8 @@ namespace Meilisearch
         public int? Limit { get; set; }
 
         /// <summary>
-        /// Gets or sets the attributes to retrieve..
+        /// Gets or sets the attributes to retrieve.
         /// </summary>
-        public IEnumerable<string> Fields { get; set; }
+        public List<string>? Fields { get; set; }
     }
 }

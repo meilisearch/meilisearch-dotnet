@@ -332,7 +332,7 @@ namespace Meilisearch
         public async Task<T> GetDocumentAsync<T>(string documentId, List<string>? fields = default, CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents/{documentId}";
-            if (query != null)
+            if (fields != null)
             {
                 uri = $"{uri}?fields={fields.ToQueryString()}";
             }
