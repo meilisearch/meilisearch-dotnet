@@ -94,7 +94,7 @@ namespace Meilisearch.Extensions
 
         private static Task<HttpResponseMessage> PatchAsync(this HttpClient client, string? requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            var uri = string.IsNullOrEmpty(requestUri) ? null : new Uri(requestUri, UriKind.RelativeOrAbsolute);
+            var uri = new Uri(requestUri, UriKind.RelativeOrAbsolute);
             return client.PatchAsync(uri, content, cancellationToken);
         }
 
