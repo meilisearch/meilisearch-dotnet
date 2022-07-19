@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -18,6 +20,6 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the attributes to retrieve.
         /// </summary>
-        public string AttributesToRetrieve { get; set; }
+        public List<string>? Fields { get; set; }
     }
 }
