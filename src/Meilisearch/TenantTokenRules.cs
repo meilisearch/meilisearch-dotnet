@@ -8,7 +8,7 @@ namespace Meilisearch
     /// </summary>
     public class TenantTokenRules
     {
-        private object _rules;
+        private readonly object _rules;
 
         public TenantTokenRules(Dictionary<string, object> rules)
         {
