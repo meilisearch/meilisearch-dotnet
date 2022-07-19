@@ -12,19 +12,21 @@ namespace Meilisearch.Tests
 {
     public abstract class TenantTokenTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
-        private TenantTokenRules _searchRules = new TenantTokenRules(new string[] { "*" });
+        private readonly TenantTokenRules _searchRules = new TenantTokenRules(new string[] { "*" });
 
         private readonly TFixture _fixture;
         private JwtBuilder _builder;
         private Index _basicIndex;
         private readonly MeilisearchClient _client;
         private readonly string _indexName = "books";
-        private string _key;
+        private readonly string _uid;
+        private readonly string _key;
 
         public TenantTokenTests(TFixture fixture)
         {
             _fixture = fixture;
             _client = fixture.DefaultClient;
+            _uid = Guid.NewGuid().ToString();
             _key = Guid.NewGuid().ToString();
         }
 
@@ -44,14 +46,22 @@ namespace Meilisearch.Tests
         public void DoesNotGenerateASignedTokenWithoutAKey()
         {
             Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
-                () => TenantToken.GenerateToken(_searchRules, null, null)
+                () => TenantToken.GenerateToken(_uid, _searchRules, null, null)
+            );
+        }
+
+        [Fact]
+        public void DoesNotGenerateASignedTokenWithoutAUid()
+        {
+            Assert.Throws<MeilisearchTenantTokenApiKeyUidInvalid>(
+                () => TenantToken.GenerateToken(null, _searchRules, _key, null)
             );
         }
 
         [Fact]
         public void SignsTokenWithGivenKey()
         {
-            var token = TenantToken.GenerateToken(_searchRules, _key, null);
+            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, null);
 
             Assert.Throws<SignatureVerificationException>(
                 () => _builder.WithSecret("other-key").Decode(token)
@@ -64,7 +74,7 @@ namespace Meilisearch.Tests
         public void GeneratesTokenWithExpiresAt()
         {
             var expiration = DateTimeOffset.UtcNow.AddDays(1).DateTime;
-            var token = TenantToken.GenerateToken(_searchRules, _key, expiration);
+            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, expiration);
 
             _builder.WithSecret(_key).Decode(token);
         }
@@ -75,25 +85,25 @@ namespace Meilisearch.Tests
             var expiresAt = new DateTime(1995, 12, 20);
 
             Assert.Throws<MeilisearchTenantTokenExpired>(
-                () => TenantToken.GenerateToken(_searchRules, _key, expiresAt)
+                () => TenantToken.GenerateToken(_uid, _searchRules, _key, expiresAt)
             );
         }
 
         [Fact]
         public void ContainsValidClaims()
         {
-            var token = TenantToken.GenerateToken(_searchRules, _key, null);
+            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, null);
 
             var claims = _builder.WithSecret(_key).Decode<IDictionary<string, object>>(token);
 
-            Assert.Equal(claims["apiKeyPrefix"], _key.Substring(0, 8));
+            Assert.Equal(claims["apiKeyUid"], _uid);
             Assert.Equal(claims["searchRules"], _searchRules.ToClaim());
         }
 
         [Fact]
         public void ClientDecodesSuccessfullyUsingApiKeyFromInstance()
         {
-            var token = _client.GenerateTenantToken(_searchRules);
+            var token = _client.GenerateTenantToken(_uid, _searchRules);
 
             _builder.WithSecret(_client.ApiKey).Decode(token);
         }
@@ -101,7 +111,7 @@ namespace Meilisearch.Tests
         [Fact]
         public void ClientDecodesSuccessfullyUsingApiKeyFromArgument()
         {
-            var token = _client.GenerateTenantToken(_searchRules, apiKey: _key);
+            var token = _client.GenerateTenantToken(_uid, _searchRules, apiKey: _key);
 
             _builder.WithSecret(_key).Decode(token);
         }
@@ -112,7 +122,7 @@ namespace Meilisearch.Tests
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress);
 
             Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
-                () => customClient.GenerateTenantToken(_searchRules)
+                () => customClient.GenerateTenantToken(_uid, _searchRules)
             );
         }
 
@@ -130,9 +140,9 @@ namespace Meilisearch.Tests
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress, createdKey.KeyUid);
             var task = await admClient.Index(_indexName).UpdateFilterableAttributesAsync(new string[] { "tag", "book_id" });
-            await admClient.Index(_indexName).WaitForTaskAsync(task.Uid);
+            await admClient.Index(_indexName).WaitForTaskAsync(task.TaskUid);
 
-            var token = admClient.GenerateTenantToken(new TenantTokenRules(data));
+            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(data));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress, token);
 
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
