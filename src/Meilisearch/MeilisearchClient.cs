@@ -84,7 +84,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the associated task.</returns>
-        public async Task<TaskInfo> CreateIndexAsync(string uid, string? primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             var index = new Index(uid, primaryKey);
             var responseMessage = await _http.PostJsonCustomAsync("indexes", index, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
@@ -321,7 +321,7 @@ namespace Meilisearch
         /// <exception cref="MeilisearchTenantTokenApiKeyInvalid">When there is no <paramref name="apiKey"/> defined in the client or as argument.</exception>
         /// <exception cref="MeilisearchTenantTokenExpired">When the sent <paramref name="expiresAt"/> param is in the past</exception>
         /// <returns>Returns a generated tenant token.</returns>
-        public string GenerateTenantToken(string apiKeyUid, TenantTokenRules searchRules, string? apiKey = null, DateTime? expiresAt = null)
+        public string GenerateTenantToken(string apiKeyUid, TenantTokenRules searchRules, string apiKey = null, DateTime? expiresAt = null)
         {
             return TenantToken.GenerateToken(apiKeyUid, searchRules, apiKey ?? ApiKey, expiresAt);
         }

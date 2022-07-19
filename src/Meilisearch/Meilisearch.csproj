@@ -12,8 +12,6 @@
         <PackageProjectUrl>https://meilisearch.com</PackageProjectUrl>
         <PackageIconUrl>https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.png</PackageIconUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Nullable>enable</Nullable>
-        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

@@ -9,7 +9,7 @@ namespace Meilisearch
     /// </summary>
     public class TaskInfo
     {
-        public TaskInfo(int taskUid, string? indexUid, TaskInfoStatus status, TaskInfoType type,
+        public TaskInfo(int taskUid, string indexUid, TaskInfoStatus status, TaskInfoType type,
             Dictionary<string, object> details, Dictionary<string, string> error, string duration, DateTime enqueuedAt,
             DateTime? startedAt, DateTime? finishedAt)
         {
@@ -33,7 +33,7 @@ namespace Meilisearch
         /// <summary>
         /// The unique index identifier.
         /// </summary>
-        public string? IndexUid { get; }
+        public string IndexUid { get; }
 
         /// <summary>
         /// The status of the task. Possible values are enqueued, processing, succeeded, failed.
