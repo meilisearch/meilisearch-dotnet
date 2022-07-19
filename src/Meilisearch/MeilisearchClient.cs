@@ -141,7 +141,8 @@ namespace Meilisearch
 
             var content = await response.Content.ReadFromJsonAsync<ResourceResults<IEnumerable<Index>>>(cancellationToken: cancellationToken).ConfigureAwait(false);
             content.Results
-                .Select(p => p.WithHttpClient(_http));
+                .Select(p => p.WithHttpClient(_http))
+                .ToList();
             return content;
         }
 

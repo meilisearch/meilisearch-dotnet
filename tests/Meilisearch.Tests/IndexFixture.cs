@@ -199,7 +199,7 @@ namespace Meilisearch.Tests
             var indexes = await DefaultClient.GetAllIndexesAsync();
             foreach (var index in indexes.Results)
             {
-                await DefaultClient.Index(index.Uid).DeleteAsync();
+                await index.DeleteAsync();
             }
         }
     }
