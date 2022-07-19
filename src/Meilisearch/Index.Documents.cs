@@ -334,7 +334,7 @@ namespace Meilisearch
             var uri = $"indexes/{Uid}/documents/{documentId}";
             if (fields != null)
             {
-                uri = $"{uri}?fields={string.Join( ",", fields)}";
+                uri = $"{uri}?fields={string.Join(",", fields)}";
             }
 
             return await _http
@@ -371,7 +371,7 @@ namespace Meilisearch
                 uri = $"{uri}?{request.ToQueryString()}";
                 if (query.Fields != null)
                 {
-                    uri = $"{uri}&fields={string.Join( ",", query.Fields)}";
+                    uri = $"{uri}&fields={string.Join(",", query.Fields)}";
                 }
             }
 

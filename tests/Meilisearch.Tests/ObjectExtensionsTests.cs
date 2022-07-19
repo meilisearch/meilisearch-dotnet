@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
         public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string fields)
         {
             var uri = "indexes/myindex/documents";
-            var dq = new DocumentQuery { Offset = offset, Limit = limit, Fields = new List<string>{ fields } };
+            var dq = new DocumentQuery { Offset = offset, Limit = limit, Fields = new List<string> { fields } };
 
             var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
             var actual = $"{uri}?{dq.ToQueryString()}";

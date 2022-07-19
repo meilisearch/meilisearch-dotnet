@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using FluentAssertions;
 
@@ -516,7 +516,7 @@ namespace Meilisearch.Tests
         public async Task GetOneExistingDocumentWithField()
         {
             var index = await _fixture.SetUpBasicIndex("GetOneExistingDocumentWithStringIdTest");
-            var documents = await index.GetDocumentAsync<Movie>("10", new List<string>{ "name" });
+            var documents = await index.GetDocumentAsync<Movie>("10", new List<string> { "name" });
             documents.Id.Should().BeNull();
             documents.Name.Should().Be("Gladiator");
         }
@@ -525,7 +525,7 @@ namespace Meilisearch.Tests
         public async Task GetOneExistingDocumentWithMultipleFields()
         {
             var index = await _fixture.SetUpBasicIndex("GetOneExistingDocumentWithStringIdTest");
-            var documents = await index.GetDocumentAsync<Movie>("10", new List<string>{ "name", "id" });
+            var documents = await index.GetDocumentAsync<Movie>("10", new List<string> { "name", "id" });
             documents.Id.Should().Be("10");
             documents.Name.Should().Be("Gladiator");
             documents.Genre.Should().BeNull();
@@ -555,7 +555,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithField()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2 , Fields = new List<string>{ "id" } });
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2, Fields = new List<string> { "id" } });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().BeNull();
@@ -566,7 +566,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithMultipleFields()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2 , Fields = new List<string>{ "id" , "name" } });
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2, Fields = new List<string> { "id", "name" } });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().Be("Gladiator");
