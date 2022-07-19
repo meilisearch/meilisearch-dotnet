@@ -20,6 +20,6 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the attributes to retrieve.
         /// </summary>
-        public List<string>? Fields { get; set; }
+        public List<string> Fields { get; set; }
     }
 }

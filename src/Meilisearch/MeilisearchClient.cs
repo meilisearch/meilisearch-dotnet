@@ -84,7 +84,7 @@ namespace Meilisearch
         /// <param name="primaryKey">Primary key for documents.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the associated task.</returns>
-        public async Task<TaskInfo> CreateIndexAsync(string uid, string? primaryKey = default, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateIndexAsync(string uid, string primaryKey = default, CancellationToken cancellationToken = default)
         {
             var index = new Index(uid, primaryKey);
             var responseMessage = await _http.PostJsonCustomAsync("indexes", index, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
