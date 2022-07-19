@@ -321,7 +321,7 @@ namespace Meilisearch
         /// <exception cref="MeilisearchTenantTokenApiKeyInvalid">When there is no <paramref name="apiKey"/> defined in the client or as argument.</exception>
         /// <exception cref="MeilisearchTenantTokenExpired">When the sent <paramref name="expiresAt"/> param is in the past</exception>
         /// <returns>Returns a generated tenant token.</returns>
-        public string GenerateTenantToken(string apiKeyUid, TenantTokenRules searchRules, string? apiKey = null, DateTime? expiresAt = null)
+        public string GenerateTenantToken(string apiKeyUid, TenantTokenRules searchRules, string apiKey = null, DateTime? expiresAt = null)
         {
             return TenantToken.GenerateToken(apiKeyUid, searchRules, apiKey ?? ApiKey, expiresAt);
         }
