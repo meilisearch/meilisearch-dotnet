@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
 
 namespace Meilisearch
 {
@@ -357,22 +358,17 @@ namespace Meilisearch
         /// <summary>
         /// Get documents with the allowed Query Parameters.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve.</param>
+        /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve named fields.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the list of documents.</returns>
-        public async Task<ResourceResults<IEnumerable<T>>> GetDocumentsAsync<T>(DocumentQuery query = default,
+        public async Task<ResourceResults<IEnumerable<T>>> GetDocumentsAsync<T>(DocumentsQuery query = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
             if (query != null)
             {
-                var request = new { Limit = query.Limit, Offset = query.Offset };
-                uri = $"{uri}?{request.ToQueryString()}";
-                if (query.Fields != null)
-                {
-                    uri = $"{uri}&fields={string.Join(",", query.Fields)}";
-                }
+                uri = $"{uri}?{query.ToQueryStringWithList()}";
             }
 
             return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)

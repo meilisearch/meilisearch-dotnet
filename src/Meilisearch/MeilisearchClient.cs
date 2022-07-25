@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
 
@@ -133,11 +135,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
+        /// <param name="query">Query parameters. Supports limit and offset.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return Enumerable of Index.</returns>
-        public async Task<ResourceResults<IEnumerable<Index>>> GetAllIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Index>>> GetAllIndexesAsync(IndexesQuery query = default, CancellationToken cancellationToken = default)
         {
-            var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
+            var uri = $"indexes";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            var response = await _http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadFromJsonAsync<ResourceResults<IEnumerable<Index>>>(cancellationToken: cancellationToken).ConfigureAwait(false);
             content.Results
@@ -174,11 +182,12 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters. Supports limit, from, indexUid, status and types.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks.</returns>
-        public async Task<Result<IEnumerable<TaskResource>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<Result<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
+            return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -264,11 +273,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets the API keys.
         /// </summary>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <param name="query">Query parameters. Supports limit and offset.</param>
+        /// <param name="query">Query parameters. Supports limit and offset.</param>
         /// <returns>Returns a list of the API keys.</returns>
-        public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<Key>>>("keys", cancellationToken: cancellationToken)
+            var uri = $"keys";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<Key>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

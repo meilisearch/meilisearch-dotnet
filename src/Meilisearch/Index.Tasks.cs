@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
     public partial class Index
@@ -9,11 +11,12 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters. Supports limit, from, indexUid, status and types.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the operations status.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
+            return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

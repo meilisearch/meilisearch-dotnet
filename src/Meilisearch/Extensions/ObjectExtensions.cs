@@ -38,5 +38,31 @@ namespace Meilisearch.Extensions
             var queryString = string.Join("&", values);
             return queryString;
         }
+
+        /// <summary>
+        /// Transforms a Meilisearch object containing Lists into an URL encoded query string.
+        /// </summary>
+        /// <param name="source">Object to transform.</param>
+        /// <param name="bindingAttr">Binding flags.</param>
+        /// <returns>Returns an url encoded query string.</returns>
+        internal static string ToQueryStringWithList(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        {
+            var values = new List<string>(); ;
+            foreach (var p in source.GetType().GetProperties(bindingAttr))
+            {
+                if (p.GetValue(source, null) != null)
+                {
+                    if (!(p.GetValue(source, null).GetType().IsGenericType && p.GetValue(source, null).GetType().GetGenericTypeDefinition() == typeof(List<>)))
+                    {
+                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(p.Name[0]) + p.Name.Substring(1)) + "=" + Uri.EscapeDataString(p.GetValue(source, null).ToString()));
+                    }
+                    if (p.GetValue(source, null).GetType().IsGenericType && p.GetValue(source, null).GetType().GetGenericTypeDefinition() == typeof(List<>))
+                    {
+                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(p.Name[0]) + p.Name.Substring(1)) + "=" + string.Join(",", (List<string>)p.GetValue(source, null)));
+                    }
+                }
+            }
+            return string.Join("&", values);
+        }
     }
 }
