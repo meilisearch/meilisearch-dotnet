@@ -3,27 +3,16 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
-get_all_tasks_filtering_1: |-
-get_all_tasks_filtering_2: |-
-get_all_tasks_paginating_1: |-
-get_all_tasks_paginating_2: |-
-get_pagination_settings_1: |-
-update_pagination_settings_1: |-
-reset_pagination_settings_1: |-
-get_faceting_settings_1: |-
-update_faceting_settings_1: |-
-reset_faceting_settings_1: |-
-settings_guide_faceting_1: |-
-settings_guide_pagination_1: |-
-
 get_one_index_1: |-
-PLEASE_UPDATE_ME>>>>>>>>>>>>>list_all_indexes_1: |-
+list_all_indexes_1: |-
+  await client.GetAllIndexesAsync();
 create_an_index_1: |-
   TaskInfo task = await client.CreateIndexAsync("movies", "id");
 update_an_index_1: |-
   TaskInfo task = await client.UpdateIndexAsync("movies", "id");
 delete_an_index_1: |-
-PLEASE_UPDATE_ME>>>>>>>>>>>>>get_one_document_1: |-
+get_one_document_1: |-
+  await client.Index("movies").GetDocumentAsync<T>(25684, new List<string> { "id", "title", "poster", "release_date" });
 get_documents_1: |-
 add_or_replace_documents_1: |-
 add_or_update_documents_1: |-
@@ -31,18 +20,48 @@ delete_all_documents_1: |-
 delete_one_document_1: |-
 delete_documents_1: |-
 search_post_1: |-
-PLEASE_REMOVE_ME>>>>>>>>>>>>>get_task_by_index_1: |-
-  TaskInfo task = await client.Index("movies").GetTaskAsync(1);
-PLEASE_REMOVE_ME>>>>>>>>>>>>>get_all_tasks_by_index_1: |-
-  Result taskResult = await client.Index("movies").GetTasksAsync();
-  var tasks = taskResult.Result;
 get_task_1: |
   TaskInfo task = await client.GetTaskAsync(1);
 get_all_tasks_1: |
   Result taskResult = await client.GetTasksAsync();
   var tasks = taskResult.Result;
 get_settings_1: |-
-PLEASE_UPDATE_ME>>>>>>>>>>>>>update_settings_1: |-
+update_settings_1: |-
+  Settings newSettings = new Settings
+  {
+    RankingRules = new string[]
+    {
+      "words",
+      "typo",
+      "proximity",
+      "attribute",
+      "sort",
+      "exactness",
+      "release_date:desc",
+      "rank:desc"
+    },
+    DistinctAttribute = "movie_id",
+    SearchableAttributes = new string[] { "title", "overview", "genres" },
+    DisplayedAttributes = new string[] { "title", "overview", "genres", "release_date" },
+    SortableAttributes = new string[] { "title", "release_date" },
+    StopWords = new string[] { "the", "a", "an" },
+    Synonyms = new Dictionary<string, IEnumerable<string>>
+    {
+      { "wolverine", new string[] { "xmen", "logan" } },
+      { "logan", new string[] { "wolverine" } },
+    },
+    FilterableAttributes = new string[] { },
+    TypoTolerance = new TypoTolerance
+    {
+        DisableOnAttributes = new string[] { "title" },
+        MinWordSizeForTypos = new TypoTolerance.TypoSize
+        {
+            OneTypo = 8,
+            TwoTypos = 10
+        }
+    }
+  };
+  TaskInfo task = await client.Index("movies").UpdateSettingsAsync(newFilters);
 reset_settings_1: |-
 get_synonyms_1: |-
 update_synonyms_1: |-
@@ -95,7 +114,13 @@ search_parameter_guide_limit_1: |-
 search_parameter_guide_retrieve_1: |-
 search_parameter_guide_crop_1: |-
 search_parameter_guide_highlight_1: |-
-PLEASE_UPDATE_ME>>>>>>>>>>>>>search_parameter_guide_matches_1: |-
+search_parameter_guide_matches_1: |-
+  await client.Index("movies").SearchAsync<T>(
+    "winter feast",
+    new SearchQuery
+    {
+        ShowMatchesPosition = True,
+    });
 settings_guide_synonyms_1: |-
 settings_guide_stop_words_1: |-
 settings_guide_ranking_rules_1: |-
@@ -152,8 +177,8 @@ getting_started_add_documents_md: |-
   }
   ```
   [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
-PLEASE_UPDATE_ME>>>>>>>>>>>>>PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_check_task_status: |-
-  TaskInfo task = await client.Index("movies").GetTaskAsync(1);
+getting_started_check_task_status: |-
+  TaskInfo task = await client.GetTaskAsync(0);
 getting_started_search_md: |-
   ```csharp
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
@@ -236,7 +261,7 @@ getting_started_communicating_with_a_protected_instance: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
 
   await client.Index("Movies").SearchAsync<Movie>("");
-faceted_search_PLEASE_UPDATE_ME>>>>>>>>>>>>>update_settings_1: |-
+faceted_search_update_settings_1: |-
 faceted_search_filter_1: |-
   SearchQuery filters = new SearchQuery()
   {
@@ -248,7 +273,7 @@ faceted_search_filter_1: |-
   };
 
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("thriller", filters);
-PLEASE_UPDATE_ME>>>>>>>>>>>>>faceted_search_facets_distribution_1: |-
+faceted_search_facets_1: |-
   SearchQuery filters = new SearchQuery()
   {
       Facets = new string[] { "genres" }
@@ -271,7 +296,6 @@ landing_getting_started_1: |-
 
   var task = await client.Index("movies").AddDocumentsAsync<Movie>(documents);
 post_dump_1: |-
-PLEASE_REMOVE_ME>>>>>>>>>>>>>get_dump_status_1: |-
 phrase_search_1: |-
 sorting_guide_update_sortable_attributes_1: |-
 sorting_guide_update_ranking_rules_1: |-
@@ -335,8 +359,8 @@ authorization_header_1: |-
   var keys = await client.GetKeysAsync();
 get_one_key_1: |-
   Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
-PLEASE_UPDATE_ME>>>>>>>>>>>>>get_all_keys_1: |-
-  Result keyResult = await client.GetKeysAsync();
+get_all_keys_1: |-
+  Result keyResult = await client.GetKeysAsync(new KeysQuery() { Limit = 3 });
   var keys = keyResult.Result;
 create_a_key_1: |-
   Key keyOptions = new Key
@@ -347,14 +371,14 @@ create_a_key_1: |-
       ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z")
   };
   Key createdKey = await this.client.CreateKeyAsync(keyOptions);
-PLEASE_UPDATE_ME>>>>>>>>>>>>>update_a_key_1: |-
+update_a_key_1: |-
   // Not implemented yet
-PLEASE_UPDATE_ME>>>>>>>>>>>>>delete_a_key_1: |-
-  client.DeleteKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4")
+delete_a_key_1: |-
+  client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
 security_guide_search_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "apiKey");
   SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
-PLEASE_UPDATE_ME>>>>>>>>>>>>>security_guide_update_key_1: |-
+security_guide_update_key_1: |-
   // Not implemented yet
 security_guide_create_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
@@ -370,9 +394,9 @@ security_guide_list_keys_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
   Result keyResult = await client.GetKeysAsync();
   var keys = keyResult.Result;
-PLEASE_UPDATE_ME>>>>>>>>>>>>>security_guide_delete_key_1: |-
+security_guide_delete_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
-  client.DeleteKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4")
+  client.DeleteKeyAsync("ac5cd97d-5a4b-4226-a868-2d0eb6d197ab")
 tenant_token_guide_generate_sdk_1: |-
   var apiKey = "B5KdX2MY2jV6EXfUs6scSfmC...";
   var expiresAt = new DateTime(2025, 12, 20);
@@ -438,3 +462,24 @@ settings_guide_typo_tolerance_1: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
+get_all_tasks_filtering_1: |-
+  Result taskResult = await client.GetTasksAsync();
+  // OR
+  Result taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });;
+get_all_tasks_filtering_2: |-
+  Result taskResult = await client.GetTasksAsync(new TasksQuery {
+    Status = new List<string>() { "succeeded", "failed" },
+    Type = new List<string>() { "documentAdditionOrUpdate" },
+  });
+get_all_tasks_paginating_1: |-
+  Result taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });
+get_all_tasks_paginating_2: |-
+  Result taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 8 });
+get_pagination_settings_1: |-
+update_pagination_settings_1: |-
+reset_pagination_settings_1: |-
+get_faceting_settings_1: |-
+update_faceting_settings_1: |-
+reset_faceting_settings_1: |-
+settings_guide_faceting_1: |-
+settings_guide_pagination_1: |-
