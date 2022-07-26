@@ -463,9 +463,9 @@ settings_guide_typo_tolerance_1: |-
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 get_all_tasks_filtering_1: |-
-  Result taskResult = await client.GetTasksAsync();
+  Result taskResult = await client.Index("movies").GetTasksAsync();
   // OR
-  Result taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });;
+  Result taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });
 get_all_tasks_filtering_2: |-
   Result taskResult = await client.GetTasksAsync(new TasksQuery {
     Status = new List<string>() { "succeeded", "failed" },
