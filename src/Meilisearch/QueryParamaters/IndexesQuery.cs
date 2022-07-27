@@ -1,7 +1,7 @@
 namespace Meilisearch.QueryParameters
 {
     /// <summary>
-    /// Indexes Query for Meilisearch class.
+    /// A class that handles the creation of a query string for Indexes.
     /// </summary>
     public class IndexesQuery
     {

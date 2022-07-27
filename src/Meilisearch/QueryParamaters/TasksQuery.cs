@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Meilisearch.QueryParameters
 {
     /// <summary>
-    /// Tasks Query for Meilisearch class.
+    /// A class that handles the creation of a query string for Tasks.
     /// </summary>
     public class TasksQuery
     {

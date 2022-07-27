@@ -1,7 +1,7 @@
 namespace Meilisearch.QueryParameters
 {
     /// <summary>
-    /// Keys Query for Meilisearch class.
+    /// A class that handles the creation of a query string for Keys.
     /// </summary>
     public class KeysQuery
     {
