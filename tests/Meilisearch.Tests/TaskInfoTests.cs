@@ -64,8 +64,8 @@ namespace Meilisearch.Tests
         {
             await _index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
             var taskResponse = await _index.GetTasksAsync(new TasksQuery { Limit = 1, IndexUid = new List<string> { _index.Uid } });
-            var tasks = taskResponse.Results;
-            tasks.Count().Should().BeGreaterOrEqualTo(1);
+
+            taskResponse.Results.Count().Should().BeGreaterOrEqualTo(1);
         }
 
         [Fact]
