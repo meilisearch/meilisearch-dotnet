@@ -368,7 +368,7 @@ namespace Meilisearch
             var uri = $"indexes/{Uid}/documents";
             if (query != null)
             {
-                uri = $"{uri}?{query.ToQueryStringWithList()}";
+                uri = $"{uri}?{query.ToQueryString()}";
             }
 
             return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)

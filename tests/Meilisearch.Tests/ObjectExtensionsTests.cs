@@ -29,25 +29,6 @@ namespace Meilisearch.Tests
         [InlineData(null, null, null)]
         [InlineData(1, null, null)]
         [InlineData(null, 3, null)]
-        [InlineData(null, null, "attr")]
-        [InlineData(1, 2, null)]
-        [InlineData(1, null, "attr")]
-        [InlineData(null, 2, "attr")]
-        [InlineData(1, 2, "attr")]
-        public void QueryStringsAreEqualsForDocumentQuery(int? offset, int? limit, string fields)
-        {
-            var uri = "indexes/myindex/documents";
-            var dq = new DocumentsQuery { Offset = offset, Limit = limit, Fields = new List<string> { fields } };
-
-            var expected = QueryHelpers.AddQueryString(uri, dq.AsDictionary());
-            var actual = $"{uri}?{dq.ToQueryString()}";
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData(null, null, null)]
-        [InlineData(1, null, null)]
-        [InlineData(null, 3, null)]
         [InlineData(null, null, new string[] { "attr" })]
         [InlineData(null, null, new string[] { "attr", "attr2", "attr3" })]
         [InlineData(1, 2, null)]
@@ -59,7 +40,7 @@ namespace Meilisearch.Tests
         {
             var uri = "indexes/myindex/documents";
             var dq = new DocumentsQuery { Offset = offset, Limit = limit, Fields = fields != null ? new List<string>(fields) : null };
-            var actualQuery = $"{uri}?{dq.ToQueryStringWithList()}";
+            var actualQuery = $"{uri}?{dq.ToQueryString()}";
 
             Assert.NotEmpty(actualQuery);
             Assert.NotNull(actualQuery);

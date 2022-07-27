@@ -29,7 +29,7 @@ namespace Meilisearch
             var uri = $"tasks";
             if (query != null)
             {
-                uri = $"{uri}?{query.ToQueryStringWithList()}";
+                uri = $"{uri}?{query.ToQueryString()}";
             }
             return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
