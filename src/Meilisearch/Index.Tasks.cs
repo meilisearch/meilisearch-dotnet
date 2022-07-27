@@ -11,7 +11,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit, from, indexUid, status and types.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the operations status.</returns>
         public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)

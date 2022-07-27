@@ -182,7 +182,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit, from, indexUid, status and types.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks.</returns>
         public async Task<Result<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
@@ -273,8 +273,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets the API keys.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit and offset.</param>
-        /// <param name="query">Query parameters. Supports limit and offset.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <returns>Returns a list of the API keys.</returns>
         public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {

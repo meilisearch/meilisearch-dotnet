@@ -358,7 +358,7 @@ namespace Meilisearch
         /// <summary>
         /// Get documents with the allowed Query Parameters.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve named fields.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the list of documents.</returns>
