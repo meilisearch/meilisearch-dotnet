@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
+
+using Meilisearch.QueryParameters;
 
 using Xunit;
 
@@ -142,13 +143,42 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task GetAllExistingIndexes()
+        public async Task GetMultipleExistingIndexes()
         {
-            var indexUid = "GetAllExistingIndexesTest";
-            var index = await _fixture.SetUpEmptyIndex(indexUid, _defaultPrimaryKey);
+            var indexUid1 = "GetMultipleExistingIndexesTest1";
+            var indexUid2 = "GetMultipleExistingIndexesTest2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
 
             var indexes = await _client.GetAllIndexesAsync();
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(2);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingIndexesWithLimit()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithLimit1";
+            var indexUid2 = "GetMultipleExistingIndexesWithLimit2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllIndexesAsync(new IndexesQuery() { Limit = 1 });
             indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
+            indexes.Limit.Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, indexes.Limit);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingIndexesWithOffset()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithOffset1";
+            var indexUid2 = "GetMultipleExistingIndexesWithOffset2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllIndexesAsync(new IndexesQuery() { Offset = 1 });
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, indexes.Offset);
         }
 
         [Fact]

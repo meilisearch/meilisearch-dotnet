@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.QueryParameters;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -27,12 +29,30 @@ namespace Meilisearch.Tests
         public Task DisposeAsync() => Task.CompletedTask;
 
         [Fact]
-        public async Task GetAllKeys()
+        public async Task GetMultipleKeys()
         {
             var keyResponse = await _client.GetKeysAsync();
             var keys = keyResponse.Results;
 
             keys.Count().Should().BeGreaterOrEqualTo(2);
+        }
+
+        [Fact]
+        public async Task GetMultipleKeysWithLimit()
+        {
+            var keys = await _client.GetKeysAsync(new KeysQuery { Limit = 1 });
+
+            keys.Results.Count().Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, keys.Limit);
+        }
+
+        [Fact]
+        public async Task GetMultipleKeysWithOffset()
+        {
+            var keys = await _client.GetKeysAsync(new KeysQuery { Offset = 1 });
+
+            keys.Results.Count().Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, keys.Offset);
         }
 
         [Fact]

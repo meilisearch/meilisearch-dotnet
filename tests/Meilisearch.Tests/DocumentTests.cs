@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.QueryParameters;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -545,7 +547,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithLimit()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2 });
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2 });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.Last().Id.Should().Be("11");
@@ -555,7 +557,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithField()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2, Fields = new List<string> { "id" } });
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Fields = new List<string> { "id" } });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().BeNull();
@@ -566,7 +568,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithMultipleFields()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery() { Limit = 2, Fields = new List<string> { "id", "name" } });
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Fields = new List<string> { "id", "name" } });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().Be("Gladiator");

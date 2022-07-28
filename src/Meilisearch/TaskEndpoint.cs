@@ -4,6 +4,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
 
@@ -17,11 +21,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the tasks.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>("tasks", cancellationToken: cancellationToken)
+            var uri = $"tasks";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
