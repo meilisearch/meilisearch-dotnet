@@ -1,3 +1,5 @@
+using System;
+
 using Xunit;
 
 namespace Meilisearch.Tests.ServerConfigs
@@ -6,9 +8,15 @@ namespace Meilisearch.Tests.ServerConfigs
     {
         const string CollectionFixtureName = nameof(ProxiedUriServer);
         private const string MeilisearchTestAddress = "http://localhost:8080/api/";
+
         public class ConfigFixture : IndexFixture
         {
-            public override string MeilisearchAddress => MeilisearchTestAddress;
+            public override string MeilisearchAddress()
+            {
+                var env = Environment.GetEnvironmentVariable("PROXIED_MEILISEARCH");
+
+                return env == null ? MeilisearchTestAddress : env;
+            }
         }
 
         [CollectionDefinition(CollectionFixtureName)]
