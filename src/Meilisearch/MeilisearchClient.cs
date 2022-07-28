@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
 
@@ -122,34 +124,34 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
-        public async Task<IEnumerable<JsonElement>> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<JsonDocument> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
         {
             var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var json = JsonDocument.Parse(content);
-            var indexes = new List<JsonElement>();
-
-            foreach (var element in json.RootElement.EnumerateArray())
-            {
-                indexes.Add(element);
-            }
-
-            return indexes;
+            return JsonDocument.Parse(content);
         }
 
         /// <summary>
         /// Gets all the Indexes for the instance. Throws error if the index does not exist.
         /// </summary>
+        /// <param name="query">Query parameters. Supports limit and offset.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return Enumerable of Index.</returns>
-        public async Task<IEnumerable<Index>> GetAllIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Index>>> GetAllIndexesAsync(IndexesQuery query = default, CancellationToken cancellationToken = default)
         {
-            var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
+            var uri = $"indexes";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            var response = await _http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
-            var content = await response.Content.ReadFromJsonAsync<IEnumerable<Index>>(cancellationToken: cancellationToken).ConfigureAwait(false);
-            return content
-                .Select(p => p.WithHttpClient(_http));
+            var content = await response.Content.ReadFromJsonAsync<ResourceResults<IEnumerable<Index>>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            content.Results
+                .Select(p => p.WithHttpClient(_http))
+                .ToList();
+            return content;
         }
 
         /// <summary>
@@ -180,11 +182,12 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks.</returns>
-        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<Result<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await TaskEndpoint().GetTasksAsync(cancellationToken).ConfigureAwait(false);
+            return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -193,7 +196,7 @@ namespace Meilisearch
         /// <param name="taskUid">Unique identifier of the task.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Return the task.</returns>
-        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskResource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
             return await TaskEndpoint().GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
         }
@@ -206,7 +209,7 @@ namespace Meilisearch
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of finished task.</returns>
-        public async Task<TaskInfo> WaitForTaskAsync(
+        public async Task<TaskResource> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,
@@ -260,46 +263,38 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns dump creation status with uid and processing status.</returns>
-        public async Task<DumpStatus> CreateDumpAsync(CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> CreateDumpAsync(CancellationToken cancellationToken = default)
         {
             var response = await _http.PostAsync("dumps", default, cancellationToken).ConfigureAwait(false);
 
-            return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Gets a dump creation status.
-        /// </summary>
-        /// <param name="uid">Unique identifier of the dump.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns dump creation status with uid and processing status.</returns>
-        public async Task<DumpStatus> GetDumpStatusAsync(string uid, CancellationToken cancellationToken = default)
-        {
-            var response = await _http.GetAsync($"dumps/{uid}/status", cancellationToken).ConfigureAwait(false);
-
-            return await response.Content.ReadFromJsonAsync<DumpStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the API keys.
         /// </summary>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <returns>Returns a list of the API keys.</returns>
-        public async Task<Result<IEnumerable<Key>>> GetKeysAsync(CancellationToken cancellationToken = default)
+        public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<Key>>>("keys", cancellationToken: cancellationToken)
+            var uri = $"keys";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<Key>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets one API key.
         /// </summary>
-        /// <param name="keyUid">Unique identifier of the API key.</param>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the API key information.</returns>
-        public async Task<Key> GetKeyAsync(string keyUid, CancellationToken cancellationToken = default)
+        public async Task<Key> GetKeyAsync(string keyOrUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Key>($"keys/{keyUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<Key>($"keys/{keyOrUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -321,13 +316,13 @@ namespace Meilisearch
         /// <summary>
         /// Deletes an API key from the Meilisearch server.
         /// </summary>
-        /// <param name="keyUid">Unique identifier of the API key.</param>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns true if the API key was deleted.</returns>
-        public async Task<bool> DeleteKeyAsync(string keyUid, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteKeyAsync(string keyOrUid, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.DeleteAsync($"keys/{keyUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
+                await _http.DeleteAsync($"keys/{keyOrUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
         }
 
@@ -340,9 +335,9 @@ namespace Meilisearch
         /// <exception cref="MeilisearchTenantTokenApiKeyInvalid">When there is no <paramref name="apiKey"/> defined in the client or as argument.</exception>
         /// <exception cref="MeilisearchTenantTokenExpired">When the sent <paramref name="expiresAt"/> param is in the past</exception>
         /// <returns>Returns a generated tenant token.</returns>
-        public string GenerateTenantToken(TenantTokenRules searchRules, string apiKey = null, DateTime? expiresAt = null)
+        public string GenerateTenantToken(string apiKeyUid, TenantTokenRules searchRules, string apiKey = null, DateTime? expiresAt = null)
         {
-            return TenantToken.GenerateToken(searchRules, apiKey ?? ApiKey, expiresAt);
+            return TenantToken.GenerateToken(apiKeyUid, searchRules, apiKey ?? ApiKey, expiresAt);
         }
 
         /// <summary>

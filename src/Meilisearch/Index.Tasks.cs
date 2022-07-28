@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
     public partial class Index
@@ -9,11 +11,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the operations status.</returns>
-        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = null, CancellationToken cancellationToken = default)
         {
-            return await TaskEndpoint().GetIndexTasksAsync(Uid, cancellationToken).ConfigureAwait(false);
+            if (query == null)
+            {
+                query = new TasksQuery { IndexUid = new List<string> { this.Uid } };
+            }
+
+            return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -22,9 +30,9 @@ namespace Meilisearch
         /// <param name="taskUid">Uid of the task.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the tasks.</returns>
-        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskResource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
-            return await TaskEndpoint().GetIndexTaskAsync(Uid, taskUid, cancellationToken).ConfigureAwait(false);
+            return await TaskEndpoint().GetTaskAsync(taskUid, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -35,7 +43,7 @@ namespace Meilisearch
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of finished task.</returns>
-        public async Task<TaskInfo> WaitForTaskAsync(
+        public async Task<TaskResource> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,

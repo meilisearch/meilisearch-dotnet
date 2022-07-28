@@ -7,13 +7,13 @@ namespace Meilisearch
     /// <summary>
     /// Information of the regarding a task.
     /// </summary>
-    public class TaskInfo
+    public class TaskResource
     {
-        public TaskInfo(int taskUid, string indexUid, TaskInfoStatus status, TaskInfoType type,
+        public TaskResource(int uid, string indexUid, TaskInfoStatus status, TaskInfoType type,
             Dictionary<string, object> details, Dictionary<string, string> error, string duration, DateTime enqueuedAt,
             DateTime? startedAt, DateTime? finishedAt)
         {
-            TaskUid = taskUid;
+            Uid = uid;
             IndexUid = indexUid;
             Status = status;
             Type = type;
@@ -28,7 +28,7 @@ namespace Meilisearch
         /// <summary>
         /// The unique sequential identifier of the task.
         /// </summary>
-        public int TaskUid { get; }
+        public int Uid { get; }
 
         /// <summary>
         /// The unique index identifier.
@@ -48,7 +48,7 @@ namespace Meilisearch
         /// <summary>
         /// Detailed information on the task payload.
         /// </summary>
-        public Dictionary<string, object> Details { get; }
+        public Dictionary<string, dynamic> Details { get; }
 
         /// <summary>
         /// Error details and context. Only present when a task has the failed status.
@@ -74,26 +74,5 @@ namespace Meilisearch
         /// The date and time when the task finished processing, whether failed or succeeded, in RFC 3339 format.
         /// </summary>
         public DateTime? FinishedAt { get; }
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum TaskInfoStatus
-    {
-        Enqueued,
-        Processing,
-        Succeeded,
-        Failed
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum TaskInfoType
-    {
-        IndexCreation,
-        IndexUpdate,
-        IndexDeletion,
-        DocumentAdditionOrUpdate,
-        DocumentDeletion,
-        SettingsUpdate,
-        DumpCreation
     }
 }

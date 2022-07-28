@@ -4,6 +4,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
+
 namespace Meilisearch
 {
 
@@ -17,11 +21,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets the tasks.
         /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the tasks.</returns>
-        public async Task<Result<IEnumerable<TaskInfo>>> GetTasksAsync(CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>("tasks", cancellationToken: cancellationToken)
+            var uri = $"tasks";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -31,9 +41,9 @@ namespace Meilisearch
         /// <param name="taskUid">Uid of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task.</returns>
-        public async Task<TaskInfo> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
+        public async Task<TaskResource> GetTaskAsync(int taskUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TaskInfo>($"tasks/{taskUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TaskResource>($"tasks/{taskUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -43,22 +53,10 @@ namespace Meilisearch
         /// <param name="indexUid">Uid of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks of an index.</returns>
-        public async Task<Result<IEnumerable<TaskInfo>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<Result<IEnumerable<TaskInfo>>>($"indexes/{indexUid}/tasks", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>($"tasks?indexUid={indexUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get one task from an index.
-        /// </summary>
-        /// <param name="indexUid">Uid of the index.</param>
-        /// <param name="taskUid">Uid of the task.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Return the task of the index.</returns>
-        public async Task<TaskInfo> GetIndexTaskAsync(string indexUid, int taskUid, CancellationToken cancellationToken = default)
-        {
-            return await _http.GetFromJsonAsync<TaskInfo>($"indexes/{indexUid}/tasks/{taskUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -69,7 +67,7 @@ namespace Meilisearch
         /// <param name="intervalMs">Interval in millisecond between each check.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of finished task.</returns>
-        public async Task<TaskInfo> WaitForTaskAsync(
+        public async Task<TaskResource> WaitForTaskAsync(
             int taskUid,
             double timeoutMs = 5000.0,
             int intervalMs = 50,

@@ -27,7 +27,7 @@ namespace Meilisearch
         public async Task<TaskInfo> UpdateSynonymsAsync(Dictionary<string, IEnumerable<string>> synonyms, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.PostAsJsonAsync($"indexes/{Uid}/settings/synonyms", synonyms, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                await _http.PutAsJsonAsync($"indexes/{Uid}/settings/synonyms", synonyms, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

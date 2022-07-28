@@ -11,8 +11,13 @@ namespace Meilisearch
         /// Generates a Tenant Token in a JWT string format.
         /// </summary>
         /// <returns>JWT string</returns>
-        public static string GenerateToken(TenantTokenRules searchRules, string apiKey, DateTime? expiresAt)
+        public static string GenerateToken(string apiKeyUid, TenantTokenRules searchRules, string apiKey, DateTime? expiresAt)
         {
+            if (String.IsNullOrEmpty(apiKeyUid))
+            {
+                throw new MeilisearchTenantTokenApiKeyUidInvalid();
+            }
+
             if (String.IsNullOrEmpty(apiKey) || apiKey.Length < 8)
             {
                 throw new MeilisearchTenantTokenApiKeyInvalid();
@@ -21,7 +26,7 @@ namespace Meilisearch
             var builder = JwtBuilder
                 .Create()
                 .WithAlgorithm(new HMACSHA256Algorithm())
-                .AddClaim("apiKeyPrefix", apiKey.Substring(0, 8))
+                .AddClaim("apiKeyUid", apiKeyUid)
                 .AddClaim("searchRules", searchRules.ToClaim())
                 .WithSecret(apiKey);
 
