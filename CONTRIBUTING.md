@@ -32,7 +32,7 @@ You can set up your local environment natively or using `docker`, check out the 
 
 Example of running all the checks with docker:
 ```bash
-docker-compose run --rm package bash -c "list of the commands required to build + run tests + run linters"
+docker-compose run --rm package bash -c "dotnet test && dotnet format --check Meilisearch.sln"
 ```
 
 To install dependencies:
@@ -40,7 +40,6 @@ To install dependencies:
 ```bash
 dotnet restore
 ```
-
 
 You need to install the [.NET Core command-line interface (CLI) tools](https://docs.microsoft.com/en-us/dotnet/core/tools/).
 
