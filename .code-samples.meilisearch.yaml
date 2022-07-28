@@ -165,7 +165,7 @@ getting_started_add_meteorites: |-
 
   var index = client.Index("meteorites");
   await index.AddDocumentsAsync<Meteorite>(meteorites);
-getting_started_update_rankingRules: |-
+getting_started_update_ranking_rules: |-
   await client.Index("movies").UpdateRankingRulesAsync(new string[] {
     "exactness",
     "words",
@@ -176,13 +176,13 @@ getting_started_update_rankingRules: |-
     "release_date:asc",
     "rank:desc"
   });
-getting_started_update_displayedAttributes: |-
+getting_started_update_displayed_attributes: |-
   await client.Index("movies").UpdateDisplayedAttributesAsync(new string[] {
     "title",
     "overview",
     "poster"
   });
-getting_started_update_searchableAttributes: |-
+getting_started_update_searchable_attributes: |-
   await client.Index("movies").UpdateSearchableAttributesAsync(new string[] {
     "title"
   });
@@ -200,10 +200,10 @@ getting_started_synonyms: |-
 getting_started_filtering: |-
   SearchQuery filter = new SearchQuery() { Filter = "mass < 200" };
   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geoRadius: |-
+getting_started_geo_radius: |-
   SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
    await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geoPoint: |-
+getting_started_geo_point: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
   await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
 getting_started_sorting: |-
@@ -301,17 +301,19 @@ geosearch_guide_sort_usage_2: |-
   };
 
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
-document_guide_create_index_primary_key: |-
-  TaskInfo task = await client.CreateIndexAsync("movies", "reference_number");
-document_guide_add_document_primary_key: |-
+primary_field_guide_create_index_primary_key: |-
+  TaskInfo task = await client.CreateIndexAsync("books", "reference_number");
+primary_field_guide_update_document_primary_key: |-
+  TaskInfo task = await client.UpdateIndexAsync("books", "title");
+primary_field_guide_add_document_primary_key: |-
   await index.AddDocumentsAsync(
     new[] {
-        new Movie {
-            ReferenceNumber: 287947,
-            Title: "Shazam",
-            Poster: "https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg",
-            Overview: "A boy is given the ability to become an adult superhero in times of need with a single magic word.",
-            ReleaseDate: "2019-03-23"
+        new Book {
+            ReferenceNumber = 287947,
+            Title = "Diary of a Wimpy Kid",
+            Author = "Jeff Kinney",
+            Genres = new string[] { "comedy", "humor" },
+            Price = 5.00
         }
     },
     "reference_number");
@@ -392,19 +394,19 @@ typo_tolerance_guide_1: |-
     Enabled = false
   };
 
-  await client.Index("mvoies").UpdateTypoToleranceAsync(typoTolerance);
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_2: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" }
   };
 
-  await client.Index("mvoies").UpdateTypoToleranceAsync(typoTolerance);
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_3: |-
   var typoTolerance = new TypoTolerance {
     DisableOnWords = new string[] { "shrek" }
   };
 
-  await client.Index("mvoies").UpdateTypoToleranceAsync(typoTolerance);
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_4: |-
   var typoTolerance = new TypoTolerance {
     MinWordSizeTypos = new TypoTolerance.TypoSize {
@@ -413,7 +415,7 @@ typo_tolerance_guide_4: |-
     }
   };
 
-  await client.Index("mvoies").UpdateTypoToleranceAsync(typoTolerance);
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 settings_guide_typo_tolerance_1: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" },
@@ -422,4 +424,4 @@ settings_guide_typo_tolerance_1: |-
     }
   };
 
-  await client.Index("mvoies").UpdateTypoToleranceAsync(typoTolerance);
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);

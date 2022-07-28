@@ -10,7 +10,7 @@ namespace Meilisearch.Extensions
     /// <summary>
     /// Class to communicate with the Meilisearch server without charset-utf-8 as Content-Type.
     /// </summary>
-    public static class HttpExtensions
+    internal static class HttpExtensions
     {
         /// <summary>
         /// Sends JSON payload using POST without "charset-utf-8" as Content-Type.
@@ -21,7 +21,7 @@ namespace Meilisearch.Extensions
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
+        internal static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload(body);
 
@@ -38,7 +38,7 @@ namespace Meilisearch.Extensions
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        public static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
+        internal static async Task<HttpResponseMessage> PostJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload(body, options);
 
@@ -54,7 +54,7 @@ namespace Meilisearch.Extensions
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        public static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
+        internal static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
         {
             var payload = PrepareJsonPayload(body);
 
@@ -66,7 +66,7 @@ namespace Meilisearch.Extensions
         /// </summary>
         /// <param name="client">HttpClient.</param>
         /// <param name="apiKey">API Key.</param>
-        public static void AddApiKeyToHeader(this HttpClient client, string apiKey)
+        internal static void AddApiKeyToHeader(this HttpClient client, string apiKey)
         {
             if (!string.IsNullOrEmpty(apiKey))
             {
@@ -74,7 +74,7 @@ namespace Meilisearch.Extensions
             }
         }
 
-        public static void AddDefaultUserAgent(this HttpClient client)
+        internal static void AddDefaultUserAgent(this HttpClient client)
         {
             var version = new Version();
 

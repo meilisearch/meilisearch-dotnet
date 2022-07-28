@@ -96,7 +96,7 @@ namespace Meilisearch.Tests
 
             Assert.Equal(task.Uid, finishedTask.Uid);
             Assert.Equal(indexUid, finishedTask.IndexUid);
-            Assert.Equal("failed", finishedTask.Status);
+            Assert.Equal(TaskInfoStatus.Failed, finishedTask.Status);
             var error = finishedTask.Error;
             error.Should().NotBeNull();
             Assert.Equal("index_already_exists", error["code"]);
