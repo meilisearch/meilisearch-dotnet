@@ -142,7 +142,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKeyWithUid()
         {
-            await _client.DeleteKeyAsync("9cd7a335-5b9c-4312-be16-7f1fcf7fd250");
+            try { await _client.DeleteKeyAsync("9cd7a335-5b9c-4312-be16-7f1fcf7fd250"); }
+            catch { }
 
             var keyOptions = new Key
             {
