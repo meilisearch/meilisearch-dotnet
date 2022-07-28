@@ -142,6 +142,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateOneKeyWithUid()
         {
+            await _client.DeleteKeyAsync("9cd7a335-5b9c-4312-be16-7f1fcf7fd250");
+
             var keyOptions = new Key
             {
                 Uid = "9cd7a335-5b9c-4312-be16-7f1fcf7fd250",
@@ -161,6 +163,30 @@ namespace Meilisearch.Tests
             Assert.Equal(fetchedKey.ExpiresAt, createdKey.ExpiresAt);
             Assert.Equal(fetchedKey.CreatedAt, createdKey.CreatedAt);
             Assert.Equal(fetchedKey.UpdatedAt, createdKey.UpdatedAt);
+        }
+
+        [Fact]
+        public async Task UpdateKey()
+        {
+            var keyOptions = new Key
+            {
+                Description = "Key to add document to all indexes.",
+                Name = "key alias",
+                Actions = new string[] { "documents.add" },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var fetchedKey = await _client.UpdateKeyAsync(createdKey.KeyUid, description: "my new Description");
+
+            Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal("my new Description", fetchedKey.Description);
+            Assert.Equal("key alias", createdKey.Name);
+
+            var newerKey = await _client.UpdateKeyAsync(createdKey.KeyUid, name: "new name");
+
+            Assert.Equal("my new Description", newerKey.Description);
+            Assert.Equal("new name", newerKey.Name);
         }
 
         [Fact]
