@@ -5,14 +5,14 @@
 ---
 get_one_index_1: |-
 list_all_indexes_1: |-
-  await client.GetAllIndexesAsync();
+  await client.GetAllIndexesAsync(new IndexesQuery { Limit = 3 });
 create_an_index_1: |-
   TaskInfo task = await client.CreateIndexAsync("movies", "id");
 update_an_index_1: |-
   TaskInfo task = await client.UpdateIndexAsync("movies", "id");
 delete_an_index_1: |-
 get_one_document_1: |-
-  await client.Index("movies").GetDocumentAsync<T>(25684, new List<string> { "id", "title", "poster", "release_date" });
+  await client.Index("movies").GetDocumentAsync<Movie>(25684, new List<string> { "id", "title", "poster", "release_date" });
 get_documents_1: |-
 add_or_replace_documents_1: |-
 add_or_update_documents_1: |-
@@ -24,7 +24,6 @@ get_task_1: |
   TaskInfo task = await client.GetTaskAsync(1);
 get_all_tasks_1: |
   ResourceResults<Task> taskResult = await client.GetTasksAsync();
-  var tasks = taskResult.Result;
 get_settings_1: |-
 update_settings_1: |-
   Settings newSettings = new Settings
@@ -360,8 +359,7 @@ authorization_header_1: |-
 get_one_key_1: |-
   Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
 get_all_keys_1: |-
-  ResourceResults<Key> keyResult = await client.GetKeysAsync(new KeysQuery() { Limit = 3 });
-  var keys = keyResult.Result;
+  ResourceResults<Key> keyResult = await client.GetKeysAsync(new KeysQuery { Limit = 3 });
 create_a_key_1: |-
   Key keyOptions = new Key
   {
@@ -469,7 +467,7 @@ get_all_tasks_filtering_1: |-
 get_all_tasks_filtering_2: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery {
     Status = new List<string>() { "succeeded", "failed" },
-    Type = new List<string>() { "documentAdditionOrUpdate" },
+    Types = new List<string>() { "documentAdditionOrUpdate" },
   });
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });

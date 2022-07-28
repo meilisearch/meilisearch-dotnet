@@ -14,8 +14,13 @@ namespace Meilisearch
         /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the operations status.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = null, CancellationToken cancellationToken = default)
         {
+            if (query == null)
+            {
+                query = new TasksQuery { IndexUid = new List<string> { this.Uid } };
+            }
+
             return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 

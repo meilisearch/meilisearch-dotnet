@@ -140,6 +140,30 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CreateOneKeyWithUid()
+        {
+            var keyOptions = new Key
+            {
+                Uid = "9cd7a335-5b9c-4312-be16-7f1fcf7fd250",
+                Description = "Key to add document to all indexes.",
+                Actions = new string[] { "documents.add" },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var createdKeyUid = createdKey.KeyUid;
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
+
+            Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal(fetchedKey.Description, createdKey.Description);
+            Assert.Equal(fetchedKey.Indexes, createdKey.Indexes);
+            Assert.Equal(fetchedKey.Actions, createdKey.Actions);
+            Assert.Equal(fetchedKey.ExpiresAt, createdKey.ExpiresAt);
+            Assert.Equal(fetchedKey.CreatedAt, createdKey.CreatedAt);
+            Assert.Equal(fetchedKey.UpdatedAt, createdKey.UpdatedAt);
+        }
+
+        [Fact]
         public async Task DeleteOneKey()
         {
             var keyOptions = new Key
