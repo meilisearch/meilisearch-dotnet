@@ -322,7 +322,8 @@ namespace Meilisearch
         /// <returns>Returns the updated API key.</returns>
         public async Task<Key> UpdateKeyAsync(string keyOrUid, string description = null, string name = null, CancellationToken cancellationToken = default)
         {
-            var key = new Key {
+            var key = new Key
+            {
                 Name = name,
                 Description = description
             };
