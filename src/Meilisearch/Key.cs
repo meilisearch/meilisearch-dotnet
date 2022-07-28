@@ -22,7 +22,7 @@ namespace Meilisearch
         public string Uid { get; set; }
 
         /// <summary>
-        /// Gets or sets the description of the API key.
+        /// Gets or sets the name of the API key.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Name { get; set; }
