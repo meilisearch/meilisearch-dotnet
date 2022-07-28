@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
 
 namespace Meilisearch
 {
@@ -329,10 +330,16 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the document, with the according type if the object is available.</returns>
-        public async Task<T> GetDocumentAsync<T>(string documentId, CancellationToken cancellationToken = default)
+        public async Task<T> GetDocumentAsync<T>(string documentId, List<string> fields = default, CancellationToken cancellationToken = default)
         {
+            var uri = $"indexes/{Uid}/documents/{documentId}";
+            if (fields != null)
+            {
+                uri = $"{uri}?fields={string.Join(",", fields)}";
+            }
+
             return await _http
-                .GetFromJsonAsync<T>($"indexes/{Uid}/documents/{documentId}", cancellationToken: cancellationToken)
+                .GetFromJsonAsync<T>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -343,19 +350,19 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type to return for document.</typeparam>
         /// <returns>Type if the object is availble.</returns>
-        public async Task<T> GetDocumentAsync<T>(int documentId, CancellationToken cancellationToken = default)
+        public async Task<T> GetDocumentAsync<T>(int documentId, List<string> fields = default, CancellationToken cancellationToken = default)
         {
-            return await GetDocumentAsync<T>(documentId.ToString(), cancellationToken);
+            return await GetDocumentAsync<T>(documentId.ToString(), fields, cancellationToken);
         }
 
         /// <summary>
         /// Get documents with the allowed Query Parameters.
         /// </summary>
-        /// <param name="query">Query parameters. Supports limit, offset and attributes to retrieve.</param>
+        /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the list of documents.</returns>
-        public async Task<IEnumerable<T>> GetDocumentsAsync<T>(DocumentQuery query = default,
+        public async Task<ResourceResults<IEnumerable<T>>> GetDocumentsAsync<T>(DocumentsQuery query = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
@@ -364,7 +371,7 @@ namespace Meilisearch
                 uri = $"{uri}?{query.ToQueryString()}";
             }
 
-            return await _http.GetFromJsonAsync<IEnumerable<T>>(uri, cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

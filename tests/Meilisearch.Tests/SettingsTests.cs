@@ -468,9 +468,9 @@ namespace Meilisearch.Tests
 
         private async Task AssertTaskInfoSucceeded(TaskInfo task)
         {
-            task.Uid.Should().BeGreaterThan(0);
-            task = await _index.WaitForTaskAsync(task.Uid);
-            task.Status.Should().Be(TaskInfoStatus.Succeeded);
+            task.TaskUid.Should().BeGreaterThan(0);
+            var taskResource = await _index.WaitForTaskAsync(task.TaskUid);
+            taskResource.Status.Should().Be(TaskInfoStatus.Succeeded);
         }
 
         private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)

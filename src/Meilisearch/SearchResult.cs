@@ -9,7 +9,7 @@ namespace Meilisearch
     /// <typeparam name="T">Hit type.</typeparam>
     public class SearchResult<T>
     {
-        public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedNbHits,
+        public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion)
@@ -17,7 +17,7 @@ namespace Meilisearch
             Hits = hits;
             Offset = offset;
             Limit = limit;
-            EstimatedNbHits = estimatedNbHits;
+            EstimatedTotalHits = estimatedTotalHits;
             FacetDistribution = facetDistribution;
             ProcessingTimeMs = processingTimeMs;
             Query = query;
@@ -40,9 +40,9 @@ namespace Meilisearch
         public int Limit { get; }
 
         /// <summary>
-        /// Total number of matches.
+        /// Gets the estimated total number of hits returned by the search.
         /// </summary>
-        public int EstimatedNbHits { get; }
+        public int EstimatedTotalHits { get; }
 
         /// <summary>
         /// Returns the number of documents matching the current search query for each given facet.
@@ -54,7 +54,6 @@ namespace Meilisearch
         /// </summary>
         public int ProcessingTimeMs { get; }
 
-        /// <summary>
         /// Query originating the response.
         /// </summary>
         public string Query { get; }

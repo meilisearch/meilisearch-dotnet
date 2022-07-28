@@ -32,7 +32,7 @@ namespace Meilisearch.Tests
             var task = await DefaultClient.CreateIndexAsync(indexUid, primaryKey);
 
             // Check the index has been created
-            var finishedTask = await DefaultClient.WaitForTaskAsync(task.Uid);
+            var finishedTask = await DefaultClient.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The index was not created in SetUpEmptyIndex. Impossible to run the tests.");
@@ -57,7 +57,7 @@ namespace Meilisearch.Tests
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            var finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpBasicIndex. Impossible to run the tests.");
@@ -82,7 +82,7 @@ namespace Meilisearch.Tests
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            var finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpBasicIndexWithIntId. Impossible to run the tests.");
@@ -111,7 +111,7 @@ namespace Meilisearch.Tests
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            var finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpIndexForFaceting. Impossible to run the tests.");
@@ -125,7 +125,7 @@ namespace Meilisearch.Tests
             task = await index.UpdateSettingsAsync(settings);
 
             // Check the settings have been added
-            finishedTask = await index.WaitForTaskAsync(task.Uid);
+            finishedTask = await index.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
@@ -185,7 +185,7 @@ namespace Meilisearch.Tests
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
-            var finishedTask = await index.WaitForTaskAsync(task.Uid);
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpIndexForNestedSearch. Impossible to run the tests.");
@@ -197,7 +197,7 @@ namespace Meilisearch.Tests
         public async Task DeleteAllIndexes()
         {
             var indexes = await DefaultClient.GetAllIndexesAsync();
-            foreach (var index in indexes)
+            foreach (var index in indexes.Results)
             {
                 await index.DeleteAsync();
             }

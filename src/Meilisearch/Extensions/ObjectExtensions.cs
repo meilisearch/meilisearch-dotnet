@@ -24,19 +24,30 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Transforms a Meilisearch object into an URL encoded query string.
+        /// Transforms a Meilisearch object containing Lists into an URL encoded query string.
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
         /// <returns>Returns an url encoded query string.</returns>
         internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         {
-            var values = source.GetType().GetProperties(bindingAttr)
-            .Where(p => p.GetValue(source, null) != null)
-            .Select(p =>
-                Uri.EscapeDataString(char.ToLowerInvariant(p.Name[0]) + p.Name.Substring(1)) + "=" + Uri.EscapeDataString(p.GetValue(source, null).ToString()));
-            var queryString = string.Join("&", values);
-            return queryString;
+            var values = new List<string>();
+            foreach (var field in source.GetType().GetProperties(bindingAttr))
+            {
+                if (field.GetValue(source, null) != null)
+                {
+                    var isList = field.GetValue(source, null).GetType().IsGenericType && field.GetValue(source, null).GetType().GetGenericTypeDefinition() == typeof(List<>);
+                    if (isList)
+                    {
+                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1)) + "=" + string.Join(",", (List<string>)field.GetValue(source, null)));
+                    }
+                    else
+                    {
+                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1)) + "=" + Uri.EscapeDataString(field.GetValue(source, null).ToString()));
+                    }
+                }
+            }
+            return string.Join("&", values);
         }
     }
 }

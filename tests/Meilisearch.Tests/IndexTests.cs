@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.QueryParameters;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -67,7 +69,7 @@ namespace Meilisearch.Tests
             index.PrimaryKey.Should().BeNull();
 
             var document = await index.AddDocumentsAsync(new[] { new Movie { Id = "1", Name = "Batman" } });
-            document.Uid.Should().BeGreaterOrEqualTo(0);
+            document.TaskUid.Should().BeGreaterOrEqualTo(0);
         }
 
         [Fact]
@@ -91,10 +93,10 @@ namespace Meilisearch.Tests
 
             await _client.CreateIndexAsync(indexUid, _defaultPrimaryKey);
             var task = await _client.CreateIndexAsync(indexUid, _defaultPrimaryKey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            var finishedTask = await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            var finishedTask = await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
-            Assert.Equal(task.Uid, finishedTask.Uid);
+            Assert.Equal(task.TaskUid, finishedTask.Uid);
             Assert.Equal(indexUid, finishedTask.IndexUid);
             Assert.Equal(TaskInfoStatus.Failed, finishedTask.Status);
             var error = finishedTask.Error;
@@ -111,8 +113,8 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid);
 
             var task = await _client.UpdateIndexAsync(indexUid, primarykey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             var index = await _client.GetIndexAsync(indexUid);
             index.PrimaryKey.Should().Be(primarykey);
@@ -134,21 +136,49 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid, _defaultPrimaryKey);
 
             var indexes = await _client.GetAllRawIndexesAsync();
-            indexes.Count().Should().BeGreaterOrEqualTo(1);
-            var index = indexes.First();
+            var results = indexes.RootElement.GetProperty("results");
+            var index = results[0];
             Assert.Equal(index.GetProperty("uid").GetString(), indexUid);
-            Assert.Equal(index.GetProperty("name").GetString(), indexUid);
             Assert.Equal(index.GetProperty("primaryKey").GetString(), _defaultPrimaryKey);
         }
 
         [Fact]
-        public async Task GetAllExistingIndexes()
+        public async Task GetMultipleExistingIndexes()
         {
-            var indexUid = "GetAllExistingIndexesTest";
-            var index = await _fixture.SetUpEmptyIndex(indexUid, _defaultPrimaryKey);
+            var indexUid1 = "GetMultipleExistingIndexesTest1";
+            var indexUid2 = "GetMultipleExistingIndexesTest2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
 
             var indexes = await _client.GetAllIndexesAsync();
-            indexes.Count().Should().BeGreaterOrEqualTo(1);
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(2);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingIndexesWithLimit()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithLimit1";
+            var indexUid2 = "GetMultipleExistingIndexesWithLimit2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllIndexesAsync(new IndexesQuery() { Limit = 1 });
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
+            indexes.Limit.Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, indexes.Limit);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingIndexesWithOffset()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithOffset1";
+            var indexUid2 = "GetMultipleExistingIndexesWithOffset2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllIndexesAsync(new IndexesQuery() { Offset = 1 });
+            indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
+            Assert.Equal(1, indexes.Offset);
         }
 
         [Fact]
@@ -193,8 +223,8 @@ namespace Meilisearch.Tests
             await _fixture.SetUpEmptyIndex(indexUid);
 
             var task = await _client.Index(indexUid).UpdateAsync(primarykey);
-            task.Uid.Should().BeGreaterOrEqualTo(0);
-            await _client.Index(indexUid).WaitForTaskAsync(task.Uid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(indexUid).WaitForTaskAsync(task.TaskUid);
 
             var index = await _client.GetIndexAsync(indexUid);
             index.PrimaryKey.Should().Be(primarykey);

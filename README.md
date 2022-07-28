@@ -187,7 +187,7 @@ JSON Output:
 
 ## 🤖 Compatibility with Meilisearch
 
-This package only guarantees the compatibility with the [version v0.27.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.27.0).
+This package only guarantees the compatibility with the [version v0.28.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.28.0).
 
 ## 🎬 Examples
 
@@ -231,7 +231,7 @@ The returned `task` is a `TaskInfo` that can access to `Uid` to get the status o
 #### Get Documents <!-- omit in toc -->
 
 ```c#
-var documents = await index.GetDocumentsAsync<Movie>(new DocumentQuery { Limit = 1 });
+var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery { Limit = 1 });
 ```
 
 #### Get Document by Id <!-- omit in toc -->

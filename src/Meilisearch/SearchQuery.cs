@@ -75,16 +75,16 @@ namespace Meilisearch
         public string HighlightPostTag { get; set; }
 
         /// <summary>
-        /// Gets or sets the facets distribution for the query.
+        /// Gets or sets the facets for the query.
         /// </summary>
-        [JsonPropertyName("facetsDistribution")]
-        public IEnumerable<string> FacetsDistribution { get; set; }
+        [JsonPropertyName("facets")]
+        public IEnumerable<string> Facets { get; set; }
 
         /// <summary>
-        /// Gets or sets matches. It defines whether an object that contains information about the matches should be returned or not.
+        /// Gets or sets showMatchesPosition. It defines whether an object that contains information about the matches should be returned or not.
         /// </summary>
-        [JsonPropertyName("matches")]
-        public bool? Matches { get; set; }
+        [JsonPropertyName("showMatchesPosition")]
+        public bool? ShowMatchesPosition { get; set; }
 
         /// <summary>
         /// Gets or sets the sorted attributes.

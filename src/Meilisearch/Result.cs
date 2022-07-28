@@ -11,5 +11,10 @@ namespace Meilisearch
         /// Gets or sets the "results" field.
         /// </summary>
         public T Results { get; set; }
+
+        /// <summary>
+        /// Gets or sets limit size.
+        /// </summary>
+        public int? Limit { get; set; }
     }
 }
