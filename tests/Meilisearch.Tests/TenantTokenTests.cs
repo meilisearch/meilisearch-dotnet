@@ -119,7 +119,7 @@ namespace Meilisearch.Tests
         [Fact]
         public void ClientThrowsIfNoKeyIsAvailable()
         {
-            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress);
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress());
 
             Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
                 () => customClient.GenerateTenantToken(_uid, _searchRules)
@@ -138,12 +138,12 @@ namespace Meilisearch.Tests
                 ExpiresAt = null,
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
-            var admClient = new MeilisearchClient(_fixture.MeilisearchAddress, createdKey.KeyUid);
+            var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
             var task = await admClient.Index(_indexName).UpdateFilterableAttributesAsync(new string[] { "tag", "book_id" });
             await admClient.Index(_indexName).WaitForTaskAsync(task.TaskUid);
 
             var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(data));
-            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress, token);
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
 
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
         }

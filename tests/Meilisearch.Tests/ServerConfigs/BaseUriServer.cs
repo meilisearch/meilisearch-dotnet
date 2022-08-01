@@ -1,3 +1,5 @@
+using System;
+
 using Xunit;
 
 namespace Meilisearch.Tests.ServerConfigs
@@ -6,9 +8,15 @@ namespace Meilisearch.Tests.ServerConfigs
     {
         const string CollectionFixtureName = nameof(BaseUriServer);
         private const string MeilisearchTestAddress = "http://localhost:7700/";
+
         public class ConfigFixture : IndexFixture
         {
-            public override string MeilisearchAddress => MeilisearchTestAddress;
+            public override string MeilisearchAddress()
+            {
+                var env = Environment.GetEnvironmentVariable("MEILISEARCH_HOST");
+
+                return env == null ? MeilisearchTestAddress : env;
+            }
         }
 
         [CollectionDefinition(CollectionFixtureName)]

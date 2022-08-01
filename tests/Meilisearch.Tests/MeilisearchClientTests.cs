@@ -97,7 +97,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task HealthWithBadUrl()
         {
-            var client = new MeilisearchClient(_fixture.MeilisearchAddress.Replace("localhost", "badhost"), "masterKey");
+            var client = new MeilisearchClient("http://badhost:7700", "masterKey");
             var ex = await Assert.ThrowsAsync<MeilisearchCommunicationError>(() => client.HealthAsync());
             Assert.Equal("CommunicationError", ex.Message);
         }
@@ -120,7 +120,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ExceptionWithBadPath()
         {
-            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = _fixture.MeilisearchAddress.ToSafeUri() };
+            var client = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = _fixture.MeilisearchAddress().ToSafeUri() };
             var ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => client.GetAsync("wrong-path"));
             Assert.Equal("MeilisearchApiError, Message: Not Found, Code: 404", ex.Message);
         }
