@@ -370,14 +370,19 @@ create_a_key_1: |-
   };
   Key createdKey = await this.client.CreateKeyAsync(keyOptions);
 update_a_key_1: |-
-  // Not implemented yet
+  await client.UpdateKeyAsync(
+    "6062abda-a5aa-4414-ac91-ecd7944c0f8d",
+    description: "Manage documents: Products/Reviews API key",
+    name: "Products/Reviews API key"
+  )
 delete_a_key_1: |-
   client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
 security_guide_search_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "apiKey");
   SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
 security_guide_update_key_1: |-
-  // Not implemented yet
+  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  await client.UpdateKeyAsync("74c9c733-3368-4738-bbe5-1d18a5fecb37", description: "Default Search API Key");
 security_guide_create_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
   Key keyOptions = new Key
