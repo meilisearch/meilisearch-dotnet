@@ -314,6 +314,28 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Updates an API key for the Meilisearch server.
+        /// </summary>
+        /// <param name="description">A description to give meaning to the key.</param>
+        /// <param name="name">A name to label the key internally.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the updated API key.</returns>
+        public async Task<Key> UpdateKeyAsync(string keyOrUid, string description = null, string name = null, CancellationToken cancellationToken = default)
+        {
+            var key = new Key
+            {
+                Name = name,
+                Description = description
+            };
+
+            var responseMessage =
+                await _http.PatchAsJsonAsync($"keys/{keyOrUid}", key, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await responseMessage.Content.ReadFromJsonAsync<Key>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Deletes an API key from the Meilisearch server.
         /// </summary>
         /// <param name="keyOrUid">Unique identifier of the API key or the Key</param>

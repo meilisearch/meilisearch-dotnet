@@ -51,11 +51,11 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the date when the API key was created.
         /// </summary>
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date when the API key was updated.
         /// </summary>
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
