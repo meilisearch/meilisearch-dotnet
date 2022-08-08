@@ -354,7 +354,7 @@ primary_field_guide_add_document_primary_key: |-
     },
     "reference_number");
 authorization_header_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var keys = await client.GetKeysAsync();
 get_one_key_1: |-
   Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
@@ -378,13 +378,13 @@ update_a_key_1: |-
 delete_a_key_1: |-
   client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
 security_guide_search_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "apiKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
   SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
 security_guide_update_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   await client.UpdateKeyAsync("74c9c733-3368-4738-bbe5-1d18a5fecb37", description: "Default Search API Key");
 security_guide_create_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   Key keyOptions = new Key
   {
       Description = "Search patient records key",
@@ -394,11 +394,11 @@ security_guide_create_key_1: |-
   };
   Key createdKey = await this.client.CreateKeyAsync(keyOptions);
 security_guide_list_keys_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   ResourceResults<Key> keyResult = await client.GetKeysAsync();
   var keys = keyResult.Result;
 security_guide_delete_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://127.0.0.1:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   client.DeleteKeyAsync("ac5cd97d-5a4b-4226-a868-2d0eb6d197ab")
 tenant_token_guide_generate_sdk_1: |-
   var apiKey = "B5KdX2MY2jV6EXfUs6scSfmC...";
@@ -413,8 +413,16 @@ tenant_token_guide_generate_sdk_1: |-
     expiresAt: expiresAt // optional
   );
 tenant_token_guide_search_sdk_1: |-
-  frontEndClient = new MeilisearchClient("http://127.0.0.1:7700", token);
+  frontEndClient = new MeilisearchClient("http://localhost:7700", token);
   SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
+getting_started_typo_tolerance: |-
+  var typoTolerance = new TypoTolerance {
+    MinWordSizeTypos = new TypoTolerance.TypoSize {
+      OneTypo = 4
+    }
+  };
+
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 get_typo_tolerance_1:
   await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
