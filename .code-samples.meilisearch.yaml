@@ -3,8 +3,6 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
-getting_started_typo_tolerance: |-
-
 get_one_index_1: |-
 list_all_indexes_1: |-
   await client.GetAllIndexesAsync(new IndexesQuery { Limit = 3 });
@@ -417,6 +415,14 @@ tenant_token_guide_generate_sdk_1: |-
 tenant_token_guide_search_sdk_1: |-
   frontEndClient = new MeilisearchClient("http://localhost:7700", token);
   SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
+getting_started_typo_tolerance: |-
+  var typoTolerance = new TypoTolerance {
+    MinWordSizeTypos = new TypoTolerance.TypoSize {
+      OneTypo = 4
+    }
+  };
+
+  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 get_typo_tolerance_1:
   await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
