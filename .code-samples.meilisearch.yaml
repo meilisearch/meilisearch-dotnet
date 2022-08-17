@@ -113,7 +113,7 @@ search_parameter_guide_limit_1: |-
 search_parameter_guide_retrieve_1: |-
 search_parameter_guide_crop_1: |-
 search_parameter_guide_highlight_1: |-
-search_parameter_guide_matches_1: |-
+search_parameter_guide_show_matches_position_1: |-
   await client.Index("movies").SearchAsync<T>(
     "winter feast",
     new SearchQuery
