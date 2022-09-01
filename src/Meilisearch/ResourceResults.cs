@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Meilisearch
@@ -11,7 +10,7 @@ namespace Meilisearch
     public class ResourceResults<T> : Result<T>
     {
         public ResourceResults(T results, int? limit, int offset, int total)
-            :base(results, limit)
+            : base(results, limit)
         {
             Offset = offset;
             Total = total;

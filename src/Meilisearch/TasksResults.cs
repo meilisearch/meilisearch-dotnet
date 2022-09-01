@@ -10,7 +10,7 @@ namespace Meilisearch
     public class TasksResults<T> : Result<T>
     {
         public TasksResults(T results, int? limit, int? from, int? next)
-            :base(results, limit)
+            : base(results, limit)
         {
             From = from;
             Next = next;
