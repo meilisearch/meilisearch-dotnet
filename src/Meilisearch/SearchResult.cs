@@ -27,35 +27,42 @@ namespace Meilisearch
         /// <summary>
         /// Results of the query.
         /// </summary>
+        [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
         /// Number of documents skipped.
         /// </summary>
+        [JsonPropertyName("offset")]
         public int Offset { get; }
 
         /// <summary>
         /// Number of documents to take.
         /// </summary>
+        [JsonPropertyName("limit")]
         public int Limit { get; }
 
         /// <summary>
         /// Gets the estimated total number of hits returned by the search.
         /// </summary>
+        [JsonPropertyName("estimatedTotalHits")]
         public int EstimatedTotalHits { get; }
 
         /// <summary>
         /// Returns the number of documents matching the current search query for each given facet.
         /// </summary>
+        [JsonPropertyName("facetDistribution")]
         public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> FacetDistribution { get; }
 
         /// <summary>
         /// Processing time of the query.
         /// </summary>
+        [JsonPropertyName("processingTimeMs")]
         public int ProcessingTimeMs { get; }
 
         /// Query originating the response.
         /// </summary>
+        [JsonPropertyName("query")]
         public string Query { get; }
 
         /// <summary>
@@ -77,12 +84,14 @@ namespace Meilisearch
         /// The beginning of a matching term within a field.
         /// WARNING: This value is in bytes and not the number of characters. For example, ü represents two bytes but one character.
         /// </summary>
+        [JsonPropertyName("start")]
         public int Start { get; }
 
         /// <summary>
         /// The length of a matching term within a field.
         /// WARNING: This value is in bytes and not the number of characters. For example, ü represents two bytes but one character.
         /// </summary>
+        [JsonPropertyName("length")]
         public int Length { get; }
     }
 }

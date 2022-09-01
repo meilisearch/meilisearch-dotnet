@@ -9,14 +9,21 @@ namespace Meilisearch
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, indexes, ...</typeparam>
     public class TasksResults<T> : Result<T>
     {
+        public TasksResults(T results, int? limit, int? from, int? next)
+            :base(results, limit)
+        {
+            From = from;
+            Next = next;
+        }
+
         /// <summary>
         /// Gets or sets from size.
         /// </summary>
-        public int? From { get; set; }
+        public int? From { get; }
 
         /// <summary>
         /// Gets or sets next size.
         /// </summary>
-        public int? Next { get; set; }
+        public int? Next { get; }
     }
 }

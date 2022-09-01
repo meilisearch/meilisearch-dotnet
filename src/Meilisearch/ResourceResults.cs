@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Meilisearch
 {
@@ -9,14 +10,23 @@ namespace Meilisearch
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, indexes, ...</typeparam>
     public class ResourceResults<T> : Result<T>
     {
+        public ResourceResults(T results, int? limit, int offset, int total)
+            :base(results, limit)
+        {
+            Offset = offset;
+            Total = total;
+        }
+
         /// <summary>
         /// Gets or sets offset size.
         /// </summary>
-        public int Offset { get; set; }
+        [JsonPropertyName("offset")]
+        public int Offset { get; }
 
         /// <summary>
         /// Gets or sets total size.
         /// </summary>
-        public int Total { get; set; }
+        [JsonPropertyName("total")]
+        public int Total { get; }
     }
 }
