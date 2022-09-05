@@ -17,12 +17,12 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets from size.
+        /// Gets from size.
         /// </summary>
         public int? From { get; }
 
         /// <summary>
-        /// Gets or sets next size.
+        /// Gets next size.
         /// </summary>
         public int? Next { get; }
     }

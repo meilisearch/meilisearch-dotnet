@@ -60,6 +60,7 @@ namespace Meilisearch
         [JsonPropertyName("processingTimeMs")]
         public int ProcessingTimeMs { get; }
 
+        /// <summary>
         /// Query originating the response.
         /// </summary>
         [JsonPropertyName("query")]

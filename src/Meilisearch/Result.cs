@@ -16,13 +16,13 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets the "results" field.
+        /// Gets the "results" field.
         /// </summary>
         [JsonPropertyName("results")]
         public T Results { get; }
 
         /// <summary>
-        /// Gets or sets limit size.
+        /// Gets limit size.
         /// </summary>
         [JsonPropertyName("limit")]
         public int? Limit { get; }

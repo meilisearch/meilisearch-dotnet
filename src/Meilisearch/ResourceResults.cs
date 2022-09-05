@@ -17,13 +17,13 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets offset size.
+        /// Gets offset size.
         /// </summary>
         [JsonPropertyName("offset")]
         public int Offset { get; }
 
         /// <summary>
-        /// Gets or sets total size.
+        /// Gets total size.
         /// </summary>
         [JsonPropertyName("total")]
         public int Total { get; }

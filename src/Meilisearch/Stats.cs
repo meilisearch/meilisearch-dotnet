@@ -17,19 +17,19 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets database size.
+        /// Gets database size.
         /// </summary>
         [JsonPropertyName("databaseSize")]
         public int DatabaseSize { get; }
 
         /// <summary>
-        /// Gets or sets last update timestamp.
+        /// Gets last update timestamp.
         /// </summary>
         [JsonPropertyName("lastUpdate")]
         public DateTime? LastUpdate { get; }
 
         /// <summary>
-        /// Gets or sets index stats.
+        /// Gets index stats.
         /// </summary>
         [JsonPropertyName("indexes")]
         public IReadOnlyDictionary<string, IndexStats> Indexes { get; }
