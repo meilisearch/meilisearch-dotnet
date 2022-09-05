@@ -239,12 +239,12 @@ getting_started_filtering: |-
   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
 getting_started_geo_radius: |-
   SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
-   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
 getting_started_geo_point: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
   await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
 getting_started_sorting: |-
-  SearchQuery searchQuery); = new SearchQuery() {
+  SearchQuery searchQuery = new SearchQuery() {
     Sort = new string[] { "mass:asc" },
     Filter = "mass < 200",
   };
