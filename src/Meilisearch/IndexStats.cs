@@ -16,19 +16,19 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets the total number of documents.
+        /// Gets the total number of documents.
         /// </summary>
         [JsonPropertyName("numberOfDocuments")]
         public int NumberOfDocuments { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the index is currently indexing.
+        /// Gets a value indicating whether the index is currently indexing.
         /// </summary>
         [JsonPropertyName("isIndexing")]
         public bool IsIndexing { get; }
 
         /// <summary>
-        /// Gets or sets field distribution.
+        /// Gets field distribution.
         /// </summary>
         [JsonPropertyName("fieldDistribution")]
         public IReadOnlyDictionary<string, int> FieldDistribution { get; }
