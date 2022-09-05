@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Meilisearch
 {
@@ -8,19 +9,29 @@ namespace Meilisearch
     /// </summary>
     public class Stats
     {
+        public Stats(int databaseSize, DateTime? lastUpdate, IReadOnlyDictionary<string, IndexStats> indexes)
+        {
+            DatabaseSize = databaseSize;
+            LastUpdate = lastUpdate;
+            Indexes = indexes;
+        }
+
         /// <summary>
         /// Gets or sets database size.
         /// </summary>
-        public int DatabaseSize { get; set; }
+        [JsonPropertyName("databaseSize")]
+        public int DatabaseSize { get; }
 
         /// <summary>
         /// Gets or sets last update timestamp.
         /// </summary>
-        public DateTime? LastUpdate { get; set; }
+        [JsonPropertyName("lastUpdate")]
+        public DateTime? LastUpdate { get; }
 
         /// <summary>
         /// Gets or sets index stats.
         /// </summary>
-        public IDictionary<string, IndexStats> Indexes { get; set; }
+        [JsonPropertyName("indexes")]
+        public IReadOnlyDictionary<string, IndexStats> Indexes { get; }
     }
 }
