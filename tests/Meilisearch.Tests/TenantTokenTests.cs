@@ -133,7 +133,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key
             {
                 Description = "Key generate a tenant token",
-                Actions = new string[] { "*" },
+                Actions = new KeyAction[] { KeyAction.All },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
