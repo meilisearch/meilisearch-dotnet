@@ -8,28 +8,28 @@ namespace Meilisearch.QueryParameters
     public class TasksQuery
     {
         /// <summary>
-        /// Gets or sets the limit.
+        /// Gets or sets the Number of tasks to return.
         /// </summary>
         public int? Limit { get; set; }
 
         /// <summary>
-        /// Gets or sets offset size.
+        /// Gets or sets the uid of the first task returned.
         /// </summary>
         public int? From { get; set; }
 
         /// <summary>
-        /// Gets or sets offset size.
+        /// Gets or sets the lists of indexUid to filter on. Case-sensitive.
         /// </summary>
         public List<string> IndexUid { get; set; }
 
         /// <summary>
-        /// Gets or sets offset size.
+        /// Gets or sets the list of statuses to filter on.
         /// </summary>
-        public List<string> Status { get; set; }
+        public List<TaskInfoStatus> Status { get; set; }
 
         /// <summary>
-        /// Gets or sets offset size.
+        /// Gets or sets the list of types to filter on.
         /// </summary>
-        public List<string> Types { get; set; }
+        public List<TaskInfoType> Types { get; set; }
     }
 }

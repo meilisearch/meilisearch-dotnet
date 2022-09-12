@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Meilisearch
@@ -40,7 +42,7 @@ namespace Meilisearch
         /// Gets or sets list of actions available for the API key.
         /// </summary>
         [JsonPropertyName("actions")]
-        public IEnumerable<string> Actions { get; set; }
+        public IEnumerable<KeyAction> Actions { get; set; }
 
         /// <summary>
         /// Gets or sets the list of indexes the API key can access.
@@ -65,5 +67,160 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
+    }
+
+    [JsonConverter(typeof(KeyActionJsonConverter))]
+    public enum KeyAction
+    {
+        /// <summary>
+        /// Gives all actions to the key.
+        /// </summary>
+        All,
+        /// <summary>
+        /// Provides access to both POST and GET search endpoints.
+        /// </summary>
+        Search,
+        /// <summary>
+        /// Provides access to the add documents and update documents endpoints.
+        /// </summary>
+        DocumentsAdd,
+        /// <summary>
+        /// Provides access to the get one document and get documents endpoints.
+        /// </summary>
+        DocumentsGet,
+        /// <summary>
+        /// Provides access to the delete one document, delete all documents, and batch delete endpoints.
+        /// </summary>
+        DocumentsDelete,
+        /// <summary>
+        /// Provides access to the create index endpoint.
+        /// </summary>
+        IndexesCreate,
+        /// <summary>
+        /// Provides access to the get one index and list all indexes endpoints.
+        /// Non-authorized indexes will be omitted from the response.
+        /// </summary>
+        IndexesGet,
+        /// <summary>
+        /// Provides access to the update index endpoint.
+        /// </summary>
+        IndexesUpdate,
+        /// <summary>
+        /// Provides access to the delete index endpoint.
+        /// </summary>
+        IndexesDelete,
+        /// <summary>
+        /// Provides access to the get one task and get tasks endpoints.
+        /// Tasks from non-authorized indexes will be omitted from the response.
+        /// </summary>
+        TasksGet,
+        /// <summary>
+        /// Provides access to the get settings endpoint and equivalents for all subroutes.
+        /// </summary>
+        SettingsGet,
+        /// <summary>
+        /// Provides access to the update settings and reset settings endpoints and equivalents for all subroutes.
+        /// </summary>
+        SettingsUpdate,
+        /// <summary>
+        /// Provides access to the get stats of an index endpoint and the get stats of all indexes endpoint.
+        /// For the latter, non-authorized indexes are omitted from the response.
+        /// </summary>
+        StatsGet,
+        /// <summary>
+        /// Provides access to the create dump endpoint. Not restricted by indexes.
+        /// </summary>
+        DumpsCreate,
+        /// <summary>
+        /// Provides access to the get Meilisearch version endpoint.
+        /// </summary>
+        Version,
+        /// <summary>
+        /// Provides access to the get all keys endpoint.
+        /// </summary>
+        KeysGet,
+        /// <summary>
+        /// Provides access to the create key endpoint.
+        /// </summary>
+        KeysCreate,
+        /// <summary>
+        /// Provides access to the update key endpoint.
+        /// </summary>
+        KeysUpdate,
+        /// <summary>
+        /// Provides access to the delete key endpoint.
+        /// </summary>
+        KeysDelete
+    }
+
+
+    internal class KeyActionJsonConverter : JsonConverter<KeyAction>
+    {
+        public override KeyAction Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return (KeyAction)Enum.Parse(typeof(KeyAction), ConvertFromDotCase(reader.GetString()), false);
+        }
+
+        public override void Write(Utf8JsonWriter writer, KeyAction value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(ConvertToDotCase(value));
+        }
+
+        private string ConvertFromDotCase(string input)
+        {
+            if (input == "*")
+            {
+                return "All";
+            }
+
+            var sb = new StringBuilder();
+            for (var i = 0; i < input.Length; i++)
+            {
+                if (i != 0 && input[i] != '.')
+                {
+                    sb.Append(input[i]);
+                }
+                else if (input[i] == '.')
+                {
+                    sb.Append(char.ToUpper(input[i + 1]));
+                    ++i;
+                }
+                else
+                {
+                    sb.Append(char.ToUpper(input[i]));
+                }
+
+            }
+
+            return sb.ToString();
+        }
+
+        private string ConvertToDotCase(KeyAction ka)
+        {
+            if (ka == KeyAction.All)
+            {
+                return "*";
+            }
+
+            var input = ka.ToString();
+            var sb = new StringBuilder();
+            for (var i = 0; i < input.Length; i++)
+            {
+                if (i != 0 && char.IsLower(input[i]))
+                {
+                    sb.Append(input[i]);
+                }
+                else if (i != 0)
+                {
+                    sb.Append($".{char.ToLower(input[i])}");
+                }
+
+                else
+                {
+                    sb.Append(char.ToLower(input[i]));
+                }
+            }
+            return sb.ToString();
+        }
     }
 }
