@@ -479,8 +479,8 @@ get_all_tasks_filtering_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });
 get_all_tasks_filtering_2: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery {
-    Status = new List<TaskInfoStatus>() { TaskInfoStatus.Succeeded, TaskInfoStatus.failed },
-    Types = new List<TaskInfoType>() { TaskInfoType.documentAdditionOrUpdate },
+    Status = new List<TaskInfoStatus>() { TaskInfoStatus.Succeeded, TaskInfoStatus.Failed },
+    Types = new List<TaskInfoType>() { TaskInfoType.DocumentAdditionOrUpdate },
   });
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });
