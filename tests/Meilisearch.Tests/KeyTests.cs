@@ -167,6 +167,22 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CreateOneKeyWithWildcardedAction()
+        {
+            var keyOptions = new Key
+            {
+                Actions = new KeyAction[] { KeyAction.DocumentsAll },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var createdKeyUid = createdKey.KeyUid;
+            var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
+
+            Assert.Equal(fetchedKey.Actions, new KeyAction[] { KeyAction.DocumentsAll });
+        }
+
+        [Fact]
         public async Task UpdateKey()
         {
             var keyOptions = new Key

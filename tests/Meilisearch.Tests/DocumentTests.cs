@@ -273,13 +273,10 @@ namespace Meilisearch.Tests
 
             // Check the documents have been updated and added
             var docs = await index.GetDocumentsAsync<Movie>();
-            Assert.Equal("1", docs.Results.First().Id);
-            Assert.Equal("Ironman", docs.Results.First().Name);
-            Assert.Null(docs.Results.First().Genre);
+            var movieNames = docs.Results.Select(movie => movie.Name);
 
-            Assert.Equal("2", docs.Results.ElementAt(1).Id);
-            Assert.Equal("Superman", docs.Results.ElementAt(1).Name);
-            docs.Results.ElementAt(1).Genre.Should().BeNull();
+            Assert.Contains("Ironman", movieNames);
+            Assert.Contains("Superman", movieNames);
         }
 
         [Fact]
