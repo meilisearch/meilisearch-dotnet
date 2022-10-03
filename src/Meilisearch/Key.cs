@@ -81,11 +81,11 @@ namespace Meilisearch
         /// </summary>
         Search,
         /// <summary>
-        /// Provides access to both POST and GET search endpoints.
+        /// Provides access to all documents endpoints.
         /// </summary>
         DocumentsAll,
         /// <summary>
-        /// Provides access to all documents endpoints.
+        /// Provides access to the add documents and update documents endpoints.
         /// </summary>
         DocumentsAdd,
         /// <summary>
@@ -97,11 +97,11 @@ namespace Meilisearch
         /// </summary>
         DocumentsDelete,
         /// <summary>
-        /// Provides access to the create index endpoint.
+        /// Provides access to all indexes endpoint.
         /// </summary>
         IndexesAll,
         /// <summary>
-        /// Provides access to all indexes endpoint.
+        /// Provides access to the create index endpoint.
         /// </summary>
         IndexesCreate,
         /// <summary>
@@ -123,11 +123,11 @@ namespace Meilisearch
         /// </summary>
         TasksGet,
         /// <summary>
-        /// Provides access to the get settings endpoint and equivalents for all subroutes.
+        /// Provides access to all settings endpoints and equivalents for all subroutes.
         /// </summary>
         SettingsAll,
         /// <summary>
-        /// Provides access to all settings endpoints.
+        /// Provides access to the get settings endpoint and equivalents for all subroutes.
         /// </summary>
         SettingsGet,
         /// <summary>
@@ -148,11 +148,11 @@ namespace Meilisearch
         /// </summary>
         Version,
         /// <summary>
-        /// Provides access to the get all keys endpoint.
+        /// Provides access to all keys endpoint.
         /// </summary>
         KeysAll,
         /// <summary>
-        /// Provides access to all keys endpoint.
+        /// Provides access to the get all keys endpoint.
         /// </summary>
         KeysGet,
         /// <summary>
