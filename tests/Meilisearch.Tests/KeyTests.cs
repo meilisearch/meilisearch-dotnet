@@ -171,7 +171,7 @@ namespace Meilisearch.Tests
         {
             var keyOptions = new Key
             {
-                Actions = new KeyAction[] { KeyAction.All },
+                Actions = new KeyAction[] { KeyAction.DocumentsAll },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
@@ -179,7 +179,7 @@ namespace Meilisearch.Tests
             var createdKeyUid = createdKey.KeyUid;
             var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
-            Assert.Equal(fetchedKey.Actions, new string[] { "documents.*" });
+            Assert.Equal(fetchedKey.Actions, new KeyAction[] { KeyAction.DocumentsAll });
         }
 
         [Fact]
