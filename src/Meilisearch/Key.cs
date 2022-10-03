@@ -81,7 +81,7 @@ namespace Meilisearch
         /// </summary>
         Search,
         /// <summary>
-        /// Provides access to the add documents and update documents endpoints.
+        /// Provides access to both POST and GET search endpoints.
         /// </summary>
         DocumentsAll,
         /// <summary>
@@ -101,7 +101,7 @@ namespace Meilisearch
         /// </summary>
         IndexesAll,
         /// <summary>
-        /// Provides access to a indexes endpoint.
+        /// Provides access to all indexes endpoint.
         /// </summary>
         IndexesCreate,
         /// <summary>
@@ -127,7 +127,7 @@ namespace Meilisearch
         /// </summary>
         SettingsAll,
         /// <summary>
-        /// Provides access to all settings endpoints and equivalents for all subroutes.
+        /// Provides access to all settings endpoints.
         /// </summary>
         SettingsGet,
         /// <summary>
