@@ -199,11 +199,8 @@ JSON Output:
 If you want to enable filtering, you must add your attributes to the `FilterableAttributes` index setting.
 
 ```c#
-await index.UpdateSettingsAsync(
-    new Settings
-    {
-        FilterableAttributes = new string[] { "id", "genres" },
-    }
+TaskInfo task = await index.UpdateFilterableAttributesAsync(
+    new string[] { "id", "genres" }
 );
 ```
 
@@ -214,7 +211,7 @@ Note that MeiliSearch will rebuild your index whenever you update `FilterableAtt
 Then, you can perform the search:
 
 ```c#
-await index.SearchAsync<Movie>(
+SearchResult<Movie> movies = await index.SearchAsync<Movie>(
     "wonder",
     new SearchQuery
     {
@@ -236,7 +233,7 @@ JSON Output:
   ],
   "offset": 0,
   "limit": 20,
-  "nbHits": 1,
+  "estimatedTotalHits": 1,
   "processingTimeMs": 0,
   "query": "wonder"
 }
