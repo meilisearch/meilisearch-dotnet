@@ -83,6 +83,10 @@ namespace Meilisearch
         /// <summary>
         /// Provides access to the add documents and update documents endpoints.
         /// </summary>
+        DocumentsAll,
+        /// <summary>
+        /// Provides access to all documents endpoints.
+        /// </summary>
         DocumentsAdd,
         /// <summary>
         /// Provides access to the get one document and get documents endpoints.
@@ -94,6 +98,10 @@ namespace Meilisearch
         DocumentsDelete,
         /// <summary>
         /// Provides access to the create index endpoint.
+        /// </summary>
+        IndexesAll,
+        /// <summary>
+        /// Provides access to a indexes endpoint.
         /// </summary>
         IndexesCreate,
         /// <summary>
@@ -117,6 +125,10 @@ namespace Meilisearch
         /// <summary>
         /// Provides access to the get settings endpoint and equivalents for all subroutes.
         /// </summary>
+        SettingsAll,
+        /// <summary>
+        /// Provides access to all settings endpoints and equivalents for all subroutes.
+        /// </summary>
         SettingsGet,
         /// <summary>
         /// Provides access to the update settings and reset settings endpoints and equivalents for all subroutes.
@@ -137,6 +149,10 @@ namespace Meilisearch
         Version,
         /// <summary>
         /// Provides access to the get all keys endpoint.
+        /// </summary>
+        KeysAll,
+        /// <summary>
+        /// Provides access toall keys endpoint.
         /// </summary>
         KeysGet,
         /// <summary>
@@ -197,12 +213,7 @@ namespace Meilisearch
 
         private string ConvertToDotCase(KeyAction ka)
         {
-            if (ka == KeyAction.All)
-            {
-                return "*";
-            }
-
-            var input = ka.ToString();
+            var input = ka.ToString().Replace("All", "*");
             var sb = new StringBuilder();
             for (var i = 0; i < input.Length; i++)
             {
