@@ -239,12 +239,12 @@ getting_started_filtering: |-
   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
 getting_started_geo_radius: |-
   SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
-   await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
 getting_started_geo_point: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
   await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
 getting_started_sorting: |-
-  SearchQuery searchQuery); = new SearchQuery() {
+  SearchQuery searchQuery = new SearchQuery() {
     Sort = new string[] { "mass:asc" },
     Filter = "mass < 200",
   };
@@ -364,7 +364,7 @@ create_a_key_1: |-
   Key keyOptions = new Key
   {
       Description = "Add documents: Products API key",
-      Actions = new string[] { "documents.add" },
+      Actions = new KeyAction[] { KeyAction.DocumentsAdd },
       Indexes = new string[] { "products" },
       ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z")
   };
@@ -479,8 +479,8 @@ get_all_tasks_filtering_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });
 get_all_tasks_filtering_2: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery {
-    Status = new List<string>() { "succeeded", "failed" },
-    Types = new List<string>() { "documentAdditionOrUpdate" },
+    Status = new List<TaskInfoStatus>() { TaskInfoStatus.Succeeded, TaskInfoStatus.Failed },
+    Types = new List<TaskInfoType>() { TaskInfoType.DocumentAdditionOrUpdate },
   });
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -7,14 +9,22 @@ namespace Meilisearch
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, tasks, ...</typeparam>
     public class Result<T>
     {
-        /// <summary>
-        /// Gets or sets the "results" field.
-        /// </summary>
-        public T Results { get; set; }
+        public Result(T results, int? limit)
+        {
+            Results = results;
+            Limit = limit;
+        }
 
         /// <summary>
-        /// Gets or sets limit size.
+        /// Gets the "results" field.
         /// </summary>
-        public int? Limit { get; set; }
+        [JsonPropertyName("results")]
+        public T Results { get; }
+
+        /// <summary>
+        /// Gets limit size.
+        /// </summary>
+        [JsonPropertyName("limit")]
+        public int? Limit { get; }
     }
 }
