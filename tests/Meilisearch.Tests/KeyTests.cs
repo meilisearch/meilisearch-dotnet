@@ -171,7 +171,7 @@ namespace Meilisearch.Tests
         {
             var keyOptions = new Key
             {
-                Actions = new string[] { "documents.*" },
+                Actions = new KeyAction[] { KeyAction.All },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
