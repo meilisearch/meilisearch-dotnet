@@ -99,7 +99,7 @@ namespace Meilisearch.Tests
             {
                 Name = "AddDocumentToAllIndexes",
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new KeyAction[] { KeyAction.DocumentsAdd },
                 Indexes = new string[] { "*" },
                 ExpiresAt = DateTime.Parse("2042-04-02T00:42:42Z"),
             };
@@ -122,7 +122,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key
             {
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new KeyAction[] { KeyAction.DocumentsAdd },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
@@ -149,7 +149,7 @@ namespace Meilisearch.Tests
             {
                 Uid = "9cd7a335-5b9c-4312-be16-7f1fcf7fd250",
                 Description = "Key to add document to all indexes.",
-                Actions = new string[] { "documents.add" },
+                Actions = new KeyAction[] { KeyAction.DocumentsAdd },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
@@ -189,7 +189,7 @@ namespace Meilisearch.Tests
             {
                 Description = "Key to add document to all indexes.",
                 Name = "key alias",
-                Actions = new string[] { "documents.add" },
+                Actions = new KeyAction[] { KeyAction.DocumentsAdd },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };
@@ -212,7 +212,7 @@ namespace Meilisearch.Tests
             var keyOptions = new Key
             {
                 Description = "Key to delete document to all indexes.",
-                Actions = new string[] { "documents.delete" },
+                Actions = new KeyAction[] { KeyAction.DocumentsAdd },
                 Indexes = new string[] { "*" },
                 ExpiresAt = null,
             };

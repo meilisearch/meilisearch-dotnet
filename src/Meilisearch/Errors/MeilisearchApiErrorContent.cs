@@ -7,28 +7,36 @@ namespace Meilisearch
     /// </summary>
     public class MeilisearchApiErrorContent
     {
+        public MeilisearchApiErrorContent(string message, string code, string type, string link)
+        {
+            Message = message;
+            Code = code;
+            Type = type;
+            Link = link;
+        }
+
         /// <summary>
-        /// Gets or sets the message.
+        /// Gets the message.
         /// </summary>
         [JsonPropertyName("message")]
-        public string Message { get; set; }
+        public string Message { get; }
 
         /// <summary>
-        /// Gets or sets the code.
+        /// Gets the code.
         /// </summary>
         [JsonPropertyName("code")]
-        public string Code { get; set; }
+        public string Code { get; }
 
         /// <summary>
-        /// Gets or sets the type.
+        /// Gets the type.
         /// </summary>
         [JsonPropertyName("type")]
-        public string Type { get; set; }
+        public string Type { get; }
 
         /// <summary>
-        /// Gets or sets the link.
+        /// Gets the link.
         /// </summary>
         [JsonPropertyName("link")]
-        public string Link { get; set; }
+        public string Link { get; }
     }
 }
