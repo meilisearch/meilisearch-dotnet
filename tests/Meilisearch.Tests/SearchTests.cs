@@ -396,5 +396,23 @@ namespace Meilisearch.Tests
             Assert.Equal("11", movies.Hits.First().Id);
             Assert.Equal(1000, movies.Hits.First().Info.ReviewNb);
         }
+
+        [Fact]
+        public async Task CustomSearchWithMatchingStrategyALL()
+        {
+            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "all" };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
+
+            movies.Hits.Should().ContainSingle();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithMatchingStrategyLast()
+        {
+            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "last" };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
+
+            Assert.True(movies.Hits.Count() > 1);
+        }
     }
 }

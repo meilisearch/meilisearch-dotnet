@@ -81,6 +81,10 @@ namespace Meilisearch
         /// </summary>
         Search,
         /// <summary>
+        /// Provides access to all documents endpoints.
+        /// </summary>
+        DocumentsAll,
+        /// <summary>
         /// Provides access to the add documents and update documents endpoints.
         /// </summary>
         DocumentsAdd,
@@ -92,6 +96,10 @@ namespace Meilisearch
         /// Provides access to the delete one document, delete all documents, and batch delete endpoints.
         /// </summary>
         DocumentsDelete,
+        /// <summary>
+        /// Provides access to all indexes endpoint.
+        /// </summary>
+        IndexesAll,
         /// <summary>
         /// Provides access to the create index endpoint.
         /// </summary>
@@ -115,6 +123,10 @@ namespace Meilisearch
         /// </summary>
         TasksGet,
         /// <summary>
+        /// Provides access to all settings endpoints and equivalents for all subroutes.
+        /// </summary>
+        SettingsAll,
+        /// <summary>
         /// Provides access to the get settings endpoint and equivalents for all subroutes.
         /// </summary>
         SettingsGet,
@@ -135,6 +147,10 @@ namespace Meilisearch
         /// Provides access to the get Meilisearch version endpoint.
         /// </summary>
         Version,
+        /// <summary>
+        /// Provides access to all keys endpoint.
+        /// </summary>
+        KeysAll,
         /// <summary>
         /// Provides access to the get all keys endpoint.
         /// </summary>
@@ -166,13 +182,9 @@ namespace Meilisearch
             writer.WriteStringValue(ConvertToDotCase(value));
         }
 
-        private string ConvertFromDotCase(string input)
+        private string ConvertFromDotCase(string inputRaw)
         {
-            if (input == "*")
-            {
-                return "All";
-            }
-
+            var input = inputRaw.Replace("*", "All");
             var sb = new StringBuilder();
             for (var i = 0; i < input.Length; i++)
             {
@@ -197,12 +209,7 @@ namespace Meilisearch
 
         private string ConvertToDotCase(KeyAction ka)
         {
-            if (ka == KeyAction.All)
-            {
-                return "*";
-            }
-
-            var input = ka.ToString();
+            var input = ka.ToString().Replace("All", "*");
             var sb = new StringBuilder();
             for (var i = 0; i < input.Length; i++)
             {
