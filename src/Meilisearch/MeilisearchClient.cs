@@ -155,7 +155,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets and index with the unique ID.
+        /// Gets an index with the unique ID.
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
