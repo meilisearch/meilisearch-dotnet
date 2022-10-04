@@ -423,6 +423,7 @@ getting_started_communicating_with_a_protected_instance: |-
 
   await client.Index("Movies").SearchAsync<Movie>("");
 faceted_search_update_settings_1: |-
+  await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
 faceted_search_filter_1: |-
   SearchQuery filters = new SearchQuery()
   {
