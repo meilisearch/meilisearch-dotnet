@@ -16,26 +16,32 @@ delete_an_index_1: |-
 get_one_document_1: |-
   await client.Index("movies").GetDocumentAsync<Movie>(25684, new List<string> { "id", "title", "poster", "release_date" });
 get_documents_1: |-
-  await client.Index("movies").GetDocumentsAsync<Movie>();
+  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2 });
 add_or_replace_documents_1: |-
   var movie = new[]
   {
-      new Movie { Id = "287947", Name = "Shazam", Genre = "Action" },
-      new Movie { Id = "329996", Name = "Dumbo", Genre = "Cartoon" }
+      new Movie
+      {
+            Id = "287947",
+            Title = "Shazam",
+            Poster = "https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg",
+            Overview = "A boy is given the ability to become an adult superhero in times of need with a single magic word.",
+            ReleaseDate = "2019-03-23"
+      }
   };
   await index.AddDocumentsAsync(movie);
 add_or_update_documents_1: |-
   var movie = new[]
   {
-      new Movie { Id = "287947", Name = "Shazam!", Genre = "Action" },
+      new Movie { Id = "287947", Title = "Shazam ⚡️", Genres = "comedy" }
   };
   await index.UpdateDocumentsAsync(movie);
 delete_all_documents_1: |-
   await client.Index("movies").DeleteAllDocumentsAsync();
 delete_one_document_1: |-
-  await client.Index("movies").DeleteOneDocumentAsync("287947");
+  await client.Index("movies").DeleteOneDocumentAsync("25684");
 delete_documents_1: |-
-  await client.Index("movies").DeleteDocumentsAsync(new[] { "287947", "329996" });
+  await client.Index("movies").DeleteDocumentsAsync(new[] { "23488", "153738", "437035", "363869" });
 search_post_1: |-
   await client.Index("movies").SearchAsync<Movie>("American ninja");
 get_task_1: |
@@ -87,8 +93,9 @@ get_synonyms_1: |-
 update_synonyms_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
-  	{ "wolverine", new string[] {"xmen", "logan"} },
-  	{ "logan", new string[] {"wolverine"} }
+  	{ "wolverine", new string[] { "xmen", "logan" } },
+  	{ "logan", new string[] { "wolverine", "xmen" } },
+    { "wow", new string[] { "world of warcraft" } }
   };
   await client.Index("movies").UpdateSynonymsAsync(synonyms);
 reset_synonyms_1: |-
@@ -213,7 +220,7 @@ search_parameter_guide_highlight_1: |-
   {
   	AttributesToHighlight = new[] {"overview"}
   };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+  await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
 search_parameter_guide_show_matches_position_1: |-
   await client.Index("movies").SearchAsync<T>(
     "winter feast",
@@ -226,15 +233,15 @@ settings_guide_synonyms_1: |-
   {
       Synonyms = new Dictionary<string, IEnumerable<string>>
       {
-        { "wolverine", new string[] {"xmen", "logan"} },
-        { "logan", new string[] {"wolverine"} }
+        { "sweater", new string[] { "jumper" } },
+        { "jumper", new string[] { "sweater" } }
       }
   };
-  await client.Index("movies").UpdateSettingsAsync(newSettings);
+  await client.Index("tops").UpdateSettingsAsync(newSettings);
 settings_guide_stop_words_1: |-
   var newSettings = new Settings
   {
-  	StopWords = new[] {"of", "the", "to"}
+  	StopWords = new[] {"the", "a", "an"}
   };
   await client.Index("movies").UpdateSettingsAsync(newSettings);
 settings_guide_ranking_rules_1: |-
@@ -265,8 +272,8 @@ settings_guide_searchable_1: |-
   	SearchableAttributes = new[]
   	{
       "title",
-  	  "overview",
-  	  "genres"
+      "overview",
+      "genres"
   	}
   };
   await client.Index("movies").UpdateSettingsAsync(newSettings);
@@ -276,9 +283,9 @@ settings_guide_displayed_1: |-
   	DisplayedAttributes = new[]
   	{
       "title",
-  	  "overview",
-  	  "genres",
-  	  "release_date"
+      "overview",
+      "genres",
+      "release_date"
   	}
   };
   await client.Index("movies").UpdateSettingsAsync(newSettings);
@@ -291,13 +298,12 @@ settings_guide_sortable_1: |-
 documents_guide_add_movie_1: |-
   var movie = new[]
   {
-      new Movie { Id = "287947", Name = "Shazam", Genre = "Action" },
-      new Movie { Id = "329996", Name = "Dumbo", Genre = "Cartoon" }
+      new Movie { MovieId = "123sq178", Title = "Amelie Poulain" }
   };
   await index.AddDocumentsAsync(movie);
 getting_started_add_documents_md: |-
   ```bash
-  dotnet add package MeiliSearch
+  dotnet add package Meilisearch
   ```
 
   ```csharp
@@ -449,8 +455,11 @@ faceted_search_walkthrough_filter_1: |-
   };
   await client.Index("movies").SearchAsync<Movie>("thriller", sq);
 add_movies_json_1: |-
+  // Make sure to add this using to your code
+  using System.IO;
+
   var jsonDocuments = await File.ReadAllTextAsync("movies.json");
-  await index.AddDocumentsJsonAsync(jsonDocuments);
+  await client.Index("movies").AddDocumentsJsonAsync(jsonDocuments);
 landing_getting_started_1: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
 
@@ -467,7 +476,7 @@ landing_getting_started_1: |-
 post_dump_1: |-
   await client.CreateDumpAsync();
 phrase_search_1: |-
-  await client.Index("movies").SearchAsync<Movie>("'african american' horror");
+  await client.Index("movies").SearchAsync<Movie>("\"african american\" horror");
 sorting_guide_update_sortable_attributes_1: |-
   await client.Index("books").UpdateSortableAttributesAsync(new [] { "price", "author" });
 sorting_guide_update_ranking_rules_1: |-
