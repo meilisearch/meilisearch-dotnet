@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -88,6 +89,45 @@ namespace Meilisearch.Tests
             var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(data));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
 
+            await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
+        }
+
+        [Fact]
+        public async Task SearchFailsWhenTokenIsExpired()
+        {
+            var keyOptions = new Key
+            {
+                Description = "Key generate a tenant token",
+                Actions = new KeyAction[] { KeyAction.All },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
+
+            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }),  expiresAt: DateTime.UtcNow.AddSeconds(1));
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            await Assert.ThrowsAsync<MeilisearchApiError>(async () =>
+                await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty));
+        }
+
+        [Fact]
+        public async void SearchSucceedsWhenTokenIsNotExpired()
+        {
+            var keyOptions = new Key
+            {
+                Description = "Key generate a tenant token",
+                Actions = new KeyAction[] { KeyAction.All },
+                Indexes = new string[] { "*" },
+                ExpiresAt = null,
+            };
+            var createdKey = await _client.CreateKeyAsync(keyOptions);
+            var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
+
+            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }),  expiresAt: DateTime.UtcNow.AddMinutes(1));
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
         }
 
