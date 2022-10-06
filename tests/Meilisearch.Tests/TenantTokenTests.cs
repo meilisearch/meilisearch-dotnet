@@ -105,7 +105,7 @@ namespace Meilisearch.Tests
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
 
-            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }),  expiresAt: DateTime.UtcNow.AddSeconds(1));
+            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }), expiresAt: DateTime.UtcNow.AddSeconds(1));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
@@ -126,7 +126,7 @@ namespace Meilisearch.Tests
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
 
-            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }),  expiresAt: DateTime.UtcNow.AddMinutes(1));
+            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }), expiresAt: DateTime.UtcNow.AddMinutes(1));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
         }
