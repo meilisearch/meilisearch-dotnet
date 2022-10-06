@@ -145,8 +145,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetMultipleRawExistingIndexesWithLimit()
         {
-            var indexUid1 = "GetMultipleExistingIndexesWithLimit1";
-            var indexUid2 = "GetMultipleExistingIndexesWithLimit2";
+            var indexUid1 = "GetMultipleRawExistingIndexesWithLimit1";
+            var indexUid2 = "GetMultipleRawExistingIndexesWithLimit2";
             await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
             await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
 
@@ -160,8 +160,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetMultipleRawExistingIndexesWithOffset()
         {
-            var indexUid1 = "GetMultipleExistingIndexesWithOffset1";
-            var indexUid2 = "GetMultipleExistingIndexesWithOffset2";
+            var indexUid1 = "GetMultipleRawExistingIndexesWithOffset1";
+            var indexUid2 = "GetMultipleRawExistingIndexesWithOffset2";
             await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
             await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
 
