@@ -400,7 +400,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMatchingStrategyALL()
         {
-            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "all" };
+            var searchQuery = new SearchQuery() { MatchingStrategy = "all" };
             var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
 
             movies.Hits.Should().ContainSingle();
@@ -409,7 +409,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMatchingStrategyLast()
         {
-            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "last" };
+            var searchQuery = new SearchQuery() { MatchingStrategy = "last" };
             var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
 
             Assert.True(movies.Hits.Count() > 1);
