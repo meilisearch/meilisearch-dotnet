@@ -254,7 +254,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithPhraseSearch()
         {
-            var movies = await _indexForFaceting.SearchAsync<Movie>(new SearchQuery ("coco \"harry\""));
+            var movies = await _indexForFaceting.SearchAsync<Movie>(new SearchQuery("coco \"harry\""));
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
