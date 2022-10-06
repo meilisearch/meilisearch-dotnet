@@ -122,11 +122,17 @@ namespace Meilisearch
         /// <summary>
         /// Gets all the raw indexes for the instance as returned by the resposne of the Meilisearch server. Throws error if the index does not exist.
         /// </summary>
+        /// <param name="query">Query parameters. Supports limit and offset.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
-        public async Task<JsonDocument> GetAllRawIndexesAsync(CancellationToken cancellationToken = default)
+        public async Task<JsonDocument> GetAllRawIndexesAsync(IndexesQuery query = default, CancellationToken cancellationToken = default)
         {
-            var response = await _http.GetAsync("indexes", cancellationToken).ConfigureAwait(false);
+            var uri = $"indexes";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+            var response = await _http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return JsonDocument.Parse(content);
