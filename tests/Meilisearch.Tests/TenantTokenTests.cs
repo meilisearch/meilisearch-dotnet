@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using JWT.Algorithms;
-using JWT.Builder;
-using JWT.Exceptions;
-
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -15,7 +11,6 @@ namespace Meilisearch.Tests
         private readonly TenantTokenRules _searchRules = new TenantTokenRules(new string[] { "*" });
 
         private readonly TFixture _fixture;
-        private JwtBuilder _builder;
         private Index _basicIndex;
         private readonly MeilisearchClient _client;
         private readonly string _indexName = "books";
@@ -34,10 +29,6 @@ namespace Meilisearch.Tests
         {
             await _fixture.DeleteAllIndexes();
             _basicIndex = await _fixture.SetUpBasicIndex(_indexName);
-            _builder = JwtBuilder
-                .Create()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .MustVerifySignature();
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -59,27 +50,6 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public void SignsTokenWithGivenKey()
-        {
-            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, null);
-
-            Assert.Throws<SignatureVerificationException>(
-                () => _builder.WithSecret("other-key").Decode(token)
-            );
-
-            _builder.WithSecret(_key).Decode(token);
-        }
-
-        [Fact]
-        public void GeneratesTokenWithExpiresAt()
-        {
-            var expiration = DateTimeOffset.UtcNow.AddDays(1).DateTime;
-            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, expiration);
-
-            _builder.WithSecret(_key).Decode(token);
-        }
-
-        [Fact]
         public void ThrowsExceptionWhenExpiresAtIsInThePast()
         {
             var expiresAt = new DateTime(1995, 12, 20);
@@ -87,33 +57,6 @@ namespace Meilisearch.Tests
             Assert.Throws<MeilisearchTenantTokenExpired>(
                 () => TenantToken.GenerateToken(_uid, _searchRules, _key, expiresAt)
             );
-        }
-
-        [Fact]
-        public void ContainsValidClaims()
-        {
-            var token = TenantToken.GenerateToken(_uid, _searchRules, _key, null);
-
-            var claims = _builder.WithSecret(_key).Decode<IDictionary<string, object>>(token);
-
-            Assert.Equal(claims["apiKeyUid"], _uid);
-            Assert.Equal(claims["searchRules"], _searchRules.ToClaim());
-        }
-
-        [Fact]
-        public void ClientDecodesSuccessfullyUsingApiKeyFromInstance()
-        {
-            var token = _client.GenerateTenantToken(_uid, _searchRules);
-
-            _builder.WithSecret(_client.ApiKey).Decode(token);
-        }
-
-        [Fact]
-        public void ClientDecodesSuccessfullyUsingApiKeyFromArgument()
-        {
-            var token = _client.GenerateTenantToken(_uid, _searchRules, apiKey: _key);
-
-            _builder.WithSecret(_key).Decode(token);
         }
 
         [Fact]

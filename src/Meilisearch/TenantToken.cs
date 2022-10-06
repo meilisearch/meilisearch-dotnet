@@ -1,7 +1,10 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 
-using JWT.Algorithms;
-using JWT.Builder;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Meilisearch
 {
@@ -23,24 +26,35 @@ namespace Meilisearch
                 throw new MeilisearchTenantTokenApiKeyInvalid();
             }
 
-            var builder = JwtBuilder
-                .Create()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .AddClaim("apiKeyUid", apiKeyUid)
-                .AddClaim("searchRules", searchRules.ToClaim())
-                .WithSecret(apiKey);
-
-            if (expiresAt.HasValue)
+            if (expiresAt.HasValue && DateTime.Compare(DateTime.UtcNow, (DateTime)expiresAt) > 0)
             {
-                if (DateTime.Compare(DateTime.UtcNow, (DateTime)expiresAt) > 0)
-                {
-                    throw new MeilisearchTenantTokenExpired();
-                }
-
-                builder.AddClaim("exp", ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
+                throw new MeilisearchTenantTokenExpired();
             }
 
-            return builder.Encode();
+            var rules = searchRules.ToClaim();
+            var isArray = rules is string[];
+            var valueType = isArray ? JsonClaimValueTypes.JsonArray : JsonClaimValueTypes.Json;
+
+            var identity = new ClaimsIdentity();
+            identity.AddClaim(new Claim("apiKeyUid", apiKeyUid));
+            identity.AddClaim(new Claim("searchRules", JsonSerializer.Serialize(searchRules.ToClaim()), valueType));
+
+            var signingKey = Encoding.ASCII.GetBytes(apiKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = identity,
+                Expires = expiresAt,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler
+            {
+                SetDefaultTimesOnTokenCreation = false
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
