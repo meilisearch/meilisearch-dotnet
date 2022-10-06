@@ -91,5 +91,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("sort")]
         public IEnumerable<string> Sort { get; set; }
+
+        /// <summary>
+        /// Gets or sets the words matching strategy.
+        /// </summary>
+        [JsonPropertyName("matchingStrategy")]
+        public string MatchingStrategy { get; set; }
     }
 }

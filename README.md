@@ -194,9 +194,54 @@ JSON Output:
 }
 ```
 
+#### Custom Search With Filters <!-- omit in toc -->
+
+If you want to enable filtering, you must add your attributes to the `FilterableAttributes` index setting.
+
+```c#
+TaskInfo task = await index.UpdateFilterableAttributesAsync(
+    new string[] { "id", "genres" }
+);
+```
+
+You only need to perform this operation once.
+
+Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+
+Then, you can perform the search:
+
+```c#
+SearchResult<Movie> movies = await index.SearchAsync<Movie>(
+    "wonder",
+    new SearchQuery
+    {
+        Filter = "id > 1 AND genres = Action",
+    }
+);
+```
+
+JSON Output:
+
+```json
+{
+  "hits": [
+    {
+      "id": 2,
+      "title": "Wonder Woman",
+      "genres": ["Action","Adventure"]
+    }
+  ],
+  "offset": 0,
+  "limit": 20,
+  "estimatedTotalHits": 1,
+  "processingTimeMs": 0,
+  "query": "wonder"
+}
+```
+
 ## 🤖 Compatibility with Meilisearch
 
-This package only guarantees the compatibility with the [version v0.28.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.28.0).
+This package only guarantees the compatibility with the [version v0.29.0 of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/v0.29.0).
 
 ## 🎬 Examples
 
