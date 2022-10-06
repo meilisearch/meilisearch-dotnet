@@ -448,26 +448,13 @@ namespace Meilisearch
         /// <summary>
         /// Search documents according to search parameters.
         /// </summary>
-        /// <param name="query">Query Parameter with Search.</param>
-        /// <param name="searchAttributes">Attributes to search.</param>
+        /// <param name="searchQuery">Query informations.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type parameter to return.</typeparam>
         /// <returns>Returns Enumerable of items.</returns>
-        public async Task<SearchResult<T>> SearchAsync<T>(string query,
-            SearchQuery searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
+        public async Task<SearchResult<T>> SearchAsync<T>(SearchQuery searchQuery, CancellationToken cancellationToken = default)
         {
-            SearchQuery body;
-            if (searchAttributes == null)
-            {
-                body = new SearchQuery { Q = query };
-            }
-            else
-            {
-                body = searchAttributes;
-                body.Q = query;
-            }
-
-            var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", body,
+            var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", searchQuery,
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return await responseMessage.Content

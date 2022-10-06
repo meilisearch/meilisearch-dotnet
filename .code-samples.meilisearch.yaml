@@ -43,7 +43,7 @@ delete_one_document_1: |-
 delete_documents_1: |-
   await client.Index("movies").DeleteDocumentsAsync(new[] { "23488", "153738", "437035", "363869" });
 search_post_1: |-
-  await client.Index("movies").SearchAsync<Movie>("American ninja");
+  await client.Index("movies").SearchAsync<Movie>(new SearchQuery("American ninja"));
 get_task_1: |
   TaskInfo task = await client.GetTaskAsync(1);
 get_all_tasks_1: |
@@ -179,52 +179,51 @@ field_properties_guide_displayed_1: |-
       "release_date"
   });
 filtering_guide_1: |-
-  SearchQuery filters = new SearchQuery() { Filter = "release_date > \"795484800\"" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Avengers", filters);
+  SearchQuery filters = new SearchQuery("Avengers") { Filter = "release_date > \"795484800\"" };
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>(filters);
 filtering_guide_2: |-
-  SearchQuery filters = new SearchQuery() { Filter = "release_date > 795484800 AND (director =
+  SearchQuery filters = new SearchQuery("Batman") { Filter = "release_date > 795484800 AND (director =
   \"Tim Burton\" OR director = \"Christopher Nolan\")" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>(filters);
 filtering_guide_3: |-
-  SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Planet of the Apes", filters);
+  SearchQuery filters = new SearchQuery("Planet of the Apes") { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>(filters);
 search_parameter_guide_query_1: |-
-  await client.Index("movies").SearchAsync<Movie>("shifu");
+  await client.Index("movies").SearchAsync<Movie>(new SearchQuery("shifu"));
 search_parameter_guide_offset_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("shifu")
   {
       Offset = 1
   };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 search_parameter_guide_limit_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("shifu")
   {
       Limit = 2
   };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 search_parameter_guide_retrieve_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("shifu")
   {
       AttributesToRetrieve = new[] {"overview", "title"}
   };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 search_parameter_guide_crop_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("shifu")
   {
       AttributesToCrop = new[] {"overview"},
       CropLength = 5
   };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 search_parameter_guide_highlight_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("winter feast")
   {
   	AttributesToHighlight = new[] {"overview"}
   };
-  await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 search_parameter_guide_show_matches_position_1: |-
   await client.Index("movies").SearchAsync<T>(
-    "winter feast",
-    new SearchQuery
+    new SearchQuery("winter feast")
     {
         ShowMatchesPosition = True,
     });
@@ -351,7 +350,7 @@ getting_started_search_md: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var index = client.Index("movies");
 
-  SearchResult<Movie> movies = await index.SearchAsync<Movie>("harry pottre");
+  SearchResult<Movie> movies = await index.SearchAsync<Movie>(new SearchQuery("harry pottre"));
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);
@@ -403,20 +402,20 @@ getting_started_synonyms: |-
   };
   await client.Index("movies").UpdateSynonymsAsync(newSynonyms);
 getting_started_filtering: |-
-  SearchQuery filter = new SearchQuery() { Filter = "mass < 200" };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+  SearchQuery filter = new SearchQuery("") { Filter = "mass < 200" };
+  await client.Index("meteorites").SearchAsync<Meteorite>(filter);
 getting_started_geo_radius: |-
-  SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
+  SearchQuery filter = new SearchQuery("") { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
+  await client.Index("meteorites").SearchAsync<Meteorite>(filter);
 getting_started_geo_point: |-
-  SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
-  await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
+  SearchQuery sort = new SearchQuery("") { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
+  await client.Index("meteorites").SearchAsync<Meteorite>(sort);
 getting_started_sorting: |-
-  SearchQuery searchQuery = new SearchQuery() {
+  SearchQuery searchQuery = new SearchQuery("") {
     Sort = new string[] { "mass:asc" },
     Filter = "mass < 200",
   };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", searchQuery);
+  await client.Index("meteorites").SearchAsync<Meteorite>(searchQuery);
 getting_started_configure_settings: |-
   var newSettings = new Settings
   {
@@ -427,11 +426,11 @@ getting_started_configure_settings: |-
 getting_started_communicating_with_a_protected_instance: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
 
-  await client.Index("Movies").SearchAsync<Movie>("");
+  await client.Index("Movies").SearchAsync<Movie>(new SearchQuery(""));
 faceted_search_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
 faceted_search_filter_1: |-
-  SearchQuery filters = new SearchQuery()
+  SearchQuery filters = new SearchQuery("thriller")
   {
       Filter = new string[][]
       {
@@ -440,20 +439,20 @@ faceted_search_filter_1: |-
       }
   };
 
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("thriller", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>(filters);
 faceted_search_facets_1: |-
-  SearchQuery filters = new SearchQuery()
+  SearchQuery filters = new SearchQuery("Batman")
   {
       Facets = new string[] { "genres" }
   };
 
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
+  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>(filters);
 faceted_search_walkthrough_filter_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("thriller")
   {
   	Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
   };
-  await client.Index("movies").SearchAsync<Movie>("thriller", sq);
+  await client.Index("movies").SearchAsync<Movie>(sq);
 add_movies_json_1: |-
   // Make sure to add this using to your code
   using System.IO;
@@ -476,7 +475,7 @@ landing_getting_started_1: |-
 post_dump_1: |-
   await client.CreateDumpAsync();
 phrase_search_1: |-
-  await client.Index("movies").SearchAsync<Movie>("\"african american\" horror");
+  await client.Index("movies").SearchAsync<Movie>(new SearchQuery("\"african american\" horror"));
 sorting_guide_update_sortable_attributes_1: |-
   await client.Index("books").UpdateSortableAttributesAsync(new [] { "price", "author" });
 sorting_guide_update_ranking_rules_1: |-
@@ -490,17 +489,17 @@ sorting_guide_update_ranking_rules_1: |-
   	"exactness"
   });
 sorting_guide_sort_parameter_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("science fiction")
   {
     Sort = new[] { "price:asc" },
   };
-  await client.Index("books").SearchAsync<Book>("science fiction", sq);
+  await client.Index("books").SearchAsync<Book>(sq);
 sorting_guide_sort_parameter_2: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("butler")
   {
     Sort = new[] { "author:desc" },
   };
-  await client.Index("books").SearchAsync<Book>("butler", sq);
+  await client.Index("books").SearchAsync<Book>(sq);
 get_sortable_attributes_1: |-
   await client.Index("books").GetSortableAttributesAsync();
 update_sortable_attributes_1: |-
@@ -508,36 +507,36 @@ update_sortable_attributes_1: |-
 reset_sortable_attributes_1: |-
   await client.Index("books").ResetSortableAttributesAsync();
 search_parameter_guide_sort_1: |-
-  var sq = new SearchQuery
+  var sq = new SearchQuery("science fiction")
   {
     Sort = new[] { "price:asc" },
   };
-  await client.Index("books").SearchAsync<Book>("science fiction", sq);
+  await client.Index("books").SearchAsync<Book>(sq);
 geosearch_guide_filter_settings_1: |-
   List<string> attributes = new() { "_geo" };
   TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 geosearch_guide_filter_usage_1: |-
-  SearchQuery filters = new SearchQuery() { Filter = "_geoRadius(45.472735, 9.184019, 2000)" };
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
+  SearchQuery filters = new SearchQuery("") { Filter = "_geoRadius(45.472735, 9.184019, 2000)" };
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>(filters);
 geosearch_guide_filter_usage_2: |-
-  SearchQuery filters = new SearchQuery()
+  SearchQuery filters = new SearchQuery("restaurants")
   {
       Filter = new string[] { "_geoRadius(45.472735, 9.184019, 2000) AND type = pizza" }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>(filters);
 geosearch_guide_sort_settings_1: |-
   List<string> attributes = new() { "_geo" };
   TaskInfo result = await client.Index("restaurants").UpdateSortableAttributesAsync(attributes);
 geosearch_guide_sort_usage_1: |-
-  SearchQuery filters = new SearchQuery()
+  SearchQuery filters = new SearchQuery("")
   {
       Sort = new string[] { "_geoPoint(48.8561446,2.2978204):asc" }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>(filters);
 geosearch_guide_sort_usage_2: |-
-  SearchQuery filters = new SearchQuery()
+  SearchQuery filters = new SearchQuery("restaurants")
   {
       Sort = new string[] {
             "_geoPoint(48.8561446,2.2978204):asc",
@@ -545,7 +544,7 @@ geosearch_guide_sort_usage_2: |-
       }
   };
 
-  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>(filters);
 primary_field_guide_create_index_primary_key: |-
   TaskInfo task = await client.CreateIndexAsync("books", "reference_number");
 primary_field_guide_update_document_primary_key: |-
@@ -588,7 +587,7 @@ delete_a_key_1: |-
   client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
 security_guide_search_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
-  SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
+  SearchResult<Patient> searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>(new SearchQuery(""));
 security_guide_update_key_1: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   await client.UpdateKeyAsync("74c9c733-3368-4738-bbe5-1d18a5fecb37", description: "Default Search API Key");
@@ -623,7 +622,7 @@ tenant_token_guide_generate_sdk_1: |-
   );
 tenant_token_guide_search_sdk_1: |-
   frontEndClient = new MeilisearchClient("http://localhost:7700", token);
-  SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
+  SearchResult<Patient> searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>(new SearchQuery("blood test"));
 getting_started_typo_tolerance: |-
   var typoTolerance = new TypoTolerance {
     MinWordSizeTypos = new TypoTolerance.TypoSize {

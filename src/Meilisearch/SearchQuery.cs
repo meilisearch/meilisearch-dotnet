@@ -8,6 +8,11 @@ namespace Meilisearch
     /// </summary>
     public class SearchQuery
     {
+        public SearchQuery(string query)
+        {
+            Q = query;
+        }
+
         /// <summary>
         /// Gets or sets query string.
         /// </summary>

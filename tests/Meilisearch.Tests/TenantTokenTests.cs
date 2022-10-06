@@ -89,7 +89,7 @@ namespace Meilisearch.Tests
             var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(data));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
 
-            await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
+            await customClient.Index(_indexName).SearchAsync<Movie>(new SearchQuery(string.Empty));
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Meilisearch.Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             await Assert.ThrowsAsync<MeilisearchApiError>(async () =>
-                await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty));
+                await customClient.Index(_indexName).SearchAsync<Movie>(new SearchQuery(string.Empty)));
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Meilisearch.Tests
 
             var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }), expiresAt: DateTime.UtcNow.AddMinutes(1));
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
-            await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
+            await customClient.Index(_indexName).SearchAsync<Movie>(new SearchQuery(string.Empty));
         }
 
         public static IEnumerable<object[]> PossibleSearchRules()

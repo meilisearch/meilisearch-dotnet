@@ -35,7 +35,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearch()
         {
-            var movies = await _basicIndex.SearchAsync<Movie>("man");
+            var movies = await _basicIndex.SearchAsync<Movie>(new SearchQuery("man"));
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
             movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
@@ -44,7 +44,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithNoQuery()
         {
-            var movies = await _basicIndex.SearchAsync<Movie>(null);
+            var movies = await _basicIndex.SearchAsync<Movie>(new SearchQuery(null));
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -53,7 +53,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task BasicSearchWithEmptyQuery()
         {
-            var movies = await _basicIndex.SearchAsync<Movie>(string.Empty);
+            var movies = await _basicIndex.SearchAsync<Movie>(new SearchQuery(string.Empty));
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -63,8 +63,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithLimit()
         {
             var movies = await _basicIndex.SearchAsync<Movie>(
-                "man",
-                new SearchQuery { Limit = 1 });
+                new SearchQuery("man") { Limit = 1 });
             movies.Hits.Should().NotBeEmpty();
             Assert.Single(movies.Hits);
             movies.Hits.First().Id.Should().NotBeEmpty();
@@ -84,8 +83,7 @@ namespace Meilisearch.Tests
             await _basicIndex.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                "man",
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
+                new SearchQuery("man") { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
@@ -97,8 +95,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithNoQuery()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                null,
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
+                new SearchQuery(null) { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -110,8 +107,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithEmptyQuery()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                string.Empty,
-                new SearchQuery { AttributesToHighlight = new string[] { "name" } });
+                new SearchQuery(string.Empty) { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
             movies.Hits.First().Id.Should().NotBeNull();
             movies.Hits.First().Name.Should().NotBeNull();
@@ -123,8 +119,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithMultipleOptions()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                "man",
-                new SearchQuery
+                new SearchQuery("man")
                 {
                     AttributesToHighlight = new string[] { "name" },
                     AttributesToRetrieve = new string[] { "name", "id" },
@@ -146,8 +141,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithFilter()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = "genre = SF",
                 });
@@ -164,8 +158,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithFilterWithSpaces()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = "genre = 'sci fi'",
                 });
@@ -180,8 +173,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithFilterArray()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = new string[] { "genre = SF" },
                 });
@@ -198,8 +190,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithFilterMultipleArray()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = new string[][] { new string[] { "genre = SF", "genre = SF" }, new string[] { "genre = SF" } },
                 });
@@ -224,8 +215,7 @@ namespace Meilisearch.Tests
             await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = "id = 12",
                 });
@@ -249,8 +239,7 @@ namespace Meilisearch.Tests
             await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Filter = "genre = SF AND id > 12",
                 });
@@ -265,7 +254,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithPhraseSearch()
         {
-            var movies = await _indexForFaceting.SearchAsync<Movie>("coco \"harry\"");
+            var movies = await _indexForFaceting.SearchAsync<Movie>(new SearchQuery ("coco \"harry\""));
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
             Assert.Single(movies.Hits);
@@ -278,8 +267,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithFacetDistribution()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(
-                null,
-                new SearchQuery
+                new SearchQuery(null)
                 {
                     Facets = new string[] { "genre" },
                 });
@@ -303,8 +291,7 @@ namespace Meilisearch.Tests
             await _basicIndex.WaitForTaskAsync(task.TaskUid);
 
             var movies = await _basicIndex.SearchAsync<Movie>(
-                "man",
-                new SearchQuery
+                new SearchQuery("man")
                 {
                     Sort = new string[] { "name:asc" },
                 });
@@ -318,8 +305,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithCroppingParameters()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                "man",
-                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" } }
+                new SearchQuery("man") { CropLength = 1, AttributesToCrop = new string[] { "*" } }
             );
 
             Assert.NotEmpty(movies.Hits);
@@ -330,8 +316,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithCropMarker()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                "man",
-                new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" }, CropMarker = "[…] " }
+                new SearchQuery("man") { CropLength = 1, AttributesToCrop = new string[] { "*" }, CropMarker = "[…] " }
             );
 
             Assert.NotEmpty(movies.Hits);
@@ -342,8 +327,7 @@ namespace Meilisearch.Tests
         public async Task CustomSearchWithCustomHighlightTags()
         {
             var movies = await _basicIndex.SearchAsync<FormattedMovie>(
-                "man",
-                new SearchQuery
+                new SearchQuery("man")
                 {
                     AttributesToHighlight = new string[] { "*" },
                     HighlightPreTag = "<mark>",
@@ -358,7 +342,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithinNestedDocuments()
         {
-            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("wizard");
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>(new SearchQuery("wizard"));
 
             Assert.NotEmpty(movies.Hits);
             Assert.Equal("Harry Potter", movies.Hits.First().Name);
@@ -372,7 +356,7 @@ namespace Meilisearch.Tests
             var task = await _nestedIndex.UpdateSearchableAttributesAsync(new string[] { "name", "info.comment" });
             await _nestedIndex.WaitForTaskAsync(task.TaskUid);
 
-            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("rich");
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>(new SearchQuery("rich"));
 
             Assert.NotEmpty(movies.Hits);
             Assert.Equal("Iron Man", movies.Hits.First().Name);
@@ -388,8 +372,8 @@ namespace Meilisearch.Tests
             var sortTask = await _nestedIndex.UpdateSortableAttributesAsync(new string[] { "info.reviewNb" });
             await _nestedIndex.WaitForTaskAsync(sortTask.TaskUid);
 
-            var query = new SearchQuery { Sort = new string[] { "info.reviewNb:desc" } };
-            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("", query);
+            var query = new SearchQuery("") { Sort = new string[] { "info.reviewNb:desc" } };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>(query);
 
             Assert.NotEmpty(movies.Hits);
             Assert.Equal("Interstellar", movies.Hits.First().Name);
@@ -400,8 +384,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMatchingStrategyALL()
         {
-            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "all" };
-            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
+            var searchQuery = new SearchQuery("movie about rich") { MatchingStrategy = "all" };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>(searchQuery);
 
             movies.Hits.Should().ContainSingle();
         }
@@ -409,8 +393,8 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithMatchingStrategyLast()
         {
-            SearchQuery searchQuery = new SearchQuery() { MatchingStrategy = "last" };
-            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
+            var searchQuery = new SearchQuery("movie about rich") { MatchingStrategy = "last" };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>(searchQuery);
 
             Assert.True(movies.Hits.Count() > 1);
         }

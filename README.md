@@ -132,7 +132,7 @@ With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` 
 
 ```c#
 # Meilisearch is typo-tolerant:
-SearchResult<Movie> movies = await index.SearchAsync<Movie>("philadalphia");
+SearchResult<Movie> movies = await index.SearchAsync<Movie>(new SearchQuery("philadalphia"));
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
 }
@@ -161,8 +161,7 @@ All the supported options are described in the [search parameters](https://docs.
 
 ```c#
 SearchResult<Movie> movies = await index.SearchAsync<Movie>(
-    "car",
-    new SearchQuery
+    new SearchQuery("car")
     {
         AttributesToHighlight = new string[] { "title" },
     }
@@ -212,8 +211,7 @@ Then, you can perform the search:
 
 ```c#
 SearchResult<Movie> movies = await index.SearchAsync<Movie>(
-    "wonder",
-    new SearchQuery
+    new SearchQuery("wonder")
     {
         Filter = "id > 1 AND genres = Action",
     }
@@ -335,13 +333,13 @@ var task = await client.GetTasksAsync();
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.SearchAsync<Movie>("prince");
+var movies = await this.index.SearchAsync<Movie>(new SearchQuery("prince"));
 ```
 
 #### Custom Search <!-- omit in toc -->
 
 ```c#
-var movies = await this.index.SearchAsync<Movie>("prince", new SearchQuery { Limit = 100 });
+var movies = await this.index.SearchAsync<Movie>(new SearchQuery("prince") { Limit = 100 });
 ```
 
 ## 🧰 Use a Custom HTTP Client
