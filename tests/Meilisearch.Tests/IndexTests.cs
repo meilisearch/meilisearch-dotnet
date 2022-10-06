@@ -165,7 +165,6 @@ namespace Meilisearch.Tests
             var indexes = await _client.GetAllIndexesAsync(new IndexesQuery() { Limit = 1 });
             indexes.Results.Count().Should().BeGreaterOrEqualTo(1);
             indexes.Limit.Should().BeGreaterOrEqualTo(1);
-            Assert.Equal(1, indexes.Limit);
         }
 
         [Fact]
