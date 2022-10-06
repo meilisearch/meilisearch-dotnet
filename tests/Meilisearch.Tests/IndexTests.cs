@@ -143,6 +143,36 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetMultipleRawExistingIndexesWithLimit()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithLimit1";
+            var indexUid2 = "GetMultipleExistingIndexesWithLimit2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllRawIndexesAsync(new IndexesQuery() { Limit = 1 });
+            var results = indexes.RootElement.GetProperty("results");
+            var limit = indexes.RootElement.GetProperty("limit").GetInt32();
+            results.GetArrayLength().Should().BeGreaterThanOrEqualTo(1);
+            Assert.Equal(1, limit);
+        }
+
+        [Fact]
+        public async Task GetMultipleRawExistingIndexesWithOffset()
+        {
+            var indexUid1 = "GetMultipleExistingIndexesWithOffset1";
+            var indexUid2 = "GetMultipleExistingIndexesWithOffset2";
+            await _fixture.SetUpEmptyIndex(indexUid1, _defaultPrimaryKey);
+            await _fixture.SetUpEmptyIndex(indexUid2, _defaultPrimaryKey);
+
+            var indexes = await _client.GetAllRawIndexesAsync(new IndexesQuery() { Offset = 1 });
+            var results = indexes.RootElement.GetProperty("results");
+            var offset = indexes.RootElement.GetProperty("offset").GetInt32();
+            results.GetArrayLength().Should().BeGreaterThanOrEqualTo(1);
+            Assert.Equal(1, offset);
+        }
+
+        [Fact]
         public async Task GetMultipleExistingIndexes()
         {
             var indexUid1 = "GetMultipleExistingIndexesTest1";
