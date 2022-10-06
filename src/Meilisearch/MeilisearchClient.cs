@@ -155,7 +155,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets and index with the unique ID.
+        /// Gets an index with the unique ID.
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -223,7 +223,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns stats of all indexes.</returns>
-        public async Task<Stats> GetStats(CancellationToken cancellationToken = default)
+        public async Task<Stats> GetStatsAsync(CancellationToken cancellationToken = default)
         {
             return await _http.GetFromJsonAsync<Stats>("stats", cancellationToken: cancellationToken).ConfigureAwait(false);
         }

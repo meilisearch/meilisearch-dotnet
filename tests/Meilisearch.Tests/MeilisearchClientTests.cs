@@ -70,7 +70,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetStats()
         {
-            var stats = await _defaultClient.GetStats();
+            var stats = await _defaultClient.GetStatsAsync();
             stats.Should().NotBeNull();
         }
 
