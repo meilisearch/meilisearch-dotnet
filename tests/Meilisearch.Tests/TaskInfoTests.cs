@@ -48,7 +48,7 @@ namespace Meilisearch.Tests
             var tasks = taskResponse.Results.Where(t => t.IndexUid != _index.Uid);
 
             taskResponse.Results.Count().Should().BeGreaterOrEqualTo(1);
-            Assert.Equal(0, tasks.Count());
+            Assert.Empty(tasks);
         }
 
         [Fact]
