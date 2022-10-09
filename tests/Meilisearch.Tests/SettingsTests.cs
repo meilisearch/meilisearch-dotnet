@@ -48,6 +48,10 @@ namespace Meilisearch.Tests
                         OneTypo = 5,
                         TwoTypos = 9
                     }
+                },
+                Pagination = new Pagination
+                {
+                    MaxTotalHits = 1000
                 }
             };
         }
@@ -438,6 +442,49 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
         }
 
+        [Fact]
+        public async Task GetPagination()
+        {
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
+        [Fact]
+        public async Task UpdatePagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 20
+            };
+
+            var returnedPagination = new Pagination
+            {
+                MaxTotalHits = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, returnedPagination);
+        }
+
+        [Fact]
+        public async Task ResetPagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 30
+            };
+
+            var returnedPagination = new Pagination
+            {
+                MaxTotalHits = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, returnedPagination);
+
+            await AssertResetSuccess(_index.ResetPaginationAsync);
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -450,7 +497,8 @@ namespace Meilisearch.Tests
                 Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
-                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance
+                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
+                Pagination = inputSettings.Pagination ?? defaultSettings.Pagination
             };
         }
 

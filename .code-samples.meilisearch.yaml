@@ -696,8 +696,15 @@ get_all_tasks_paginating_1: |-
 get_all_tasks_paginating_2: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 8 });
 get_pagination_settings_1: |-
+  await client.Index("movies").GetPaginationAsync();
 update_pagination_settings_1: |-
+  var pagination = new Pagination {
+    MaxTotalHits = 20
+  };
+
+  await client.Index("movies").UpdatePaginationAsync(pagination);
 reset_pagination_settings_1: |-
+    await client.Index("movies").ResetPaginationAsync();
 get_faceting_settings_1: |-
 update_faceting_settings_1: |-
 reset_faceting_settings_1: |-
