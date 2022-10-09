@@ -48,6 +48,10 @@ namespace Meilisearch.Tests
                         OneTypo = 5,
                         TwoTypos = 9
                     }
+                },
+                Faceting = new Faceting()
+                {
+                    MaxValuesPerFacet = 100
                 }
             };
         }
@@ -438,6 +442,49 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
         }
 
+        [Fact]
+        public async Task GetFaceting()
+        {
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
+        [Fact]
+        public async Task UpdateFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 20
+            };
+
+            var returnedFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, returnedFaceting);
+        }
+
+        [Fact]
+        public async Task ResetFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 30
+            };
+
+            var returnedFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, returnedFaceting);
+
+            await AssertResetSuccess(_index.ResetFacetingAsync);
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -450,7 +497,8 @@ namespace Meilisearch.Tests
                 Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
-                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance
+                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
+                Faceting = inputSettings.Faceting ?? defaultSettings.Faceting
             };
         }
 
