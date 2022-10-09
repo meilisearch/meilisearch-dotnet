@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -46,16 +47,7 @@ namespace Meilisearch.Tests
         public async Task<Index> SetUpBasicIndex(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
-            var movies = new[]
-            {
-                new Movie { Id = "10", Name = "Gladiator" },
-                new Movie { Id = "11", Name = "Interstellar" },
-                new Movie { Id = "12", Name = "Star Wars", Genre = "SF" },
-                new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
-                new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
-                new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
-                new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
-            };
+            var movies = await JsonFileReader.ReadAsync<List<Movie>>(Datasets.MoviesWithStringIdJsonPath);
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
@@ -71,16 +63,7 @@ namespace Meilisearch.Tests
         public async Task<Index> SetUpBasicIndexWithIntId(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
-            var movies = new[]
-            {
-                new MovieWithIntId { Id = 10, Name = "Gladiator" },
-                new MovieWithIntId { Id = 11, Name = "Interstellar" },
-                new MovieWithIntId { Id = 12, Name = "Star Wars", Genre = "SF" },
-                new MovieWithIntId { Id = 13, Name = "Harry Potter", Genre = "SF" },
-                new MovieWithIntId { Id = 14, Name = "Iron Man", Genre = "Action" },
-                new MovieWithIntId { Id = 15, Name = "Spider-Man", Genre = "Action" },
-                new MovieWithIntId { Id = 16, Name = "Amélie Poulain", Genre = "French movie" },
-            };
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithIntId>>(Datasets.MoviesWithIntIdJsonPath);
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
@@ -98,18 +81,7 @@ namespace Meilisearch.Tests
             var index = DefaultClient.Index(indexUid);
 
             // Add documents
-            var movies = new[]
-            {
-                new Movie { Id = "10", Name = "Gladiator" },
-                new Movie { Id = "11", Name = "Interstellar" },
-                new Movie { Id = "12", Name = "Star Wars", Genre = "SF" },
-                new Movie { Id = "13", Name = "Harry Potter", Genre = "SF" },
-                new Movie { Id = "14", Name = "Iron Man", Genre = "Action" },
-                new Movie { Id = "15", Name = "Spider-Man", Genre = "Action" },
-                new Movie { Id = "16", Name = "Amélie Poulain", Genre = "French movie" },
-                new Movie { Id = "17", Name = "Mission Impossible", Genre = "Action" },
-                new Movie { Id = "1344", Name = "The Hobbit", Genre = "sci fi" },
-            };
+            var movies = await JsonFileReader.ReadAsync<List<Movie>>(Datasets.MoviesForFacetingJsonPath);
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
@@ -139,51 +111,7 @@ namespace Meilisearch.Tests
         public async Task<Index> SetUpIndexForNestedSearch(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
-            var movies = new[]
-            {
-                new MovieWithInfo
-                {
-                    Id = "10",
-                    Name = "Gladiator",
-                    Info = new MovieInfo { Comment = "a movie about old times", ReviewNb = 700 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "11",
-                    Name = "Interstellar",
-                    Info = new MovieInfo { Comment = "the best movie", ReviewNb = 1000 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "12",
-                    Name = "Star Wars",
-                    Info = new MovieInfo { Comment = "a lot of wars in the stars", ReviewNb = 900 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "13",
-                    Name = "Harry Potter",
-                    Info = new MovieInfo { Comment = "a movie about a wizard boy", ReviewNb = 900 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "14",
-                    Name = "Iron Man",
-                    Info = new MovieInfo { Comment = "a movie about a rich man", ReviewNb = 800 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "15",
-                    Name = "Spider-Man",
-                    Info = new MovieInfo { Comment = "the spider bit the boy", ReviewNb = 900 }
-                },
-                new MovieWithInfo
-                {
-                    Id = "16",
-                    Name = "Amélie Poulain",
-                    Info = new MovieInfo { Comment = "talks about hapiness", ReviewNb = 800 }
-                },
-            };
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithInfo>>(Datasets.MoviesWithInfoJsonPath);
             var task = await index.AddDocumentsAsync(movies);
 
             // Check the documents have been added
