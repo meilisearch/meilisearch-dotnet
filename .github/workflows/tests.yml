@@ -21,7 +21,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: "3.1.x"
+        dotnet-version: "6.0.x"
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -39,8 +39,6 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: "3.1.x"
-    - name: Install dotnet-format
-      run: dotnet tool install -g dotnet-format
+        dotnet-version: "6.0.x"
     - name: Check with dotnet-format
-      run: dotnet format --check Meilisearch.sln
+      run: dotnet format --verify-no-changes -v n
