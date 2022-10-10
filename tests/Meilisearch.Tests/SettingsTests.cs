@@ -456,13 +456,8 @@ namespace Meilisearch.Tests
                 MaxTotalHits = 20
             };
 
-            var returnedPagination = new Pagination
-            {
-                MaxTotalHits = 20
-            };
-
             await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
-            await AssertGetEquality(_index.GetPaginationAsync, returnedPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
         }
 
         [Fact]
@@ -473,13 +468,8 @@ namespace Meilisearch.Tests
                 MaxTotalHits = 30
             };
 
-            var returnedPagination = new Pagination
-            {
-                MaxTotalHits = 30
-            };
-
             await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
-            await AssertGetEquality(_index.GetPaginationAsync, returnedPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
 
             await AssertResetSuccess(_index.ResetPaginationAsync);
             await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
