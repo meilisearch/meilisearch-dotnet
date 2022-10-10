@@ -49,6 +49,10 @@ namespace Meilisearch.Tests
                         TwoTypos = 9
                     }
                 },
+                Faceting = new Faceting
+                {
+                    MaxValuesPerFacet = 100
+                },
                 Pagination = new Pagination
                 {
                     MaxTotalHits = 1000
@@ -443,6 +447,39 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetFaceting()
+        {
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
+        [Fact]
+        public async Task UpdateFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
+        }
+
+        [Fact]
+        public async Task ResetFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
+
+            await AssertResetSuccess(_index.ResetFacetingAsync);
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
+        [Fact]
         public async Task GetPagination()
         {
             await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
@@ -488,6 +525,7 @@ namespace Meilisearch.Tests
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
+                Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination
             };
         }

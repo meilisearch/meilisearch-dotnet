@@ -706,7 +706,13 @@ update_pagination_settings_1: |-
 reset_pagination_settings_1: |-
     await client.Index("movies").ResetPaginationAsync();
 get_faceting_settings_1: |-
+  await client.Index("movies").GetFacetingAsync();
 update_faceting_settings_1: |-
+  var faceting = new Faceting {
+    MaxValuesPerFacet = 2
+  };
+  await client.Index("movies").UpdateFacetingAsync(faceting);
 reset_faceting_settings_1: |-
+  await client.Index("movies").ResetFacetingAsync();
 settings_guide_faceting_1: |-
 settings_guide_pagination_1: |-

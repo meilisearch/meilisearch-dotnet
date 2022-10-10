@@ -63,6 +63,11 @@ namespace Meilisearch
         public TypoTolerance TypoTolerance { get; set; }
 
         /// <summary>
+        /// Gets or sets the faceting attributes.
+        /// </summary>
+        [JsonPropertyName("faceting")]
+        public Faceting Faceting { get; set; }
+
         /// Gets or sets the pagination attributes.
         /// </summary>
         [JsonPropertyName("pagination")]
