@@ -8,9 +8,14 @@ namespace Meilisearch.Tests
     internal static class Datasets
     {
         private static readonly string BasePath = Path.Combine(Directory.GetCurrentDirectory(), "Datasets");
-        public static readonly string SmallMoviesJson = Path.Combine(BasePath, "small_movies.json");
-        public static readonly string SongsCsv = Path.Combine(BasePath, "songs.csv");
-        public static readonly string SongsNdjson = Path.Combine(BasePath, "songs.ndjson");
+        public static readonly string SmallMoviesJsonPath = Path.Combine(BasePath, "small_movies.json");
+        public static readonly string SongsCsvPath = Path.Combine(BasePath, "songs.csv");
+        public static readonly string SongsNdjsonPath = Path.Combine(BasePath, "songs.ndjson");
+
+        public static readonly string MoviesWithStringIdJsonPath = Path.Combine(BasePath, "movies_with_string_id.json");
+        public static readonly string MoviesForFacetingJsonPath = Path.Combine(BasePath, "movies_for_faceting.json");
+        public static readonly string MoviesWithIntIdJsonPath = Path.Combine(BasePath, "movies_with_int_id.json");
+        public static readonly string MoviesWithInfoJsonPath = Path.Combine(BasePath, "movies_with_info.json");
     }
 
     public class DatasetSmallMovie
