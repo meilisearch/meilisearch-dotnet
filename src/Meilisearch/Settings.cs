@@ -67,5 +67,10 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("faceting")]
         public Faceting Faceting { get; set; }
+
+        /// Gets or sets the pagination attributes.
+        /// </summary>
+        [JsonPropertyName("pagination")]
+        public Pagination Pagination { get; set; }
     }
 }

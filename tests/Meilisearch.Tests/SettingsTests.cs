@@ -49,9 +49,13 @@ namespace Meilisearch.Tests
                         TwoTypos = 9
                     }
                 },
-                Faceting = new Faceting()
+                Faceting = new Faceting
                 {
                     MaxValuesPerFacet = 100
+                },
+                Pagination = new Pagination
+                {
+                    MaxTotalHits = 1000
                 }
             };
         }
@@ -475,6 +479,39 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
         }
 
+        [Fact]
+        public async Task GetPagination()
+        {
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
+        [Fact]
+        public async Task UpdatePagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
+        }
+
+        [Fact]
+        public async Task ResetPagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
+
+            await AssertResetSuccess(_index.ResetPaginationAsync);
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -488,7 +525,8 @@ namespace Meilisearch.Tests
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
-                Faceting = inputSettings.Faceting ?? defaultSettings.Faceting
+                Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
+                Pagination = inputSettings.Pagination ?? defaultSettings.Pagination
             };
         }
 
