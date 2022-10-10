@@ -456,13 +456,8 @@ namespace Meilisearch.Tests
                 MaxValuesPerFacet = 20
             };
 
-            var returnedFaceting = new Faceting
-            {
-                MaxValuesPerFacet = 20
-            };
-
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
-            await AssertGetEquality(_index.GetFacetingAsync, returnedFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
         }
 
         [Fact]
@@ -473,13 +468,8 @@ namespace Meilisearch.Tests
                 MaxValuesPerFacet = 30
             };
 
-            var returnedFaceting = new Faceting
-            {
-                MaxValuesPerFacet = 30
-            };
-
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
-            await AssertGetEquality(_index.GetFacetingAsync, returnedFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
 
             await AssertResetSuccess(_index.ResetFacetingAsync);
             await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
