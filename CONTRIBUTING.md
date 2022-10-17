@@ -58,7 +58,7 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 
 ### Tests <!-- omit in TOC -->
 
-Meilisearch instance must be started with the specific docker-compose file in the directory:
+To run the tests locally, the Meilisearch instance must be started with the specific docker-compose file in the:
 
 ```bash
 docker-compose up
@@ -67,8 +67,6 @@ docker-compose up
 You need to run the following command to launch tests in the Dotnet SDK:
 
 ```bash
-curl -L https://install.meilisearch.com | sh # download Meilisearch
-./meilisearch --master-key=masterKey --no-analytics # run Meilisearch
 dotnet restore
 dotnet test
 ```
