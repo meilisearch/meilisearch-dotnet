@@ -58,7 +58,7 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 
 ### Tests <!-- omit in TOC -->
 
-To run the tests locally, the Meilisearch instance must be started with the specific docker-compose file in the:
+To run the tests locally, the Meilisearch instance must be started with the specific docker-compose file in the directory:
 
 ```bash
 docker-compose up
