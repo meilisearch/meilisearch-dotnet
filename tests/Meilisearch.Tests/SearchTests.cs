@@ -73,6 +73,28 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithPage()
+        {
+            var movies = (PaginatedSearchResult<Movie>) await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1 });
+
+            Assert.Equal(1, movies.Page);
+            Assert.Equal(20, movies.HitsPerPage);
+            movies.Hits.First().Id.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.First().Genre.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPageWithoutTypeCast()
+        {
+            var movies = await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1 });
+
+            movies.Hits.First().Id.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.First().Genre.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
             var newFilters = new Settings

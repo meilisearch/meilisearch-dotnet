@@ -453,7 +453,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type parameter to return.</typeparam>
         /// <returns>Returns Enumerable of items.</returns>
-        public async Task<SearchResult<T>> SearchAsync<T>(string query,
+        public async Task<ISearchable<T>> SearchAsync<T>(string query,
             SearchQuery searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
         {
             SearchQuery body;
@@ -470,8 +470,16 @@ namespace Meilisearch
             var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", body,
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            return await responseMessage.Content
-                .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            if (body.Page != null || body.HitsPerPage != null) {
+                return await responseMessage.Content
+                    .ReadFromJsonAsync<PaginatedSearchResult<T>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            } else {
+                return await responseMessage.Content
+                    .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
     }
 }

@@ -7,22 +7,34 @@ namespace Meilisearch
     /// Wrapper for Search Results.
     /// </summary>
     /// <typeparam name="T">Hit type.</typeparam>
-    public class SearchResult<T> : ISearchable<T>
+    public class PaginatedSearchResult<T> : ISearchable<T>
     {
-        public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
+        public PaginatedSearchResult(IReadOnlyCollection<T> hits, int hitsPerPage, int page, int total,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion)
         {
             Hits = hits;
-            Offset = offset;
-            Limit = limit;
-            EstimatedTotalHits = estimatedTotalHits;
+            HitsPerPage = hitsPerPage;
+            Page = page;
+            Total = total;
             FacetDistribution = facetDistribution;
             ProcessingTimeMs = processingTimeMs;
             Query = query;
             MatchesPostion = matchesPostion;
         }
+
+        /// <summary>
+        /// Number of documents skipped.
+        /// </summary>
+        [JsonPropertyName("hitsPerPage")]
+        public int HitsPerPage { get; }
+
+        /// <summary>
+        /// Number of documents to take.
+        /// </summary>
+        [JsonPropertyName("page")]
+        public int Page { get; }
 
         /// <summary>
         /// Results of the query.
@@ -31,22 +43,10 @@ namespace Meilisearch
         public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
-        /// Number of documents skipped.
-        /// </summary>
-        [JsonPropertyName("offset")]
-        public int Offset { get; }
-
-        /// <summary>
-        /// Number of documents to take.
-        /// </summary>
-        [JsonPropertyName("limit")]
-        public int Limit { get; }
-
-        /// <summary>
         /// Gets the estimated total number of hits returned by the search.
         /// </summary>
-        [JsonPropertyName("estimatedTotalHits")]
-        public int EstimatedTotalHits { get; }
+        [JsonPropertyName("total")]
+        public int Total { get; }
 
         /// <summary>
         /// Returns the number of documents matching the current search query for each given facet.
@@ -71,28 +71,5 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("_matchesPosition")]
         public IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
-    }
-
-    public class MatchPosition
-    {
-        public MatchPosition(int start, int length)
-        {
-            Start = start;
-            Length = length;
-        }
-
-        /// <summary>
-        /// The beginning of a matching term within a field.
-        /// WARNING: This value is in bytes and not the number of characters. For example, ü represents two bytes but one character.
-        /// </summary>
-        [JsonPropertyName("start")]
-        public int Start { get; }
-
-        /// <summary>
-        /// The length of a matching term within a field.
-        /// WARNING: This value is in bytes and not the number of characters. For example, ü represents two bytes but one character.
-        /// </summary>
-        [JsonPropertyName("length")]
-        public int Length { get; }
     }
 }
