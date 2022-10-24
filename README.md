@@ -24,14 +24,14 @@
 
 **Meilisearch .NET** is the Meilisearch API client for C# developers.
 
-**Meilisearch** is an open-source search engine. [Discover what Meilisearch is!](https://github.com/meilisearch/meilisearch)
+**Meilisearch** is an open-source search engine. [Learn more about Meilisearch.](https://github.com/meilisearch/meilisearch)
 
 ## Table of Contents <!-- omit in toc -->
 
 - [🎃 Hacktoberfest](#-hacktoberfest)
 - [📖 Documentation](#-documentation)
 - [🔧 Installation](#-installation)
-- [🚀 Getting Started](#-getting-started)
+- [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
 - [🎬 Examples](#-examples)
   - [Indexes](#indexes)
@@ -39,7 +39,7 @@
   - [Get Task information](#get-task-information)
   - [Search](#search)
 - [🧰 Use a Custom HTTP Client](#-use-a-custom-http-client)
-- [⚙️ Development Workflow and Contributing](#️-development-workflow-and-contributing)
+- [⚙️ Contributing](#️-contributing)
 
 ## 🎃 Hacktoberfest
 
@@ -51,7 +51,10 @@ You’d like to contribute? Don’t hesitate to check out our [contributing guid
 
 ## 📖 Documentation
 
-See our [Documentation](https://docs.meilisearch.com/learn/tutorials/getting_started.html) or our [API References](https://docs.meilisearch.com/reference/api/).
+This readme contains all the documentation you need to start using this Meilisearch SDK.
+
+For general information on how to use Meilisearch—such as our API reference, tutorials, guides, and in-depth articles—refer to our [main documentation website](https://docs.meilisearch.com/).
+
 
 ## 🔧 Installation
 
@@ -84,7 +87,7 @@ curl -L https://install.meilisearch.com | sh
 
 NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
 
-## 🚀 Getting Started
+## 🚀 Getting started
 
 #### Add Documents <!-- omit in toc -->
 
@@ -357,7 +360,7 @@ var client = new MeilisearchClient(_httpClient);
 
 Where `ClientFactory` is declared [like this](/tests/Meilisearch.Tests/ClientFactory.cs).
 
-## ⚙️ Development Workflow and Contributing
+## ⚙️ Contributing
 
 Any new contribution is more than welcome in this project!
 
