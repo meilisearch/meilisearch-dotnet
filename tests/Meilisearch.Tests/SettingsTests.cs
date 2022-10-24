@@ -430,6 +430,7 @@ namespace Meilisearch.Tests
 
             var returnedTypoTolerance = new TypoTolerance
             {
+                Enabled = true,
                 DisableOnAttributes = new string[] { },
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
