@@ -12,7 +12,7 @@ namespace Meilisearch
         /// Whether the typo tolerance feature is enabled
         /// </summary>
         [JsonPropertyName("enabled")]
-        public bool Enabled { get; set; }
+        public bool? Enabled { get; set; }
 
         /// <summary>
         /// Disable the typo tolerance feature on the specified document attributes.
