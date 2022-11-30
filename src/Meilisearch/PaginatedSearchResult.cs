@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace Meilisearch
 {
     /// <summary>
-    /// Wrapper for Search Results.
+    /// Wrapper for Search Results with finite pagination.
     /// </summary>
     /// <typeparam name="T">Hit type.</typeparam>
     public class PaginatedSearchResult<T> : ISearchable<T>
@@ -25,7 +25,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Number of documents skipped.
+        /// Number of documents each page.
         /// </summary>
         [JsonPropertyName("hitsPerPage")]
         public int HitsPerPage { get; }
