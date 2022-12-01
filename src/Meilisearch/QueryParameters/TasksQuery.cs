@@ -20,12 +20,12 @@ namespace Meilisearch.QueryParameters
         /// <summary>
         /// Gets or sets the lists of indexUid to filter on. Case-sensitive.
         /// </summary>
-        public List<string> IndexUid { get; set; }
+        public List<string> IndexUids { get; set; }
 
         /// <summary>
         /// Gets or sets the list of statuses to filter on.
         /// </summary>
-        public List<TaskInfoStatus> Status { get; set; }
+        public List<TaskInfoStatus> Statuses { get; set; }
 
         /// <summary>
         /// Gets or sets the list of types to filter on.
