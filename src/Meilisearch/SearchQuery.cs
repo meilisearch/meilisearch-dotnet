@@ -15,18 +15,6 @@ namespace Meilisearch
         public string Q { get; set; }
 
         /// <summary>
-        /// Gets or sets offset for the Query.
-        /// </summary>
-        [JsonPropertyName("offset")]
-        public int? Offset { get; set; }
-
-        /// <summary>
-        /// Gets or sets limits the number of results.
-        /// </summary>
-        [JsonPropertyName("limit")]
-        public int? Limit { get; set; }
-
-        /// <summary>
         /// Gets or sets the filter to apply to the query.
         /// </summary>
         [JsonPropertyName("filter")]
@@ -97,5 +85,32 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("matchingStrategy")]
         public string MatchingStrategy { get; set; }
+
+        // pagination:
+
+        /// <summary>
+        /// Gets or sets offset for the Query.
+        /// </summary>
+        [JsonPropertyName("offset")]
+        public int? Offset { get; set; }
+
+        /// <summary>
+        /// Gets or sets limits the number of results.
+        /// </summary>
+        [JsonPropertyName("limit")]
+        public int? Limit { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets hitsPerPage.
+        /// </summary>
+        [JsonPropertyName("hitsPerPage")]
+        public int? HitsPerPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets page.
+        /// </summary>
+        [JsonPropertyName("page")]
+        public int? Page { get; set; }
     }
 }
