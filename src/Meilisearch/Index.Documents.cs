@@ -471,11 +471,14 @@ namespace Meilisearch
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (body.Page != null || body.HitsPerPage != null) {
+            if (body.Page != null || body.HitsPerPage != null)
+            {
                 return await responseMessage.Content
                     .ReadFromJsonAsync<PaginatedSearchResult<T>>(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
-            } else {
+            }
+            else
+            {
                 return await responseMessage.Content
                     .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
