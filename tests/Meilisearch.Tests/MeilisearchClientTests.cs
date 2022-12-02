@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using FluentAssertions;
 
 using Meilisearch.Extensions;
+using Meilisearch.QueryParameters;
 
 using Xunit;
 
@@ -85,6 +88,24 @@ namespace Meilisearch.Tests
             var dumpTask = await _defaultClient.GetTaskAsync(dumpResponse.TaskUid);
             dumpTask.Status.Should().BeOneOf(TaskInfoStatus.Succeeded, TaskInfoStatus.Processing, TaskInfoStatus.Enqueued);
             Assert.Equal(dumpResponse.TaskUid, dumpTask.Uid);
+        }
+
+        [Fact]
+        public async Task CancelTasks()
+        {
+            var date = DateTime.Now;
+            var formattedDate = Uri.EscapeDataString(((DateTime)date).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz"));
+            var response = await _defaultClient.CancelTasksAsync(new CancelTasksQuery
+            {
+                Uids = new List<string> { "1", "4" },
+                AfterStartedAt = date
+            });
+            var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);
+
+            response.TaskUid.Should().Be(task.Uid);
+            response.Type.Should().Be(TaskInfoType.TaskCancelation);
+            task.Status.Should().Be(TaskInfoStatus.Succeeded);
+            Assert.Equal($"?uids=1,4&afterStartedAt={formattedDate}", task.Details["originalFilter"].ToString());
         }
 
         [Fact]
