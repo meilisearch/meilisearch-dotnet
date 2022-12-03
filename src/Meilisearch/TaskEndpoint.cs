@@ -55,6 +55,25 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Delete tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns a list of the tasks.</returns>
+        public async Task<TaskInfo> DeleteTasksAsync(DeleteTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            var uri = "tasks";
+            if (query != null)
+            {
+                uri = $"{uri}?{query.ToQueryString()}";
+            }
+
+            var response = await _http.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
+
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets one task.
         /// </summary>
         /// <param name="taskUid">Uid of the index.</param>
