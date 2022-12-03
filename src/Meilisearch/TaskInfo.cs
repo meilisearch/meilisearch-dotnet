@@ -113,6 +113,7 @@ namespace Meilisearch
         SettingsUpdate,
         DumpCreation,
         TaskCancelation,
-        SnapshotCreation
+        SnapshotCreation,
+        TaskDeletion
     }
 }
