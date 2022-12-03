@@ -40,10 +40,19 @@ namespace Meilisearch.Extensions
 
                 if (value != null)
                 {
-                    var isList = value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(List<>);
-                    if (isList)
+                    var type = value.GetType();
+
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        values.Add(key + "=" + string.Join(",", (List<string>)value));
+                        Type itemType = type.GetGenericArguments()[0];
+                        if (itemType == typeof(string))
+                        {
+                            values.Add(key + "=" + string.Join(",", (List<string>)value));
+                        }
+                        else if (itemType == typeof(int))
+                        {
+                            values.Add(key + "=" + string.Join(",", (List<int>)value));
+                        }
                     }
                     else if (value is DateTime)
                     {
