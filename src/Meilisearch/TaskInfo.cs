@@ -114,6 +114,7 @@ namespace Meilisearch
         DumpCreation,
         TaskCancelation,
         SnapshotCreation,
-        TaskDeletion
+        TaskDeletion,
+        IndexSwap
     }
 }
