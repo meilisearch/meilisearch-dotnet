@@ -4,41 +4,29 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 async_guide_filter_by_date_1: |-
-  with filter: { afterEnqueuedAt=2020-10-11T11:49:53.000Z }
-
+  await client.GetTasksAsync(new TasksQuery { AfterEnqueuedAt = DateTime.Parse("2020-10-11T11:49:53.000Z") });
 async_guide_multiple_filters_1: |-
-  with filter: { indexUids: movies, types: ["documentAdditionOrUpdate","documentDeletion"], statuses: ["processing"] }
-
+  await client.GetTasksAsync(new TasksQuery { IndexUids = new List<string> { "movies" }, Types = new List<TaskInfo> { TaskInfo.DocumentAdditionOrUpdate, TaskInfo.DocumentDeletion }, Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Processing } });
 async_guide_filter_by_ids_1: |-
-  with filter: { uids: [5, 10, 13] }
-
+  await client.GetTasksAsync(new TasksQuery { Uids = new List<int> { 5, 10, 13 } });
 async_guide_filter_by_statuses_1: |-
-  with filter: { statuses: ["failed", "canceled"] }
-
+  await client.GetTasksAsync(new TasksQuery { Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Failed, TaskInfoStatus.Canceled } });
 async_guide_filter_by_types_1: |-
-  with filter: { types: ["dumpCreation", "indexSwap"] }
-
+  await client.GetTasksAsync(new TasksQuery { Types = new List<TaskInfoType> { TaskInfoType.DumpCreation, TaskInfoType.IndexSwap } });
 async_guide_filter_by_index_uids_1: |-
-  with filter: { indexUids: ["movies"] }
-
+  await client.GetTasksAsync(new TasksQuery { IndexUids = new List<string> { "movies" } });
 delete_tasks_1: |-
-  with filter: { uids: [1, 2] }
-
+  await client.DeleteTasksAsync(new DeleteTasksQuery { Uids = new List<int> { 1, 2 } });
 cancel_tasks_1: |-
-  with filter: { uids: [1,2] }
-
-async_guide_canceled_by: |-
-  with filter: { canceledBy: [9] }
-
+  await client.CancelTasksAsync(new CancelTasksQuery { Uids = new List<int> { 1, 2 } });
+async_guide_canceled_by_1: |-
+  await client.GetTasksAsync(new TasksQuery { CanceledBy = new List<int> { 9, 15 } });
 swap_indexes_1: |-
-  with data: { indexes: [ "indexA", "indexB"], indexes: [ "indexX", "indexY" ] }
-
+  await client.SwapIndexesAsync(new List<IndexSwap> { new IndexSwap("indexA", "indexB"), new IndexSwap("indexX", "indexY") } });
 search_parameter_guide_hitsperpage_1: |-
-  with queryparams: { "q": "", "hitsPerPage": 15 }
-
+  await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { HitsPerPage = 15 });
 search_parameter_guide_page_1: |-
-  with queryparams: { "q": "", "page": 2 }
-
+  await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { Page = 2 });
 get_one_index_1: |-
   await client.GetIndexAsync("movies");
 list_all_indexes_1: |-
@@ -718,15 +706,6 @@ settings_guide_typo_tolerance_1: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
->>>>>>>>>>> REMOVE_ME get_all_tasks_filtering_1: |-
-  ResourceResults<TaskInfo> taskResult = await client.Index("movies").GetTasksAsync();
-  // OR
-  ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });
->>>>>>>>>>> REMOVE_ME get_all_tasks_filtering_2: |-
-  ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery {
-    Status = new List<TaskInfoStatus>() { TaskInfoStatus.Succeeded, TaskInfoStatus.Failed },
-    Types = new List<TaskInfoType>() { TaskInfoType.DocumentAdditionOrUpdate },
-  });
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });
 get_all_tasks_paginating_2: |-
