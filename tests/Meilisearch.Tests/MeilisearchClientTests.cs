@@ -97,7 +97,7 @@ namespace Meilisearch.Tests
             var formattedDate = Uri.EscapeDataString(((DateTime)date).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz"));
             var response = await _defaultClient.CancelTasksAsync(new CancelTasksQuery
             {
-                Uids = new List<string> { "1", "4" },
+                Uids = new List<int> { 1, 4 },
                 AfterStartedAt = date
             });
             var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);

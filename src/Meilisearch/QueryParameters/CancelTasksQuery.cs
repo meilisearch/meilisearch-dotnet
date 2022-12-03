@@ -26,7 +26,7 @@ namespace Meilisearch.QueryParameters
         /// <summary>
         /// Gets or sets the list of uids to filter on. Case-sensitive.
         /// </summary>
-        public List<string> Uids { get; set; }
+        public List<int> Uids { get; set; }
 
         /// <summary>
         /// Gets or sets the list of canceledBy uids to filter on. Case-sensitive.
