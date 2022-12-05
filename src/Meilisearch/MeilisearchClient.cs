@@ -320,6 +320,28 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Cancel tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> CancelTasksAsync(CancelTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().CancelTasksAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Delete tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> DeleteTasksAsync(DeleteTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().DeleteTasksAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Updates an API key for the Meilisearch server.
         /// </summary>
         /// <param name="description">A description to give meaning to the key.</param>
@@ -352,6 +374,20 @@ namespace Meilisearch
             var responseMessage =
                 await _http.DeleteAsync($"keys/{keyOrUid}", cancellationToken: cancellationToken).ConfigureAwait(false);
             return responseMessage.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        /// <summary>
+        /// Swaps indexes unique identifiers.
+        /// </summary>
+        /// <param name="indexes">List of IndexSwap objects.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> SwapIndexesAsync(List<IndexSwap> indexes, CancellationToken cancellationToken = default)
+        {
+            var response = await _http.PostAsJsonAsync("swap-indexes", indexes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>

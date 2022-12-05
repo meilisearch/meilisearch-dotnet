@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -24,7 +25,7 @@ namespace Meilisearch.Extensions
         }
 
         /// <summary>
-        /// Transforms a Meilisearch object containing Lists into an URL encoded query string.
+        /// Transforms any object fields into an URL encoded query string.
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
@@ -34,19 +35,36 @@ namespace Meilisearch.Extensions
             var values = new List<string>();
             foreach (var field in source.GetType().GetProperties(bindingAttr))
             {
-                if (field.GetValue(source, null) != null)
+                var value = field.GetValue(source, null);
+                var key = Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1));
+
+                if (value != null)
                 {
-                    var isList = field.GetValue(source, null).GetType().IsGenericType && field.GetValue(source, null).GetType().GetGenericTypeDefinition() == typeof(List<>);
-                    if (isList)
+                    var type = value.GetType();
+
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1)) + "=" + string.Join(",", (List<string>)field.GetValue(source, null)));
+                        Type itemType = type.GetGenericArguments()[0];
+                        if (itemType == typeof(string))
+                        {
+                            values.Add(key + "=" + string.Join(",", (List<string>)value));
+                        }
+                        else if (itemType == typeof(int))
+                        {
+                            values.Add(key + "=" + string.Join(",", (List<int>)value));
+                        }
+                    }
+                    else if (value is DateTime)
+                    {
+                        values.Add(key + "=" + Uri.EscapeDataString(((DateTime)value).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
                     }
                     else
                     {
-                        values.Add(Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1)) + "=" + Uri.EscapeDataString(field.GetValue(source, null).ToString()));
+                        values.Add(key + "=" + Uri.EscapeDataString(value.ToString()));
                     }
                 }
             }
+
             return string.Join("&", values);
         }
     }

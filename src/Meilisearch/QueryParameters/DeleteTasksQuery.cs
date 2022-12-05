@@ -4,29 +4,14 @@ using System.Collections.Generic;
 namespace Meilisearch.QueryParameters
 {
     /// <summary>
-    /// A class that handles the creation of a query string for Tasks.
+    /// A class that handles the creation of a query string when deleting tasks.
     /// </summary>
-    public class TasksQuery
+    public class DeleteTasksQuery
     {
-        /// <summary>
-        /// Gets or sets the Number of tasks to return.
-        /// </summary>
-        public int? Limit { get; set; }
-
-        /// <summary>
-        /// Gets or sets the uid of the first task returned.
-        /// </summary>
-        public int? From { get; set; }
-
         /// <summary>
         /// Gets or sets the lists of indexUid to filter on. Case-sensitive.
         /// </summary>
         public List<string> IndexUids { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lists of uid to filter on. Case-sensitive.
-        /// </summary>
-        public List<int> Uids { get; set; }
 
         /// <summary>
         /// Gets or sets the list of statuses to filter on.
@@ -37,6 +22,11 @@ namespace Meilisearch.QueryParameters
         /// Gets or sets the list of types to filter on.
         /// </summary>
         public List<TaskInfoType> Types { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of uids to filter on. Case-sensitive.
+        /// </summary>
+        public List<int> Uids { get; set; }
 
         /// <summary>
         /// Gets or sets the list of canceledBy uids to filter on. Case-sensitive.
