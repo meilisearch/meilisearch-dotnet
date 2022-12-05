@@ -6,7 +6,9 @@
 async_guide_filter_by_date_1: |-
   await client.GetTasksAsync(new TasksQuery { AfterEnqueuedAt = DateTime.Parse("2020-10-11T11:49:53.000Z") });
 async_guide_multiple_filters_1: |-
-  await client.GetTasksAsync(new TasksQuery { IndexUids = new List<string> { "movies" }, Types = new List<TaskInfo> { TaskInfo.DocumentAdditionOrUpdate, TaskInfo.DocumentDeletion }, Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Processing } });
+  var query = new TasksQuery { IndexUids = new List<string> { "movies" }, Types = new List<TaskInfo> { TaskInfo.DocumentAdditionOrUpdate, TaskInfo.DocumentDeletion }, Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Processing } };
+
+  await client.GetTasksAsync(query);
 async_guide_filter_by_ids_1: |-
   await client.GetTasksAsync(new TasksQuery { Uids = new List<int> { 5, 10, 13 } });
 async_guide_filter_by_statuses_1: |-
