@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
@@ -124,6 +125,19 @@ namespace Meilisearch.Tests
             response.Type.Should().Be(TaskInfoType.TaskDeletion);
             task.Status.Should().Be(TaskInfoStatus.Succeeded);
             Assert.Equal($"?uids=1,4&afterStartedAt={formattedDate}", task.Details["originalFilter"].ToString());
+        }
+
+        [Fact]
+        public async Task SwapIndexes()
+        {
+            var swaps = new List<IndexSwap> { new IndexSwap("indexA", "indexB") };
+            var response = await _defaultClient.SwapIndexesAsync(swaps);
+            var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);
+
+            response.TaskUid.Should().Be(task.Uid);
+            response.Type.Should().Be(TaskInfoType.IndexSwap);
+            task.Status.Should().Be(TaskInfoStatus.Failed);
+            Assert.Equal(task.Details["swaps"].ToString(), JsonSerializer.Serialize(swaps).ToString());
         }
 
         [Fact]

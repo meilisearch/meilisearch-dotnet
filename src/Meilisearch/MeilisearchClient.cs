@@ -377,6 +377,20 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Swaps indexes unique identifiers.
+        /// </summary>
+        /// <param name="indexes">List of IndexSwap objects.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> SwapIndexesAsync(List<IndexSwap> indexes, CancellationToken cancellationToken = default)
+        {
+            var response = await _http.PostAsJsonAsync("swap-indexes", indexes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Generate a tenant token string to be used during search.
         /// </summary>
         /// <param name="searchRules">Object with the rules applied in a search call.</param>
