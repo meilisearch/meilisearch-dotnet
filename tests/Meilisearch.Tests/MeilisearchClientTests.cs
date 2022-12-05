@@ -109,6 +109,24 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task DeleteTasks()
+        {
+            var date = DateTime.Now;
+            var formattedDate = Uri.EscapeDataString(((DateTime)date).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz"));
+            var response = await _defaultClient.DeleteTasksAsync(new DeleteTasksQuery
+            {
+                Uids = new List<int> { 1, 4 },
+                AfterStartedAt = date
+            });
+            var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);
+
+            response.TaskUid.Should().Be(task.Uid);
+            response.Type.Should().Be(TaskInfoType.TaskDeletion);
+            task.Status.Should().Be(TaskInfoStatus.Succeeded);
+            Assert.Equal($"?uids=1,4&afterStartedAt={formattedDate}", task.Details["originalFilter"].ToString());
+        }
+
+        [Fact]
         public async Task Health()
         {
             var health = await _defaultClient.HealthAsync();

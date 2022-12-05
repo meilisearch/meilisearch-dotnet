@@ -324,10 +324,21 @@ namespace Meilisearch
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns the created API key.</returns>
+        /// <returns>Returns the task info of finished task.</returns>
         public async Task<TaskInfo> CancelTasksAsync(CancelTasksQuery query, CancellationToken cancellationToken = default)
         {
             return await TaskEndpoint().CancelTasksAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Delete tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> DeleteTasksAsync(DeleteTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().DeleteTasksAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
