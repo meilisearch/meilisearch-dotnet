@@ -123,6 +123,10 @@ namespace Meilisearch
         /// </summary>
         TasksGet,
         /// <summary>
+        /// Allows canceling tasks in the tasks endpoint.
+        /// </summary>
+        TasksCancel,
+        /// <summary>
         /// Provides access to all settings endpoints and equivalents for all subroutes.
         /// </summary>
         SettingsAll,
