@@ -10,8 +10,43 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
+    public class FakeQuery
+    {
+        public DateTime? FakeDate { get; set; }
+        public string FakeString { get; set; }
+        public int? FakeInteger { get; set; }
+        public List<string> FakeStringList { get; set; }
+    }
+
     public class ObjectExtensionsTests
     {
+        public static IEnumerable<object[]> FakeData()
+        {
+            var date = DateTime.Now;
+
+            yield return new object[] {
+                new FakeQuery { FakeString = "+1" },
+                "fakeString=%2B1"
+            };
+
+            yield return new object[] {
+                new FakeQuery { FakeString = "+1", FakeInteger = 22 },
+                "fakeString=%2B1&fakeInteger=22"
+            };
+
+            yield return new object[] {
+                new FakeQuery { FakeDate = date, FakeStringList = new List<string> { "hey", "ho" } },
+                $"fakeDate={Uri.EscapeDataString(date.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz"))}&fakeStringList=hey,ho"
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(FakeData))]
+        public void ToQueryStringConvertTypes(FakeQuery query, string expected)
+        {
+            Assert.Equal(query.ToQueryString(), expected);
+        }
+
         [Theory]
         [InlineData("simple")]
         [InlineData("com pl <->& ex")]
