@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: "3.1.x"
     - name: Install dependencies
@@ -37,10 +37,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: "3.1.x"
     - name: Install dotnet-format
       run: dotnet tool install -g dotnet-format
     - name: Check with dotnet-format
-      run: dotnet format --check Meilisearch.sln
+      run: dotnet format --version
+    - name: Check with dotnet-format
+      run: dotnet format --verbosity normal --verify-no-changes
