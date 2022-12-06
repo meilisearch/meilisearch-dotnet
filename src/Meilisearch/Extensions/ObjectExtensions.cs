@@ -44,7 +44,7 @@ namespace Meilisearch.Extensions
 
                     if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                     {
-                        Type itemType = type.GetGenericArguments()[0];
+                        var itemType = type.GetGenericArguments()[0];
                         if (itemType == typeof(string))
                         {
                             values.Add(key + "=" + string.Join(",", (List<string>)value));
