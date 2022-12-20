@@ -12,10 +12,15 @@
         <PackageProjectUrl>https://meilisearch.com</PackageProjectUrl>
         <PackageIconUrl>https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.png</PackageIconUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <!-- Warnings for missing XML documentation are only visible during dev time -->
+        <!-- You may want to remove the NoWarn node in case documentation will be mandatory in the future -->
+        <NoWarn Condition=" '$(Configuration)' == 'Release'">$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
       <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
     </ItemGroup>
 

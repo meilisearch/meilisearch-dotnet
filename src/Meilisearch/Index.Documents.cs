@@ -327,6 +327,7 @@ namespace Meilisearch
         /// Get document by its ID.
         /// </summary>
         /// <param name="documentId">Document identifier.</param>
+        /// <param name="fields">Document attributes to show (case-sensitive).</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the document, with the according type if the object is available.</returns>
@@ -347,6 +348,7 @@ namespace Meilisearch
         /// Get document by its ID.
         /// </summary>
         /// <param name="documentId">Document Id for query.</param>
+        /// <param name="fields">Document attributes to show (case-sensitive).</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type to return for document.</typeparam>
         /// <returns>Type if the object is availble.</returns>
