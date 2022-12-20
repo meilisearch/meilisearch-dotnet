@@ -280,6 +280,7 @@ namespace Meilisearch
         /// Gets the API keys.
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the API keys.</returns>
         public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {
@@ -344,6 +345,7 @@ namespace Meilisearch
         /// <summary>
         /// Updates an API key for the Meilisearch server.
         /// </summary>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key</param>
         /// <param name="description">A description to give meaning to the key.</param>
         /// <param name="name">A name to label the key internally.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -393,6 +395,7 @@ namespace Meilisearch
         /// <summary>
         /// Generate a tenant token string to be used during search.
         /// </summary>
+        /// <param name="apiKeyUid">Unique identifier of the API key.</param>
         /// <param name="searchRules">Object with the rules applied in a search call.</param>
         /// <param name="apiKey">API Key which signs the generated token.</param>
         /// <param name="expiresAt">Date to express how long the generated token will last. If null the token will last forever.</param>
