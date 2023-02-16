@@ -73,7 +73,7 @@ For example, using the `curl` command in [your Terminal](https://itconnect.uw.ed
 # Install Meilisearch
 curl -L https://install.meilisearch.com | sh
 # Launch Meilisearch
-./meilisearch --master-key=masterKeyz
+./meilisearch --master-key=masterKey
 ```
 
 NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
