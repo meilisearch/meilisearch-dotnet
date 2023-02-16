@@ -73,7 +73,7 @@ For example, using the `curl` command in [your Terminal](https://itconnect.uw.ed
 # Install Meilisearch
 curl -L https://install.meilisearch.com | sh
 # Launch Meilisearch
-./meilisearch --master-key=masterKey
+./meilisearch --master-key=masterKeyz
 ```
 
 NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
@@ -235,7 +235,7 @@ JSON Output:
 
 ## 🤖 Compatibility with Meilisearch
 
-This package guarantees compatibility with [version v1.x of Meilisearch](https://github.com/meilisearch/meilisearch/releases/tag/latest), but some features may not be present. Please check the [issues](https://github.com/meilisearch/meilisearch-dotnet/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3Aenhancement) for more info.
+This package guarantees compatibility with [version v1.x of Meilisearch](https://github.com/meilisearch/meilisearch/releases/latest), but some features may not be present. Please check the [issues](https://github.com/meilisearch/meilisearch-dotnet/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3Aenhancement) for more info.
 
 ## 🎬 Examples
 
