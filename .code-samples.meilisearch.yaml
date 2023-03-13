@@ -26,8 +26,7 @@ date_guide_index_1: |-
   var index = client.Index("games");
   await index.AddDocumentsAsync<Movie>(games);
 date_guide_filterable_attributes_1: |-
-  List<string> attributes = new() { "release_timestamp" };
-  TaskInfo result = await client.Index("games").UpdateFilterableAttributesAsync(attributes);
+  await client.Index("games").UpdateFilterableAttributesAsync(new string[] { "release_timestamp" });
 date_guide_filter_1: |-
   var filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
   SearchResult<Game> games = await client.Index("games").SearchAsync<Movie>("", filters);
