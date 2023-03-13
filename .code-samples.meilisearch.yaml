@@ -29,7 +29,7 @@ date_guide_filterable_attributes_1: |-
   List<string> attributes = new() { "release_timestamp" };
   TaskInfo result = await client.Index("games").UpdateFilterableAttributesAsync(attributes);
 date_guide_filter_1: |-
-  SearchQuery filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
+  var filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
   SearchResult<Game> games = await client.Index("games").SearchAsync<Movie>("", filters);
 date_guide_sortable_attributes_1: |-
   await client.Index("games").UpdateSortableAttributesAsync(new [] { "release_timestamp" });
