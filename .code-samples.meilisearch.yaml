@@ -31,7 +31,7 @@ date_guide_filter_1: |-
   var filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
   SearchResult<Game> games = await client.Index("games").SearchAsync<Movie>("", filters);
 date_guide_sortable_attributes_1: |-
-  await client.Index("games").UpdateSortableAttributesAsync(new [] { "release_timestamp" });
+  await client.Index("games").UpdateSortableAttributesAsync(new string[] { "release_timestamp" });
 date_guide_sort_1: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "release_timestamp:desc" }};
   await client.Index("games").SearchAsync<Meteorite>("", sort);
