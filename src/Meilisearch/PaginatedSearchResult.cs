@@ -9,15 +9,23 @@ namespace Meilisearch
     /// <typeparam name="T">Hit type.</typeparam>
     public class PaginatedSearchResult<T> : ISearchable<T>
     {
-        public PaginatedSearchResult(IReadOnlyCollection<T> hits, int hitsPerPage, int page, int total,
+        public PaginatedSearchResult(
+            IReadOnlyCollection<T> hits,
+            int hitsPerPage,
+            int page,
+            int totalHits,
+            int totalPages,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
-            int processingTimeMs, string query,
-            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion)
+            int processingTimeMs,
+            string query,
+            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion
+        )
         {
             Hits = hits;
             HitsPerPage = hitsPerPage;
             Page = page;
-            Total = total;
+            TotalHits = totalHits;
+            TotalPages = totalPages;
             FacetDistribution = facetDistribution;
             ProcessingTimeMs = processingTimeMs;
             Query = query;
@@ -37,16 +45,22 @@ namespace Meilisearch
         public int Page { get; }
 
         /// <summary>
+        /// Total number of documents' pages.
+        /// </summary>
+        [JsonPropertyName("totalPages")]
+        public int TotalPages { get; }
+
+        /// <summary>
         /// Results of the query.
         /// </summary>
         [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
-        /// Gets the estimated total number of hits returned by the search.
+        /// Gets the total number of hits returned by the search.
         /// </summary>
-        [JsonPropertyName("total")]
-        public int Total { get; }
+        [JsonPropertyName("totalHits")]
+        public int TotalHits { get; }
 
         /// <summary>
         /// Returns the number of documents matching the current search query for each given facet.
