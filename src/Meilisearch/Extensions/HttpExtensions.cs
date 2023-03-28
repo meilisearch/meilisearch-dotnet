@@ -86,7 +86,7 @@ namespace Meilisearch.Extensions
         private static JsonContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
             options = options ?? Constants.JsonSerializerOptionsWriteNulls;
-            var payload = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), options);            
+            var payload = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), options);
 
             return payload;
         }
