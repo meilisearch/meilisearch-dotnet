@@ -56,7 +56,9 @@ namespace Meilisearch
             JsonSerializerOptions options
         )
         {
-            throw new NotImplementedException();
+            var serialized = JsonSerializer.SerializeToNode(value.Original, options).AsObject();
+            serialized["_formatted"] = JsonSerializer.SerializeToNode(value.Formatted, options);
+            serialized.WriteTo(writer, options);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
@@ -31,6 +32,33 @@ namespace Meilisearch.Tests
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
+
+        [Fact]
+        public async Task TestJsonConverter()
+        {
+            MovieWithIntId[] movies =
+            {
+                new MovieWithIntId { Id = 1, Name = "Batman" },
+                new MovieWithIntId { Id = 2, Name = "Reservoir Dogs" },
+                new MovieWithIntId { Id = 3, Name = "Taxi Driver" },
+                new MovieWithIntId { Id = 4, Name = "Interstellar" },
+                new MovieWithIntId { Id = 5, Name = "Titanic" },
+            }; ;
+            var formattable = movies
+                .Select(x => new DefaultFormattable<MovieWithIntId, Movie>(x, new Movie()
+                {
+                    Id = x.Id.ToString(),
+                    Genre = x.Genre,
+                    Name = x.Name
+                }))
+                .Cast<IFormatContainer<MovieWithIntId, Movie>>();
+
+            var elements = formattable.Select(x => JsonSerializer.SerializeToElement(x)).ToList();
+            elements.Should().AllSatisfy(x => x.GetProperty("_formatted").Should().NotBeNull());
+
+            var deserialized = elements.Select(x => JsonSerializer.Deserialize<IFormatContainer<MovieWithIntId, Movie>>(x)).ToList();
+            deserialized.Should().AllSatisfy(x => x.Formatted.Should().NotBeNull());
+        }
 
         [Fact]
         public async Task BasicSearch()
