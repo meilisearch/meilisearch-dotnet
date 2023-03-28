@@ -84,11 +84,10 @@ namespace Meilisearch.Extensions
             client.DefaultRequestHeaders.Add("User-Agent", version.GetQualifiedVersion());
         }
 
-        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
+        private static JsonContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
             options = options ?? Constants.JsonSerializerOptionsWriteNulls;
-            var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
-            payload.Headers.ContentType.CharSet = string.Empty;
+            var payload = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), options);
 
             return payload;
         }
