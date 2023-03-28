@@ -3,6 +3,38 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+getting_started_faceting: |-
+  var faceting = new Faceting {
+    MaxValuesPerFacet = 2
+  };
+  await client.Index("movies").UpdateFacetingAsync(faceting);
+getting_started_pagination: |-
+  var pagination = new Pagination {
+    MaxTotalHits = 500
+  };
+  await client.Index("movies").UpdatePaginationAsync(pagination);
+synonyms_guide_1: |-
+  var synonyms = new Dictionary<string, IEnumerable<string>>
+  {
+  	{ "great", new string[] { "fantastic" } },
+  	{ "fantastic", new string[] { "great" } }
+  };
+  await client.Index("movies").UpdateSynonymsAsync(synonyms);
+date_guide_index_1: |-
+  string jsonString = await File.ReadAllTextAsync("games.json");
+  var games = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
+  var index = client.Index("games");
+  await index.AddDocumentsAsync<Movie>(games);
+date_guide_filterable_attributes_1: |-
+  await client.Index("games").UpdateFilterableAttributesAsync(new string[] { "release_timestamp" });
+date_guide_filter_1: |-
+  var filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
+  SearchResult<Game> games = await client.Index("games").SearchAsync<Movie>("", filters);
+date_guide_sortable_attributes_1: |-
+  await client.Index("games").UpdateSortableAttributesAsync(new string[] { "release_timestamp" });
+date_guide_sort_1: |-
+  SearchQuery sort = new SearchQuery() { Sort = new string[] { "release_timestamp:desc" }};
+  await client.Index("games").SearchAsync<Meteorite>("", sort);
 async_guide_filter_by_date_1: |-
   await client.GetTasksAsync(new TasksQuery { AfterEnqueuedAt = DateTime.Parse("2020-10-11T11:49:53.000Z") });
 async_guide_multiple_filters_1: |-
@@ -472,7 +504,6 @@ faceted_search_facets_1: |-
   {
       Facets = new string[] { "genres" }
   };
-
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
 faceted_search_walkthrough_filter_1: |-
   var sq = new SearchQuery
@@ -676,19 +707,16 @@ typo_tolerance_guide_1: |-
   var typoTolerance = new TypoTolerance {
     Enabled = false
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_2: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" }
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_3: |-
   var typoTolerance = new TypoTolerance {
     DisableOnWords = new string[] { "shrek" }
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_4: |-
   var typoTolerance = new TypoTolerance {
@@ -718,7 +746,6 @@ update_pagination_settings_1: |-
   var pagination = new Pagination {
     MaxTotalHits = 20
   };
-
   await client.Index("movies").UpdatePaginationAsync(pagination);
 reset_pagination_settings_1: |-
     await client.Index("movies").ResetPaginationAsync();
@@ -732,4 +759,12 @@ update_faceting_settings_1: |-
 reset_faceting_settings_1: |-
   await client.Index("movies").ResetFacetingAsync();
 settings_guide_faceting_1: |-
+  var faceting = new Faceting {
+    MaxValuesPerFacet = 5
+  };
+  await client.Index("movies").UpdateFacetingAsync(faceting);
 settings_guide_pagination_1: |-
+  var pagination = new Pagination {
+    MaxTotalHits = 50
+  };
+  await client.Index("movies").UpdatePaginationAsync(pagination);

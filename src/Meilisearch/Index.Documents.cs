@@ -187,7 +187,7 @@ namespace Meilisearch
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
-            responseMessage = await _http.PutJsonCustomAsync(uri, documents, cancellationToken).ConfigureAwait(false);
+            responseMessage = await _http.PutJsonCustomAsync(uri, documents, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken).ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

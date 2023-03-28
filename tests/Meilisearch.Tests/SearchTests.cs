@@ -75,10 +75,12 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithPage()
         {
-            var movies = (PaginatedSearchResult<Movie>)await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1 });
+            var movies = (PaginatedSearchResult<Movie>)await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1, HitsPerPage = 1 });
 
             Assert.Equal(1, movies.Page);
-            Assert.Equal(20, movies.HitsPerPage);
+            Assert.Equal(1, movies.HitsPerPage);
+            Assert.Equal(2, movies.TotalHits);
+            Assert.Equal(2, movies.TotalPages);
             movies.Hits.First().Id.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
             movies.Hits.First().Genre.Should().NotBeEmpty();

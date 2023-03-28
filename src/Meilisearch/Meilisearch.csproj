@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageId>MeiliSearch</PackageId>
-        <Version>0.13.1</Version>
+        <Version>0.14.0</Version>
         <Description>.NET wrapper for Meilisearch, an open-source search engine</Description>
         <RepositoryUrl>https://github.com/meilisearch/meilisearch-dotnet</RepositoryUrl>
         <PackageTags>meilisearch;dotnet;sdk;search-engine;search;instant-search</PackageTags>
@@ -20,7 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
       <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
     </ItemGroup>
 

@@ -275,6 +275,8 @@ namespace Meilisearch.Tests
             var docs = await index.GetDocumentsAsync<Movie>();
             var movieNames = docs.Results.Select(movie => movie.Name);
 
+            // Ensure Genre didn't get removed
+            docs.Results.First(x => x.Id == "1").Genre.Should().Be("Action");
             Assert.Contains("Ironman", movieNames);
             Assert.Contains("Superman", movieNames);
         }

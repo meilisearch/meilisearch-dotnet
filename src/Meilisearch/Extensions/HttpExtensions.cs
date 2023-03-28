@@ -53,12 +53,13 @@ namespace Meilisearch.Extensions
         /// <param name="client">HttpClient.</param>
         /// <param name="uri">Endpoint.</param>
         /// <param name="body">Body sent.</param>
+        /// <param name="options">Json options for serialization.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the body to send.</typeparam>
         /// <returns>Returns the HTTP response from the Meilisearch server.</returns>
-        internal static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, CancellationToken cancellationToken = default)
+        internal static async Task<HttpResponseMessage> PutJsonCustomAsync<T>(this HttpClient client, string uri, T body, JsonSerializerOptions options, CancellationToken cancellationToken = default)
         {
-            var payload = PrepareJsonPayload(body);
+            var payload = PrepareJsonPayload(body, options);
 
             return await client.PutAsync(uri, payload, cancellationToken).ConfigureAwait(false);
         }
@@ -83,11 +84,10 @@ namespace Meilisearch.Extensions
             client.DefaultRequestHeaders.Add("User-Agent", version.GetQualifiedVersion());
         }
 
-        private static StringContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
+        private static JsonContent PrepareJsonPayload<T>(T body, JsonSerializerOptions options = null)
         {
             options = options ?? Constants.JsonSerializerOptionsWriteNulls;
-            var payload = new StringContent(JsonSerializer.Serialize(body, options), Encoding.UTF8, "application/json");
-            payload.Headers.ContentType.CharSet = string.Empty;
+            var payload = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), options);
 
             return payload;
         }
