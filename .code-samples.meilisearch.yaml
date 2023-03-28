@@ -3,6 +3,63 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+multi_search_1: |-
+  see cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L996-L1017
+  with data: { "queries": [
+      {
+        "indexUid": "movies",
+        "q": "pooh",
+        "limit": 5
+      },
+      {
+        "indexUid": "movies",
+        "q": "nemo",
+        "limit": 5
+      },
+      {
+        "indexUid": "movie_ratings",
+        "q": "us"
+      }
+    ]
+  }
+faceted_search_update_settings_1: |-
+  See cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L1018-L1024
+  on the books index: Add "genres", "rating", "language" as filterable attributes
+faceted_search_1: |-
+  See cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L1025-L1034
+  Search books index with data: {
+      "q": "classic",
+        "facets": [
+        "genres", "rating", "language"
+      ]
+    }
+faceted_search_2: |-
+  see cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L1043-L1065
+  multi-search with data: {
+      "queries": [
+        {
+          "indexUid": "books",
+          "facets": ["language", "genres", "author", "format"],
+          "filter": [["language = English", "language = French"], ["genres = Fiction"]]
+        },
+        {
+          "indexUid": "books",
+          "facets": ["language"],
+          "filter": [["genres = Fiction"]]
+        },
+        {
+          "indexUid": "books",
+          "facets": ["genres"],
+          "filter": [["language = English", "language = French"]]
+        }
+      ]
+    }
+geosearch_guide_filter_usage_3: |-
+  see cURL: https://github.com/meilisearch/documentation/blob/c8ab47d004753ce2241a756eff14ade448d70a93/.code-samples.meilisearch.yaml#L696-L700
+  Search on `restaurants` with data:
+    { "filter": "_geoBoundingBox([45.494181, 9.179175], [45.449484, 9.214024])" }
+    
+
 getting_started_faceting: |-
   var faceting = new Faceting {
     MaxValuesPerFacet = 2
@@ -486,7 +543,7 @@ getting_started_communicating_with_a_protected_instance: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
 
   await client.Index("Movies").SearchAsync<Movie>("");
-faceted_search_update_settings_1: |-
+filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
 faceted_search_filter_1: |-
   SearchQuery filters = new SearchQuery()
