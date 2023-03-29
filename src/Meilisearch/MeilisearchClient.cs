@@ -165,7 +165,8 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns Index or Null if the index does not exist.</returns>
+        /// <returns>Returns Index.</returns>
+        /// <exception cref="MeilisearchApiError">Throws if the index doesn't exist.</exception>
         public async Task<Index> GetIndexAsync(string uid, CancellationToken cancellationToken = default)
         {
             return await Index(uid).FetchInfoAsync(cancellationToken).ConfigureAwait(false);
