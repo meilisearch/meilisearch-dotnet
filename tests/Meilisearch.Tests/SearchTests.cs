@@ -316,6 +316,28 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithFacetStats()
+        {
+            var newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "id" },
+            };
+            var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
+            await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
+            var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
+                null,
+                new SearchQuery
+                {
+                    Facets = new string[] { "id" },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetDistribution.Should().NotBeEmpty();
+            movies.FacetDistribution["id"].Should().NotBeEmpty();
+            Assert.Equal(10, movies.FacetStats["id"]["min"]);
+            Assert.Equal(16, movies.FacetStats["id"]["max"]);
+        }
+
+        [Fact]
         public async Task CustomSearchWithSort()
         {
             var newSortable = new Settings
