@@ -21,6 +21,7 @@
     <ItemGroup>
       <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\songs.csv" CopyToOutputDirectory="PreserveNewest" />
+      <None Update="Datasets\songs_custom_delimiter.csv" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\songs.ndjson" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\movies_with_string_id.json" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\movies_for_faceting.json" CopyToOutputDirectory="PreserveNewest" />
