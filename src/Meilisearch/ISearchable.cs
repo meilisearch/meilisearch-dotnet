@@ -43,6 +43,6 @@ namespace Meilisearch
         /// Returns the numeric min and max values per facet of the hits returned by the search query.
         /// </summary>
         [JsonPropertyName("facetStats")]
-        IReadOnlyDictionary<string, IReadOnlyDictionary<string, float>> FacetStats { get; }
+        IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
     }
 }

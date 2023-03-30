@@ -13,7 +13,7 @@ namespace Meilisearch
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion,
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, float>> facetStats)
+            IReadOnlyDictionary<string, FacetStat> facetStats)
         {
             Hits = hits;
             Offset = offset;
@@ -78,6 +78,6 @@ namespace Meilisearch
         /// Returns the numeric min and max values per facet of the hits returned by the search query.
         /// </summary>
         [JsonPropertyName("facetStats")]
-        public IReadOnlyDictionary<string, IReadOnlyDictionary<string, float>> FacetStats { get; }
+        public IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
     }
 }

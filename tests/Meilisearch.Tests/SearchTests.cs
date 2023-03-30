@@ -333,8 +333,8 @@ namespace Meilisearch.Tests
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().NotBeEmpty();
             movies.FacetDistribution["id"].Should().NotBeEmpty();
-            Assert.Equal(10, movies.FacetStats["id"]["min"]);
-            Assert.Equal(16, movies.FacetStats["id"]["max"]);
+            Assert.Equal(10, movies.FacetStats["id"].Min);
+            Assert.Equal(16, movies.FacetStats["id"].Max);
         }
 
         [Fact]
