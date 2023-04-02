@@ -37,7 +37,7 @@ date_guide_sort_1: |-
   await client.Index("games").SearchAsync<Game>("", sort);
 filtering_guide_nested_1: |-
   var filters = new SearchQuery() { Filter = "rating.users >= 90" };
-  SearchResult<Movie> movies = await client.Index("movie_ratings").SearchAsync<Movie>("thriller", filters);
+  SearchResult<MovieRating> movies = await client.Index("movie_ratings").SearchAsync<MovieRating>("thriller", filters);
 sorting_guide_sort_nested_1: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "rating.users:asc" }};
   await client.Index("books").SearchAsync<Book>("science fiction", sort);
