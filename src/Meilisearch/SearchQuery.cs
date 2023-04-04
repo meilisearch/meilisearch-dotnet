@@ -9,6 +9,12 @@ namespace Meilisearch
     public class SearchQuery
     {
         /// <summary>
+        /// The id of the index
+        /// </summary>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; set; }
+
+        /// <summary>
         /// Gets or sets query string.
         /// </summary>
         [JsonPropertyName("q")]

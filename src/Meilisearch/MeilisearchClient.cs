@@ -80,6 +80,25 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Searches multiple indexes at once
+        /// </summary>
+        /// <param name="query">The queries to be executed (must have IndexUid set)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query, CancellationToken cancellationToken = default)
+        {
+            if (!query.Queries.TrueForAll(x => x.IndexUid != null))
+            {
+                throw new ArgumentNullException("IndexUid", "IndexUid should be provided for all search queries");
+            }
+            var responseMessage = await _http.PostAsJsonAsync("multi-search", query, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
+            return await responseMessage.Content
+                    .ReadFromJsonAsync<MultiSearchResult>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Creates and index with an UID and a primary key.
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>

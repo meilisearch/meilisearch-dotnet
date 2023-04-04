@@ -19,7 +19,8 @@ namespace Meilisearch
             int processingTimeMs,
             string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion,
-            IReadOnlyDictionary<string, FacetStat> facetStats
+            IReadOnlyDictionary<string, FacetStat> facetStats,
+            string indexUid
         )
         {
             Hits = hits;
@@ -32,6 +33,7 @@ namespace Meilisearch
             Query = query;
             MatchesPostion = matchesPostion;
             FacetStats = facetStats;
+            IndexUid = indexUid;
         }
 
         /// <summary>
@@ -93,5 +95,9 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("facetStats")]
         public IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; }
     }
 }
