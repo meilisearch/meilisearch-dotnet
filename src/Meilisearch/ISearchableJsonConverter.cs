@@ -13,10 +13,7 @@ namespace Meilisearch
                 && (typeToConvert.GetGenericTypeDefinition() == typeof(ISearchable<>));
         }
 
-        public override JsonConverter CreateConverter(
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
+        public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
             var genericArgs = typeToConvert.GetGenericArguments();
             var converterType = typeof(ISearchableJsonConverter<>).MakeGenericType(
@@ -26,15 +23,10 @@ namespace Meilisearch
             return converter;
         }
     }
-    public class ISearchableJsonConverter<T>
-        : JsonConverter<ISearchable<T>>
-        where T : class
+
+    public class ISearchableJsonConverter<T> : JsonConverter<ISearchable<T>> where T : class
     {
-        public override ISearchable<T> Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
+        public override ISearchable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var document = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
             return document.TryGetProperty("page", out _) || document.TryGetProperty("hitsPerPage", out _)
@@ -42,11 +34,7 @@ namespace Meilisearch
                 : (ISearchable<T>)document.Deserialize<SearchResult<T>>(options);
         }
 
-        public override void Write(
-            Utf8JsonWriter writer,
-            ISearchable<T> value,
-            JsonSerializerOptions options
-        )
+        public override void Write(Utf8JsonWriter writer, ISearchable<T> value, JsonSerializerOptions options)
         {
             if (value is PaginatedSearchResult<T> paginated)
             {
@@ -63,5 +51,3 @@ namespace Meilisearch
         }
     }
 }
-
-

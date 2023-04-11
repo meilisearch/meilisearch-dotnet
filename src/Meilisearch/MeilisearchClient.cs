@@ -92,6 +92,7 @@ namespace Meilisearch
             {
                 throw new ArgumentNullException("IndexUid", "IndexUid should be provided for all search queries");
             }
+
             var responseMessage = await _http.PostAsJsonAsync("multi-search", query, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
             return await responseMessage.Content
                     .ReadFromJsonAsync<MultiSearchResult>(cancellationToken: cancellationToken)
