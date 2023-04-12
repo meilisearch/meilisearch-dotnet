@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace Meilisearch
 {
+    /// <summary>
+    /// The json converter factory for <see cref="ISearchable{T}"/>
+    /// </summary>
     public class ISearchableJsonConverterFactory : JsonConverterFactory
     {
+        /// <inheritdoc/>
         public override bool CanConvert(Type typeToConvert)
         {
             return typeToConvert.IsInterface
@@ -13,6 +17,7 @@ namespace Meilisearch
                 && (typeToConvert.GetGenericTypeDefinition() == typeof(ISearchable<>));
         }
 
+        /// <inheritdoc/>
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
             var genericArgs = typeToConvert.GetGenericArguments();
@@ -24,8 +29,13 @@ namespace Meilisearch
         }
     }
 
+    /// <summary>
+    /// The json converter for <see cref="ISearchable{T}"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ISearchableJsonConverter<T> : JsonConverter<ISearchable<T>> where T : class
     {
+        /// <inheritdoc/>
         public override ISearchable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var document = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
@@ -34,6 +44,7 @@ namespace Meilisearch
                 : (ISearchable<T>)document.Deserialize<SearchResult<T>>(options);
         }
 
+        /// <inheritdoc/>
         public override void Write(Utf8JsonWriter writer, ISearchable<T> value, JsonSerializerOptions options)
         {
             if (value is PaginatedSearchResult<T> paginated)
