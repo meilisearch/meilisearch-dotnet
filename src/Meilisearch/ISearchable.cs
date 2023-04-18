@@ -38,5 +38,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("_matchesPosition")]
         IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
+
+        /// <summary>
+        /// Returns the numeric min and max values per facet of the hits returned by the search query.
+        /// </summary>
+        [JsonPropertyName("facetStats")]
+        IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
     }
 }

@@ -10,6 +10,7 @@ namespace Meilisearch.Tests
         private static readonly string BasePath = Path.Combine(Directory.GetCurrentDirectory(), "Datasets");
         public static readonly string SmallMoviesJsonPath = Path.Combine(BasePath, "small_movies.json");
         public static readonly string SongsCsvPath = Path.Combine(BasePath, "songs.csv");
+        public static readonly string SongsCsvCustomDelimiterPath = Path.Combine(BasePath, "songs_custom_delimiter.csv");
         public static readonly string SongsNdjsonPath = Path.Combine(BasePath, "songs.ndjson");
 
         public static readonly string MoviesWithStringIdJsonPath = Path.Combine(BasePath, "movies_with_string_id.json");
