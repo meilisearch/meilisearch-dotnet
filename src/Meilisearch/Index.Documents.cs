@@ -477,23 +477,15 @@ namespace Meilisearch
                 body = searchAttributes;
                 body.Q = query;
             }
+            body.IndexUid = default;
 
             var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", body,
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (body.Page != null || body.HitsPerPage != null)
-            {
-                return await responseMessage.Content
-                    .ReadFromJsonAsync<PaginatedSearchResult<T>>(cancellationToken: cancellationToken)
+            return await responseMessage.Content
+                    .ReadFromJsonAsync<ISearchable<T>>(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
-            }
-            else
-            {
-                return await responseMessage.Content
-                    .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-            }
         }
     }
 }
