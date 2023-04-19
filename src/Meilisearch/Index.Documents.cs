@@ -469,6 +469,7 @@ namespace Meilisearch
                 body = searchAttributes;
                 body.Q = query;
             }
+            body.IndexUid = default;
 
             var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", body,
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)

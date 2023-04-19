@@ -7,8 +7,15 @@ namespace Meilisearch
     /// Wrapper for Search Results.
     /// </summary>
     /// <typeparam name="T">Hit type.</typeparam>
+    [JsonConverter(typeof(ISearchableJsonConverterFactory))]
     public interface ISearchable<T>
     {
+        /// <summary>
+        /// The uid of the index
+        /// </summary>
+        [JsonPropertyName("indexUid")]
+        string IndexUid { get; }
+
         /// <summary>
         /// Results of the query.
         /// </summary>
