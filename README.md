@@ -17,7 +17,7 @@
   <a href="https://www.nuget.org/packages/meilisearch"><img src="https://img.shields.io/nuget/v/meilisearch" alt="NuGet"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/actions"><img src="https://github.com/meilisearch/meilisearch-dotnet/workflows/Tests/badge.svg?branch=main" alt="GitHub Workflow Status"></a>
   <a href="https://github.com/meilisearch/meilisearch-dotnet/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-informational" alt="License"></a>
-  <a href="https://app.bors.tech/repositories/28784"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
+  <a href="https://ms-bors.herokuapp.com/repositories/63"><img src="https://bors.tech/images/badge_small.svg" alt="Bors enabled"></a>
 </p>
 
 <p align="center">⚡ The Meilisearch API client written for .NET</p>
