@@ -80,6 +80,26 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Searches multiple indexes at once
+        /// </summary>
+        /// <param name="query">The queries to be executed (must have IndexUid set)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query, CancellationToken cancellationToken = default)
+        {
+            if (!query.Queries.TrueForAll(x => x.IndexUid != null))
+            {
+                throw new ArgumentNullException("IndexUid", "IndexUid should be provided for all search queries");
+            }
+
+            var responseMessage = await _http.PostAsJsonAsync("multi-search", query, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
+            return await responseMessage.Content
+                    .ReadFromJsonAsync<MultiSearchResult>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Creates and index with an UID and a primary key.
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
@@ -165,7 +185,8 @@ namespace Meilisearch
         /// </summary>
         /// <param name="uid">Unique identifier of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns Index or Null if the index does not exist.</returns>
+        /// <returns>Returns Index.</returns>
+        /// <exception cref="MeilisearchApiError">Throws if the index doesn't exist.</exception>
         public async Task<Index> GetIndexAsync(string uid, CancellationToken cancellationToken = default)
         {
             return await Index(uid).FetchInfoAsync(cancellationToken).ConfigureAwait(false);
@@ -280,6 +301,7 @@ namespace Meilisearch
         /// Gets the API keys.
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the API keys.</returns>
         public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {
@@ -320,8 +342,31 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Cancel tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> CancelTasksAsync(CancelTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().CancelTasksAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Delete tasks given a specific query.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> DeleteTasksAsync(DeleteTasksQuery query, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().DeleteTasksAsync(query, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Updates an API key for the Meilisearch server.
         /// </summary>
+        /// <param name="keyOrUid">Unique identifier of the API key or the Key</param>
         /// <param name="description">A description to give meaning to the key.</param>
         /// <param name="name">A name to label the key internally.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -355,8 +400,23 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Swaps indexes unique identifiers.
+        /// </summary>
+        /// <param name="indexes">List of IndexSwap objects.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of finished task.</returns>
+        public async Task<TaskInfo> SwapIndexesAsync(List<IndexSwap> indexes, CancellationToken cancellationToken = default)
+        {
+            var response = await _http.PostAsJsonAsync("swap-indexes", indexes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Generate a tenant token string to be used during search.
         /// </summary>
+        /// <param name="apiKeyUid">Unique identifier of the API key.</param>
         /// <param name="searchRules">Object with the rules applied in a search call.</param>
         /// <param name="apiKey">API Key which signs the generated token.</param>
         /// <param name="expiresAt">Date to express how long the generated token will last. If null the token will last forever.</param>

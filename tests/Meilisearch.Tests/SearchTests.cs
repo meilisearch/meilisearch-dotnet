@@ -73,6 +73,30 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithPage()
+        {
+            var movies = (PaginatedSearchResult<Movie>)await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1, HitsPerPage = 1 });
+
+            Assert.Equal(1, movies.Page);
+            Assert.Equal(1, movies.HitsPerPage);
+            Assert.Equal(2, movies.TotalHits);
+            Assert.Equal(2, movies.TotalPages);
+            movies.Hits.First().Id.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.First().Genre.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPageWithoutTypeCast()
+        {
+            var movies = await _basicIndex.SearchAsync<Movie>("man", new SearchQuery { Page = 1 });
+
+            movies.Hits.First().Id.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.First().Genre.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public async Task CustomSearchWithAttributesToHighlight()
         {
             var newFilters = new Settings
@@ -289,6 +313,28 @@ namespace Meilisearch.Tests
             Assert.Equal(3, movies.FacetDistribution["genre"]["Action"]);
             Assert.Equal(2, movies.FacetDistribution["genre"]["SF"]);
             Assert.Equal(1, movies.FacetDistribution["genre"]["French movie"]);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithFacetStats()
+        {
+            var newFilters = new Settings
+            {
+                FilterableAttributes = new string[] { "id" },
+            };
+            var task = await _indexWithIntId.UpdateSettingsAsync(newFilters);
+            await _indexWithIntId.WaitForTaskAsync(task.TaskUid);
+            var movies = await _indexWithIntId.SearchAsync<MovieWithIntId>(
+                null,
+                new SearchQuery
+                {
+                    Facets = new string[] { "id" },
+                });
+            movies.Hits.Should().NotBeEmpty();
+            movies.FacetDistribution.Should().NotBeEmpty();
+            movies.FacetDistribution["id"].Should().NotBeEmpty();
+            Assert.Equal(10, movies.FacetStats["id"].Min);
+            Assert.Equal(16, movies.FacetStats["id"].Max);
         }
 
         [Fact]

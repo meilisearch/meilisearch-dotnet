@@ -48,6 +48,14 @@ namespace Meilisearch.Tests
                         OneTypo = 5,
                         TwoTypos = 9
                     }
+                },
+                Faceting = new Faceting
+                {
+                    MaxValuesPerFacet = 100
+                },
+                Pagination = new Pagination
+                {
+                    MaxTotalHits = 1000
                 }
             };
         }
@@ -366,6 +374,7 @@ namespace Meilisearch.Tests
 
             var returnedTypoTolerance = new TypoTolerance
             {
+                Enabled = true,
                 DisableOnAttributes = new string[] { },
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
@@ -394,6 +403,7 @@ namespace Meilisearch.Tests
 
             var returnedTypoTolerance = new TypoTolerance
             {
+                Enabled = true,
                 DisableOnAttributes = new string[] { "title" },
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
@@ -422,6 +432,7 @@ namespace Meilisearch.Tests
 
             var returnedTypoTolerance = new TypoTolerance
             {
+                Enabled = true,
                 DisableOnAttributes = new string[] { },
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
@@ -438,6 +449,72 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
         }
 
+        [Fact]
+        public async Task GetFaceting()
+        {
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
+        [Fact]
+        public async Task UpdateFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
+        }
+
+        [Fact]
+        public async Task ResetFaceting()
+        {
+            var newFaceting = new Faceting
+            {
+                MaxValuesPerFacet = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
+            await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
+
+            await AssertResetSuccess(_index.ResetFacetingAsync);
+            await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
+        }
+
+        [Fact]
+        public async Task GetPagination()
+        {
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
+        [Fact]
+        public async Task UpdatePagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 20
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
+        }
+
+        [Fact]
+        public async Task ResetPagination()
+        {
+            var newPagination = new Pagination
+            {
+                MaxTotalHits = 30
+            };
+
+            await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
+            await AssertGetEquality(_index.GetPaginationAsync, newPagination);
+
+            await AssertResetSuccess(_index.ResetPaginationAsync);
+            await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -450,7 +527,9 @@ namespace Meilisearch.Tests
                 Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
-                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance
+                TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
+                Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
+                Pagination = inputSettings.Pagination ?? defaultSettings.Pagination
             };
         }
 

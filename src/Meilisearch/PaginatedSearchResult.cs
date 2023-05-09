@@ -4,35 +4,44 @@ using System.Text.Json.Serialization;
 namespace Meilisearch
 {
     /// <summary>
-    /// Wrapper for Search Results.
+    /// Wrapper for Search Results with finite pagination.
     /// </summary>
     /// <typeparam name="T">Hit type.</typeparam>
-    public class SearchResult<T> : ISearchable<T>
+    public class PaginatedSearchResult<T> : ISearchable<T>
     {
         /// <summary>
-        /// Create a new search result where the documents are of type <typeparamref name="T"/>
+        /// Creates a new paginated search result of type <typeparamref name="T"/>
         /// </summary>
         /// <param name="hits"></param>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
-        /// <param name="estimatedTotalHits"></param>
+        /// <param name="hitsPerPage"></param>
+        /// <param name="page"></param>
+        /// <param name="totalHits"></param>
+        /// <param name="totalPages"></param>
         /// <param name="facetDistribution"></param>
         /// <param name="processingTimeMs"></param>
         /// <param name="query"></param>
         /// <param name="matchesPostion"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
-        public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
+        public PaginatedSearchResult(
+            IReadOnlyCollection<T> hits,
+            int hitsPerPage,
+            int page,
+            int totalHits,
+            int totalPages,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
-            int processingTimeMs, string query,
+            int processingTimeMs,
+            string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion,
             IReadOnlyDictionary<string, FacetStat> facetStats,
-            string indexUid)
+            string indexUid
+        )
         {
             Hits = hits;
-            Offset = offset;
-            Limit = limit;
-            EstimatedTotalHits = estimatedTotalHits;
+            HitsPerPage = hitsPerPage;
+            Page = page;
+            TotalHits = totalHits;
+            TotalPages = totalPages;
             FacetDistribution = facetDistribution;
             ProcessingTimeMs = processingTimeMs;
             Query = query;
@@ -41,27 +50,33 @@ namespace Meilisearch
             IndexUid = indexUid;
         }
 
+        /// <summary>
+        /// Number of documents each page.
+        /// </summary>
+        [JsonPropertyName("hitsPerPage")]
+        public int HitsPerPage { get; }
+
+        /// <summary>
+        /// Number of documents to take.
+        /// </summary>
+        [JsonPropertyName("page")]
+        public int Page { get; }
+
+        /// <summary>
+        /// Total number of documents' pages.
+        /// </summary>
+        [JsonPropertyName("totalPages")]
+        public int TotalPages { get; }
+
         /// <inheritdoc/>
         [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
-        /// Number of documents skipped.
+        /// Gets the total number of hits returned by the search.
         /// </summary>
-        [JsonPropertyName("offset")]
-        public int Offset { get; }
-
-        /// <summary>
-        /// Number of documents to take.
-        /// </summary>
-        [JsonPropertyName("limit")]
-        public int Limit { get; }
-
-        /// <summary>
-        /// Gets the estimated total number of hits returned by the search.
-        /// </summary>
-        [JsonPropertyName("estimatedTotalHits")]
-        public int EstimatedTotalHits { get; }
+        [JsonPropertyName("totalHits")]
+        public int TotalHits { get; }
 
         /// <inheritdoc/>
         [JsonPropertyName("facetDistribution")]

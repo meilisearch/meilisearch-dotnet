@@ -84,6 +84,12 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("finishedAt")]
         public DateTime? FinishedAt { get; }
+
+        /// <summary>
+        /// A taskUid who canceled the current task.
+        /// </summary>
+        [JsonPropertyName("canceledBy")]
+        public int? CanceledBy { get; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -92,7 +98,8 @@ namespace Meilisearch
         Enqueued,
         Processing,
         Succeeded,
-        Failed
+        Failed,
+        Canceled
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -104,6 +111,10 @@ namespace Meilisearch
         DocumentAdditionOrUpdate,
         DocumentDeletion,
         SettingsUpdate,
-        DumpCreation
+        DumpCreation,
+        TaskCancelation,
+        SnapshotCreation,
+        TaskDeletion,
+        IndexSwap
     }
 }

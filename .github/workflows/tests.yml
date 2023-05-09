@@ -17,9 +17,9 @@ jobs:
     name: integration-tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: "6.0.x"
     - name: Install dependencies
@@ -35,10 +35,14 @@ jobs:
     name: format-check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: "6.0.x"
+    - name: Check with dotnet-format
+      run: dotnet format --check Meilisearch.sln
+    - name: Check with dotnet-format
+      run: dotnet format --version
     - name: Check with dotnet-format
       run: dotnet format --verify-no-changes -v n

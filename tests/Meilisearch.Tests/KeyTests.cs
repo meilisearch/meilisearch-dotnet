@@ -65,6 +65,8 @@ namespace Meilisearch.Tests
             var fetchedKey = await _client.GetKeyAsync(firstKey.KeyUid);
 
             Assert.Equal(fetchedKey.KeyUid, firstKey.KeyUid);
+            Assert.Equal(fetchedKey.Uid, firstKey.Uid);
+            Assert.Equal(fetchedKey.Name, firstKey.Name);
             Assert.Equal(fetchedKey.Description, firstKey.Description);
             Assert.Equal(fetchedKey.Indexes, firstKey.Indexes);
             Assert.Equal(fetchedKey.Actions, firstKey.Actions);
@@ -108,6 +110,7 @@ namespace Meilisearch.Tests
             var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal(fetchedKey.Uid, createdKey.Uid);
             Assert.Equal(fetchedKey.Description, createdKey.Description);
             Assert.Equal(fetchedKey.Indexes, createdKey.Indexes);
             Assert.Equal(fetchedKey.Actions, createdKey.Actions);
@@ -158,6 +161,7 @@ namespace Meilisearch.Tests
             var fetchedKey = await _client.GetKeyAsync(createdKeyUid);
 
             Assert.Equal(fetchedKey.KeyUid, createdKey.KeyUid);
+            Assert.Equal(fetchedKey.Uid, createdKey.Uid);
             Assert.Equal(fetchedKey.Description, createdKey.Description);
             Assert.Equal(fetchedKey.Indexes, createdKey.Indexes);
             Assert.Equal(fetchedKey.Actions, createdKey.Actions);

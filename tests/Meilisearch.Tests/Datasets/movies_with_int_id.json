@@ -1,0 +1,37 @@
+[
+    {
+        "Id": 10,
+        "Name": "Gladiator",
+        "Genre": null
+    },
+    {
+        "Id": 11,
+        "Name": "Interstellar",
+        "Genre": null
+    },
+    {
+        "Id": 12,
+        "Name": "Star Wars",
+        "Genre": "SF"
+    },
+    {
+        "Id": 13,
+        "Name": "Harry Potter",
+        "Genre": "SF"
+    },
+    {
+        "Id": 14,
+        "Name": "Iron Man",
+        "Genre": "Action"
+    },
+    {
+        "Id": 15,
+        "Name": "Spider-Man",
+        "Genre": "Action"
+    },
+    {
+        "Id": 16,
+        "Name": "Am\u00E9lie Poulain",
+        "Genre": "French movie"
+    }
+]

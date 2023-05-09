@@ -2,24 +2,11 @@
 
 First of all, thank you for contributing to Meilisearch! The goal of this document is to provide everything you need to know in order to contribute to Meilisearch and its different integrations.
 
-- [Hacktoberfest](#hacktoberfest-2022)
 - [Assumptions](#assumptions)
 - [How to Contribute](#how-to-contribute)
 - [Development Workflow](#development-workflow)
 - [Git Guidelines](#git-guidelines)
 - [Release Process (for internal team only)](#release-process-for-internal-team-only)
-
-## Hacktoberfest 2022
-
-It's [Hacktoberfest month](https://hacktoberfest.com)! 🥳
-
-Thanks so much for participating with Meilisearch this year!
-
-1. We will follow the quality standards set by the organizers of Hacktoberfest (see detail on their [website](https://hacktoberfest.com/participation/#spam)). Our reviewers will not consider any PR that doesn’t match that standard.
-2. PRs reviews will take place from Monday to Thursday, during usual working hours, CEST time. If you submit outside of these hours, there’s no need to panic; we will get around to your contribution.
-3. There will be no issue assignment as we don’t want people to ask to be assigned specific issues and never return, discouraging the volunteer contributors from opening a PR to fix this issue. We take the liberty to choose the PR that best fixes the issue, so we encourage you to get to it as soon as possible and do your best!
-
-You can check out the longer, more complete guideline documentation [here](https://github.com/meilisearch/.github/blob/main/Hacktoberfest_2022_contributors_guidelines.md).
 
 ## Assumptions
 
@@ -58,9 +45,15 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 
 ### Tests <!-- omit in TOC -->
 
+To run the tests locally, the Meilisearch instance must be started with the specific docker-compose file in the directory:
+
 ```bash
-curl -L https://install.meilisearch.com | sh # download Meilisearch
-./meilisearch --master-key=masterKey --no-analytics # run Meilisearch
+docker-compose up
+```
+
+You need to run the following command to launch tests in the Dotnet SDK:
+
+```bash
 dotnet restore
 dotnet test
 ```
@@ -110,7 +103,7 @@ Some notes on GitHub PRs:
 - All PRs must be reviewed and approved by at least one maintainer.
 - The PR title should be accurate and descriptive of the changes. The title of the PR will be indeed automatically added to the next [release changelogs](https://github.com/meilisearch/meilisearch-dotnet/releases/).
 
-## Release Process (for internal team only)
+## Release Process (for the internal team only)
 
 Meilisearch tools follow the [Semantic Versioning Convention](https://semver.org/).
 
@@ -134,10 +127,10 @@ Make a PR modifying the file [`src/Meilisearch/Meilisearch.csproj`](https://gith
 <Version>X.X.X</Version>
 ```
 
-Once the changes are merged on `main`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommandations](https://github.com/meilisearch/integration-guides/blob/main/resources/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
+Once the changes are merged on `main`, you can publish the current draft release via the [GitHub interface](https://github.com/meilisearch/meilisearch-dotnet/releases): on this page, click on `Edit` (related to the draft release) > update the description (be sure you apply [these recommendations](https://github.com/meilisearch/integration-guides/blob/main/resources/integration-release.md#writting-the-release-description)) > when you are ready, click on `Publish release`.
 
 GitHub Actions will be triggered and push the package to [NuGet](https://www.nuget.org/packages/meilisearch).
 
 <hr>
 
-Thank you again for reading this through, we can not wait to begin to work with you if you made your way through this contributing guide ❤️
+Thank you again for reading this through. We can not wait to begin to work with you if you make your way through this contributing guide ❤️

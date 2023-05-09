@@ -65,7 +65,7 @@ namespace Meilisearch.Tests
         public async Task GetMultipleTaskInfoWithQueryParameters()
         {
             await _index.AddDocumentsAsync(new[] { new Movie { Id = "1" } });
-            var taskResponse = await _index.GetTasksAsync(new TasksQuery { Limit = 1, IndexUid = new List<string> { _index.Uid } });
+            var taskResponse = await _index.GetTasksAsync(new TasksQuery { Limit = 1, IndexUids = new List<string> { _index.Uid } });
 
             taskResponse.Results.Count().Should().BeGreaterOrEqualTo(1);
         }

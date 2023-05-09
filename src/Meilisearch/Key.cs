@@ -14,6 +14,7 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets unique identifier of the API key.
         /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("key")]
         public string KeyUid { get; set; }
 
@@ -59,12 +60,14 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the date when the API key was created.
         /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("createdAt")]
         public DateTime? CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date when the API key was updated.
         /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
     }
@@ -122,6 +125,14 @@ namespace Meilisearch
         /// Tasks from non-authorized indexes will be omitted from the response.
         /// </summary>
         TasksGet,
+        /// <summary>
+        /// Allows canceling tasks in the tasks endpoint.
+        /// </summary>
+        TasksCancel,
+        /// <summary>
+        /// Allows deleting tasks in the tasks endpoint.
+        /// </summary>
+        TasksDelete,
         /// <summary>
         /// Provides access to all settings endpoints and equivalents for all subroutes.
         /// </summary>

@@ -13,7 +13,7 @@ namespace Meilisearch.Tests.ServerConfigs
         {
             public override string MeilisearchAddress()
             {
-                var env = Environment.GetEnvironmentVariable("MEILISEARCH_HOST");
+                var env = Environment.GetEnvironmentVariable("MEILISEARCH_URL");
 
                 return env == null ? MeilisearchTestAddress : env;
             }
@@ -60,6 +60,14 @@ namespace Meilisearch.Tests.ServerConfigs
         public class SearchTests : SearchTests<ConfigFixture>
         {
             public SearchTests(ConfigFixture fixture) : base(fixture)
+            {
+            }
+        }
+
+        [Collection(CollectionFixtureName)]
+        public class MultiIndexSearchTests : MultiIndexSearchTests<ConfigFixture>
+        {
+            public MultiIndexSearchTests(ConfigFixture fixture) : base(fixture)
             {
             }
         }

@@ -66,17 +66,25 @@ namespace Meilisearch
         /// </summary>
         /// <param name="documents">Documents to add as CSV string.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="csvDelimiter">One ASCII character used to customize the delimiter for CSV. Comma used by default.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
-        public async Task<TaskInfo> AddDocumentsCsvAsync(string documents, string primaryKey = default,
+        public async Task<TaskInfo> AddDocumentsCsvAsync(string documents, string primaryKey = default, char csvDelimiter = default,
             CancellationToken cancellationToken = default)
         {
             var uri = $"indexes/{Uid}/documents";
+            var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
             if (primaryKey != default)
             {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
+                queryString.Add("primaryKey", primaryKey);
             }
+            if (csvDelimiter != default)
+            {
+                queryString.Add("csvDelimiter", csvDelimiter.ToString());
+            }
+
+            uri = $"{uri}?{queryString}";
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Csv);
             var responseMessage = await _http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
@@ -134,15 +142,16 @@ namespace Meilisearch
         /// <param name="documents">Documents to add as CSV string.</param>
         /// <param name="batchSize">Size of documents batches while adding them.</param>
         /// <param name="primaryKey">Primary key for the documents.</param>
+        /// <param name="csvDelimiter">One ASCII character used to customize the delimiter for CSV. Comma used by default.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task list.</returns>
         public async Task<IEnumerable<TaskInfo>> AddDocumentsCsvInBatchesAsync(string documents,
-            int batchSize = 1000, string primaryKey = default, CancellationToken cancellationToken = default)
+            int batchSize = 1000, string primaryKey = default, char csvDelimiter = default, CancellationToken cancellationToken = default)
         {
             var tasks = new List<TaskInfo>();
             foreach (var chunk in documents.GetCsvChunks(batchSize))
             {
-                tasks.Add(await AddDocumentsCsvAsync(chunk, primaryKey, cancellationToken).ConfigureAwait(false));
+                tasks.Add(await AddDocumentsCsvAsync(chunk, primaryKey, csvDelimiter, cancellationToken).ConfigureAwait(false));
             }
 
             return tasks;
@@ -187,7 +196,7 @@ namespace Meilisearch
                 uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
             }
 
-            responseMessage = await _http.PutJsonCustomAsync(uri, documents, cancellationToken).ConfigureAwait(false);
+            responseMessage = await _http.PutJsonCustomAsync(uri, documents, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken).ConfigureAwait(false);
 
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -327,6 +336,7 @@ namespace Meilisearch
         /// Get document by its ID.
         /// </summary>
         /// <param name="documentId">Document identifier.</param>
+        /// <param name="fields">Document attributes to show (case-sensitive).</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type of the document.</typeparam>
         /// <returns>Returns the document, with the according type if the object is available.</returns>
@@ -347,6 +357,7 @@ namespace Meilisearch
         /// Get document by its ID.
         /// </summary>
         /// <param name="documentId">Document Id for query.</param>
+        /// <param name="fields">Document attributes to show (case-sensitive).</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type to return for document.</typeparam>
         /// <returns>Type if the object is availble.</returns>
@@ -453,7 +464,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <typeparam name="T">Type parameter to return.</typeparam>
         /// <returns>Returns Enumerable of items.</returns>
-        public async Task<SearchResult<T>> SearchAsync<T>(string query,
+        public async Task<ISearchable<T>> SearchAsync<T>(string query,
             SearchQuery searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
         {
             SearchQuery body;
@@ -466,12 +477,15 @@ namespace Meilisearch
                 body = searchAttributes;
                 body.Q = query;
             }
+            body.IndexUid = default;
 
             var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/search", body,
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
+
             return await responseMessage.Content
-                .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+                    .ReadFromJsonAsync<ISearchable<T>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
         }
     }
 }

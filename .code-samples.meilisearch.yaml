@@ -3,6 +3,70 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+getting_started_faceting: |-
+  var faceting = new Faceting {
+    MaxValuesPerFacet = 2
+  };
+  await client.Index("movies").UpdateFacetingAsync(faceting);
+getting_started_pagination: |-
+  var pagination = new Pagination {
+    MaxTotalHits = 500
+  };
+  await client.Index("movies").UpdatePaginationAsync(pagination);
+synonyms_guide_1: |-
+  var synonyms = new Dictionary<string, IEnumerable<string>>
+  {
+  	{ "great", new string[] { "fantastic" } },
+  	{ "fantastic", new string[] { "great" } }
+  };
+  await client.Index("movies").UpdateSynonymsAsync(synonyms);
+date_guide_index_1: |-
+  string jsonString = await File.ReadAllTextAsync("games.json");
+  var games = JsonSerializer.Deserialize<IEnumerable<Movie>>(jsonString, options);
+  var index = client.Index("games");
+  await index.AddDocumentsAsync<Movie>(games);
+date_guide_filterable_attributes_1: |-
+  await client.Index("games").UpdateFilterableAttributesAsync(new string[] { "release_timestamp" });
+date_guide_filter_1: |-
+  var filters = new SearchQuery() { Filter = "release_timestamp >= 1514761200 AND release_timestamp < 1672527600" };
+  SearchResult<Game> games = await client.Index("games").SearchAsync<Game>("", filters);
+date_guide_sortable_attributes_1: |-
+  await client.Index("games").UpdateSortableAttributesAsync(new string[] { "release_timestamp" });
+date_guide_sort_1: |-
+  SearchQuery sort = new SearchQuery() { Sort = new string[] { "release_timestamp:desc" }};
+  await client.Index("games").SearchAsync<Game>("", sort);
+filtering_guide_nested_1: |-
+  var filters = new SearchQuery() { Filter = "rating.users >= 90" };
+  SearchResult<MovieRating> movies = await client.Index("movie_ratings").SearchAsync<MovieRating>("thriller", filters);
+sorting_guide_sort_nested_1: |-
+  SearchQuery sort = new SearchQuery() { Sort = new string[] { "rating.users:asc" }};
+  await client.Index("books").SearchAsync<Book>("science fiction", sort);
+async_guide_filter_by_date_1: |-
+  await client.GetTasksAsync(new TasksQuery { AfterEnqueuedAt = DateTime.Parse("2020-10-11T11:49:53.000Z") });
+async_guide_multiple_filters_1: |-
+  var query = new TasksQuery { IndexUids = new List<string> { "movies" }, Types = new List<TaskInfo> { TaskInfo.DocumentAdditionOrUpdate, TaskInfo.DocumentDeletion }, Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Processing } };
+
+  await client.GetTasksAsync(query);
+async_guide_filter_by_ids_1: |-
+  await client.GetTasksAsync(new TasksQuery { Uids = new List<int> { 5, 10, 13 } });
+async_guide_filter_by_statuses_1: |-
+  await client.GetTasksAsync(new TasksQuery { Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Failed, TaskInfoStatus.Canceled } });
+async_guide_filter_by_types_1: |-
+  await client.GetTasksAsync(new TasksQuery { Types = new List<TaskInfoType> { TaskInfoType.DumpCreation, TaskInfoType.IndexSwap } });
+async_guide_filter_by_index_uids_1: |-
+  await client.GetTasksAsync(new TasksQuery { IndexUids = new List<string> { "movies" } });
+delete_tasks_1: |-
+  await client.DeleteTasksAsync(new DeleteTasksQuery { Uids = new List<int> { 1, 2 } });
+cancel_tasks_1: |-
+  await client.CancelTasksAsync(new CancelTasksQuery { Uids = new List<int> { 1, 2 } });
+async_guide_canceled_by_1: |-
+  await client.GetTasksAsync(new TasksQuery { CanceledBy = new List<int> { 9, 15 } });
+swap_indexes_1: |-
+  await client.SwapIndexesAsync(new List<IndexSwap> { new IndexSwap("indexA", "indexB"), new IndexSwap("indexX", "indexY") } });
+search_parameter_guide_hitsperpage_1: |-
+  await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { HitsPerPage = 15 });
+search_parameter_guide_page_1: |-
+  await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { Page = 2 });
 get_one_index_1: |-
   await client.GetIndexAsync("movies");
 list_all_indexes_1: |-
@@ -228,73 +292,6 @@ search_parameter_guide_show_matches_position_1: |-
     {
         ShowMatchesPosition = True,
     });
-settings_guide_synonyms_1: |-
-  var newSettings = new Settings
-  {
-      Synonyms = new Dictionary<string, IEnumerable<string>>
-      {
-        { "sweater", new string[] { "jumper" } },
-        { "jumper", new string[] { "sweater" } }
-      }
-  };
-  await client.Index("tops").UpdateSettingsAsync(newSettings);
-settings_guide_stop_words_1: |-
-  var newSettings = new Settings
-  {
-  	StopWords = new[] {"the", "a", "an"}
-  };
-  await client.Index("movies").UpdateSettingsAsync(newSettings);
-settings_guide_ranking_rules_1: |-
-  var newSettings = new Settings
-  {
-    RankingRules = new[]
-    {
-      "words",
-      "typo",
-      "proximity",
-      "attribute",
-      "sort",
-      "exactness",
-      "release_date:asc",
-      "rank:desc"
-    }
-  };
-  await client.Index("movies").UpdateSettingsAsync(newSettings);
-settings_guide_distinct_1: |-
-  var newSettings = new Settings
-  {
-  	DistinctAttribute = "product_id"
-  };
-  await client.Index("jackets").UpdateSettingsAsync(newSettings);
-settings_guide_searchable_1: |-
-  var newSettings = new Settings
-  {
-  	SearchableAttributes = new[]
-  	{
-      "title",
-      "overview",
-      "genres"
-  	}
-  };
-  await client.Index("movies").UpdateSettingsAsync(newSettings);
-settings_guide_displayed_1: |-
-  var newSettings = new Settings
-  {
-  	DisplayedAttributes = new[]
-  	{
-      "title",
-      "overview",
-      "genres",
-      "release_date"
-  	}
-  };
-  await client.Index("movies").UpdateSettingsAsync(newSettings);
-settings_guide_sortable_1: |-
-  var newSettings = new Settings
-  {
-      SortableAttributes = new string[] { "price", "author" },
-  };
-  await client.Index("meteorites").UpdateSettingsAsync(newSettings);
 documents_guide_add_movie_1: |-
   var movie = new[]
   {
@@ -446,7 +443,6 @@ faceted_search_facets_1: |-
   {
       Facets = new string[] { "genres" }
   };
-
   SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
 faceted_search_walkthrough_filter_1: |-
   var sq = new SearchQuery
@@ -650,19 +646,16 @@ typo_tolerance_guide_1: |-
   var typoTolerance = new TypoTolerance {
     Enabled = false
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_2: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" }
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_3: |-
   var typoTolerance = new TypoTolerance {
     DisableOnWords = new string[] { "shrek" }
   };
-
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 typo_tolerance_guide_4: |-
   var typoTolerance = new TypoTolerance {
@@ -673,33 +666,25 @@ typo_tolerance_guide_4: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
-settings_guide_typo_tolerance_1: |-
-  var typoTolerance = new TypoTolerance {
-    DisableOnAttributes = new string[] { "title" },
-    MinWordSizeTypos = new TypoTolerance.TypoSize {
-      TwoTypos = 12
-    }
-  };
-
-  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
-get_all_tasks_filtering_1: |-
-  ResourceResults<TaskInfo> taskResult = await client.Index("movies").GetTasksAsync();
-  // OR
-  ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { IndexUid = "movies" });
-get_all_tasks_filtering_2: |-
-  ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery {
-    Status = new List<TaskInfoStatus>() { TaskInfoStatus.Succeeded, TaskInfoStatus.Failed },
-    Types = new List<TaskInfoType>() { TaskInfoType.DocumentAdditionOrUpdate },
-  });
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });
 get_all_tasks_paginating_2: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 8 });
 get_pagination_settings_1: |-
+  await client.Index("movies").GetPaginationAsync();
 update_pagination_settings_1: |-
+  var pagination = new Pagination {
+    MaxTotalHits = 20
+  };
+  await client.Index("movies").UpdatePaginationAsync(pagination);
 reset_pagination_settings_1: |-
+    await client.Index("movies").ResetPaginationAsync();
 get_faceting_settings_1: |-
+  await client.Index("movies").GetFacetingAsync();
 update_faceting_settings_1: |-
+  var faceting = new Faceting {
+    MaxValuesPerFacet = 2
+  };
+  await client.Index("movies").UpdateFacetingAsync(faceting);
 reset_faceting_settings_1: |-
-settings_guide_faceting_1: |-
-settings_guide_pagination_1: |-
+  await client.Index("movies").ResetFacetingAsync();

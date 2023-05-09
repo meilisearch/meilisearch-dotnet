@@ -18,7 +18,7 @@ namespace Meilisearch
         {
             if (query == null)
             {
-                query = new TasksQuery { IndexUid = new List<string> { this.Uid } };
+                query = new TasksQuery { IndexUids = new List<string> { this.Uid } };
             }
 
             return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
