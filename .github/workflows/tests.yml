@@ -41,8 +41,6 @@ jobs:
       with:
         dotnet-version: "6.0.x"
     - name: Check with dotnet-format
-      run: dotnet format --check Meilisearch.sln
-    - name: Check with dotnet-format
       run: dotnet format --version
     - name: Check with dotnet-format
       run: dotnet format --verify-no-changes -v n
