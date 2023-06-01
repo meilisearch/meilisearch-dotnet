@@ -65,7 +65,7 @@ Install-Package MeiliSearch
 
 ### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/learn/getting_started/installation).
 
 For example, using the `curl` command in [your Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
@@ -200,7 +200,7 @@ TaskInfo task = await index.UpdateFilterableAttributesAsync(
 
 You only need to perform this operation once.
 
-Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://www.meilisearch.com/docs/reference/api/updates.html#get-an-update-status).
+Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://www.meilisearch.com/docs/reference/api/tasks#status).
 
 Then, you can perform the search:
 
