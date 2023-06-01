@@ -10,7 +10,7 @@
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
   <a href="https://www.meilisearch.com">Website</a> |
-  <a href="https://docs.meilisearch.com/faq">FAQ</a>
+  <a href="https://www.meilisearch.com/docs/faq">FAQ</a>
 </h4>
 
 <p align="center">
@@ -44,7 +44,7 @@
 
 This readme contains all the documentation you need to start using this Meilisearch SDK.
 
-For general information on how to use Meilisearch—such as our API reference, tutorials, guides, and in-depth articles—refer to our [main documentation website](https://docs.meilisearch.com/).
+For general information on how to use Meilisearch—such as our API reference, tutorials, guides, and in-depth articles—refer to our [main documentation website](https://www.meilisearch.com/docs/).
 
 
 ## 🔧 Installation
@@ -65,7 +65,7 @@ Install-Package MeiliSearch
 
 ### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a Meilisearch instance](https://docs.meilisearch.com/reference/features/installation.html#download-and-launch).
+There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/reference/features/installation.html#download-and-launch).
 
 For example, using the `curl` command in [your Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
 
@@ -120,7 +120,7 @@ namespace GettingStarted
 }
 ```
 
-With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://docs.meilisearch.com/reference/api/tasks.html#get-task).
+With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -151,7 +151,7 @@ JSON Output:
 
 #### Custom Search <!-- omit in toc -->
 
-All the supported options are described in the [search parameters](https://docs.meilisearch.com/reference/features/search_parameters.html) section of the documentation.
+All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
 
 ```c#
 SearchResult<Movie> movies = await index.SearchAsync<Movie>(
@@ -200,7 +200,7 @@ TaskInfo task = await index.UpdateFilterableAttributesAsync(
 
 You only need to perform this operation once.
 
-Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://docs.meilisearch.com/reference/api/updates.html#get-an-update-status).
+Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://www.meilisearch.com/docs/reference/api/updates.html#get-an-update-status).
 
 Then, you can perform the search:
 
