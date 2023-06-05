@@ -32,7 +32,7 @@ You can set up your local environment natively or using `docker`, check out the 
 
 Example of running all the checks with docker:
 ```bash
-docker-compose run --rm package bash -c "dotnet test && dotnet format --verify-no-changes -v n"
+docker-compose run --rm package bash -c "dotnet test && dotnet format --verbosity normal --verify-no-changes"
 ```
 
 To install dependencies:
