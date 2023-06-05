@@ -43,4 +43,4 @@ jobs:
     - name: Check with dotnet-format
       run: dotnet format --version
     - name: Check with dotnet-format
-      run: dotnet format --verify-no-changes -v n
+      run: dotnet format --verbosity normal --verify-no-changes
