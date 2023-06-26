@@ -376,14 +376,27 @@ namespace Meilisearch
         public async Task<ResourceResults<IEnumerable<T>>> GetDocumentsAsync<T>(DocumentsQuery query = default,
             CancellationToken cancellationToken = default)
         {
-            var uri = $"indexes/{Uid}/documents";
-            if (query != null)
+            if (query != null && query.Filter != null)
             {
-                uri = $"{uri}?{query.ToQueryString()}";
+                //Use the fetch route
+                var uri = $"indexes/{Uid}/documents/fetch";
+                var result = await _http.PostAsJsonAsync(uri, query, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+                return await result.Content
+                    .ReadFromJsonAsync<ResourceResults<IEnumerable<T>>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
             }
+            else
+            {
+                var uri = $"indexes/{Uid}/documents";
+                if (query != null)
+                {
+                    uri = $"{uri}?{query.ToQueryString()}";
+                }
 
-            return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+                return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -424,6 +437,24 @@ namespace Meilisearch
         {
             var httpresponse =
                 await _http.PostAsJsonAsync($"indexes/{Uid}/documents/delete-batch", documentIds,
+                        cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Delete documents from an index based on a filter.
+        /// </summary>
+        /// <remarks>Available ONLY with Meilisearch v1.2 and newer.</remarks>
+        /// <param name="query">A hash containing a filter that should match documents.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Return the task info.</returns>
+        public async Task<TaskInfo> DeleteDocumentsAsync(DeleteDocumentsQuery query,
+            CancellationToken cancellationToken = default)
+        {
+            var httpresponse =
+                await _http.PostAsJsonAsync($"indexes/{Uid}/documents/delete", query,
                         cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
