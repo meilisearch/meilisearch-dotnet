@@ -597,8 +597,8 @@ namespace Meilisearch.Tests
 
             var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Filter = "genre = 'SF'" });
             Assert.Equal(2, documents.Results.Count());
-            documents.Results.Should().ContainSingle(x=>x.Id == "12");
-            documents.Results.Should().ContainSingle(x=>x.Id == "13");
+            documents.Results.Should().ContainSingle(x => x.Id == "12");
+            documents.Results.Should().ContainSingle(x => x.Id == "13");
         }
 
         [Fact]
@@ -618,7 +618,8 @@ namespace Meilisearch.Tests
             var documents =
                 await index.GetDocumentsAsync<Movie>(new DocumentsQuery()
                 {
-                    Limit = 2, Fields = new List<string> { "id" }
+                    Limit = 2,
+                    Fields = new List<string> { "id" }
                 });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
@@ -633,7 +634,8 @@ namespace Meilisearch.Tests
             var documents =
                 await index.GetDocumentsAsync<Movie>(new DocumentsQuery()
                 {
-                    Limit = 2, Fields = new List<string> { "id", "name" }
+                    Limit = 2,
+                    Fields = new List<string> { "id", "name" }
                 });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
