@@ -80,7 +80,13 @@ delete_an_index_1: |-
 get_one_document_1: |-
   await client.Index("movies").GetDocumentAsync<Movie>(25684, new List<string> { "id", "title", "poster", "release_date" });
 get_documents_1: |-
-  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2 });
+  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Filter = "genres = action" });
+get_documents_post_1: |-
+  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { 
+      Limit = 3, 
+      Fields = new List<string> { "title", "genres", "rating", "language"}, 
+      Filter = "genres = action OR genres = adventure" 
+  });
 add_or_replace_documents_1: |-
   var movie = new[]
   {
@@ -104,8 +110,10 @@ delete_all_documents_1: |-
   await client.Index("movies").DeleteAllDocumentsAsync();
 delete_one_document_1: |-
   await client.Index("movies").DeleteOneDocumentAsync("25684");
-delete_documents_1: |-
+delete_documents_by_batch_1: |-
   await client.Index("movies").DeleteDocumentsAsync(new[] { "23488", "153738", "437035", "363869" });
+delete_documents_by_filter_1: |-
+  await client.Index("movies").DeleteDocumentsAsync(new DeleteDocumentsQuery() { Filter = "genres = action OR genres = adventure" });
 search_post_1: |-
   await client.Index("movies").SearchAsync<Movie>("American ninja");
 get_task_1: |
