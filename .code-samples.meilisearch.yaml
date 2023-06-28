@@ -85,7 +85,7 @@ get_documents_post_1: |-
   await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { 
       Limit = 3, 
       Fields = new List<string> { "title", "genres", "rating", "language"}, 
-      Filter = "genres = action OR genres = adventure" 
+      Filter = "(rating > 3 AND (genres=Adventure OR genres=Fiction)) AND language=English" 
   });
 add_or_replace_documents_1: |-
   var movie = new[]

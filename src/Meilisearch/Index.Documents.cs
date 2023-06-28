@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -386,14 +387,22 @@ namespace Meilisearch
         {
             if (query != null && query.Filter != null)
             {
-                //Use the fetch route
-                var uri = $"indexes/{Uid}/documents/fetch";
-                var result = await _http.PostAsJsonAsync(uri, query, Constants.JsonSerializerOptionsRemoveNulls,
-                        cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-                return await result.Content
-                    .ReadFromJsonAsync<ResourceResults<IEnumerable<T>>>(cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
+                try
+                {
+                    //Use the fetch route
+                    var uri = $"indexes/{Uid}/documents/fetch";
+                    var result = await _http.PostAsJsonAsync(uri, query, Constants.JsonSerializerOptionsRemoveNulls,
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                    return await result.Content
+                        .ReadFromJsonAsync<ResourceResults<IEnumerable<T>>>(cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (MeilisearchCommunicationError e)
+                {
+                    throw new MeilisearchCommunicationError(
+                        Constants.VersionErrorHintMessage(e.Message, nameof(GetDocumentsAsync)), e);
+                }
             }
             else
             {
@@ -463,13 +472,21 @@ namespace Meilisearch
         public async Task<TaskInfo> DeleteDocumentsAsync(DeleteDocumentsQuery query,
             CancellationToken cancellationToken = default)
         {
-            var httpresponse =
-                await _http.PostAsJsonAsync($"indexes/{Uid}/documents/delete", query,
-                        Constants.JsonSerializerOptionsRemoveNulls,
-                        cancellationToken: cancellationToken)
+            try
+            {
+                var httpresponse =
+                    await _http.PostAsJsonAsync($"indexes/{Uid}/documents/delete", query,
+                            Constants.JsonSerializerOptionsRemoveNulls,
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
-            return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+            }
+            catch (MeilisearchCommunicationError e)
+            {
+                throw new MeilisearchCommunicationError(
+                    Constants.VersionErrorHintMessage(e.Message, nameof(DeleteDocumentsAsync)), e);
+            }
         }
 
         /// <summary>
