@@ -348,7 +348,7 @@ getting_started_search_md: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var index = client.Index("movies");
 
-  SearchResult<Movie> movies = await index.SearchAsync<Movie>("harry pottre");
+  SearchResult<Movie> movies = await index.SearchAsync<Movie>("botman");
   foreach (var movie in movies.Hits)
   {
       Console.WriteLine(movie.Title);

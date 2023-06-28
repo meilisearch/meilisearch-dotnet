@@ -55,7 +55,7 @@ namespace Meilisearch
 
         /// <summary>
         /// Gets the current Meilisearch version. For more details on response.
-        /// https://docs.meilisearch.com/reference/api/version.html#get-version-of-meilisearch.
+        /// https://www.meilisearch.com/docs/reference/api/version#get-version-of-meilisearch.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the Meilisearch version with commit and build version.</returns>
