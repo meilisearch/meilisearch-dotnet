@@ -5,7 +5,7 @@ volumes:
 
 services:
   package:
-    build: .
+    image: mcr.microsoft.com/dotnet/sdk:6.0
     tty: true
     stdin_open: true
     working_dir: /home/package
