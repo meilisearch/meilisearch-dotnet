@@ -456,16 +456,8 @@ namespace Meilisearch
                 .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Search documents according to search parameters.
-        /// </summary>
-        /// <param name="query">Query Parameter with Search.</param>
-        /// <param name="searchAttributes">Attributes to search.</param>
-        /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <typeparam name="T">Type parameter to return.</typeparam>
-        /// <returns>Returns Enumerable of items.</returns>
-        public async Task<ISearchable<T>> SearchAsync<T>(string query,
-            SearchQuery searchAttributes = default(SearchQuery), CancellationToken cancellationToken = default)
+        private async Task<(SearchQuery, HttpResponseMessage)> SendSearchRequest(string query,
+            SearchQuery searchAttributes = default, CancellationToken cancellationToken = default)
         {
             SearchQuery body;
             if (searchAttributes == null)
@@ -483,9 +475,54 @@ namespace Meilisearch
                     Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            return await responseMessage.Content
-                    .ReadFromJsonAsync<ISearchable<T>>(cancellationToken: cancellationToken)
+            return (body, responseMessage);
+        }
+
+        /// <summary>
+        /// Search documents according to search parameters.
+        /// </summary>
+        /// <param name="query">Query Parameter with Search.</param>
+        /// <param name="searchAttributes">Attributes to search.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <typeparam name="T">Type parameter to return.</typeparam>
+        /// <returns>Returns Enumerable of items.</returns>
+        public async Task<ISearchable<T>> SearchAsync<T>(string query,
+            SearchQuery searchAttributes = default, CancellationToken cancellationToken = default)
+        {
+
+            var (body, responseMessage) = await SendSearchRequest(query, searchAttributes, cancellationToken);
+
+            return body.Page != null || body.HitsPerPage != null
+                ? await responseMessage.Content
+                    .ReadFromJsonAsync<PaginatedSearchResult<T>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false)
+                : (ISearchable<T>)await responseMessage.Content
+                    .ReadFromJsonAsync<SearchResult<T>>(cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Search documents according to search parameters, Including format.
+        /// </summary>
+        /// <param name="query">Query Parameter with Search.</param>
+        /// <param name="searchAttributes">Attributes to search.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <typeparam name="T">Type parameter to return.</typeparam>
+        /// <typeparam name="TFormatted">formatted document type.</typeparam>
+        /// <returns>Returns Enumerable of items.</returns>
+        public async Task<ISearchable<IFormatContainer<T, TFormatted>>> SearchAsync<T, TFormatted>(string query,
+            SearchQuery searchAttributes = default, CancellationToken cancellationToken = default)
+        {
+            var (body, responseMessage) = await SendSearchRequest(query, searchAttributes, cancellationToken);
+
+            return body.Page != null || body.HitsPerPage != null
+                ? await responseMessage.Content
+                    .ReadFromJsonAsync<PaginatedSearchResult<IFormatContainer<T, TFormatted>>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false)
+                : (ISearchable<IFormatContainer<T, TFormatted>>)await responseMessage.Content
+                    .ReadFromJsonAsync<SearchResult<IFormatContainer<T, TFormatted>>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+        }
+
     }
 }

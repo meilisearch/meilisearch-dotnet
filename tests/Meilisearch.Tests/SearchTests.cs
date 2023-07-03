@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
@@ -31,6 +32,33 @@ namespace Meilisearch.Tests
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
+
+        [Fact]
+        public async Task TestJsonConverter()
+        {
+            MovieWithIntId[] movies =
+            {
+                new MovieWithIntId { Id = 1, Name = "Batman" },
+                new MovieWithIntId { Id = 2, Name = "Reservoir Dogs" },
+                new MovieWithIntId { Id = 3, Name = "Taxi Driver" },
+                new MovieWithIntId { Id = 4, Name = "Interstellar" },
+                new MovieWithIntId { Id = 5, Name = "Titanic" },
+            }; ;
+            var formattable = movies
+                .Select(x => new DefaultFormattable<MovieWithIntId, Movie>(x, new Movie()
+                {
+                    Id = x.Id.ToString(),
+                    Genre = x.Genre,
+                    Name = x.Name
+                }))
+                .Cast<IFormatContainer<MovieWithIntId, Movie>>();
+
+            var elements = formattable.Select(x => JsonSerializer.SerializeToElement(x)).ToList();
+            elements.Should().AllSatisfy(x => x.GetProperty("_formatted").Should().NotBeNull());
+
+            var deserialized = elements.Select(x => JsonSerializer.Deserialize<IFormatContainer<MovieWithIntId, Movie>>(x)).ToList();
+            deserialized.Should().AllSatisfy(x => x.Formatted.Should().NotBeNull());
+        }
 
         [Fact]
         public async Task BasicSearch()
@@ -107,46 +135,46 @@ namespace Meilisearch.Tests
             task.TaskUid.Should().BeGreaterOrEqualTo(0);
             await _basicIndex.WaitForTaskAsync(task.TaskUid);
 
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 "man",
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
-            movies.Hits.First().Id.Should().NotBeEmpty();
-            movies.Hits.First().Name.Should().NotBeEmpty();
-            movies.Hits.First().Genre.Should().NotBeEmpty();
-            movies.Hits.First()._Formatted.Name.Should().NotBeEmpty();
+            movies.Hits.First().Original.Id.Should().NotBeEmpty();
+            movies.Hits.First().Original.Name.Should().NotBeEmpty();
+            movies.Hits.First().Original.Genre.Should().NotBeEmpty();
+            movies.Hits.First().Formatted.Name.Should().NotBeEmpty();
         }
 
         [Fact]
         public async Task CustomSearchWithNoQuery()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 null,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
-            movies.Hits.First().Id.Should().NotBeNull();
-            movies.Hits.First().Name.Should().NotBeNull();
-            movies.Hits.First()._Formatted.Id.Should().NotBeNull();
-            movies.Hits.First()._Formatted.Name.Should().NotBeNull();
+            movies.Hits.First().Original.Id.Should().NotBeNull();
+            movies.Hits.First().Original.Name.Should().NotBeNull();
+            movies.Hits.First().Formatted.Id.Should().NotBeNull();
+            movies.Hits.First().Formatted.Name.Should().NotBeNull();
         }
 
         [Fact]
         public async Task CustomSearchWithEmptyQuery()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 string.Empty,
                 new SearchQuery { AttributesToHighlight = new string[] { "name" } });
             movies.Hits.Should().NotBeEmpty();
-            movies.Hits.First().Id.Should().NotBeNull();
-            movies.Hits.First().Name.Should().NotBeNull();
-            movies.Hits.First()._Formatted.Id.Should().NotBeNull();
-            movies.Hits.First()._Formatted.Name.Should().NotBeNull();
+            movies.Hits.First().Original.Id.Should().NotBeNull();
+            movies.Hits.First().Original.Name.Should().NotBeNull();
+            movies.Hits.First().Formatted.Id.Should().NotBeNull();
+            movies.Hits.First().Formatted.Name.Should().NotBeNull();
         }
 
         [Fact]
         public async Task CustomSearchWithMultipleOptions()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 "man",
                 new SearchQuery
                 {
@@ -158,12 +186,12 @@ namespace Meilisearch.Tests
 
             Assert.NotEmpty(movies.Hits);
             Assert.Single(movies.Hits);
-            Assert.NotEmpty(firstHit.Name);
-            Assert.NotEmpty(firstHit.Id);
-            Assert.Null(firstHit.Genre);
-            Assert.NotEmpty(firstHit._Formatted.Name);
-            Assert.Equal("15", firstHit._Formatted.Id);
-            Assert.Null(firstHit._Formatted.Genre);
+            Assert.NotEmpty(firstHit.Original.Name);
+            Assert.NotEmpty(firstHit.Original.Id);
+            Assert.Null(firstHit.Original.Genre);
+            Assert.NotEmpty(firstHit.Formatted.Name);
+            Assert.Equal("15", firstHit.Formatted.Id);
+            Assert.Null(firstHit.Formatted.Genre);
         }
 
         [Fact]
@@ -363,31 +391,31 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CustomSearchWithCroppingParameters()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 "man",
                 new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" } }
             );
 
             Assert.NotEmpty(movies.Hits);
-            Assert.Equal("…Man", movies.Hits.First()._Formatted.Name);
+            Assert.Equal("…Man", movies.Hits.First().Formatted.Name);
         }
 
         [Fact]
         public async Task CustomSearchWithCropMarker()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 "man",
                 new SearchQuery { CropLength = 1, AttributesToCrop = new string[] { "*" }, CropMarker = "[…] " }
             );
 
             Assert.NotEmpty(movies.Hits);
-            Assert.Equal("[…] Man", movies.Hits.First()._Formatted.Name);
+            Assert.Equal("[…] Man", movies.Hits.First().Formatted.Name);
         }
 
         [Fact]
         public async Task CustomSearchWithCustomHighlightTags()
         {
-            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+            var movies = await _basicIndex.SearchAsync<Movie, Movie>(
                 "man",
                 new SearchQuery
                 {
@@ -398,7 +426,7 @@ namespace Meilisearch.Tests
             );
 
             Assert.NotEmpty(movies.Hits);
-            Assert.Equal("Iron <mark>Man</mark>", movies.Hits.First()._Formatted.Name);
+            Assert.Equal("Iron <mark>Man</mark>", movies.Hits.First().Formatted.Name);
         }
 
         [Fact]
