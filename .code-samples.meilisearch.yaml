@@ -8,27 +8,27 @@ faceted_search_2: |-
   {
       Queries = new System.Collections.Generic.List<SearchQuery>()
       {
-          new SearchQuery() { 
-            IndexUid = "books", 
+          new SearchQuery() {
+            IndexUid = "books",
             Filter = new[] {
               new[] {"language = English", "language = French"},
               new[] {"genres = Fiction"}
-            }, 
-            Facets = new[] { "language", "genres", "author", "format" } 
+            },
+            Facets = new[] { "language", "genres", "author", "format" }
           },
-          new SearchQuery() { 
-            IndexUid = "books", 
+          new SearchQuery() {
+            IndexUid = "books",
             Filter = new[] {
               new[] {"genres = Fiction"}
-            }, 
-            Facets = new[] { "language" } 
+            },
+            Facets = new[] { "language" }
           },
-          new SearchQuery() { 
-            IndexUid = "books", 
+          new SearchQuery() {
+            IndexUid = "books",
             Filter = new[] {
               new[] {"language = English", "language = French"}
-            }, 
-            Facets = new[] { "genres" } 
+            },
+            Facets = new[] { "genres" }
           }
       }
   });
@@ -740,19 +740,19 @@ multi_search_1: |-
   {
       Queries = new System.Collections.Generic.List<SearchQuery>()
       {
-          new SearchQuery() { 
-            IndexUid = "movies", 
-            Q = "booh", 
+          new SearchQuery() {
+            IndexUid = "movies",
+            Q = "booh",
             Limit = 5
           },
-          new SearchQuery() { 
-            IndexUid = "movies", 
-            Q = "nemo", 
+          new SearchQuery() {
+            IndexUid = "movies",
+            Q = "nemo",
             Limit = 5
           },
-          new SearchQuery() { 
-            IndexUid = "movie_ratings", 
+          new SearchQuery() {
+            IndexUid = "movie_ratings",
             Q = "us",
-          },        
+          },
       }
   });
