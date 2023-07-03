@@ -4,26 +4,34 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 faceted_search_2: |-
-  see cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L1043-L1065
-  multi-search with data: {
-      "queries": [
-        {
-          "indexUid": "books",
-          "facets": ["language", "genres", "author", "format"],
-          "filter": [["language = English", "language = French"], ["genres = Fiction"]]
-        },
-        {
-          "indexUid": "books",
-          "facets": ["language"],
-          "filter": [["genres = Fiction"]]
-        },
-        {
-          "indexUid": "books",
-          "facets": ["genres"],
-          "filter": [["language = English", "language = French"]]
-        }
-      ]
-    }
+  await client.MultiSearchAsync(new MultiSearchQuery()
+  {
+      Queries = new System.Collections.Generic.List<SearchQuery>()
+      {
+          new SearchQuery() { 
+            IndexUid = "books", 
+            Filter = new[] {
+              new[] {"language = English", "language = French"},
+              new[] {"genres = Fiction"}
+            }, 
+            Facets = new[] { "language", "genres", "author", "format" } 
+          },
+          new SearchQuery() { 
+            IndexUid = "books", 
+            Filter = new[] {
+              new[] {"genres = Fiction"}
+            }, 
+            Facets = new[] { "language" } 
+          },
+          new SearchQuery() { 
+            IndexUid = "books", 
+            Filter = new[] {
+              new[] {"language = English", "language = French"}
+            }, 
+            Facets = new[] { "genres" } 
+          }
+      }
+  });
 getting_started_faceting: |-
   var faceting = new Faceting {
     MaxValuesPerFacet = 2
@@ -728,21 +736,23 @@ update_faceting_settings_1: |-
 reset_faceting_settings_1: |-
   await client.Index("movies").ResetFacetingAsync();
 multi_search_1: |-
-  see cURL: https://github.com/meilisearch/documentation/blob/5ec3df3844f603f0958d91a0c5cfc38bc57656af/.code-samples.meilisearch.yaml#L996-L1017
-  with data: { "queries": [
+  await client.MultiSearchAsync(new MultiSearchQuery()
+  {
+      Queries = new System.Collections.Generic.List<SearchQuery>()
       {
-        "indexUid": "movies",
-        "q": "pooh",
-        "limit": 5
-      },
-      {
-        "indexUid": "movies",
-        "q": "nemo",
-        "limit": 5
-      },
-      {
-        "indexUid": "movie_ratings",
-        "q": "us"
+          new SearchQuery() { 
+            IndexUid = "movies", 
+            Q = "booh", 
+            Limit = 5
+          },
+          new SearchQuery() { 
+            IndexUid = "movies", 
+            Q = "nemo", 
+            Limit = 5
+          },
+          new SearchQuery() { 
+            IndexUid = "movie_ratings", 
+            Q = "us",
+          },        
       }
-    ]
-  }
+  });
