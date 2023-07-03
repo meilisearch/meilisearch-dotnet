@@ -3,6 +3,35 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
+faceted_search_2: |-
+  await client.MultiSearchAsync(new MultiSearchQuery()
+  {
+      Queries = new System.Collections.Generic.List<SearchQuery>()
+      {
+          new SearchQuery() {
+            IndexUid = "books",
+            Filter = new[] {
+              new[] {"language = English", "language = French"},
+              new[] {"genres = Fiction"}
+            },
+            Facets = new[] { "language", "genres", "author", "format" }
+          },
+          new SearchQuery() {
+            IndexUid = "books",
+            Filter = new[] {
+              new[] {"genres = Fiction"}
+            },
+            Facets = new[] { "language" }
+          },
+          new SearchQuery() {
+            IndexUid = "books",
+            Filter = new[] {
+              new[] {"language = English", "language = French"}
+            },
+            Facets = new[] { "genres" }
+          }
+      }
+  });
 getting_started_faceting: |-
   var faceting = new Faceting {
     MaxValuesPerFacet = 2
@@ -425,7 +454,7 @@ getting_started_communicating_with_a_protected_instance: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
 
   await client.Index("Movies").SearchAsync<Movie>("");
-faceted_search_update_settings_1: |-
+filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
 faceted_search_filter_1: |-
   SearchQuery filters = new SearchQuery()
@@ -450,6 +479,15 @@ faceted_search_walkthrough_filter_1: |-
   	Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
   };
   await client.Index("movies").SearchAsync<Movie>("thriller", sq);
+faceted_search_update_settings_1: |-
+  List<string> attributes = new() { "genres", "rating", "language" };
+  TaskInfo result = await client.Index("books").UpdateFilterableAttributesAsync(attributes);
+faceted_search_1: |-
+  var sq = new SearchQuery
+  {
+  	Facets = new string[] { "genres", "rating", "language" }
+  };
+  await client.Index("books").SearchAsync<Book>("classic", sq);
 add_movies_json_1: |-
   // Make sure to add this using to your code
   using System.IO;
@@ -541,6 +579,15 @@ geosearch_guide_sort_usage_2: |-
       }
   };
 
+  SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
+geosearch_guide_filter_usage_3: |-
+  SearchQuery filters = new SearchQuery()
+  {
+      Sort = new string[] {
+            "_geoBoundingBox([45.494181, 9.179175], [45.449484, 9.214024])",
+            "rating:desc"
+      }
+  };
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
 primary_field_guide_create_index_primary_key: |-
   TaskInfo task = await client.CreateIndexAsync("books", "reference_number");
@@ -688,3 +735,24 @@ update_faceting_settings_1: |-
   await client.Index("movies").UpdateFacetingAsync(faceting);
 reset_faceting_settings_1: |-
   await client.Index("movies").ResetFacetingAsync();
+multi_search_1: |-
+  await client.MultiSearchAsync(new MultiSearchQuery()
+  {
+      Queries = new System.Collections.Generic.List<SearchQuery>()
+      {
+          new SearchQuery() {
+            IndexUid = "movies",
+            Q = "booh",
+            Limit = 5
+          },
+          new SearchQuery() {
+            IndexUid = "movies",
+            Q = "nemo",
+            Limit = 5
+          },
+          new SearchQuery() {
+            IndexUid = "movie_ratings",
+            Q = "us",
+          },
+      }
+  });
