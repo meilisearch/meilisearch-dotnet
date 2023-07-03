@@ -9,10 +9,25 @@ namespace Meilisearch
     /// <typeparam name="T">Hit type.</typeparam>
     public class SearchResult<T> : ISearchable<T>
     {
+        /// <summary>
+        /// Create a new search result where the documents are of type <typeparamref name="T"/>
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <param name="estimatedTotalHits"></param>
+        /// <param name="facetDistribution"></param>
+        /// <param name="processingTimeMs"></param>
+        /// <param name="query"></param>
+        /// <param name="matchesPostion"></param>
+        /// <param name="facetStats"></param>
+        /// <param name="indexUid"></param>
         public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
-            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion)
+            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion,
+            IReadOnlyDictionary<string, FacetStat> facetStats,
+            string indexUid)
         {
             Hits = hits;
             Offset = offset;
@@ -22,11 +37,11 @@ namespace Meilisearch
             ProcessingTimeMs = processingTimeMs;
             Query = query;
             MatchesPostion = matchesPostion;
+            FacetStats = facetStats;
+            IndexUid = indexUid;
         }
 
-        /// <summary>
-        /// Results of the query.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
@@ -48,28 +63,28 @@ namespace Meilisearch
         [JsonPropertyName("estimatedTotalHits")]
         public int EstimatedTotalHits { get; }
 
-        /// <summary>
-        /// Returns the number of documents matching the current search query for each given facet.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("facetDistribution")]
         public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> FacetDistribution { get; }
 
-        /// <summary>
-        /// Processing time of the query.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("processingTimeMs")]
         public int ProcessingTimeMs { get; }
 
-        /// <summary>
-        /// Query originating the response.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("query")]
         public string Query { get; }
 
-        /// <summary>
-        /// Contains the location of each occurrence of queried terms across all fields.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("_matchesPosition")]
         public IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("facetStats")]
+        public IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; }
     }
 }

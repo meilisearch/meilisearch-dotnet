@@ -86,6 +86,26 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicDocumentAdditionFromCsvWithDelimiter()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromCsvWithDelimiter);
+            var index = _client.Index(indexUID);
+
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvCustomDelimiterPath);
+            var task = await index.AddDocumentsCsvAsync(csvDocuments, csvDelimiter: ';');
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
+
+            // Check the documents have been added
+            var docs = (await index.GetDocumentsAsync<DatasetSong>()).Results.ToList();
+            Assert.NotEmpty(docs);
+            var doc = docs.First();
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+        }
+
+        [Fact]
         public async Task BasicDocumentAdditionFromNdjsonString()
         {
             var indexUID = nameof(BasicDocumentAdditionFromNdjsonString);
@@ -161,6 +181,34 @@ namespace Meilisearch.Tests
             Assert.Equal("128391318", doc.Id);
             Assert.Equal("For What It's Worth", doc.Title);
             Assert.Equal("Rock", doc.Genre);
+        }
+
+        [Fact]
+        public async Task BasicDocumentAdditionFromCsvWithDelimiterInBatches()
+        {
+            var indexUID = nameof(BasicDocumentAdditionFromCsvWithDelimiterInBatches);
+            var index = _client.Index(indexUID);
+
+            var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvCustomDelimiterPath);
+            var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 15, csvDelimiter: ';')).ToList();
+            Assert.Equal(2, tasks.Count());
+            foreach (var u in tasks)
+            {
+                u.TaskUid.Should().BeGreaterOrEqualTo(0);
+                await index.WaitForTaskAsync(u.TaskUid);
+            }
+
+            // Check the documents have been added from first chunk
+            var doc = await index.GetDocumentAsync<DatasetSong>("702481615");
+            Assert.Equal("702481615", doc.Id);
+            Assert.Equal("Armatage Shanks", doc.Title);
+            Assert.Equal("Rock", doc.Genre);
+
+            // Check the documents have been added from second chunk
+            doc = await index.GetDocumentAsync<DatasetSong>("888221515");
+            Assert.Equal("888221515", doc.Id);
+            Assert.Equal("Old Folks", doc.Title);
+            Assert.Equal("Jazz", doc.Genre);
         }
 
         [Fact]

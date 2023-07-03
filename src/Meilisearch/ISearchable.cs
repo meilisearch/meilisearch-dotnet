@@ -7,8 +7,15 @@ namespace Meilisearch
     /// Wrapper for Search Results.
     /// </summary>
     /// <typeparam name="T">Hit type.</typeparam>
+    [JsonConverter(typeof(ISearchableJsonConverterFactory))]
     public interface ISearchable<T>
     {
+        /// <summary>
+        /// The uid of the index
+        /// </summary>
+        [JsonPropertyName("indexUid")]
+        string IndexUid { get; }
+
         /// <summary>
         /// Results of the query.
         /// </summary>
@@ -38,5 +45,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("_matchesPosition")]
         IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
+
+        /// <summary>
+        /// Returns the numeric min and max values per facet of the hits returned by the search query.
+        /// </summary>
+        [JsonPropertyName("facetStats")]
+        IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
     }
 }

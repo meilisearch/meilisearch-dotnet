@@ -9,6 +9,20 @@ namespace Meilisearch
     /// <typeparam name="T">Hit type.</typeparam>
     public class PaginatedSearchResult<T> : ISearchable<T>
     {
+        /// <summary>
+        /// Creates a new paginated search result of type <typeparamref name="T"/>
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <param name="hitsPerPage"></param>
+        /// <param name="page"></param>
+        /// <param name="totalHits"></param>
+        /// <param name="totalPages"></param>
+        /// <param name="facetDistribution"></param>
+        /// <param name="processingTimeMs"></param>
+        /// <param name="query"></param>
+        /// <param name="matchesPostion"></param>
+        /// <param name="facetStats"></param>
+        /// <param name="indexUid"></param>
         public PaginatedSearchResult(
             IReadOnlyCollection<T> hits,
             int hitsPerPage,
@@ -18,7 +32,9 @@ namespace Meilisearch
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs,
             string query,
-            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion
+            IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPostion,
+            IReadOnlyDictionary<string, FacetStat> facetStats,
+            string indexUid
         )
         {
             Hits = hits;
@@ -30,6 +46,8 @@ namespace Meilisearch
             ProcessingTimeMs = processingTimeMs;
             Query = query;
             MatchesPostion = matchesPostion;
+            FacetStats = facetStats;
+            IndexUid = indexUid;
         }
 
         /// <summary>
@@ -50,9 +68,7 @@ namespace Meilisearch
         [JsonPropertyName("totalPages")]
         public int TotalPages { get; }
 
-        /// <summary>
-        /// Results of the query.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
@@ -62,28 +78,28 @@ namespace Meilisearch
         [JsonPropertyName("totalHits")]
         public int TotalHits { get; }
 
-        /// <summary>
-        /// Returns the number of documents matching the current search query for each given facet.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("facetDistribution")]
         public IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> FacetDistribution { get; }
 
-        /// <summary>
-        /// Processing time of the query.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("processingTimeMs")]
         public int ProcessingTimeMs { get; }
 
-        /// <summary>
-        /// Query originating the response.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("query")]
         public string Query { get; }
 
-        /// <summary>
-        /// Contains the location of each occurrence of queried terms across all fields.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("_matchesPosition")]
         public IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("facetStats")]
+        public IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; }
     }
 }
