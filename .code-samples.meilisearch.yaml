@@ -327,7 +327,7 @@ documents_guide_add_movie_1: |-
       new Movie { MovieId = "123sq178", Title = "Amelie Poulain" }
   };
   await index.AddDocumentsAsync(movie);
-getting_started_add_documents_md: |-
+PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_add_documents_md: |-
   ```bash
   dotnet add package Meilisearch
   ```
