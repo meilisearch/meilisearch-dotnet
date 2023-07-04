@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Meilisearch.QueryParameters
 {
@@ -10,16 +11,25 @@ namespace Meilisearch.QueryParameters
         /// <summary>
         /// Gets or sets the limit.
         /// </summary>
+        [JsonPropertyName("limit")]
         public int? Limit { get; set; }
 
         /// <summary>
         /// Gets or sets the offset.
         /// </summary>
+        [JsonPropertyName("offset")]
         public int? Offset { get; set; }
 
         /// <summary>
         /// Gets or sets the attributes to retrieve.
         /// </summary>
+        [JsonPropertyName("fields")]
         public List<string> Fields { get; set; }
+
+        /// <summary>
+        /// An optional filter to apply
+        /// </summary>
+        [JsonPropertyName("filter")]
+        public object Filter { get; set; }
     }
 }
