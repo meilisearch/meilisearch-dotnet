@@ -23,7 +23,8 @@ namespace Meilisearch.Tests
             _client = fixture.DefaultClient;
         }
 
-        public async Task InitializeAsync() => await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
+        public async Task InitializeAsync() =>
+            await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
 
         public Task DisposeAsync() => Task.CompletedTask;
 
@@ -134,10 +135,8 @@ namespace Meilisearch.Tests
             // Add the documents
             Movie[] movies =
             {
-                new Movie { Id = "1", Name = "Batman" },
-                new Movie { Id = "2", Name = "Reservoir Dogs" },
-                new Movie { Id = "3", Name = "Taxi Driver" },
-                new Movie { Id = "4", Name = "Interstellar" },
+                new Movie { Id = "1", Name = "Batman" }, new Movie { Id = "2", Name = "Reservoir Dogs" },
+                new Movie { Id = "3", Name = "Taxi Driver" }, new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
             var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
@@ -419,10 +418,8 @@ namespace Meilisearch.Tests
             // Add the documents
             Movie[] movies =
             {
-                new Movie { Id = "1", Name = "Batman" },
-                new Movie { Id = "2", Name = "Reservoir Dogs" },
-                new Movie { Id = "3", Name = "Taxi Driver" },
-                new Movie { Id = "4", Name = "Interstellar" },
+                new Movie { Id = "1", Name = "Batman" }, new Movie { Id = "2", Name = "Reservoir Dogs" },
+                new Movie { Id = "3", Name = "Taxi Driver" }, new Movie { Id = "4", Name = "Interstellar" },
                 new Movie { Id = "5", Name = "Titanic" },
             };
             var tasks = await index.AddDocumentsInBatchesAsync(movies, 2);
@@ -591,6 +588,20 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetMultipleExistingDocumentsWithQuery()
+        {
+            var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithQueryTest");
+            var taskUpdate = await index.UpdateFilterableAttributesAsync(new[] { "genre" });
+            taskUpdate.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(taskUpdate.TaskUid);
+
+            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Filter = "genre = 'SF'" });
+            Assert.Equal(2, documents.Results.Count());
+            documents.Results.Should().ContainSingle(x => x.Id == "12");
+            documents.Results.Should().ContainSingle(x => x.Id == "13");
+        }
+
+        [Fact]
         public async Task GetMultipleExistingDocumentsWithLimit()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
@@ -604,7 +615,12 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithField()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Fields = new List<string> { "id" } });
+            var documents =
+                await index.GetDocumentsAsync<Movie>(new DocumentsQuery()
+                {
+                    Limit = 2,
+                    Fields = new List<string> { "id" }
+                });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().BeNull();
@@ -615,7 +631,12 @@ namespace Meilisearch.Tests
         public async Task GetMultipleExistingDocumentsWithMultipleFields()
         {
             var index = await _fixture.SetUpBasicIndex("GetMultipleExistingDocumentWithLimitTest");
-            var documents = await index.GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Fields = new List<string> { "id", "name" } });
+            var documents =
+                await index.GetDocumentsAsync<Movie>(new DocumentsQuery()
+                {
+                    Limit = 2,
+                    Fields = new List<string> { "id", "name" }
+                });
             Assert.Equal(2, documents.Results.Count());
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().Be("Gladiator");
@@ -697,6 +718,29 @@ namespace Meilisearch.Tests
             ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>("13"));
             Assert.Equal("document_not_found", ex.Code);
             ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<MovieWithIntId>("14"));
+            Assert.Equal("document_not_found", ex.Code);
+        }
+
+        [Fact]
+        public async Task DeleteMultipleDocumentsByFilter()
+        {
+            var index = await _fixture.SetUpBasicIndex("DeleteMultipleDocumentsByFilterTest");
+            var taskUpdate = await index.UpdateFilterableAttributesAsync(new[] { "genre" });
+            taskUpdate.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(taskUpdate.TaskUid);
+
+            // Delete the documents
+            var task = await index.DeleteDocumentsAsync(new DeleteDocumentsQuery() { Filter = "genre = SF" });
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
+
+            // Check the documents have been deleted
+            var docs = await index.GetDocumentsAsync<Movie>();
+            Assert.Equal(5, docs.Results.Count());
+            MeilisearchApiError ex;
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("12"));
+            Assert.Equal("document_not_found", ex.Code);
+            ex = await Assert.ThrowsAsync<MeilisearchApiError>(() => index.GetDocumentAsync<Movie>("13"));
             Assert.Equal("document_not_found", ex.Code);
         }
 
