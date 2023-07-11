@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="README.md" Pack="true" PackagePath="\" />
-      <None Include="logo.png" Pack="true" Visible="false" PackagePath="" />
+      <None Include="../../README.md" Pack="true" PackagePath="\" />
+      <None Include="../../assets/logo.png" Pack="true" Visible="false" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
