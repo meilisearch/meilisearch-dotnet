@@ -111,10 +111,10 @@ get_one_document_1: |-
 get_documents_1: |-
   await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { Limit = 2, Filter = "genres = action" });
 get_documents_post_1: |-
-  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() { 
-      Limit = 3, 
-      Fields = new List<string> { "title", "genres", "rating", "language"}, 
-      Filter = "(rating > 3 AND (genres=Adventure OR genres=Fiction)) AND language=English" 
+  await client.Index("movies").GetDocumentsAsync<Movie>(new DocumentsQuery() {
+      Limit = 3,
+      Fields = new List<string> { "title", "genres", "rating", "language"},
+      Filter = "(rating > 3 AND (genres=Adventure OR genres=Fiction)) AND language=English"
   });
 add_or_replace_documents_1: |-
   var movie = new[]
@@ -335,7 +335,7 @@ documents_guide_add_movie_1: |-
       new Movie { MovieId = "123sq178", Title = "Amelie Poulain" }
   };
   await index.AddDocumentsAsync(movie);
-PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_add_documents_md: |-
+getting_started_add_documents_md: |-
   ```bash
   dotnet add package Meilisearch
   ```
@@ -362,7 +362,7 @@ PLEASE_UPDATE_ME>>>>>>>>>>>>>getting_started_add_documents_md: |-
       {
           static async Task Main(string[] args)
           {
-              MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+              MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "aSampleMasterKey");
               var options = new JsonSerializerOptions
               {
                   PropertyNameCaseInsensitive = true
