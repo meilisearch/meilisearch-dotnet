@@ -329,6 +329,12 @@ search_parameter_guide_show_matches_position_1: |-
     {
         ShowMatchesPosition = True,
     });
+search_parameter_guide_attributes_to_search_on_1: |-
+  var searchQuery = new SearchQuery
+  {
+    AttributesToSearchOn = new[] { "overview" }
+  };
+  await client.Index("movies").SearchAsync<Movie>("exciting", searchQuery);
 documents_guide_add_movie_1: |-
   var movie = new[]
   {

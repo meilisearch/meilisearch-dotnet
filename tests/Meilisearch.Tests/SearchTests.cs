@@ -167,6 +167,38 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchWithAttributesToSearchOn()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "Harry",
+                new SearchQuery
+                {
+                    AttributesToSearchOn = new[] { "name" },
+                });
+            var firstHit = movies.Hits.First();
+
+            Assert.NotEmpty(movies.Hits);
+            Assert.Single(movies.Hits);
+            Assert.NotEmpty(firstHit.Name);
+            Assert.NotEmpty(firstHit.Id);
+            Assert.NotEmpty(firstHit.Genre);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithAttributesToSearchOnNoResults()
+        {
+            var movies = await _basicIndex.SearchAsync<FormattedMovie>(
+                "Harry",
+                new SearchQuery
+                {
+                    AttributesToSearchOn = new[] { "genre" },
+                });
+            var firstHit = movies.Hits.FirstOrDefault();
+
+            Assert.Null(firstHit);
+        }
+
+        [Fact]
         public async Task CustomSearchWithFilter()
         {
             var movies = await _indexForFaceting.SearchAsync<Movie>(

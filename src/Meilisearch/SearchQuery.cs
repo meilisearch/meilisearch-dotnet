@@ -39,6 +39,12 @@ namespace Meilisearch
         public IEnumerable<string> AttributesToCrop { get; set; }
 
         /// <summary>
+        /// Gets or sets attributes to search on.
+        /// </summary>
+        [JsonPropertyName("attributesToSearchOn")]
+        public IEnumerable<string> AttributesToSearchOn { get; set; }
+
+        /// <summary>
         /// Gets or sets length used to crop field values.
         /// </summary>
         [JsonPropertyName("cropLength")]
