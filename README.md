@@ -126,7 +126,7 @@ namespace GettingStarted
 }
 ```
 
-With the `uid`, you can check the status (`enqueued`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks).
+With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks).
 
 #### Basic Search <!-- omit in toc -->
 
