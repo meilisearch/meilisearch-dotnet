@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Meilisearch
 {
     /// <summary>
-    /// The default implmentation of <see cref="IFormatContainer{TOriginal,TFormatted}"/>
+    /// The default implementation of <see cref="IFormatContainer{TOriginal,TFormatted}"/>
     /// </summary>
     /// <typeparam name="TOriginal"></typeparam>
     /// <typeparam name="TFormatted"></typeparam>
