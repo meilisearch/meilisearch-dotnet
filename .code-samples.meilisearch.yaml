@@ -10,24 +10,17 @@ faceted_search_2: |-
       {
           new SearchQuery() {
             IndexUid = "books",
-            Filter = new[] {
-              new[] {"language = English", "language = French"},
-              new[] {"genres = Fiction"}
-            },
+            Filter = "(language = English AND language = French) OR genres = Fiction",
             Facets = new[] { "language", "genres", "author", "format" }
           },
           new SearchQuery() {
             IndexUid = "books",
-            Filter = new[] {
-              new[] {"genres = Fiction"}
-            },
+            Filter = "genres = Fiction",
             Facets = new[] { "language" }
           },
           new SearchQuery() {
             IndexUid = "books",
-            Filter = new[] {
-              new[] {"language = English", "language = French"}
-            },
+            Filter = "language = English OR language = Frenc",
             Facets = new[] { "genres" }
           }
       }
@@ -281,14 +274,14 @@ field_properties_guide_displayed_1: |-
   });
 filtering_guide_1: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > \"795484800\"" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Avengers", filters);
+  SearchResult<Movie> movies = await client.Index("movie_ratings").SearchAsync<Movie>("Avengers", filters);
 filtering_guide_2: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > 795484800 AND (director =
   \"Tim Burton\" OR director = \"Christopher Nolan\")" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
+  SearchResult<Movie> movies = await client.Index("movie_ratings").SearchAsync<Movie>("Batman", filters);
 filtering_guide_3: |-
-  SearchQuery filters = new SearchQuery() { Filter = "rating >= 3 AND (NOT director = \"Tim Burton\"" };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Planet of the Apes", filters);
+  SearchQuery filters = new SearchQuery() { Filter = "release_date > 1577884550 AND (NOT director = \"Tim Burton\")" };
+  SearchResult<Movie> movies = await client.Index("movie_ratings").SearchAsync<Movie>("Planet of the Apes", filters);
 search_parameter_guide_query_1: |-
   await client.Index("movies").SearchAsync<Movie>("shifu");
 search_parameter_guide_offset_1: |-
@@ -470,17 +463,6 @@ getting_started_communicating_with_a_protected_instance: |-
   await client.Index("Movies").SearchAsync<Movie>("");
 filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
-faceted_search_filter_1: |-
-  SearchQuery filters = new SearchQuery()
-  {
-      Filter = new string[][]
-      {
-          new string[] {"genres = Horror", "genres = Mystery"},
-          new string[] {"director = \"Jordan Peele\""}
-      }
-  };
-
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("thriller", filters);
 faceted_search_facets_1: |-
   SearchQuery filters = new SearchQuery()
   {
@@ -495,7 +477,7 @@ faceted_search_walkthrough_filter_1: |-
   await client.Index("movies").SearchAsync<Movie>("thriller", sq);
 faceted_search_update_settings_1: |-
   List<string> attributes = new() { "genres", "rating", "language" };
-  TaskInfo result = await client.Index("books").UpdateFilterableAttributesAsync(attributes);
+  TaskInfo result = await client.Index("movie_ratings").UpdateFilterableAttributesAsync(attributes);
 faceted_search_1: |-
   var sq = new SearchQuery
   {
@@ -597,10 +579,7 @@ geosearch_guide_sort_usage_2: |-
 geosearch_guide_filter_usage_3: |-
   SearchQuery filters = new SearchQuery()
   {
-      Sort = new string[] {
-            "_geoBoundingBox([45.494181, 9.179175], [45.449484, 9.214024])",
-            "rating:desc"
-      }
+      Filter = "_geoBoundingBox([45.494181, 9.214024], [45.449484, 9.179175])"
   };
   SearchResult<Restaurant> restaurants = await client.Index("restaurants").SearchAsync<Restaurant>("restaurants", filters);
 primary_field_guide_create_index_primary_key: |-
