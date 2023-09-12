@@ -749,3 +749,9 @@ multi_search_1: |-
           },
       }
   });
+search_parameter_guide_matching_strategy_1: |-
+  SearchQuery params = new SearchQuery() { MatchingStrategy = "last" };
+  await client.Index("movies").SearchAsync<Game>("big fat liar", params);
+search_parameter_guide_matching_strategy_2: |-
+  SearchQuery params = new SearchQuery() { MatchingStrategy = "all" };
+  await client.Index("movies").SearchAsync<Game>("big fat liar", params);
