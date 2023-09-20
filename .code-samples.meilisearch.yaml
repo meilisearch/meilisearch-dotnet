@@ -3,28 +3,6 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
-faceted_search_2: |-
-  await client.MultiSearchAsync(new MultiSearchQuery()
-  {
-      Queries = new System.Collections.Generic.List<SearchQuery>()
-      {
-          new SearchQuery() {
-            IndexUid = "books",
-            Filter = "(language = English AND language = French) OR genres = Fiction",
-            Facets = new[] { "language", "genres", "author", "format" }
-          },
-          new SearchQuery() {
-            IndexUid = "books",
-            Filter = "genres = Fiction",
-            Facets = new[] { "language" }
-          },
-          new SearchQuery() {
-            IndexUid = "books",
-            Filter = "language = English OR language = Frenc",
-            Facets = new[] { "genres" }
-          }
-      }
-  });
 getting_started_faceting: |-
   var faceting = new Faceting {
     MaxValuesPerFacet = 2
@@ -38,8 +16,8 @@ getting_started_pagination: |-
 synonyms_guide_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
-  	{ "great", new string[] { "fantastic" } },
-  	{ "fantastic", new string[] { "great" } }
+    { "great", new string[] { "fantastic" } },
+    { "fantastic", new string[] { "great" } }
   };
   await client.Index("movies").UpdateSynonymsAsync(synonyms);
 date_guide_index_1: |-
@@ -187,8 +165,8 @@ get_synonyms_1: |-
 update_synonyms_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
-  	{ "wolverine", new string[] { "xmen", "logan" } },
-  	{ "logan", new string[] { "wolverine", "xmen" } },
+    { "wolverine", new string[] { "xmen", "logan" } },
+    { "logan", new string[] { "wolverine", "xmen" } },
     { "wow", new string[] { "world of warcraft" } }
   };
   await client.Index("movies").UpdateSynonymsAsync(synonyms);
@@ -309,10 +287,25 @@ search_parameter_guide_crop_1: |-
       CropLength = 5
   };
   await client.Index("movies").SearchAsync<Movie>("shifu", sq);
+search_parameter_guide_crop_marker_1: |-
+  var sq = new SearchQuery
+  {
+      AttributesToCrop = new[] {"overview"},
+      CropMarker = "[...]"
+  };
+  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
 search_parameter_guide_highlight_1: |-
   var sq = new SearchQuery
   {
-  	AttributesToHighlight = new[] {"overview"}
+    AttributesToHighlight = new[] {"overview"}
+  };
+  await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
+search_parameter_guide_highlight_tag_1: |-
+  var sq = new SearchQuery
+  {
+    AttributesToHighlight = new[] {"overview"},
+    HighlightPreTag = "<span class=\"highlight\">",
+    HighlightPostTag = "</span>"
   };
   await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
 search_parameter_guide_show_matches_position_1: |-
@@ -328,12 +321,12 @@ search_parameter_guide_attributes_to_search_on_1: |-
     AttributesToSearchOn = new[] { "overview" }
   };
   await client.Index("movies").SearchAsync<Movie>("adventure", searchQuery);
-documents_guide_add_movie_1: |-
-  var movie = new[]
+search_parameter_guide_facet_stats_1: |-
+  var sq = new SearchQuery
   {
-      new Movie { MovieId = "123sq178", Title = "Amelie Poulain" }
+    Facets = new string[] { "genres", "rating" }
   };
-  await index.AddDocumentsAsync(movie);
+  await client.Index("movie_ratings").SearchAsync<Movie>("Batman", sq);
 getting_started_add_documents_md: |-
   ```bash
   dotnet add package Meilisearch
@@ -457,22 +450,12 @@ getting_started_configure_settings: |-
       SortableAttributes = new string[] { "mass", "_geo" },
   };
   await client.Index("meteorites").UpdateSettingsAsync(newSettings);
-getting_started_communicating_with_a_protected_instance: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
-
-  await client.Index("Movies").SearchAsync<Movie>("");
 filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
-faceted_search_facets_1: |-
-  SearchQuery filters = new SearchQuery()
-  {
-      Facets = new string[] { "genres" }
-  };
-  SearchResult<Movie> movies = await client.Index("movies").SearchAsync<Movie>("Batman", filters);
 faceted_search_walkthrough_filter_1: |-
   var sq = new SearchQuery
   {
-  	Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
+    Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
   };
   await client.Index("movies").SearchAsync<Movie>("thriller", sq);
 faceted_search_update_settings_1: |-
@@ -481,7 +464,7 @@ faceted_search_update_settings_1: |-
 faceted_search_1: |-
   var sq = new SearchQuery
   {
-  	Facets = new string[] { "genres", "rating", "language" }
+    Facets = new string[] { "genres", "rating", "language" }
   };
   await client.Index("books").SearchAsync<Book>("classic", sq);
 add_movies_json_1: |-
@@ -512,12 +495,12 @@ sorting_guide_update_sortable_attributes_1: |-
 sorting_guide_update_ranking_rules_1: |-
   await client.Index("books").UpdateRankingRulesAsync(new[]
   {
-  	"words",
-  	"sort",
-  	"typo",
-  	"proximity",
-  	"attribute",
-  	"exactness"
+    "words",
+    "sort",
+    "typo",
+    "proximity",
+    "attribute",
+    "exactness"
   });
 sorting_guide_sort_parameter_1: |-
   var sq = new SearchQuery
