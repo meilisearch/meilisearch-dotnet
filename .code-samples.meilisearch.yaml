@@ -16,8 +16,8 @@ getting_started_pagination: |-
 synonyms_guide_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
-    { "great", new string[] { "fantastic" } },
-    { "fantastic", new string[] { "great" } }
+      { "great", new string[] { "fantastic" } },
+      { "fantastic", new string[] { "great" } }
   };
   await client.Index("movies").UpdateSynonymsAsync(synonyms);
 date_guide_index_1: |-
@@ -143,8 +143,8 @@ update_settings_1: |-
     StopWords = new string[] { "the", "a", "an" },
     Synonyms = new Dictionary<string, IEnumerable<string>>
     {
-      { "wolverine", new string[] { "xmen", "logan" } },
-      { "logan", new string[] { "wolverine" } },
+        { "wolverine", new string[] { "xmen", "logan" } },
+        { "logan", new string[] { "wolverine" } },
     },
     FilterableAttributes = new string[] { },
     TypoTolerance = new TypoTolerance
@@ -165,9 +165,9 @@ get_synonyms_1: |-
 update_synonyms_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
-    { "wolverine", new string[] { "xmen", "logan" } },
-    { "logan", new string[] { "wolverine", "xmen" } },
-    { "wow", new string[] { "world of warcraft" } }
+      { "wolverine", new string[] { "xmen", "logan" } },
+      { "logan", new string[] { "wolverine", "xmen" } },
+      { "wow", new string[] { "world of warcraft" } }
   };
   await client.Index("movies").UpdateSynonymsAsync(synonyms);
 reset_synonyms_1: |-
@@ -297,15 +297,15 @@ search_parameter_guide_crop_marker_1: |-
 search_parameter_guide_highlight_1: |-
   var sq = new SearchQuery
   {
-    AttributesToHighlight = new[] {"overview"}
+      AttributesToHighlight = new[] {"overview"}
   };
   await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
 search_parameter_guide_highlight_tag_1: |-
   var sq = new SearchQuery
   {
-    AttributesToHighlight = new[] {"overview"},
-    HighlightPreTag = "<span class=\"highlight\">",
-    HighlightPostTag = "</span>"
+      AttributesToHighlight = new[] {"overview"},
+      HighlightPreTag = "<span class=\"highlight\">",
+      HighlightPostTag = "</span>"
   };
   await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
 search_parameter_guide_show_matches_position_1: |-
@@ -455,7 +455,7 @@ filtering_update_settings_1: |-
 faceted_search_walkthrough_filter_1: |-
   var sq = new SearchQuery
   {
-    Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
+      Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
   };
   await client.Index("movies").SearchAsync<Movie>("thriller", sq);
 faceted_search_update_settings_1: |-
@@ -464,7 +464,7 @@ faceted_search_update_settings_1: |-
 faceted_search_1: |-
   var sq = new SearchQuery
   {
-    Facets = new string[] { "genres", "rating", "language" }
+      Facets = new string[] { "genres", "rating", "language" }
   };
   await client.Index("books").SearchAsync<Book>("classic", sq);
 add_movies_json_1: |-
@@ -495,12 +495,12 @@ sorting_guide_update_sortable_attributes_1: |-
 sorting_guide_update_ranking_rules_1: |-
   await client.Index("books").UpdateRankingRulesAsync(new[]
   {
-    "words",
-    "sort",
-    "typo",
-    "proximity",
-    "attribute",
-    "exactness"
+      "words",
+      "sort",
+      "typo",
+      "proximity",
+      "attribute",
+      "exactness"
   });
 sorting_guide_sort_parameter_1: |-
   var sq = new SearchQuery
