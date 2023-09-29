@@ -30,7 +30,7 @@ namespace Meilisearch.Extensions
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
         /// <returns>Returns an url encoded query string.</returns>
-        internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance, string uri = null)
         {
             var values = new List<string>();
             foreach (var field in source.GetType().GetProperties(bindingAttr))
@@ -65,7 +65,12 @@ namespace Meilisearch.Extensions
                 }
             }
 
-            return string.Join("&", values);
+            if (string.IsNullOrWhiteSpace(uri))
+            {
+                return string.Join("&", values);
+            }
+
+            return $"{uri}?{string.Join("&", values)}";
         }
     }
 }

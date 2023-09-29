@@ -16,6 +16,7 @@ namespace Meilisearch.Tests
         public string FakeString { get; set; }
         public int? FakeInteger { get; set; }
         public List<string> FakeStringList { get; set; }
+        public string Path { get; set; }
     }
 
     public class ObjectExtensionsTests
