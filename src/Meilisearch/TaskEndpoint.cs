@@ -40,7 +40,7 @@ namespace Meilisearch
         public async Task<TaskInfo> CancelTasksAsync(CancelTasksQuery query, CancellationToken cancellationToken = default)
         {
             var uri = query.ToQueryString(uri: "tasks/cancel");
-            
+
             var response = await _http.PostAsync(uri, null, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
