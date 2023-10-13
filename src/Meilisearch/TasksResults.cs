@@ -9,7 +9,7 @@ namespace Meilisearch
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, indexes, ...</typeparam>
     public class TasksResults<T> : Result<T>
     {
-        public TasksResults(T results, int? limit, int? from, int? next)
+        public TasksResults(T results, int? limit, int? from, int? next, int? total)
             : base(results, limit)
         {
             From = from;
@@ -25,5 +25,10 @@ namespace Meilisearch
         /// Gets next size.
         /// </summary>
         public int? Next { get; }
+
+        /// <summary>
+        /// Gets total number of tasks.
+        /// </summary>
+        public int? Total { get; }
     }
 }
