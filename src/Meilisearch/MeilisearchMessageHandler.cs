@@ -18,7 +18,7 @@ namespace Meilisearch
         public MeilisearchMessageHandler()
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchMessageHandler"/> class.
         /// Default message handler for Meilisearch API.
