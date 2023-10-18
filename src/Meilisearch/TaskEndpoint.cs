@@ -26,11 +26,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            var uri = $"tasks";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "tasks");
             return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -43,11 +39,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<TaskInfo> CancelTasksAsync(CancelTasksQuery query, CancellationToken cancellationToken = default)
         {
-            var uri = "tasks/cancel";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "tasks/cancel");
 
             var response = await _http.PostAsync(uri, null, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -62,11 +54,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<TaskInfo> DeleteTasksAsync(DeleteTasksQuery query, CancellationToken cancellationToken = default)
         {
-            var uri = "tasks";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "tasks");
 
             var response = await _http.DeleteAsync(uri, cancellationToken).ConfigureAwait(false);
 
