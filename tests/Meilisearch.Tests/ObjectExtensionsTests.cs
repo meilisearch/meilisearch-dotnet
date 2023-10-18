@@ -68,7 +68,7 @@ namespace Meilisearch.Tests
         {
             var o = new { primaryKey = key };
 
-            var expected = "primaryKey=key";
+            var expected = "primaryKey=simple";
             var actual = o.ToQueryString();
             Assert.Equal(expected, actual);
         }
