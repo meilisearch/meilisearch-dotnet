@@ -26,7 +26,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the tasks.</returns>
         public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
-            var uri = query.ToQueryString(uri: $"tasks");
+            var uri = query.ToQueryString(uri: "tasks");
             return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }

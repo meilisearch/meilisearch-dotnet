@@ -66,10 +66,9 @@ namespace Meilisearch.Tests
         [InlineData("simple")]
         public void QueryStringOnlyQueryStringParameters(string key)
         {
-            var uri = "";
             var o = new { primaryKey = key };
 
-            var expected = string.Join(",", o.AsDictionary().Select(kv => kv.Key + "=" + kv.Value));
+            var expected = "primaryKey=key";
             var actual = o.ToQueryString();
             Assert.Equal(expected, actual);
         }
