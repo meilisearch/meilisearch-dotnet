@@ -10,15 +10,14 @@ jobs:
     name: Build, pack & publish
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check release validity
         run: sh .github/scripts/check-release.sh
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 3.1.101
+      - name: Pack
+        run: dotnet pack src/Meilisearch/Meilisearch.csproj -c Release -o src/Meilisearch/bin/Release
       - name: Publish
-        uses: rohith/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/Meilisearch/Meilisearch.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+        run: dotnet nuget push src/Meilisearch/bin/Release/*.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
