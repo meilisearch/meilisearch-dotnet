@@ -9,7 +9,7 @@ namespace Meilisearch
     /// </summary>
     public class Stats
     {
-        public Stats(int databaseSize, DateTime? lastUpdate, IReadOnlyDictionary<string, IndexStats> indexes)
+        public Stats(long databaseSize, DateTime? lastUpdate, IReadOnlyDictionary<string, IndexStats> indexes)
         {
             DatabaseSize = databaseSize;
             LastUpdate = lastUpdate;
@@ -20,7 +20,7 @@ namespace Meilisearch
         /// Gets database size.
         /// </summary>
         [JsonPropertyName("databaseSize")]
-        public int DatabaseSize { get; }
+        public long DatabaseSize { get; }
 
         /// <summary>
         /// Gets last update timestamp.
