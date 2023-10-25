@@ -10,6 +10,15 @@ namespace Meilisearch
     /// </summary>
     public class MeilisearchMessageHandler : DelegatingHandler
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MeilisearchMessageHandler"/> class.
+        /// Default message handler for Meilisearch API.
+        /// </summary>
+        public MeilisearchMessageHandler()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MeilisearchMessageHandler"/> class.
         /// Default message handler for Meilisearch API.
