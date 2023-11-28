@@ -29,13 +29,8 @@ namespace Meilisearch
         /// </summary>
         /// <param name="url">URL corresponding to Meilisearch server.</param>
         /// <param name="apiKey">API Key to connect to the Meilisearch server.</param>
-        public MeilisearchClient(string url, string apiKey = default)
+        public MeilisearchClient(string url, string apiKey = default) : this(new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = url.ToSafeUri() }, apiKey)
         {
-            _http = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = url.ToSafeUri() };
-            _http.AddApiKeyToHeader(apiKey);
-            _http.AddDefaultUserAgent();
-            _taskEndpoint = null;
-            ApiKey = apiKey;
         }
 
         /// <summary>
@@ -147,11 +142,7 @@ namespace Meilisearch
         /// <returns>An IEnumerable of indexes in JsonElement format.</returns>
         public async Task<JsonDocument> GetAllRawIndexesAsync(IndexesQuery query = default, CancellationToken cancellationToken = default)
         {
-            var uri = $"indexes";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "indexes");
             var response = await _http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -166,11 +157,7 @@ namespace Meilisearch
         /// <returns>Return Enumerable of Index.</returns>
         public async Task<ResourceResults<IEnumerable<Index>>> GetAllIndexesAsync(IndexesQuery query = default, CancellationToken cancellationToken = default)
         {
-            var uri = $"indexes";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "indexes");
             var response = await _http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 
             var content = await response.Content.ReadFromJsonAsync<ResourceResults<IEnumerable<Index>>>(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -305,11 +292,7 @@ namespace Meilisearch
         /// <returns>Returns a list of the API keys.</returns>
         public async Task<ResourceResults<IEnumerable<Key>>> GetKeysAsync(KeysQuery query = default, CancellationToken cancellationToken = default)
         {
-            var uri = $"keys";
-            if (query != null)
-            {
-                uri = $"{uri}?{query.ToQueryString()}";
-            }
+            var uri = query.ToQueryString(uri: "keys");
             return await _http.GetFromJsonAsync<ResourceResults<IEnumerable<Key>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }

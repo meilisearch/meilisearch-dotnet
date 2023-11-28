@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Meilisearch.Extensions;
 using Meilisearch.QueryParameters;
@@ -16,6 +17,7 @@ namespace Meilisearch.Tests
         public string FakeString { get; set; }
         public int? FakeInteger { get; set; }
         public List<string> FakeStringList { get; set; }
+        public string Path { get; set; }
     }
 
     public class ObjectExtensionsTests
@@ -56,7 +58,51 @@ namespace Meilisearch.Tests
             var o = new { primaryKey = key };
 
             var expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
-            var actual = $"{uri}?{o.ToQueryString()}";
+            var actual = o.ToQueryString(uri: uri);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("simple")]
+        public void QueryStringOnlyQueryStringParameters(string key)
+        {
+            var o = new { primaryKey = key };
+
+            var expected = "primaryKey=simple";
+            var actual = o.ToQueryString();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("simple")]
+        public void QueryStringPrependsUri(string key)
+        {
+            var uri = "indexes/myindex/documents";
+            var o = new { primaryKey = key };
+
+            var expected = QueryHelpers.AddQueryString(uri, o.AsDictionary());
+            var actual = o.ToQueryString(uri: uri);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void QueryStringReturnsEmptyForNullObject()
+        {
+            object o = null;
+
+            var expected = "";
+            var actual = o.ToQueryString();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void QueryStringReturnsUriForNullObject()
+        {
+            var uri = "indexes/myindex/documents";
+            object o = null;
+
+            var expected = uri;
+            var actual = o.ToQueryString(uri: uri);
             Assert.Equal(expected, actual);
         }
 
@@ -75,7 +121,7 @@ namespace Meilisearch.Tests
         {
             var uri = "indexes/myindex/documents";
             var dq = new DocumentsQuery { Offset = offset, Limit = limit, Fields = fields != null ? new List<string>(fields) : null };
-            var actualQuery = $"{uri}?{dq.ToQueryString()}";
+            var actualQuery = dq.ToQueryString(uri: uri);
 
             Assert.NotEmpty(actualQuery);
             Assert.NotNull(actualQuery);

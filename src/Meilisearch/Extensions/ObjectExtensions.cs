@@ -29,43 +29,58 @@ namespace Meilisearch.Extensions
         /// </summary>
         /// <param name="source">Object to transform.</param>
         /// <param name="bindingAttr">Binding flags.</param>
+        /// <param name="uri">Uri to prepend before query string.</param>
         /// <returns>Returns an url encoded query string.</returns>
-        internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        internal static string ToQueryString(this object source, BindingFlags bindingAttr = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance, string uri = "")
         {
             var values = new List<string>();
-            foreach (var field in source.GetType().GetProperties(bindingAttr))
+            if (source != null)
             {
-                var value = field.GetValue(source, null);
-                var key = Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1));
-
-                if (value != null)
+                foreach (var field in source.GetType().GetProperties(bindingAttr))
                 {
-                    var type = value.GetType();
+                    var value = field.GetValue(source, null);
+                    var key = Uri.EscapeDataString(char.ToLowerInvariant(field.Name[0]) + field.Name.Substring(1));
 
-                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+                    if (value != null)
                     {
-                        var itemType = type.GetGenericArguments()[0];
-                        if (itemType == typeof(string))
+                        var type = value.GetType();
+
+                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                         {
-                            values.Add(key + "=" + string.Join(",", (List<string>)value));
+                            var itemType = type.GetGenericArguments()[0];
+                            if (itemType == typeof(string))
+                            {
+                                values.Add(key + "=" + string.Join(",", (List<string>)value));
+                            }
+                            else if (itemType == typeof(int))
+                            {
+                                values.Add(key + "=" + string.Join(",", (List<int>)value));
+                            }
                         }
-                        else if (itemType == typeof(int))
+                        else if (value is DateTime)
                         {
-                            values.Add(key + "=" + string.Join(",", (List<int>)value));
+                            values.Add(key + "=" + Uri.EscapeDataString(((DateTime)value).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
                         }
-                    }
-                    else if (value is DateTime)
-                    {
-                        values.Add(key + "=" + Uri.EscapeDataString(((DateTime)value).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
-                    }
-                    else
-                    {
-                        values.Add(key + "=" + Uri.EscapeDataString(value.ToString()));
+                        else
+                        {
+                            values.Add(key + "=" + Uri.EscapeDataString(value.ToString()));
+                        }
                     }
                 }
             }
 
-            return string.Join("&", values);
+            var queryString = string.Join("&", values);
+            if (string.IsNullOrWhiteSpace(uri))
+            {
+                return queryString;
+            }
+
+            if (string.IsNullOrEmpty(queryString))
+            {
+                return uri;
+            }
+
+            return $"{uri}?{queryString}";
         }
     }
 }
