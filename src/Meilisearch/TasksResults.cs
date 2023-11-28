@@ -14,6 +14,7 @@ namespace Meilisearch
         {
             From = from;
             Next = next;
+            Total = total;
         }
 
         /// <summary>
