@@ -68,6 +68,7 @@ namespace Meilisearch.Tests
             var taskResponse = await _index.GetTasksAsync(new TasksQuery { Limit = 1, IndexUids = new List<string> { _index.Uid } });
 
             taskResponse.Results.Count().Should().BeGreaterOrEqualTo(1);
+            taskResponse.Total.Should().BeGreaterThan(0);
         }
 
         [Fact]
