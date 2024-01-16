@@ -19,7 +19,7 @@ namespace Meilisearch
         /// <param name="facetDistribution"></param>
         /// <param name="processingTimeMs"></param>
         /// <param name="query"></param>
-        /// <param name="matchesPostion"></param>
+        /// <param name="matchesPosition"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
         public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
