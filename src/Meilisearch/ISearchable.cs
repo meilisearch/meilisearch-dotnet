@@ -44,7 +44,7 @@ namespace Meilisearch
         /// Contains the location of each occurrence of queried terms across all fields.
         /// </summary>
         [JsonPropertyName("_matchesPosition")]
-        IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPostion { get; }
+        IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> MatchesPosition { get; }
 
         /// <summary>
         /// Returns the numeric min and max values per facet of the hits returned by the search query.
