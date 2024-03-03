@@ -492,5 +492,16 @@ namespace Meilisearch.Tests
 
             Assert.True(movies.Hits.Count() > 1);
         }
+
+        [Fact]
+        public async Task CustomSearchWithShowRankingScore()
+        {
+            var searchQuery = new SearchQuery()
+            {
+                ShowRankingScore = true
+            };
+            var movies = await _basicIndex.SearchAsync<MovieWithRankingScore>("iron man", searchQuery);
+            Assert.NotNull(movies.Hits.First()._RankingScore);
+        }
     }
 }
