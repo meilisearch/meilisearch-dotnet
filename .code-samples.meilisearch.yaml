@@ -701,7 +701,7 @@ update_pagination_settings_1: |-
   };
   await client.Index("movies").UpdatePaginationAsync(pagination);
 reset_pagination_settings_1: |-
-    await client.Index("movies").ResetPaginationAsync();
+  await client.Index("movies").ResetPaginationAsync();
 get_faceting_settings_1: |-
   await client.Index("movies").GetFacetingAsync();
 update_faceting_settings_1: |-
@@ -744,3 +744,9 @@ search_parameter_guide_show_ranking_score_1: |-
     ShowRankingScore = true
   };
   await client.Index("movies").SearchAsync<MovieWithRankingScore>("dragon", params);
+get_proximity_precision_settings_1: |-
+  await client.Index("books").GetProximityPrecisionAsync();
+update_proximity_precision_settings_1: |-
+  await client.Index("books").UpdateProximityPrecisionAsync("byAttribute");
+reset_proximity_precision_settings_1: |-
+  await client.Index("books").ResetProximityPrecisionAsync();
