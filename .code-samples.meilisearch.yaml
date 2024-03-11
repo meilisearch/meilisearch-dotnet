@@ -651,7 +651,8 @@ getting_started_typo_tolerance: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
-get_typo_tolerance_1: await client.Index("books").GetTypoToleranceAsync();
+get_typo_tolerance_1:
+  await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" },
