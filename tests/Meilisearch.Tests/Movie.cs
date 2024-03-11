@@ -46,4 +46,14 @@ namespace Meilisearch.Tests
 #pragma warning disable SA1300
         public Movie _Formatted { get; set; }
     }
+
+    public class MovieWithRankingScore
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+        public double? _RankingScore { get; set; }
+    }
 }

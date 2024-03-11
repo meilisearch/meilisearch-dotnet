@@ -98,6 +98,12 @@ namespace Meilisearch
         [JsonPropertyName("matchingStrategy")]
         public string MatchingStrategy { get; set; }
 
+        /// <summary>
+        /// Gets or sets showRankingScore parameter. It defines wheter the global ranking score of a document (between 0 and 1) is returned or not.
+        /// </summary>
+        [JsonPropertyName("showRankingScore")]
+        public bool? ShowRankingScore { get; set; }
+
         // pagination:
 
         /// <summary>
