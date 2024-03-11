@@ -739,8 +739,8 @@ search_parameter_guide_matching_strategy_2: |-
   SearchQuery params = new SearchQuery() { MatchingStrategy = "all" };
   await client.Index("movies").SearchAsync<Game>("big fat liar", params);
 search_parameter_guide_show_ranking_score_1: |-
-  var searchQuery = new SearchQuery()
+  var params = new SearchQuery()
   {
     ShowRankingScore = true
   };
-  var movies = await _basicIndex.SearchAsync<MovieWithRankingScore>("iron man", searchQuery);
+  await client.Index("movies").SearchAsync<MovieWithRankingScore>("dragon", params);
