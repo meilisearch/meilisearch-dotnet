@@ -739,8 +739,8 @@ search_parameter_guide_matching_strategy_2: |-
   SearchQuery params = new SearchQuery() { MatchingStrategy = "all" };
   await client.Index("movies").SearchAsync<Game>("big fat liar", params);
 get_proximity_precision_settings_1: |-
-  await client.Index("movies").GetProximityPrecisionAsync();
+  await client.Index("books").GetProximityPrecisionAsync();
 update_proximity_precision_settings_1: |-
-  await client.Index("movies").UpdateProximityPrecisionAsync("byAttribute");
+  await client.Index("books").UpdateProximityPrecisionAsync("byAttribute");
 reset_proximity_precision_settings_1: |-
-  await client.Index("movies").ResetProximityPrecisionAsync();
+  await client.Index("books").ResetProximityPrecisionAsync();
