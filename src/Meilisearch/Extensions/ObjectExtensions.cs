@@ -56,6 +56,14 @@ namespace Meilisearch.Extensions
                             {
                                 values.Add(key + "=" + string.Join(",", (List<int>)value));
                             }
+                            else if (itemType == typeof(TaskInfoStatus))
+                            {
+                                values.Add(key + "=" + string.Join(",", ((List<TaskInfoStatus>)value).Select(x => x.ToString())));
+                            }
+                            else if (itemType == typeof(TaskInfoType))
+                            {
+                                values.Add(key + "=" + string.Join(",", ((List<TaskInfoType>)value).Select(x => x.ToString())));
+                            }
                         }
                         else if (value is DateTime)
                         {
