@@ -3,16 +3,15 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Meilisearch.Extensions;
 namespace Meilisearch
 {
     public partial class Index
     {
         /// <summary>
-        /// Gets all the separator tokens settings.
+        /// Gets all the non separator tokens settings.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns all the configured separator tokens.</returns>
+        /// <returns>Returns all the configured non separator tokens.</returns>
         public async Task<IEnumerable<string>> GetNonSeparatorTokensAsync(CancellationToken cancellationToken = default)
         {
             return await _http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{Uid}/settings/non-separator-tokens", cancellationToken: cancellationToken)
@@ -20,7 +19,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Updates all the separator tokens settings.
+        /// Updates all the non separator tokens settings.
         /// </summary>
         /// <param name="nonSeparatorTokens">Collection of separator tokens.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
@@ -34,7 +33,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Resets all the separator tokens settings.
+        /// Resets all the non separator tokens settings.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of the asynchronous task.</returns>
