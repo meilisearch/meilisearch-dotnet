@@ -12,9 +12,9 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns all the configured non separator tokens.</returns>
-        public async Task<IEnumerable<string>> GetNonSeparatorTokensAsync(CancellationToken cancellationToken = default)
+        public async Task<List<string>> GetNonSeparatorTokensAsync(CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{Uid}/settings/non-separator-tokens", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<List<string>>($"indexes/{Uid}/settings/non-separator-tokens", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 

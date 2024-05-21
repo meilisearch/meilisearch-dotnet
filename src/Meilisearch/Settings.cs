@@ -48,13 +48,13 @@ namespace Meilisearch
         /// Gets or sets the non separator tokens list.
         /// </summary>
         [JsonPropertyName("nonSeparatorTokens")]
-        public IEnumerable<string> NonSeparatorTokens { get; set; }
+        public List<string> NonSeparatorTokens { get; set; }
 
         /// <summary>
         /// Gets or sets the separator tokens list.
         /// </summary>
         [JsonPropertyName("separatorTokens")]
-        public IEnumerable<string> SeparatorTokens { get; set; }
+        public List<string> SeparatorTokens { get; set; }
 
         /// <summary>
         /// Gets or sets the filterable attributes.

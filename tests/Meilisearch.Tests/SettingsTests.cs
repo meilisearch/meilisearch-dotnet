@@ -35,8 +35,8 @@ namespace Meilisearch.Tests
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
                 StopWords = new string[] { },
-                SeparatorTokens = new string[] { },
-                NonSeparatorTokens = new string[] { },
+                SeparatorTokens = new List<string> { },
+                NonSeparatorTokens = new List<string> { },
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
                 FilterableAttributes = new string[] { },
                 SortableAttributes = new string[] { },
@@ -333,7 +333,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdateSeparatorTokens()
         {
-            var newSeparatorTokens = new string[] { "-", "/", "&sep" };
+            var newSeparatorTokens = new List<string> { "-", "/", "&sep" };
             await AssertUpdateSuccess(_index.UpdateSeparatorTokensAsync, newSeparatorTokens);
             await AssertGetEquality(_index.GetSeparatorTokensAsync, newSeparatorTokens);
         }
@@ -341,7 +341,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ResetSeparatorTokens()
         {
-            var newSeparatorTokens = new string[] { "-", "/", "&sep" };
+            var newSeparatorTokens = new List<string> { "-", "/", "&sep" };
             await AssertUpdateSuccess(_index.UpdateSeparatorTokensAsync, newSeparatorTokens);
             await AssertGetEquality(_index.GetSeparatorTokensAsync, newSeparatorTokens);
 
@@ -358,7 +358,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdateNonSeparatorTokens()
         {
-            var newNonSeparatorTokens = new string[] { "@", "#" };
+            var newNonSeparatorTokens = new List<string> { "@", "#" };
             await AssertUpdateSuccess(_index.UpdateNonSeparatorTokensAsync, newNonSeparatorTokens);
             await AssertGetEquality(_index.GetNonSeparatorTokensAsync, newNonSeparatorTokens);
         }
@@ -366,7 +366,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ResetNonSeparatorTokens()
         {
-            var newNonSeparatorTokens = new string[] { "@", "#" };
+            var newNonSeparatorTokens = new List<string> { "@", "#" };
             await AssertUpdateSuccess(_index.UpdateNonSeparatorTokensAsync, newNonSeparatorTokens);
             await AssertGetEquality(_index.GetNonSeparatorTokensAsync, newNonSeparatorTokens);
 
