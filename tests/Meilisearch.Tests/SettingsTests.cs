@@ -35,6 +35,8 @@ namespace Meilisearch.Tests
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
                 StopWords = new string[] { },
+                SeparatorTokens = new string[] { },
+                NonSeparatorTokens = new string[] { },
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
                 FilterableAttributes = new string[] { },
                 SortableAttributes = new string[] { },
@@ -322,6 +324,56 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetSeparatorTokens()
+        {
+            await AssertGetEquality(_index.GetSeparatorTokensAsync, _defaultSettings.SeparatorTokens);
+        }
+
+        [Fact]
+        public async Task UpdateSeparatorTokens()
+        {
+            var newSeparatorTokens = new string[] { "-", "/", "&sep" };
+            await AssertUpdateSuccess(_index.UpdateSeparatorTokensAsync, newSeparatorTokens);
+            await AssertGetEquality(_index.GetSeparatorTokensAsync, newSeparatorTokens);
+        }
+
+        [Fact]
+        public async Task ResetSeparatorTokens()
+        {
+            var newSeparatorTokens = new string[] { "-", "/", "&sep" };
+            await AssertUpdateSuccess(_index.UpdateSeparatorTokensAsync, newSeparatorTokens);
+            await AssertGetEquality(_index.GetSeparatorTokensAsync, newSeparatorTokens);
+
+            await AssertResetSuccess(_index.ResetSeparatorTokensAsync);
+            await AssertGetEquality(_index.GetSeparatorTokensAsync, _defaultSettings.SeparatorTokens);
+        }
+
+        [Fact]
+        public async Task GetNonSeparatorTokens()
+        {
+            await AssertGetEquality(_index.GetNonSeparatorTokensAsync, _defaultSettings.NonSeparatorTokens);
+        }
+
+        [Fact]
+        public async Task UpdateNonSeparatorTokens()
+        {
+            var newNonSeparatorTokens = new string[] { "@", "#" };
+            await AssertUpdateSuccess(_index.UpdateNonSeparatorTokensAsync, newNonSeparatorTokens);
+            await AssertGetEquality(_index.GetNonSeparatorTokensAsync, newNonSeparatorTokens);
+        }
+
+        [Fact]
+        public async Task ResetNonSeparatorTokens()
+        {
+            var newNonSeparatorTokens = new string[] { "@", "#" };
+            await AssertUpdateSuccess(_index.UpdateNonSeparatorTokensAsync, newNonSeparatorTokens);
+            await AssertGetEquality(_index.GetNonSeparatorTokensAsync, newNonSeparatorTokens);
+
+            await AssertResetSuccess(_index.ResetNonSeparatorTokensAsync);
+            await AssertGetEquality(_index.GetNonSeparatorTokensAsync, _defaultSettings.NonSeparatorTokens);
+        }
+
+        [Fact]
         public async Task GetSynonyms()
         {
             await AssertGetEquality(_index.GetSynonymsAsync, _defaultSettings.Synonyms);
@@ -524,6 +576,8 @@ namespace Meilisearch.Tests
                 SearchableAttributes = inputSettings.SearchableAttributes ?? defaultSettings.SearchableAttributes,
                 DisplayedAttributes = inputSettings.DisplayedAttributes ?? defaultSettings.DisplayedAttributes,
                 StopWords = inputSettings.StopWords ?? defaultSettings.StopWords,
+                SeparatorTokens = inputSettings.SeparatorTokens ?? defaultSettings.SeparatorTokens,
+                NonSeparatorTokens = inputSettings.NonSeparatorTokens ?? defaultSettings.NonSeparatorTokens,
                 Synonyms = inputSettings.Synonyms ?? defaultSettings.Synonyms,
                 FilterableAttributes = inputSettings.FilterableAttributes ?? defaultSettings.FilterableAttributes,
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
