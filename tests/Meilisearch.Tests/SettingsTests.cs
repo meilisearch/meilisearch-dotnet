@@ -40,6 +40,7 @@ namespace Meilisearch.Tests
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
                 FilterableAttributes = new string[] { },
                 SortableAttributes = new string[] { },
+                ProximityPrecision = "byWord",
                 TypoTolerance = new TypoTolerance
                 {
                     Enabled = true,
@@ -567,6 +568,34 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
         }
 
+        [Fact]
+        public async Task GetProximityPrecision()
+        {
+            await AssertGetEquality(_index.GetProximityPrecisionAsync, _defaultSettings.ProximityPrecision);
+        }
+
+        [Fact]
+        public async Task UpdateProximityPrecision()
+        {
+            var newPrecision = "byAttribute";
+
+            await AssertUpdateSuccess(_index.UpdateProximityPrecisionAsync, newPrecision);
+            await AssertGetEquality(_index.GetProximityPrecisionAsync, newPrecision);
+        }
+
+        [Fact]
+        public async Task ResetProximityPrecision()
+        {
+            var newPrecision = "byAttribute";
+
+            await AssertUpdateSuccess(_index.UpdateProximityPrecisionAsync, newPrecision);
+            await AssertGetEquality(_index.GetProximityPrecisionAsync, newPrecision);
+
+            await AssertResetSuccess(_index.ResetProximityPrecisionAsync
+            );
+            await AssertGetEquality(_index.GetProximityPrecisionAsync, _defaultSettings.ProximityPrecision);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -583,7 +612,8 @@ namespace Meilisearch.Tests
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
                 Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
-                Pagination = inputSettings.Pagination ?? defaultSettings.Pagination
+                Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
+                ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision
             };
         }
 

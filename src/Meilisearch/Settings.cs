@@ -85,5 +85,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("pagination")]
         public Pagination Pagination { get; set; }
+
+        /// <summary>
+        /// Gets or sets the proximity precision attribute.
+        /// </summary>
+        [JsonPropertyName("proximityPrecision")]
+        public string ProximityPrecision { get; set; }
     }
 }
