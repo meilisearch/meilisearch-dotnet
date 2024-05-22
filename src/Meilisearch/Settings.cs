@@ -45,6 +45,18 @@ namespace Meilisearch
         public Dictionary<string, IEnumerable<string>> Synonyms { get; set; }
 
         /// <summary>
+        /// Gets or sets the non separator tokens list.
+        /// </summary>
+        [JsonPropertyName("nonSeparatorTokens")]
+        public List<string> NonSeparatorTokens { get; set; }
+
+        /// <summary>
+        /// Gets or sets the separator tokens list.
+        /// </summary>
+        [JsonPropertyName("separatorTokens")]
+        public List<string> SeparatorTokens { get; set; }
+
+        /// <summary>
         /// Gets or sets the filterable attributes.
         /// </summary>
         [JsonPropertyName("filterableAttributes")]

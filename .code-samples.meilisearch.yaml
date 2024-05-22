@@ -178,6 +178,18 @@ update_stop_words_1: |-
   await client.Index("movies").UpdateStopWordsAsync(new[] {"of", "the", "to"});
 reset_stop_words_1: |-
   await client.Index("movies").ResetStopWordsAsync();
+get_separator_tokens_1: |-
+  await client.Index("movies").GetSeparatorTokensAsync();
+update_separator_tokens_1: |-
+  await client.Index("movies").UpdateSeparatorTokensAsync(new[] { "|", "&hellip;" });
+reset_separator_tokens_1: |-
+  await client.Index("movies").ResetSeparatorTokensAsync();
+get_non_separator_tokens_1: |-
+  await client.Index("movies").GetNonSeparatorTokensAsync();
+update_non_separator_tokens_1: |-
+  await client.Index("movies").UpdateNonSeparatorTokensAsync(new[] { "@", "#" });
+reset_non_separator_tokens_1: |-
+  await client.Index("movies").ResetNonSeparatorTokensAsync();
 get_ranking_rules_1: |-
   await client.Index("movies").GetRankingRulesAsync();
 update_ranking_rules_1: |-
@@ -651,8 +663,7 @@ getting_started_typo_tolerance: |-
   };
 
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
-get_typo_tolerance_1:
-  await client.Index("books").GetTypoToleranceAsync();
+get_typo_tolerance_1: await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
   var typoTolerance = new TypoTolerance {
     DisableOnAttributes = new string[] { "title" },
