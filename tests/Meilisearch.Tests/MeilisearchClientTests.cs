@@ -141,6 +141,43 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task HandleUnknownTaskType()
+        {
+            // Simulate an unknown task type response
+            var unknownTaskUid = Guid.NewGuid();
+            var response = await _defaultClient.CreateUnknownTaskAsync(new UnknownTaskQuery
+            {
+                Uid = unknownTaskUid,
+                TaskType = TaskInfoType.Unknown
+            });
+            var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);
+
+            response.TaskUid.Should().Be(task.Uid);
+            response.Type.Should().Be(TaskInfoType.Unknown);
+            task.Status.Should().Be(TaskInfoStatus.Failed);
+            Assert.Equal($"?uid={unknownTaskUid}", task.Details["originalFilter"].ToString());
+        }
+
+
+        [Fact]
+        public async Task GracefulHandlingOfUnknownTaskType()
+        {
+            // Simulate receiving a task with an unknown type
+            var unknownTaskUid = Guid.NewGuid();
+            var response = await _defaultClient.GetTaskWithUnknownTypeAsync(new GetTaskQuery
+            {
+                Uid = unknownTaskUid
+            });
+            var task = await _defaultClient.WaitForTaskAsync(response.TaskUid);
+
+            response.TaskUid.Should().Be(task.Uid);
+            response.Type.Should().Be(TaskInfoType.Unknown);
+            task.Status.Should().Be(TaskInfoStatus.Failed);
+            Assert.Equal($"?uid={unknownTaskUid}", task.Details["originalFilter"].ToString());
+        }
+
+
+        [Fact]
         public async Task Health()
         {
             var health = await _defaultClient.HealthAsync();
