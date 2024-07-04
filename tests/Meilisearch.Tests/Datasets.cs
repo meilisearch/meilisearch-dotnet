@@ -17,6 +17,8 @@ namespace Meilisearch.Tests
         public static readonly string MoviesForFacetingJsonPath = Path.Combine(BasePath, "movies_for_faceting.json");
         public static readonly string MoviesWithIntIdJsonPath = Path.Combine(BasePath, "movies_with_int_id.json");
         public static readonly string MoviesWithInfoJsonPath = Path.Combine(BasePath, "movies_with_info.json");
+
+        public static readonly string ProductsForDistinctJsonPath = Path.Combine(BasePath, "products_for_distinct_search.json");
     }
 
     public class DatasetSmallMovie
