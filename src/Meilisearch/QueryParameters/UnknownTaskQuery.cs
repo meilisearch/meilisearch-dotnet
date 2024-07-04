@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Meilisearch
+namespace Meilisearch.QueryParameters
 {
     public class UnknownTaskQuery
     {
