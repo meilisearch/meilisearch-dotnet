@@ -761,3 +761,18 @@ update_proximity_precision_settings_1: |-
   await client.Index("books").UpdateProximityPrecisionAsync("byAttribute");
 reset_proximity_precision_settings_1: |-
   await client.Index("books").ResetProximityPrecisionAsync();
+search_parameter_reference_distinct_1: |-
+  var params = new SearchQuery()
+  {   
+    Distinct = "ATTRIBUTE_A"
+  };
+  await client.Index("INDEX_NAME").SearchAsync<T>("QUERY TERMS", params);
+distinct_attribute_guide_filterable_1: |-
+  List<string> attributes = new() { "product_id", "sku", "url" };
+  TaskInfo result = await client.Index("products").UpdateFilterableAttributesAsync(attributes);
+distinct_attribute_guide_distinct_parameter_1: |-
+  var params = new SearchQuery()
+  {   
+    Distinct = "sku"
+  };
+  await client.Index("products").SearchAsync<Products>("white shirt", params);
