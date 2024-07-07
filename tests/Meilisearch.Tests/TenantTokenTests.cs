@@ -61,6 +61,17 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public void DoesNotGenerateASignedTokenWithShortApiKey()
+        {
+            var shortApiKey = "short"; // An API key that is shorter than the required minimum length (less than 16 characters)
+
+            Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
+                () => TenantToken.GenerateToken(_uid, _searchRules, shortApiKey, null)
+            );
+        }
+
+
+        [Fact]
         public void ClientThrowsIfNoKeyIsAvailable()
         {
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress());

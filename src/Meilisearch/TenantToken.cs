@@ -21,7 +21,7 @@ namespace Meilisearch
                 throw new MeilisearchTenantTokenApiKeyUidInvalid();
             }
 
-            if (String.IsNullOrEmpty(apiKey) || apiKey.Length < 8)
+            if (String.IsNullOrEmpty(apiKey) || apiKey.Length < 16)
             {
                 throw new MeilisearchTenantTokenApiKeyInvalid();
             }
