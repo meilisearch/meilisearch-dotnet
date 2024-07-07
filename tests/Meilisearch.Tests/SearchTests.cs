@@ -13,6 +13,7 @@ namespace Meilisearch.Tests
         private Index _nestedIndex;
         private Index _indexForFaceting;
         private Index _indexWithIntId;
+        private Index _productIndexForDistinct;
 
         private readonly TFixture _fixture;
 
@@ -28,6 +29,7 @@ namespace Meilisearch.Tests
             _indexForFaceting = await _fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
             _indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
             _nestedIndex = await _fixture.SetUpIndexForNestedSearch("IndexForNestedDocs-SearchTests");
+            _productIndexForDistinct = await _fixture.SetUpIndexForDistinctProductsSearch("IndexForDistinctProducts-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -502,6 +504,26 @@ namespace Meilisearch.Tests
             };
             var movies = await _basicIndex.SearchAsync<MovieWithRankingScore>("iron man", searchQuery);
             Assert.NotNull(movies.Hits.First()._RankingScore);
+        }
+        [Fact]
+        public async Task CustomSearchProductsWithoutDistinct()
+        {
+            var searchQuery = new SearchQuery()
+            {
+
+            };
+            var products = await _productIndexForDistinct.SearchAsync<Product>("", searchQuery);
+            products.Hits.Count.Should().Be(14);
+        }
+        [Fact]
+        public async Task CustomSearchProductsWithDistinct()
+        {
+            var searchQuery = new SearchQuery()
+            {
+                Distinct = "product_id"
+            };
+            var products = await _productIndexForDistinct.SearchAsync<Product>("", searchQuery);
+            products.Hits.Count.Should().Be(6);
         }
     }
 }

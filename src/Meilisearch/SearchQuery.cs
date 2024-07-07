@@ -130,5 +130,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("page")]
         public int? Page { get; set; }
+
+        /// <summary>
+        /// Sets distinct attribute at search time.
+        /// </summary>
+        [JsonPropertyName("distinct")]
+        public string Distinct { get; set; }
     }
 }
