@@ -763,7 +763,7 @@ reset_proximity_precision_settings_1: |-
   await client.Index("books").ResetProximityPrecisionAsync();
 search_parameter_reference_distinct_1: |-
   var params = new SearchQuery()
-  {   
+  {
     Distinct = "ATTRIBUTE_A"
   };
   await client.Index("INDEX_NAME").SearchAsync<T>("QUERY TERMS", params);
@@ -772,7 +772,7 @@ distinct_attribute_guide_filterable_1: |-
   TaskInfo result = await client.Index("products").UpdateFilterableAttributesAsync(attributes);
 distinct_attribute_guide_distinct_parameter_1: |-
   var params = new SearchQuery()
-  {   
+  {
     Distinct = "sku"
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
