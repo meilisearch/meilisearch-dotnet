@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Xunit;
@@ -119,6 +120,37 @@ namespace Meilisearch.Tests
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The documents were not added during SetUpIndexForNestedSearch. Impossible to run the tests.");
+            }
+
+            return index;
+        }
+        public async Task<Index> SetUpIndexForDistinctProductsSearch(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+            var products = await JsonFileReader.ReadAsync<List<Product>>(Datasets.ProductsForDistinctJsonPath);
+            var task = await index.AddDocumentsAsync(products, primaryKey: "id");
+            // Check the documents have been added
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForDistinctProductsSearch.\n" +
+                    $"Impossible to run the tests.\n" +
+                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
+            }
+
+            var settings = new Settings
+            {
+                FilterableAttributes = new string[] { "product_id" },
+            };
+            task = await index.UpdateSettingsAsync(settings);
+
+            // Check the settings have been added
+            finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForDistinctProductsSearch.\n" +
+                    $"Impossible to run the tests.\n" +
+                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
             }
 
             return index;

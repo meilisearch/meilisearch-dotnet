@@ -1,0 +1,100 @@
+[
+    {
+        "id": 1,
+        "description": "Leather Jacket",
+        "brand": "Lee Jeans",
+        "product_id": "123456",
+        "color": "Brown"
+    },
+    {
+        "id": 2,
+        "description": "Leather Jacket",
+        "brand": "Lee Jeans",
+        "product_id": "123456",
+        "color": "Black"
+    },
+    {
+        "id": 3,
+        "description": "Leather Jacket",
+        "brand": "Lee Jeans",
+        "product_id": "123456",
+        "color": "Blue"
+    },
+    {
+        "id": 4,
+        "description": "T-Shirt",
+        "brand": "Nike",
+        "product_id": "789012",
+        "color": "Red"
+    },
+    {
+        "id": 5,
+        "description": "T-Shirt",
+        "brand": "Nike",
+        "product_id": "789012",
+        "color": "Blue"
+    },
+    {
+        "id": 6,
+        "description": "Running Shoes",
+        "brand": "Adidas",
+        "product_id": "456789",
+        "color": "Black"
+    },
+    {
+        "id": 7,
+        "description": "Running Shoes",
+        "brand": "Adidas",
+        "product_id": "456789",
+        "color": "White"
+    },
+    {
+        "id": 8,
+        "description": "Hoodie",
+        "brand": "Puma",
+        "product_id": "987654",
+        "color": "Gray"
+    },
+    {
+        "id": 9,
+        "description": "Sweater",
+        "brand": "Gap",
+        "product_id": "234567",
+        "color": "Green"
+    },
+    {
+        "id": 10,
+        "description": "Sweater",
+        "brand": "Gap",
+        "product_id": "234567",
+        "color": "Red"
+    },
+    {
+        "id": 11,
+        "description": "Sweater",
+        "brand": "Gap",
+        "product_id": "234567",
+        "color": "Blue"
+    },
+    {
+        "id": 12,
+        "description": "Jeans",
+        "brand": "Levi's",
+        "product_id": "345678",
+        "color": "Indigo"
+    },
+    {
+        "id": 13,
+        "description": "Jeans",
+        "brand": "Levi's",
+        "product_id": "345678",
+        "color": "Black"
+    },
+    {
+        "id": 14,
+        "description": "Jeans",
+        "brand": "Levi's",
+        "product_id": "345678",
+        "color": "Stone Wash"
+    }
+]
