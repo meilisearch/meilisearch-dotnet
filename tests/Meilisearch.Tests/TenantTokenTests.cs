@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -70,11 +71,11 @@ namespace Meilisearch.Tests
             );
         }
 
-        
+
         [Fact]
         public void ClientThrowsIfKeyIsLessThan128Bits()
         {
-            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), "masterKey");            
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), "masterKey");
             Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
                 () => customClient.GenerateTenantToken(_uid, _searchRules)
             );
