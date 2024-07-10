@@ -10,11 +10,31 @@ namespace Meilisearch
     {
         private readonly object _rules;
 
-        public TenantTokenRules(Dictionary<string, object> rules)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TenantTokenRules"/> class based on a rules json object.        
+        /// </summary>
+        /// <param name="rules">
+        /// 
+        /// example:
+        /// 
+        /// {'*': {"filter": 'tag = Tale'}}
+        /// 
+        /// </param>
+        public TenantTokenRules(IReadOnlyDictionary<string, object> rules)
         {
             _rules = rules;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TenantTokenRules"/> class based on a rules string array.        
+        /// </summary>
+        /// <param name="rules">
+        /// 
+        /// example:
+        /// 
+        /// ['books']
+        /// 
+        /// </param>
         public TenantTokenRules(string[] rules)
         {
             _rules = rules;
