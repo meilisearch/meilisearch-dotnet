@@ -426,22 +426,5 @@ namespace Meilisearch
             return _taskEndpoint;
         }
 
-
-        public async Task<TaskInfo> CreateUnknownTaskAsync(UnknownTaskQuery query, CancellationToken cancellationToken = default)
-        {
-            var response = await _http.PostAsJsonAsync("create-unknown-task", query, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<TaskInfo> GetTaskWithUnknownTypeAsync(GetTaskQuery query, CancellationToken cancellationToken = default)
-        {
-            var response = await _http.PostAsJsonAsync("get-task-with-unknown-type", query, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
-                    .ConfigureAwait(false);
-
-            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
     }
 }
