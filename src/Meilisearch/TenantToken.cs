@@ -16,12 +16,12 @@ namespace Meilisearch
         /// <returns>JWT string</returns>
         public static string GenerateToken(string apiKeyUid, TenantTokenRules searchRules, string apiKey, DateTime? expiresAt)
         {
-            if (String.IsNullOrEmpty(apiKeyUid))
+            if (string.IsNullOrEmpty(apiKeyUid))
             {
                 throw new MeilisearchTenantTokenApiKeyUidInvalid();
             }
 
-            if (String.IsNullOrEmpty(apiKey) || apiKey.Length < 8)
+            if (string.IsNullOrEmpty(apiKey) || apiKey.Length < 16)
             {
                 throw new MeilisearchTenantTokenApiKeyInvalid();
             }

@@ -7,7 +7,8 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    public abstract class TenantTokenTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
+    public abstract class TenantTokenTests<TFixture> : IAsyncLifetime
+        where TFixture : IndexFixture
     {
         private readonly TenantTokenRules _searchRules = new TenantTokenRules(new string[] { "*" });
 
@@ -70,9 +71,21 @@ namespace Meilisearch.Tests
             );
         }
 
+
+        [Fact]
+        public void ClientThrowsIfKeyIsLessThan128Bits()
+        {
+            var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), "masterKey");
+            Assert.Throws<MeilisearchTenantTokenApiKeyInvalid>(
+                () => customClient.GenerateTenantToken(_uid, _searchRules)
+            );
+        }
+
+
+
         [Theory]
         [MemberData(nameof(PossibleSearchRules))]
-        public async void SearchesSuccessfullyWithTheNewToken(dynamic data)
+        public async void SearchesSuccessfullyWithTheNewToken(object data)
         {
             var keyOptions = new Key
             {
@@ -83,10 +96,26 @@ namespace Meilisearch.Tests
             };
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
-            var task = await admClient.Index(_indexName).UpdateFilterableAttributesAsync(new string[] { "tag", "book_id" });
+            var task = await admClient
+                .Index(_indexName)
+                .UpdateFilterableAttributesAsync(new string[] { "tag", "book_id" });
             await admClient.Index(_indexName).WaitForTaskAsync(task.TaskUid);
 
-            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(data));
+            TenantTokenRules tokenRules;
+            if (data is string[] dataStringArray)
+            {
+                tokenRules = new TenantTokenRules(dataStringArray);
+            }
+            else if (data is IReadOnlyDictionary<string, object> dataDictionary)
+            {
+                tokenRules = new TenantTokenRules(dataDictionary);
+            }
+            else
+            {
+                throw new Exception("Invalid data type");
+            }
+
+            var token = admClient.GenerateTenantToken(createdKey.Uid, tokenRules);
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
 
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
@@ -105,12 +134,17 @@ namespace Meilisearch.Tests
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
 
-            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }), expiresAt: DateTime.UtcNow.AddSeconds(1));
+            var token = admClient.GenerateTenantToken(
+                createdKey.Uid,
+                new TenantTokenRules(new[] { "*" }),
+                expiresAt: DateTime.UtcNow.AddSeconds(1)
+            );
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            await Assert.ThrowsAsync<MeilisearchApiError>(async () =>
-                await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty));
+            await Assert.ThrowsAsync<MeilisearchApiError>(
+                async () => await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty)
+            );
         }
 
         [Fact]
@@ -126,29 +160,61 @@ namespace Meilisearch.Tests
             var createdKey = await _client.CreateKeyAsync(keyOptions);
             var admClient = new MeilisearchClient(_fixture.MeilisearchAddress(), createdKey.KeyUid);
 
-            var token = admClient.GenerateTenantToken(createdKey.Uid, new TenantTokenRules(new[] { "*" }), expiresAt: DateTime.UtcNow.AddMinutes(1));
+            var token = admClient.GenerateTenantToken(
+                createdKey.Uid,
+                new TenantTokenRules(new[] { "*" }),
+                expiresAt: DateTime.UtcNow.AddMinutes(1)
+            );
             var customClient = new MeilisearchClient(_fixture.MeilisearchAddress(), token);
             await customClient.Index(_indexName).SearchAsync<Movie>(string.Empty);
         }
 
-        public static IEnumerable<object[]> PossibleSearchRules()
+        public static TheoryData<object> PossibleSearchRules()
         {
-            // {'*': {}}
-            yield return new object[] { new Dictionary<string, object> { { "*", new Dictionary<string, object> { } } } };
-            // {'books': {}}
-            yield return new object[] { new Dictionary<string, object> { { "books", new Dictionary<string, object> { } } } };
-            // {'*': null}
-            yield return new object[] { new Dictionary<string, object> { { "*", null } } };
-            // {'books': null}
-            yield return new object[] { new Dictionary<string, object> { { "books", null } } };
-            // ['*']
-            yield return new object[] { new string[] { "*" } };
-            // ['books']
-            yield return new object[] { new string[] { "books" } };
-            // {'*': {"filter": 'tag = Tale'}}
-            yield return new object[] { new Dictionary<string, object> { { "*", new Dictionary<string, object> { { "filter", "tag = Tale" } } } } };
-            // {'books': {"filter": 'tag = Tale'}}
-            yield return new object[] { new Dictionary<string, object> { { "books", new Dictionary<string, object> { { "filter", "tag = Tale" } } } } };
+            IEnumerable<object> SubPossibleSearchRules()
+            {
+                // {'*': {}}
+                yield return new Dictionary<string, object>
+                {
+                    {
+                        "*",
+                        new Dictionary<string, object> { }
+                    }
+                };
+                // {'books': {}}
+                yield return new Dictionary<string, object>
+                {
+                    {
+                        "books",
+                        new Dictionary<string, object> { }
+                    }
+                };
+                // {'*': null}
+                yield return new Dictionary<string, object> { { "*", null } };
+                // {'books': null}
+                yield return new Dictionary<string, object> { { "books", null } };
+                // ['*']
+                yield return new string[] { "*" };
+                // ['books']
+                yield return new string[] { "books" };
+                // {'*': {"filter": 'tag = Tale'}}
+                yield return new Dictionary<string, object>
+                {
+                    {
+                        "*",
+                        new Dictionary<string, object> { { "filter", "tag = Tale" } }
+                    }
+                };
+                // {'books': {"filter": 'tag = Tale'}}
+                yield return new Dictionary<string, object>
+                {
+                    {
+                        "books",
+                        new Dictionary<string, object> { { "filter", "tag = Tale" } }
+                    }
+                };
+            }
+            return new TheoryData<object>(SubPossibleSearchRules());
         }
     }
 }
