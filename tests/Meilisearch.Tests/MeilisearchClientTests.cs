@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.Converters;
 using Meilisearch.Extensions;
 using Meilisearch.QueryParameters;
 
@@ -189,5 +190,34 @@ namespace Meilisearch.Tests
             var finishedTask = await _defaultClient.Index(indexUid).WaitForTaskAsync(task.TaskUid);
             Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
         }
+
+        [Fact]
+        public void Deserialize_UnknownTaskType_ReturnsUnknown()
+        {
+            var json = "\"NonExistentTaskType\"";
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new TaskInfoTypeConverter() }
+            };
+
+            var result = JsonSerializer.Deserialize<TaskInfoType>(json, options);
+
+            Assert.Equal(TaskInfoType.Unknown, result);
+        }
+
+        [Fact]
+        public void Deserialize_KnownTaskType_ReturnsEnumValue()
+        {
+            var json = "\"IndexCreation\"";
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new TaskInfoTypeConverter() }
+            };
+
+            var result = JsonSerializer.Deserialize<TaskInfoType>(json, options);
+
+            Assert.Equal(TaskInfoType.IndexCreation, result);
+        }
+
     }
 }
