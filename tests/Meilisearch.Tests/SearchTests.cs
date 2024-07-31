@@ -505,6 +505,18 @@ namespace Meilisearch.Tests
             var movies = await _basicIndex.SearchAsync<MovieWithRankingScore>("iron man", searchQuery);
             Assert.NotNull(movies.Hits.First()._RankingScore);
         }
+
+        [Fact]
+        public async Task CustomSearchWithShowRankingScoreDetails()
+        {
+            var searchQuery = new SearchQuery()
+            {
+                ShowRankingScoreDetails = true
+            };
+            var movies = await _basicIndex.SearchAsync<MovieWithRankingScoreDetails>("iron man", searchQuery);
+            Assert.NotEmpty(movies.Hits.First()._RankingScoreDetails);
+        }
+
         [Fact]
         public async Task CustomSearchProductsWithoutDistinct()
         {

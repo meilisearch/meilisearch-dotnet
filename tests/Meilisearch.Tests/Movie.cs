@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Text.Json;
+
 namespace Meilisearch.Tests
 {
     public class Movie
@@ -55,5 +58,15 @@ namespace Meilisearch.Tests
 
         public string Genre { get; set; }
         public double? _RankingScore { get; set; }
+    }
+
+    public class MovieWithRankingScoreDetails
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+        public IDictionary<string, JsonElement> _RankingScoreDetails { get; set; }
     }
 }
