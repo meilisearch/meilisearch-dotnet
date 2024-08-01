@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Meilisearch.Converters
 {
@@ -12,7 +12,7 @@ namespace Meilisearch.Converters
         {
             if (reader.TokenType == JsonTokenType.String)
             {
-                string enumValue = reader.GetString();
+                var enumValue = reader.GetString();
                 if (Enum.TryParse<TaskInfoType>(enumValue, true, out var taskInfoType))
                 {
                     return taskInfoType;
