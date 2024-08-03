@@ -104,7 +104,7 @@ namespace Meilisearch
         Canceled
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(TaskInfoTypeConverter))]
     public enum TaskInfoType
     {
         IndexCreation,
