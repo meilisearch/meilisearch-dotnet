@@ -425,5 +425,6 @@ namespace Meilisearch
 
             return _taskEndpoint;
         }
+
     }
 }

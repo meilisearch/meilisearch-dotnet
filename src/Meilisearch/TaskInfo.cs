@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+using Meilisearch.Converters;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -102,7 +104,7 @@ namespace Meilisearch
         Canceled
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(TaskInfoTypeConverter))]
     public enum TaskInfoType
     {
         IndexCreation,
@@ -115,6 +117,7 @@ namespace Meilisearch
         TaskCancelation,
         SnapshotCreation,
         TaskDeletion,
-        IndexSwap
+        IndexSwap,
+        Unknown
     }
 }
