@@ -104,6 +104,12 @@ namespace Meilisearch
         [JsonPropertyName("showRankingScore")]
         public bool? ShowRankingScore { get; set; }
 
+        /// <summary>
+        /// Gets or sets showRankingScoreDetails parameter. It defines whether details on how the ranking score was computed are returned or not.
+        /// </summary>
+        [JsonPropertyName("showRankingScoreDetails")]
+        public bool? ShowRankingScoreDetails { get; set; }
+
         // pagination:
 
         /// <summary>

@@ -755,6 +755,12 @@ search_parameter_guide_show_ranking_score_1: |-
     ShowRankingScore = true
   };
   await client.Index("movies").SearchAsync<MovieWithRankingScore>("dragon", params);
+search_parameter_guide_show_ranking_score_details_1: |-
+  var params = new SearchQuery()
+  {
+    ShowRankingScoreDetails = true
+  };
+  await client.Index("movies").SearchAsync<MovieWithRankingScoreDetails>("dragon", params);
 get_proximity_precision_settings_1: |-
   await client.Index("books").GetProximityPrecisionAsync();
 update_proximity_precision_settings_1: |-
