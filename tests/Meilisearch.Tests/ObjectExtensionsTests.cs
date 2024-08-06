@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
+using Meilisearch.Converters;
 using Meilisearch.Extensions;
 using Meilisearch.QueryParameters;
 
@@ -17,6 +19,8 @@ namespace Meilisearch.Tests
         public string FakeString { get; set; }
         public int? FakeInteger { get; set; }
         public List<string> FakeStringList { get; set; }
+        public List<TaskInfoStatus> FakeStatusList { get; set; }
+        public List<TaskInfoType> FakeTypeList { get; set; }
         public string Path { get; set; }
     }
 
@@ -39,6 +43,21 @@ namespace Meilisearch.Tests
             yield return new object[] {
                 new FakeQuery { FakeDate = date, FakeStringList = new List<string> { "hey", "ho" } },
                 $"fakeDate={Uri.EscapeDataString(date.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz"))}&fakeStringList=hey,ho"
+            };
+
+            yield return new object[] {
+                new FakeQuery { FakeStatusList = new List<TaskInfoStatus> { TaskInfoStatus.Enqueued, TaskInfoStatus.Succeeded } },
+                "fakeStatusList=Enqueued,Succeeded"
+            };
+
+            yield return new object[] {
+                new FakeQuery { FakeTypeList = new List<TaskInfoType> { TaskInfoType.IndexCreation, TaskInfoType.DocumentDeletion } },
+                "fakeTypeList=IndexCreation,DocumentDeletion"
+            };
+
+            yield return new object[] {
+                new FakeQuery { FakeStatusList = new List<TaskInfoStatus> { TaskInfoStatus.Processing }, FakeTypeList = new List<TaskInfoType> { TaskInfoType.SettingsUpdate } },
+                "fakeStatusList=Processing&fakeTypeList=SettingsUpdate"
             };
         }
 
