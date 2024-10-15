@@ -32,7 +32,8 @@ namespace Meilisearch.Tests
             _index2 = await _fixture.SetUpBasicIndex("BasicIndex-MultiSearch-Index2");
             var t1 = _index1.UpdateFilterableAttributesAsync(new[] { "genre" });
             var t2 = _index2.UpdateFilterableAttributesAsync(new[] { "genre" });
-            await Task.WhenAll((await Task.WhenAll(t1, t2)).Select(x => _fixture.DefaultClient.WaitForTaskAsync(x.TaskUid)));
+            await Task.WhenAll(
+                (await Task.WhenAll(t1, t2)).Select(x => _fixture.DefaultClient.WaitForTaskAsync(x.TaskUid)));
         }
 
         [Fact]
@@ -41,7 +42,7 @@ namespace Meilisearch.Tests
             var result = await _fixture.DefaultClient.MultiSearchAsync(new MultiSearchQuery()
             {
                 Queries = new System.Collections.Generic.List<SearchQuery>()
-                    {
+                {
                     new SearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
                     new SearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
                 }
@@ -77,6 +78,151 @@ namespace Meilisearch.Tests
                 var og = GetMovie(originalHits2, x.Id);
                 return og.Name == x.Name && og.Genre == x.Genre;
             }).Should().BeTrue();
+        }
+
+
+        [Fact]
+        public async Task FederatedSearchWithNoFederationOptions()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                    },
+                });
+
+
+            Movie GetMovie(IEnumerable<Movie> movies, string id)
+            {
+                return movies.FirstOrDefault(x => x.Id == id);
+            }
+
+            var original1 = await _index1.GetDocumentsAsync<Movie>();
+            var originalHits1 = original1.Results;
+            result.Hits.Should().HaveCount(4);
+            var res1 = result.Hits.ToList()[0];
+            // res1.IndexUid.Should().Be(_index1.Uid);
+            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res1Hits.Should().HaveCount(2);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits1, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
+            //
+            // var original2 = await _index2.GetDocumentsAsync<Movie>();
+            // var originalHits2 = original2.Results.ToList();
+            // var res2 = result.Results[1];
+            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res2Hits.Should().HaveCount(2);
+            // res2.IndexUid.Should().Be(_index2.Uid);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits2, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task FederatedSearchWithEmptyOptions()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                    },
+                    FederationOptions = new MultiSearchFederationOptions()
+                    {
+
+                    }
+                });
+
+
+            Movie GetMovie(IEnumerable<Movie> movies, string id)
+            {
+                return movies.FirstOrDefault(x => x.Id == id);
+            }
+
+            var original1 = await _index1.GetDocumentsAsync<Movie>();
+            var originalHits1 = original1.Results;
+            result.Hits.Should().HaveCount(4);
+            var res1 = result.Hits.ToList()[0];
+            // res1.IndexUid.Should().Be(_index1.Uid);
+            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res1Hits.Should().HaveCount(2);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits1, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
+            //
+            // var original2 = await _index2.GetDocumentsAsync<Movie>();
+            // var originalHits2 = original2.Results.ToList();
+            // var res2 = result.Results[1];
+            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res2Hits.Should().HaveCount(2);
+            // res2.IndexUid.Should().Be(_index2.Uid);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits2, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task FederatedSearchWithLimitAndOffset()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                    },
+                    FederationOptions = new MultiSearchFederationOptions()
+                    {
+                        Limit = 2,
+                        Offset = 0
+                    }
+                });
+
+
+            Movie GetMovie(IEnumerable<Movie> movies, string id)
+            {
+                return movies.FirstOrDefault(x => x.Id == id);
+            }
+
+            var original1 = await _index1.GetDocumentsAsync<Movie>();
+            var originalHits1 = original1.Results;
+            result.Hits.Should().HaveCount(2);
+            var res1 = result.Hits.ToList()[0];
+            // res1.IndexUid.Should().Be(_index1.Uid);
+            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res1Hits.Should().HaveCount(2);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits1, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
+            //
+            // var original2 = await _index2.GetDocumentsAsync<Movie>();
+            // var originalHits2 = original2.Results.ToList();
+            // var res2 = result.Results[1];
+            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
+            // res2Hits.Should().HaveCount(2);
+            // res2.IndexUid.Should().Be(_index2.Uid);
+            // res1Hits.All(x =>
+            // {
+            //     var og = GetMovie(originalHits2, x.Id);
+            //     return og.Name == x.Name && og.Genre == x.Genre;
+            // }).Should().BeTrue();
         }
     }
 }

@@ -1,6 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Meilisearch.Converters;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -15,6 +17,7 @@ namespace Meilisearch
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new MultiSearchFederationOptionsConverter() }
         };
 
         /// <summary>
