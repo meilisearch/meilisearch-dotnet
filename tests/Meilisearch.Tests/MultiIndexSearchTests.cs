@@ -135,7 +135,6 @@ namespace Meilisearch.Tests
                 });
 
             result.Hits.Should().HaveCount(2);
-            var res1 = result.Hits.ToList()[0];
         }
     }
 }
