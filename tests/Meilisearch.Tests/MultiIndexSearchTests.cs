@@ -94,36 +94,7 @@ namespace Meilisearch.Tests
                     },
                 });
 
-
-            Movie GetMovie(IEnumerable<Movie> movies, string id)
-            {
-                return movies.FirstOrDefault(x => x.Id == id);
-            }
-
-            var original1 = await _index1.GetDocumentsAsync<Movie>();
-            var originalHits1 = original1.Results;
             result.Hits.Should().HaveCount(4);
-            var res1 = result.Hits.ToList()[0];
-            // res1.IndexUid.Should().Be(_index1.Uid);
-            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res1Hits.Should().HaveCount(2);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits1, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
-            //
-            // var original2 = await _index2.GetDocumentsAsync<Movie>();
-            // var originalHits2 = original2.Results.ToList();
-            // var res2 = result.Results[1];
-            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res2Hits.Should().HaveCount(2);
-            // res2.IndexUid.Should().Be(_index2.Uid);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits2, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
         }
 
         [Fact]
@@ -139,40 +110,10 @@ namespace Meilisearch.Tests
                     },
                     FederationOptions = new MultiSearchFederationOptions()
                     {
-
                     }
                 });
 
-
-            Movie GetMovie(IEnumerable<Movie> movies, string id)
-            {
-                return movies.FirstOrDefault(x => x.Id == id);
-            }
-
-            var original1 = await _index1.GetDocumentsAsync<Movie>();
-            var originalHits1 = original1.Results;
             result.Hits.Should().HaveCount(4);
-            var res1 = result.Hits.ToList()[0];
-            // res1.IndexUid.Should().Be(_index1.Uid);
-            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res1Hits.Should().HaveCount(2);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits1, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
-            //
-            // var original2 = await _index2.GetDocumentsAsync<Movie>();
-            // var originalHits2 = original2.Results.ToList();
-            // var res2 = result.Results[1];
-            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res2Hits.Should().HaveCount(2);
-            // res2.IndexUid.Should().Be(_index2.Uid);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits2, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
         }
 
         [Fact]
@@ -193,36 +134,8 @@ namespace Meilisearch.Tests
                     }
                 });
 
-
-            Movie GetMovie(IEnumerable<Movie> movies, string id)
-            {
-                return movies.FirstOrDefault(x => x.Id == id);
-            }
-
-            var original1 = await _index1.GetDocumentsAsync<Movie>();
-            var originalHits1 = original1.Results;
             result.Hits.Should().HaveCount(2);
             var res1 = result.Hits.ToList()[0];
-            // res1.IndexUid.Should().Be(_index1.Uid);
-            // var res1Hits = res1.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res1Hits.Should().HaveCount(2);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits1, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
-            //
-            // var original2 = await _index2.GetDocumentsAsync<Movie>();
-            // var originalHits2 = original2.Results.ToList();
-            // var res2 = result.Results[1];
-            // var res2Hits = res2.Hits.Select(x => x.Deserialize<Movie>(Constants.JsonSerializerOptionsWriteNulls));
-            // res2Hits.Should().HaveCount(2);
-            // res2.IndexUid.Should().Be(_index2.Uid);
-            // res1Hits.All(x =>
-            // {
-            //     var og = GetMovie(originalHits2, x.Id);
-            //     return og.Name == x.Name && og.Genre == x.Genre;
-            // }).Should().BeTrue();
         }
     }
 }

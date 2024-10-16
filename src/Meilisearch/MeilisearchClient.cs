@@ -92,7 +92,7 @@ namespace Meilisearch
             }
 
             var responseMessage = await _http.PostAsJsonAsync("multi-search", query,
-                Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
+                Constants.FederatedSearchJsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
             return await responseMessage.Content
                 .ReadFromJsonAsync<ISearchable<T>>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
