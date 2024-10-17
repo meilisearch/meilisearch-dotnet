@@ -35,7 +35,8 @@ namespace Meilisearch
         /// </summary>
         internal static readonly JsonSerializerOptions JsonSerializerOptionsWriteNulls = new JsonSerializerOptions
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never, PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 
         internal static string VersionErrorHintMessage(string message, string method)
