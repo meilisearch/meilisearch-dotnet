@@ -13,12 +13,13 @@ namespace Meilisearch
         /// <summary>
         /// JsonSerializer options used when serializing objects that needs to remove null values.
         /// </summary>
-        internal static readonly JsonSerializerOptions FederatedSearchJsonSerializerOptionsRemoveNulls = new JsonSerializerOptions
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new MultiSearchFederationOptionsConverter() }
-        };
+        internal static readonly JsonSerializerOptions FederatedSearchJsonSerializerOptionsRemoveNulls =
+            new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                Converters = { new MultiSearchFederationOptionsConverter() }
+            };
 
         /// <summary>
         /// JsonSerializer options used when serializing objects that needs to remove null values.
@@ -34,8 +35,7 @@ namespace Meilisearch
         /// </summary>
         internal static readonly JsonSerializerOptions JsonSerializerOptionsWriteNulls = new JsonSerializerOptions
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never, PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 
         internal static string VersionErrorHintMessage(string message, string method)

@@ -10,9 +10,8 @@ namespace Meilisearch
     /// </summary>
     public class FederatedMultiSearchQuery
     {
-
         /// <summary>
-        /// Default Constructor that ensures FederationOptions are always set
+        /// Default constructor that ensures FederationOptions are always set
         /// </summary>
         public FederatedMultiSearchQuery()
         {
@@ -26,7 +25,7 @@ namespace Meilisearch
         public List<FederatedSearchQuery> Queries { get; set; }
 
         /// <summary>
-        /// If present and not null, returns a single list merging all search results across all specified queries
+        /// The federated search query options
         /// </summary>
         [JsonInclude]
         [JsonPropertyName("federation")]

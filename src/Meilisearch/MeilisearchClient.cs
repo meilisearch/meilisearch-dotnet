@@ -77,11 +77,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Searches multiple indexes at once but get a aggregated result
+        /// Searches multiple indexes at once but gets an aggregated list of results.
         /// </summary>
-        /// <param name="query">The queries to be executed (must have IndexUid set)</param>
+        /// <param name="query">The query to be executed (must have at least one query inside)</param>
         /// <param name="cancellationToken"></param>
-        /// <returns>Aggregated results</returns>
+        /// <returns>Aggregated results.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<ISearchable<T>> FederatedMultiSearchAsync<T>(FederatedMultiSearchQuery query,
             CancellationToken cancellationToken = default)
@@ -99,7 +99,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Searches multiple indexes at once
+        /// Searches multiple indexes at once.
         /// </summary>
         /// <param name="query">The queries to be executed (must have IndexUid set)</param>
         /// <param name="cancellationToken"></param>

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace Meilisearch
 {
     /// <summary>
-    /// Base properties of Search Query
+    /// Base properties of search query
     /// </summary>
     public class SearchQueryBase
     {
@@ -99,7 +99,7 @@ namespace Meilisearch
         public string MatchingStrategy { get; set; }
 
         /// <summary>
-        /// Gets or sets showRankingScore parameter. It defines wheter the global ranking score of a document (between 0 and 1) is returned or not.
+        /// Gets or sets showRankingScore parameter. It defines whether the global ranking score of a document (between 0 and 1) is returned or not.
         /// </summary>
         [JsonPropertyName("showRankingScore")]
         public bool? ShowRankingScore { get; set; }

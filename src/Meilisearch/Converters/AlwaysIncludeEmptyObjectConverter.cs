@@ -7,7 +7,8 @@ using System.Text.Json.Serialization;
 namespace Meilisearch.Converters
 {
     /// <summary>
-    /// Always include Property in json objects will be serialized as "{}"
+    /// Always include property in json. MultiSearchFederationOptions will be serialized as "{}"
+    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class MultiSearchFederationOptionsConverter : JsonConverter<MultiSearchFederationOptions>
@@ -23,19 +24,28 @@ namespace Meilisearch.Converters
         {
             if (value == null || !HasAnyValueSet(value))
             {
-                // Write an empty object if the value is null
-                writer.WriteStartObject();
-                writer.WriteEndObject();
+                WriteEmptyObject(writer);
             }
             else
             {
-                var newOptions = new JsonSerializerOptions(options);
-                newOptions.Converters.Remove(newOptions.Converters.First(c =>
-                    c.GetType() == typeof(MultiSearchFederationOptionsConverter)));
-
-                // Serialize the value as usual
-                JsonSerializer.Serialize(writer, value, newOptions);
+                var sanitizedOptions =
+                    RemoveSelfFromSerializerOptions(options); //Prevents getting stuck in a loop during serialization
+                JsonSerializer.Serialize(writer, value, sanitizedOptions);
             }
+        }
+
+        private static JsonSerializerOptions RemoveSelfFromSerializerOptions(JsonSerializerOptions options)
+        {
+            var sanitizedOptions = new JsonSerializerOptions(options);
+            sanitizedOptions.Converters.Remove(sanitizedOptions.Converters.First(c =>
+                c.GetType() == typeof(MultiSearchFederationOptionsConverter)));
+            return sanitizedOptions;
+        }
+
+        private static void WriteEmptyObject(Utf8JsonWriter writer)
+        {
+            writer.WriteStartObject();
+            writer.WriteEndObject();
         }
 
         private bool HasAnyValueSet(MultiSearchFederationOptions value)
