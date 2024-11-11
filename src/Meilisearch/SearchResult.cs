@@ -45,21 +45,15 @@ namespace Meilisearch
         [JsonPropertyName("hits")]
         public IReadOnlyCollection<T> Hits { get; }
 
-        /// <summary>
-        /// Number of documents skipped.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("offset")]
         public int Offset { get; }
 
-        /// <summary>
-        /// Number of documents to take.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("limit")]
         public int Limit { get; }
 
-        /// <summary>
-        /// Gets the estimated total number of hits returned by the search.
-        /// </summary>
+        /// <inheritdoc/>
         [JsonPropertyName("estimatedTotalHits")]
         public int EstimatedTotalHits { get; }
 

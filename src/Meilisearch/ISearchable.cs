@@ -23,6 +23,24 @@ namespace Meilisearch
         IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
+        /// Number of documents skipped.
+        /// </summary>
+        [JsonPropertyName("offset")]
+        int Offset { get; }
+
+        /// <summary>
+        /// Number of documents to take.
+        /// </summary>
+        [JsonPropertyName("limit")]
+        int Limit { get; }
+
+        /// <summary>
+        /// Gets the estimated total number of hits returned by the search.
+        /// </summary>
+        [JsonPropertyName("estimatedTotalHits")]
+        int EstimatedTotalHits { get; }
+
+        /// <summary>
         /// Returns the number of documents matching the current search query for each given facet.
         /// </summary>
         [JsonPropertyName("facetDistribution")]
