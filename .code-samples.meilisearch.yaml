@@ -782,3 +782,10 @@ distinct_attribute_guide_distinct_parameter_1: |-
     Distinct = "sku"
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
+get_dictionary_1: |-
+  var indexDictionary = await client.Index("products").GetDictionaryAsync();
+update_dictionary_1: |-
+  var newDictionary = new string[] { "W. E. B.", "W.E.B." };
+  await client.Index("products").UpdateDictionaryAsync(newDictionary);
+reset_dictionary_1: |-
+  await client.Index("products").ResetDictionaryAsync();
