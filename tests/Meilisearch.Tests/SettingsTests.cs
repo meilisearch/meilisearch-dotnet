@@ -591,8 +591,7 @@ namespace Meilisearch.Tests
             await AssertUpdateSuccess(_index.UpdateProximityPrecisionAsync, newPrecision);
             await AssertGetEquality(_index.GetProximityPrecisionAsync, newPrecision);
 
-            await AssertResetSuccess(_index.ResetProximityPrecisionAsync
-            );
+            await AssertResetSuccess(_index.ResetProximityPrecisionAsync);
             await AssertGetEquality(_index.GetProximityPrecisionAsync, _defaultSettings.ProximityPrecision);
         }
 
