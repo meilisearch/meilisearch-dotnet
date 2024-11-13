@@ -7,10 +7,10 @@ namespace Meilisearch
     public partial class Index
     {
         /// <summary>
-        /// Gets all the settings of an index.
+        /// Gets the dictionary of an index.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns all the settings.</returns>
+        /// <returns>Returns the dictionary.</returns>
         public async Task<string[]> GetDictionaryAsync(CancellationToken cancellationToken = default)
         {
             return await _http.GetFromJsonAsync<string[]>($"indexes/{Uid}/settings/dictionary", cancellationToken: cancellationToken)
@@ -18,11 +18,11 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets all the settings of an index.
+        /// Updates the dictionary of an index.
         /// </summary>
         /// <param name="dictionary">Dictionary object.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Returns all the settings.</returns>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
         public async Task<TaskInfo> UpdateDictionaryAsync(string[] dictionary, CancellationToken cancellationToken = default)
         {
             var responseMessage =
@@ -32,7 +32,7 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Resets all the settings to their default values.
+        /// Resets the dictionary to their default values.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of the asynchronous task.</returns>
