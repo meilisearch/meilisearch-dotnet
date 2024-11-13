@@ -34,6 +34,7 @@ namespace Meilisearch.Tests
                 DistinctAttribute = null,
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
+                Dictionary = new string[] { },
                 StopWords = new string[] { },
                 SeparatorTokens = new List<string> { },
                 NonSeparatorTokens = new List<string> { },
@@ -593,6 +594,33 @@ namespace Meilisearch.Tests
 
             await AssertResetSuccess(_index.ResetProximityPrecisionAsync);
             await AssertGetEquality(_index.GetProximityPrecisionAsync, _defaultSettings.ProximityPrecision);
+        }
+
+        [Fact]
+        public async Task GetDictionaryAsync()
+        {
+            await AssertGetEquality(_index.GetDictionaryAsync, _defaultSettings.Dictionary);
+        }
+
+        [Fact]
+        public async Task UpdateDictionaryAsync()
+        {
+            var newDictionary = new string[] { "W. E. B.", "W.E.B." };
+
+            await AssertUpdateSuccess(_index.UpdateDictionaryAsync, newDictionary);
+            await AssertGetEquality(_index.GetDictionaryAsync, newDictionary);
+        }
+
+        [Fact]
+        public async Task ResetDictionaryAsync()
+        {
+            var newDictionary = new string[] { "W. E. B.", "W.E.B." };
+
+            await AssertUpdateSuccess(_index.UpdateDictionaryAsync, newDictionary);
+            await AssertGetEquality(_index.GetDictionaryAsync, newDictionary);
+
+            await AssertResetSuccess(_index.ResetDictionaryAsync);
+            await AssertGetEquality(_index.GetDictionaryAsync, _defaultSettings.Dictionary);
         }
 
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
