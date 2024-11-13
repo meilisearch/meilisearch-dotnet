@@ -14,6 +14,7 @@ namespace Meilisearch.Tests
         private Index _indexForFaceting;
         private Index _indexWithIntId;
         private Index _productIndexForDistinct;
+        private Index _indexForRankingScoreThreshold;
 
         private readonly TFixture _fixture;
 
@@ -30,6 +31,7 @@ namespace Meilisearch.Tests
             _indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
             _nestedIndex = await _fixture.SetUpIndexForNestedSearch("IndexForNestedDocs-SearchTests");
             _productIndexForDistinct = await _fixture.SetUpIndexForDistinctProductsSearch("IndexForDistinctProducts-SearchTests");
+            _indexForRankingScoreThreshold = await _fixture.SetUpIndexForRankingScoreThreshold("IndexForRankingThreshold-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -537,6 +539,20 @@ namespace Meilisearch.Tests
             };
             var products = await _productIndexForDistinct.SearchAsync<Product>("", searchQuery);
             products.Hits.Count.Should().Be(6);
+        }
+
+        [Fact]
+        public async Task CustomSearchWithRankingScoreThreshold()
+        {
+            var searchQuery = new SearchQuery { };
+            var movies = await _indexForRankingScoreThreshold.SearchAsync<MovieWithInfo>("a wizard movie", searchQuery);
+            movies.Hits.Count.Should().Be(4);
+
+            searchQuery.RankingScoreThreshold = 0.5M;
+            movies = await _indexForRankingScoreThreshold.SearchAsync<MovieWithInfo>("a wizard movie", searchQuery);
+            movies.Hits.Count.Should().Be(1);
+            movies.Hits.First().Id.Should().Be("13");
+            movies.Hits.First().Name.Should().Be("Harry Potter");
         }
     }
 }
