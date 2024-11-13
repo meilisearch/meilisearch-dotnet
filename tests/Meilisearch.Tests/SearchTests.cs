@@ -527,6 +527,7 @@ namespace Meilisearch.Tests
             var products = await _productIndexForDistinct.SearchAsync<Product>("", searchQuery);
             products.Hits.Count.Should().Be(14);
         }
+
         [Fact]
         public async Task CustomSearchProductsWithDistinct()
         {
