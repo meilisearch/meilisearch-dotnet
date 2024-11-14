@@ -124,6 +124,7 @@ namespace Meilisearch.Tests
 
             return index;
         }
+
         public async Task<Index> SetUpIndexForDistinctProductsSearch(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);
@@ -151,6 +152,22 @@ namespace Meilisearch.Tests
                 throw new Exception($"The documents were not added during SetUpIndexForDistinctProductsSearch.\n" +
                     $"Impossible to run the tests.\n" +
                     $"{JsonSerializer.Serialize(finishedTask.Error)}");
+            }
+
+            return index;
+        }
+
+        public async Task<Index> SetUpIndexForRankingScoreThreshold(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithInfo>>(Datasets.MoviesWithInfoJsonPath);
+            var task = await index.AddDocumentsAsync(movies);
+
+            // Check the documents have been added
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception("The documents were not added during SetUpIndexForRankingScoreThreshold. Impossible to run the tests.");
             }
 
             return index;
