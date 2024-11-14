@@ -1,6 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Meilisearch.Converters;
+
 namespace Meilisearch
 {
     /// <summary>
@@ -8,6 +10,17 @@ namespace Meilisearch
     /// </summary>
     internal static class Constants
     {
+        /// <summary>
+        /// JsonSerializer options used when serializing objects that needs to remove null values.
+        /// </summary>
+        internal static readonly JsonSerializerOptions FederatedSearchJsonSerializerOptionsRemoveNulls =
+            new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                Converters = { new MultiSearchFederationOptionsConverter() }
+            };
+
         /// <summary>
         /// JsonSerializer options used when serializing objects that needs to remove null values.
         /// </summary>
