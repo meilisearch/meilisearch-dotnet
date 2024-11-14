@@ -87,6 +87,12 @@ namespace Meilisearch
         public Pagination Pagination { get; set; }
 
         /// <summary>
+        /// Gets or sets the dictionary object.
+        /// </summary>
+        [JsonPropertyName("dictionary")]
+        public string[] Dictionary { get; set; }
+
+        /// <summary>
         /// Gets or sets the proximity precision attribute.
         /// </summary>
         [JsonPropertyName("proximityPrecision")]
