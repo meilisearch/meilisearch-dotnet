@@ -66,12 +66,12 @@ swap_indexes_1: |-
 search_parameter_guide_hitsperpage_1: |-
   var result = await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { HitsPerPage = 15 });
   if(result is PaginatedSearchResult<Movie> pagedResults)
-  {    
+  {
   }
 search_parameter_guide_page_1: |-
   var result = await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { Page = 2 });
   if(result is PaginatedSearchResult<Movie> pagedResults)
-  {    
+  {
   }
 get_one_index_1: |-
   await client.GetIndexAsync("movies");
@@ -287,7 +287,7 @@ search_parameter_guide_offset_1: |-
   };
   var result = await client.Index("movies").SearchAsync<Movie>("shifu", sq);
   if(result is SearchResult<Movie> pagedResults)
-  {    
+  {
   }
 search_parameter_guide_limit_1: |-
   var sq = new SearchQuery
@@ -296,7 +296,7 @@ search_parameter_guide_limit_1: |-
   };
   var result = await client.Index("movies").SearchAsync<Movie>("shifu", sq);
   if(result is SearchResult<Movie> pagedResults)
-  {    
+  {
   }
 search_parameter_guide_retrieve_1: |-
   var sq = new SearchQuery
