@@ -783,9 +783,9 @@ distinct_attribute_guide_distinct_parameter_1: |-
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
 get_dictionary_1: |-
-  var indexDictionary = await client.Index("products").GetDictionaryAsync();
+  var indexDictionary = await client.Index("books").GetDictionaryAsync();
 update_dictionary_1: |-
   var newDictionary = new string[] { "J. R. R.", "W. E. B." };
-  await client.Index("products").UpdateDictionaryAsync(newDictionary);
+  await client.Index("books").UpdateDictionaryAsync(newDictionary);
 reset_dictionary_1: |-
-  await client.Index("products").ResetDictionaryAsync();
+  await client.Index("books").ResetDictionaryAsync();
