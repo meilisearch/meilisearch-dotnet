@@ -92,6 +92,7 @@ namespace Meilisearch.Tests
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
+                Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -111,6 +112,7 @@ namespace Meilisearch.Tests
                     { "hp", new string[] { "harry potter" } },
                     { "harry potter", new string[] { "hp" } },
                 },
+                Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsOne);
 
@@ -140,7 +142,8 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 DisplayedAttributes = new string[] { "name" },
                 RankingRules = new string[] { "typo" },
-                FilterableAttributes = new string[] { "genre" }
+                FilterableAttributes = new string[] { "genre" },
+                Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -640,7 +643,8 @@ namespace Meilisearch.Tests
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
                 Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
-                ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision
+                ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
+                Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
             };
         }
 
