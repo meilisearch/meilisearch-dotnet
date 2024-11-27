@@ -39,6 +39,9 @@
       <Compile Update="Index.Documents.cs">
         <DependentUpon>Index.cs</DependentUpon>
       </Compile>
+      <Compile Update="Index.Dictionary.cs">
+        <DependentUpon>Index.cs</DependentUpon>
+      </Compile>
       <Compile Update="Index.Tasks.cs">
         <DependentUpon>Index.cs</DependentUpon>
       </Compile>
