@@ -90,7 +90,7 @@ namespace Meilisearch
         /// Gets or sets the dictionary object.
         /// </summary>
         [JsonPropertyName("dictionary")]
-        public string[] Dictionary { get; set; }
+        public IEnumerable<string> Dictionary { get; set; }
 
         /// <summary>
         /// Gets or sets the proximity precision attribute.

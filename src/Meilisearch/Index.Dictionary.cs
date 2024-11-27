@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the dictionary.</returns>
-        public async Task<string[]> GetDictionaryAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<string>> GetDictionaryAsync(CancellationToken cancellationToken = default)
         {
             return await _http.GetFromJsonAsync<string[]>($"indexes/{Uid}/settings/dictionary", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -23,7 +24,7 @@ namespace Meilisearch
         /// <param name="dictionary">Dictionary object.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of the asynchronous task.</returns>
-        public async Task<TaskInfo> UpdateDictionaryAsync(string[] dictionary, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> UpdateDictionaryAsync(IEnumerable<string> dictionary, CancellationToken cancellationToken = default)
         {
             var responseMessage =
                 await _http.PutAsJsonAsync($"indexes/{Uid}/settings/dictionary", dictionary, cancellationToken: cancellationToken)
