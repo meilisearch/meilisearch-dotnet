@@ -782,6 +782,12 @@ distinct_attribute_guide_distinct_parameter_1: |-
     Distinct = "sku"
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
+search_parameter_reference_ranking_score_threshold_1: |-
+  var params = new SearchQuery()
+  {
+    RankingScoreThreshold = 0.2M
+  };
+  await client.Index("INDEX_NAME").SearchAsync<T>("badman", params);
 get_dictionary_1: |-
   var indexDictionary = await client.Index("books").GetDictionaryAsync();
 update_dictionary_1: |-
