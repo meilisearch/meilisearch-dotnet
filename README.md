@@ -256,7 +256,7 @@ if (results is SearchResult<T> limitedResults)
 }
 ```
 
-#### Search with defined Number of results per page
+#### Search with defined number of results per page
 
 To get paginated results with page numbers, the [HitsPerPage](https://www.meilisearch.com/docs/reference/api/search#number-of-results-per-page) and [Page](https://www.meilisearch.com/docs/reference/api/search#page) properties must be defined.
 
