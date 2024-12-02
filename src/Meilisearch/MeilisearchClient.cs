@@ -396,6 +396,14 @@ namespace Meilisearch
             return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
+
+        ///<summary>
+        ///</summary>
+        public async Task<SearchSimilarDocuments> SearchSimilarDocuments(SearchSimilarDocuments searchSimilarDocuments)
+        {
+            throw NotImplementedException();
+        }
+
         /// <summary>
         /// Generate a tenant token string to be used during search.
         /// </summary>
