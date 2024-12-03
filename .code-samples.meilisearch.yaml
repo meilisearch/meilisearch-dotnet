@@ -4,8 +4,13 @@
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
 getting_started_faceting: |-
-  var faceting = new Faceting {
-    MaxValuesPerFacet = 2
+  var faceting = new Faceting
+  {
+      MaxValuesPerFacet = 2,
+      SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+      {
+          ["*"] = SortFacetValuesByType.Count
+      }
   };
   await client.Index("movies").UpdateFacetingAsync(faceting);
 getting_started_pagination: |-
@@ -716,10 +721,16 @@ reset_pagination_settings_1: |-
 get_faceting_settings_1: |-
   await client.Index("movies").GetFacetingAsync();
 update_faceting_settings_1: |-
-  var faceting = new Faceting {
-    MaxValuesPerFacet = 2
+  var faceting = new Faceting
+  {
+      MaxValuesPerFacet = 2,
+      SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+      {
+          ["*"] = SortFacetValuesByType.Alpha,
+          ["genres"] = SortFacetValuesByType.Count
+      }
   };
-  await client.Index("movies").UpdateFacetingAsync(faceting);
+  await client.Index("books").UpdateFacetingAsync(faceting);
 reset_faceting_settings_1: |-
   await client.Index("movies").ResetFacetingAsync();
 multi_search_1: |-
@@ -782,3 +793,12 @@ distinct_attribute_guide_distinct_parameter_1: |-
     Distinct = "sku"
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
+facet_search_2: |-
+  var newFaceting = new Faceting
+  {
+      SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+      {
+          ["genres"] = SortFacetValuesByType.Count
+      }
+  };
+  await client.Index("books").UpdateFacetingAsync(newFaceting);
