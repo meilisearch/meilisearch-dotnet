@@ -550,13 +550,13 @@ namespace Meilisearch
         /// <param name="query">The search criteria to find the facet matches.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Facets meeting the search criteria.</returns>
-        public async Task<SearchFacetsResult> FacetSearchAsync(string facetName,
-            SearchFacetsQuery query = default, CancellationToken cancellationToken = default)
+        public async Task<FacetSearchResult> FacetSearchAsync(string facetName,
+            FacetSearchQuery query = default, CancellationToken cancellationToken = default)
         {
-            SearchFacetsQuery body;
+            FacetSearchQuery body;
             if (query == null)
             {
-                body = new SearchFacetsQuery() { FacetName = facetName };
+                body = new FacetSearchQuery() { FacetName = facetName };
             }
             else
             {
@@ -569,7 +569,7 @@ namespace Meilisearch
                 .ConfigureAwait(false);
 
             return await responseMessage.Content
-                .ReadFromJsonAsync<SearchFacetsResult>(cancellationToken: cancellationToken)
+                .ReadFromJsonAsync<FacetSearchResult>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
     }

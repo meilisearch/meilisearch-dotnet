@@ -6,7 +6,7 @@ namespace Meilisearch
     /// <summary>
     /// Wrapper for facet search query
     /// </summary>
-    public class SearchFacetsQuery
+    public class FacetSearchQuery
     {
         /// <summary>
         /// Gets or sets the facetName property

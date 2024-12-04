@@ -62,7 +62,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFilter()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Filter = "genre = SF"
             };
@@ -77,7 +77,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFilterWithSpaces()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Filter = "genre = 'sci fi'"
             };
@@ -92,7 +92,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFilterFacetIsNotNull()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Filter = "genre IS NOT NULL"
             };
@@ -115,7 +115,7 @@ namespace Meilisearch.Tests
             task.TaskUid.Should().BeGreaterOrEqualTo(0);
             await _indexForFaceting.WaitForTaskAsync(task.TaskUid);
 
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Filter = "genre = SF AND id != 13"
             };
@@ -130,7 +130,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFilterFacetIsNull()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Filter = "genre IS NULL"
             };
@@ -143,7 +143,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFacetQuery()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 FacetQuery = "SF"
             };
@@ -158,7 +158,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithFacetQueryWithSpaces()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 FacetQuery = "sci fi"
             };
@@ -173,7 +173,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithLooseFacetQuery()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 FacetQuery = "s"
             };
@@ -188,7 +188,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithLooseQuery()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Query = "s"
             };
@@ -204,7 +204,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithMultipleQueryAndLastMatchingStrategy()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Query = "action spider man",
                 MatchingStrategy = "last"
@@ -219,7 +219,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithMultipleQueryAndAllMatchingStrategy()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Query = "action spider man",
                 MatchingStrategy = "all",
@@ -234,7 +234,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FacetSearchWithMultipleQueryAndAllMatchingStrategyAndAttributesToSearchOn()
         {
-            var query = new SearchFacetsQuery()
+            var query = new FacetSearchQuery()
             {
                 Query = "spider man",
                 MatchingStrategy = "all",
