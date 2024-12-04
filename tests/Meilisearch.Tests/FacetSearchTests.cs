@@ -7,17 +7,13 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    public abstract class FacetingSearchTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
+    public abstract class FacetSearchTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private Index _indexForFaceting;
-        //private Index _basicIndex;
-        //private Index _nestedIndex;
-        //private Index _indexWithIntId;
-        //private Index _productIndexForDistinct;
 
         private readonly TFixture _fixture;
 
-        public FacetingSearchTests(TFixture fixture)
+        public FacetSearchTests(TFixture fixture)
         {
             _fixture = fixture;
         }
@@ -26,10 +22,6 @@ namespace Meilisearch.Tests
         {
             await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
             _indexForFaceting = await _fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
-            //_basicIndex = await _fixture.SetUpBasicIndex("BasicIndex-SearchTests");
-            //_indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
-            //_nestedIndex = await _fixture.SetUpIndexForNestedSearch("IndexForNestedDocs-SearchTests");
-            //_productIndexForDistinct = await _fixture.SetUpIndexForDistinctProductsSearch("IndexForDistinctProducts-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -43,7 +35,7 @@ namespace Meilisearch.Tests
             Assert.Null(results.FacetQuery);
         }
 
-        //[Fact]
+        //[Fact] //these may or may not be required.
         //public async Task BasicFacetSearchWithNoFacet()
         //{
         //    var results = await _indexForFaceting.SearchFacetsAsync(null);
