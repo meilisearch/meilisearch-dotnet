@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -541,6 +540,36 @@ namespace Meilisearch
 
             return await responseMessage.Content
                 .ReadFromJsonAsync<ISearchable<T>>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Search index facets
+        /// </summary>
+        /// <param name="facetName">Name of the facet to search.</param>
+        /// <param name="query">The search criteria to find the facet matches.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Facets meeting the search criteria.</returns>
+        public async Task<FacetSearchResult> FacetSearchAsync(string facetName,
+            FacetSearchQuery query = default, CancellationToken cancellationToken = default)
+        {
+            FacetSearchQuery body;
+            if (query == null)
+            {
+                body = new FacetSearchQuery() { FacetName = facetName };
+            }
+            else
+            {
+                body = query;
+                body.FacetName = facetName;
+            }
+
+            var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/facet-search", body,
+                    Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<FacetSearchResult>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
     }
