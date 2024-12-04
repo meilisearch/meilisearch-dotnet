@@ -30,7 +30,7 @@ namespace Meilisearch
         /// Gets or sets the filter property
         /// </summary>
         [JsonPropertyName("filter")]
-        public string Filter { get; set; }
+        public dynamic Filter { get; set; }
 
         /// <summary>
         /// Gets or sets the matchingStrategy property, can be <c>last</c>, <c>all</c> or <c>frequency</c>.
