@@ -782,3 +782,16 @@ distinct_attribute_guide_distinct_parameter_1: |-
     Distinct = "sku"
   };
   await client.Index("products").SearchAsync<Product>("white shirt", params);
+facet_search_1: |-
+  var query = new SearchFacetsQuery()
+  {
+    FacetQuery = "fiction",
+    Filter = "rating > 3"
+  };
+  await client.Index("books").FacetSearchAsync("genres", query);
+facet_search_2: |-
+  var query = new SearchFacetsQuery()
+  {
+    FacetQuery = "c"
+  };
+  await client.Index("books").FacetSearchAsync("genres", query);
