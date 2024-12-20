@@ -795,3 +795,5 @@ update_dictionary_1: |-
   await client.Index("books").UpdateDictionaryAsync(newDictionary);
 reset_dictionary_1: |-
   await client.Index("books").ResetDictionaryAsync();
+create_snapshot_1: |-
+  await client.CreateSnapshotAsync();
