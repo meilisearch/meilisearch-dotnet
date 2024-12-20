@@ -92,7 +92,8 @@ namespace Meilisearch.Tests
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
-                Dictionary = new string[] { "dictionary" }
+                Dictionary = new string[] { "dictionary" },
+                SearchCutoffMs = 1000,
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -626,6 +627,31 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetDictionaryAsync, _defaultSettings.Dictionary);
         }
 
+        [Fact]
+        public async Task GetSearchCutoffMsAsync()
+        {
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, _defaultSettings.SearchCutoffMs);
+        }
+
+        [Fact]
+        public async Task UpdateSearchCutoffMsAsync()
+        {
+            var newSearchCutoffMs = 2000;
+            await AssertUpdateSuccess(_index.UpdateSearchCutoffMsAsync, newSearchCutoffMs);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, newSearchCutoffMs);
+        }
+
+        [Fact]
+        public async Task ResetSearchCutoffMsAsync()
+        {
+            var newSearchCutoffMs = 2000;
+            await AssertUpdateSuccess(_index.UpdateSearchCutoffMsAsync, newSearchCutoffMs);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, newSearchCutoffMs);
+
+            await AssertResetSuccess(_index.ResetSearchCutoffMsAsync);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, _defaultSettings.SearchCutoffMs);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -645,6 +671,7 @@ namespace Meilisearch.Tests
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
+                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs
             };
         }
 
