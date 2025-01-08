@@ -572,5 +572,35 @@ namespace Meilisearch
                 .ReadFromJsonAsync<FacetSearchResult>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Retrieve documents similar to a specific search result.
+        /// </summary>
+        /// <typeparam name="T">Type parameter to return.</typeparam>
+        /// <param name="id"></param>
+        /// <param name="searchAttributes"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SimilarDocumentsResult<T>> SearchSimilarDocuments<T>(string id,
+            SimilarDocumentsSearch searchAttributes = default, CancellationToken cancellationToken = default)
+        {
+            SimilarDocumentsSearch similarSearch;
+            if(searchAttributes == null)
+            {
+                similarSearch = new SimilarDocumentsSearch() { Id = id };
+            }
+            else
+            {
+                similarSearch = searchAttributes;
+                similarSearch.Id = id;
+            }
+
+            var responseMessage = await _http.PostAsJsonAsync($"indexes/{Uid}/similar", similarSearch, cancellationToken)
+                .ConfigureAwait(false);
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<SimilarDocumentsResult<T>>()
+                .ConfigureAwait(false);
+        }
     }
 }
