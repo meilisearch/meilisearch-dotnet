@@ -146,7 +146,7 @@ JSON Output:
 All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
 
 ```c#
-SearchResult<Movie> movies = await index.SearchAsync<Movie>(
+var movies = await index.SearchAsync<Movie>(
     "car",
     new SearchQuery
     {
@@ -197,7 +197,7 @@ Note that MeiliSearch will rebuild your index whenever you update `FilterableAtt
 Then, you can perform the search:
 
 ```c#
-SearchResult<Movie> movies = await index.SearchAsync<Movie>(
+var movies = await index.SearchAsync<Movie>(
     "wonder",
     new SearchQuery
     {
@@ -222,6 +222,41 @@ JSON Output:
   "estimatedTotalHits": 1,
   "processingTimeMs": 0,
   "query": "wonder"
+}
+```
+
+#### Search with Limit and Offset
+
+You can paginate search results by making queries combining both [offset](https://www.meilisearch.com/docs/reference/api/search#offset) and [limit](https://www.meilisearch.com/docs/reference/api/search#limit).
+
+```c#
+var results = await index.SearchAsync<T>(query, new SearchQuery()
+{
+    Limit = 5,
+    Offset = 0
+});
+
+if (results is SearchResult<T> limitedResults)
+{
+    var estimatedTotalHits = limitedResults.EstimatedTotalHits;
+}
+```
+
+#### Search with defined number of results per page
+
+To get paginated results with page numbers, the [HitsPerPage](https://www.meilisearch.com/docs/reference/api/search#number-of-results-per-page) and [Page](https://www.meilisearch.com/docs/reference/api/search#page) properties must be defined.
+
+```c#
+var results = await index.SearchAsync<T>(query, new SearchQuery()
+{
+    HitsPerPage = pageSize,
+    Page = pageNumber,
+});
+
+if (results is PaginatedSearchResult<T> paginatedResults)
+{
+    var totalHits = paginatedResults.TotalHits;
+    var totalPages = paginatedResults.TotalPages;
 }
 ```
 
