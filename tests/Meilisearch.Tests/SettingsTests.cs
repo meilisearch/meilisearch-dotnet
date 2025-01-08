@@ -55,7 +55,11 @@ namespace Meilisearch.Tests
                 },
                 Faceting = new Faceting
                 {
-                    MaxValuesPerFacet = 100
+                    MaxValuesPerFacet = 100,
+                    SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>()
+                    {
+                        ["*"] = SortFacetValuesByType.Alpha
+                    }
                 },
                 Pagination = new Pagination
                 {
@@ -517,7 +521,11 @@ namespace Meilisearch.Tests
         {
             var newFaceting = new Faceting
             {
-                MaxValuesPerFacet = 20
+                MaxValuesPerFacet = 20,
+                SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+                {
+                    ["*"] = SortFacetValuesByType.Count
+                }
             };
 
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
@@ -529,7 +537,11 @@ namespace Meilisearch.Tests
         {
             var newFaceting = new Faceting
             {
-                MaxValuesPerFacet = 30
+                MaxValuesPerFacet = 30,
+                SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+                {
+                    ["*"] = SortFacetValuesByType.Count
+                }
             };
 
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
