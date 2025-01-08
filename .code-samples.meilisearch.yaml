@@ -802,7 +802,7 @@ facet_search_1: |-
     Filter = "rating > 3"
   };
   await client.Index("books").FacetSearchAsync("genres", query);
-facet_search_2: |-
+facet_search_3: |-
   var query = new SearchFacetsQuery()
   {
     FacetQuery = "c"
