@@ -802,3 +802,16 @@ update_search_cutoff_1: |-
   await client.Index("movies").UpdateSearchCutoffMsAsync(150);
 reset_search_cutoff_1: |-
   await client.Index("movies").ResetSearchCutoffMsAsync();
+facet_search_1: |-
+  var query = new SearchFacetsQuery()
+  {
+    FacetQuery = "fiction",
+    Filter = "rating > 3"
+  };
+  await client.Index("books").FacetSearchAsync("genres", query);
+facet_search_3: |-
+  var query = new SearchFacetsQuery()
+  {
+    FacetQuery = "c"
+  };
+  await client.Index("books").FacetSearchAsync("genres", query);
