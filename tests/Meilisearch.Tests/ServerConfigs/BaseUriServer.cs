@@ -73,6 +73,14 @@ namespace Meilisearch.Tests.ServerConfigs
         }
 
         [Collection(CollectionFixtureName)]
+        public class FacetingSearchTests : FacetSearchTests<ConfigFixture>
+        {
+            public FacetingSearchTests(ConfigFixture fixture) : base(fixture)
+            {
+            }
+        }
+
+        [Collection(CollectionFixtureName)]
         public class SettingsTests : SettingsTests<ConfigFixture>
         {
             public SettingsTests(ConfigFixture fixture) : base(fixture)
