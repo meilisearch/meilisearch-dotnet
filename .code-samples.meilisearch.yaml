@@ -166,7 +166,8 @@ update_settings_1: |-
             OneTypo = 8,
             TwoTypos = 10
         }
-    }
+    },
+    SearchCutoffMs = 150
   };
   TaskInfo task = await client.Index("movies").UpdateSettingsAsync(newFilters);
 reset_settings_1: |-
@@ -812,6 +813,12 @@ update_dictionary_1: |-
   await client.Index("books").UpdateDictionaryAsync(newDictionary);
 reset_dictionary_1: |-
   await client.Index("books").ResetDictionaryAsync();
+get_search_cutoff_1: |-
+  var searchCutoff = await client.Index("movies").GetSearchCutoffMsAsync();
+update_search_cutoff_1: |-
+  await client.Index("movies").UpdateSearchCutoffMsAsync(150);
+reset_search_cutoff_1: |-
+  await client.Index("movies").ResetSearchCutoffMsAsync();
 facet_search_2: |-
   var newFaceting = new Faceting
   {
