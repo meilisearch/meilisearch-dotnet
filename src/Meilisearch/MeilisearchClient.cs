@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -423,6 +424,33 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Get a list of all experimental features that can be activated via the /experimental-features route and whether or not they are currently activated.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>A dictionary of experimental features and their current state.</returns>
+        public async Task<Dictionary<string, bool>> GetExperimentalFeaturesAsync(CancellationToken cancellationToken = default)
+        {
+            var response = await _http.GetAsync("experimental-features", cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<Dictionary<string, bool>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Activate or deactivate experimental features.
+        /// </summary>
+        /// <param name="activeState">true to activate, false to deactivate.</param>
+        /// <param name="featureName">Experimental feature name to change.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>The experimental feature's updated state.</returns>
+        public async Task<KeyValuePair<string, bool>> UpdateExperimentalFeatureAsync(string featureName, bool activeState, CancellationToken cancellationToken = default)
+        {
+            var feature = new Dictionary<string, bool>() { { featureName, activeState } };
+            var response = await _http.PatchAsJsonAsync($"experimental-features", feature, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken).ConfigureAwait(false);
+
+            var responseData = await response.Content.ReadFromJsonAsync<Dictionary<string, bool>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return responseData.FirstOrDefault();
+        }
+
+        /// <summary>
         /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
         /// <returns>Returns a Task instance.</returns>
@@ -436,6 +464,7 @@ namespace Meilisearch
 
             return _taskEndpoint;
         }
+
 
     }
 }

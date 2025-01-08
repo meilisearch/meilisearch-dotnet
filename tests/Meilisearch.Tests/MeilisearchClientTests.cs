@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -232,5 +233,39 @@ namespace Meilisearch.Tests
             Assert.Equal(TaskInfoType.IndexCreation, result);
         }
 
+        [Fact]
+        public async Task GetExperimentalFeatures()
+        {
+            await ResetExperimentalFeatures();
+
+            var features = await _defaultClient.GetExperimentalFeaturesAsync();
+
+            Assert.NotNull(features);
+            Assert.NotEmpty(features);
+            Assert.All(features, x => Assert.False(x.Value));
+        }
+
+        [Fact]
+        public async Task UpdateExperimentalFeatures()
+        {
+            await ResetExperimentalFeatures();
+
+            var currentFeatures = await _defaultClient.GetExperimentalFeaturesAsync();
+            Assert.Contains(currentFeatures, x => x.Key == "vectorStore" && x.Value == false);
+
+            var result = await _defaultClient.UpdateExperimentalFeatureAsync("vectorStore", true);
+
+            Assert.Equal("vectorStore", result.Key);
+            Assert.True(result.Value);
+
+            var updatedFeatures = await _defaultClient.GetExperimentalFeaturesAsync();
+            Assert.Contains(updatedFeatures, x => x.Key == "vectorStore" && x.Value == true);
+        }
+
+        private async Task ResetExperimentalFeatures()
+        {
+            foreach (var feature in await _defaultClient.GetExperimentalFeaturesAsync())
+                await _defaultClient.UpdateExperimentalFeatureAsync(feature.Key, false);
+        }
     }
 }
