@@ -93,6 +93,19 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CreateAndGetSnapshots()
+        {
+            var snapshotResponse = await _defaultClient.CreateSnapshotAsync();
+            Assert.NotNull(snapshotResponse);
+
+            snapshotResponse.Status.Should().Be(TaskInfoStatus.Enqueued);
+
+            var snapshotTask = await _defaultClient.GetTaskAsync(snapshotResponse.TaskUid);
+            snapshotTask.Status.Should().BeOneOf(TaskInfoStatus.Succeeded, TaskInfoStatus.Processing, TaskInfoStatus.Enqueued);
+            Assert.Equal(snapshotResponse.TaskUid, snapshotTask.Uid);
+        }
+
+        [Fact]
         public async Task CancelTasks()
         {
             var date = DateTime.Now;

@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageId>MeiliSearch</PackageId>
-        <Version>0.15.5</Version>
+        <Version>0.16.0</Version>
         <Description>.NET wrapper for Meilisearch, an open-source search engine</Description>
         <RepositoryUrl>https://github.com/meilisearch/meilisearch-dotnet</RepositoryUrl>
         <PackageTags>meilisearch;dotnet;sdk;search-engine;search;instant-search</PackageTags>
@@ -21,13 +21,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
-      <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
+        <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="../../README.md" Pack="true" PackagePath="\" />
-      <None Include="../../assets/logo.png" Pack="true" Visible="false" PackagePath="" />
+        <None Include="../../README.md" Pack="true" PackagePath="\" />
+        <None Include="../../assets/logo.png" Pack="true" Visible="false" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,32 +36,35 @@
         </AssemblyAttribute>
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Index.Documents.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.Dictionary.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.Tasks.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.StopWords.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.Attributes.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.Synonyms.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.RankingRules.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.Settings.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Index.TypoTolerance.cs">
-        <DependentUpon>Index.cs</DependentUpon>
-      </Compile>
+        <Compile Update="Index.Documents.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Dictionary.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Tasks.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.StopWords.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Attributes.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Synonyms.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.RankingRules.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Settings.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.TypoTolerance.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.SearchCutoffMs.cs">
+            <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>
