@@ -147,6 +147,6 @@ namespace Meilisearch
         /// Gets or sets rankingScoreThreshold, a number between 0.0 and 1.0. 
         /// </summary>
         [JsonPropertyName("rankingScoreThreshold")]
-        public decimal RankingScoreThreshold { get; set; }
+        public decimal? RankingScoreThreshold { get; set; }
     }
 }
