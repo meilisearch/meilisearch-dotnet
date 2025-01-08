@@ -813,6 +813,8 @@ update_dictionary_1: |-
   await client.Index("books").UpdateDictionaryAsync(newDictionary);
 reset_dictionary_1: |-
   await client.Index("books").ResetDictionaryAsync();
+create_snapshot_1: |-
+  await client.CreateSnapshotAsync();
 get_search_cutoff_1: |-
   var searchCutoff = await client.Index("movies").GetSearchCutoffMsAsync();
 update_search_cutoff_1: |-
