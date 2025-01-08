@@ -173,6 +173,21 @@ namespace Meilisearch.Tests
             return index;
         }
 
+        public async Task<Index> SetUpIndexForSimilarDocumentsSearch(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithInfo>>(Datasets.MoviesWithVectorStoreJsonPath);
+            var task = await index.AddDocumentsAsync(movies);
+
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception("The documents were not added during SetUpIndexForSimilarDocumentsSearch. Impossible to run the tests.");
+            }
+
+            return index;
+        }
+
         public async Task DeleteAllIndexes()
         {
             var indexes = await DefaultClient.GetAllIndexesAsync();

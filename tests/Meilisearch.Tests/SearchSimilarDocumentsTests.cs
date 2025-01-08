@@ -6,6 +6,7 @@ namespace Meilisearch.Tests
 {
     public abstract class SearchSimilarDocumentsTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
+        private readonly MeilisearchClient _client;
         private Index _basicIndex;
 
         private readonly TFixture _fixture;
@@ -13,12 +14,13 @@ namespace Meilisearch.Tests
         public SearchSimilarDocumentsTests(TFixture fixture)
         {
             _fixture = fixture;
+            _client = fixture.DefaultClient;
         }
 
         public async Task InitializeAsync()
         {
             await _fixture.DeleteAllIndexes();
-            _basicIndex = await _fixture.SetUpBasicIndex("BasicIndex-SearchTests");
+            _basicIndex = await _fixture.SetUpIndexForSimilarDocumentsSearch("BasicIndexWithVectorStore-SearchTests");
         }
 
         public Task DisposeAsync() => Task.CompletedTask;
@@ -26,7 +28,9 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task SearchSimilarDocuments()
         {
-            _basicIndex.UpdateSettingsAsync()
+            await _client.UpdateExperimentalFeatureAsync("vectorStore", true);
+
+            //TODO: add embedder
 
             var response = await _basicIndex.SearchSimilarDocuments<Movie>("13");
             Assert.Single(response.Hits);
