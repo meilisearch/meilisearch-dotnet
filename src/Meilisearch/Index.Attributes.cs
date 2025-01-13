@@ -120,6 +120,43 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the localized attributes setting.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the localized attributes setting.</returns>
+        public async Task<IEnumerable<LocalizedAttributeLocale>> GetLocalizedAttributesAsync(CancellationToken cancellationToken = default)
+        {
+            return await _http.GetFromJsonAsync<IEnumerable<LocalizedAttributeLocale>>($"indexes/{Uid}/settings/localized-attributes", cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Updates the localized attributes setting.
+        /// </summary>
+        /// <param name="localizedAttributes">Collection of localized attributes.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
+        public async Task<TaskInfo> UpdateLocalizedAttributesAsync(IEnumerable<LocalizedAttributeLocale> localizedAttributes, CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.PutAsJsonAsync($"indexes/{Uid}/settings/localized-attributes", localizedAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Resets the filterable attributes setting.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
+        public async Task<TaskInfo> ResetLocalizedAttributesAsync(CancellationToken cancellationToken = default)
+        {
+            var httpresponse = await _http.DeleteAsync($"indexes/{Uid}/settings/localized-attributes", cancellationToken)
+                .ConfigureAwait(false);
+            return await httpresponse.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets the searchable attributes setting.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
