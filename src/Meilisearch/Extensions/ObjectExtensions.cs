@@ -54,7 +54,7 @@ namespace Meilisearch.Extensions
                         {
                             values.Add(key + "=" + string.Join(",", taskInfoStatusValue.Select(x => x.ToString())));
                         }
-                        else if(value is List<TaskInfoType> taskInfoTypeValue)
+                        else if (value is List<TaskInfoType> taskInfoTypeValue)
                         {
                             values.Add(key + "=" + string.Join(",", taskInfoTypeValue.Select(x => x.ToString())));
                         }
