@@ -11,8 +11,8 @@ namespace Meilisearch
         /// <summary>
         /// Gets or sets the locales.
         /// </summary>
-        [JsonPropertyName("locale")]
-        public IEnumerable<string> Locale { get; set; }
+        [JsonPropertyName("locales")]
+        public IEnumerable<string> Locales { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute patterns.
