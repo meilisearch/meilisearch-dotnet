@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libicu-dev
       - name: Check release validity
         run: sh .github/scripts/check-release.sh
       - name: Setup dotnet

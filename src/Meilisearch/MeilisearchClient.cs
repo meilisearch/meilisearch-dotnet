@@ -285,6 +285,17 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Creates Snapshot process.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns snapshot creation status with uid and processing status.</returns>
+        public async Task<TaskInfo> CreateSnapshotAsync(CancellationToken cancellationToken = default)
+        {
+            var response = await _http.PostAsync("snapshots", default, cancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets the API keys.
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>

@@ -103,5 +103,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("proximityPrecision")]
         public string ProximityPrecision { get; set; }
+
+        /// <summary>
+        /// Gets or sets the searchCutoffMs attribute.
+        /// </summary>
+        [JsonPropertyName("searchCutoffMs")]
+        public int? SearchCutoffMs { get; set; }
     }
 }
