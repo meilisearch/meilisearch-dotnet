@@ -98,6 +98,13 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 Dictionary = new string[] { "dictionary" },
                 SearchCutoffMs = 1000,
+                LocalizedAttributes = new LocalizedAttributeLocale[]
+                {
+                    new LocalizedAttributeLocale() {
+                        Locales = new[] { "eng" },
+                        AttributePatterns = new[] { "en_*" }
+                    }
+                }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -231,6 +238,45 @@ namespace Meilisearch.Tests
 
             await AssertResetSuccess(_index.ResetFilterableAttributesAsync);
             await AssertGetEquality(_index.GetFilterableAttributesAsync, _defaultSettings.FilterableAttributes);
+        }
+
+        [Fact]
+        public async Task GetLocaliztedAttributes()
+        {
+            await AssertGetEquality(_index.GetLocalizedAttributesAsync, _defaultSettings.LocalizedAttributes);
+        }
+
+        [Fact]
+        public async Task UpdateLocalizedAttributes()
+        {
+            var newLocalizedAttributes = new LocalizedAttributeLocale[]
+            {
+                new LocalizedAttributeLocale() {
+                    Locales = new[] { "eng" },
+                    AttributePatterns = new[] { "en_*" }
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateLocalizedAttributesAsync, newLocalizedAttributes);
+            await AssertGetEquality(_index.GetLocalizedAttributesAsync, newLocalizedAttributes);
+        }
+
+        [Fact]
+        public async Task ResetLocalizedAttributes()
+        {
+            var newLocalizedAttributes = new LocalizedAttributeLocale[]
+            {
+                new LocalizedAttributeLocale() {
+                    Locales = new[] { "eng" },
+                    AttributePatterns = new[] { "en_*" }
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateLocalizedAttributesAsync, newLocalizedAttributes);
+            await AssertGetEquality(_index.GetLocalizedAttributesAsync, newLocalizedAttributes);
+
+            await AssertResetSuccess(_index.ResetLocalizedAttributesAsync);
+            await AssertGetEquality(_index.GetLocalizedAttributesAsync, _defaultSettings.LocalizedAttributes);
         }
 
         [Fact]
@@ -683,7 +729,8 @@ namespace Meilisearch.Tests
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
-                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs
+                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs,
+                LocalizedAttributes = inputSettings.LocalizedAttributes ?? defaultSettings.LocalizedAttributes
             };
         }
 
