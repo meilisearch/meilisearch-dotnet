@@ -213,7 +213,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
-            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal(2, movies.Hits.Count);
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
@@ -247,7 +247,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
-            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal(2, movies.Hits.Count);
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
@@ -265,7 +265,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
-            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal(2, movies.Hits.Count);
             Assert.Equal("12", movies.Hits.First().Id);
             Assert.Equal("Star Wars", movies.Hits.First().Name);
             Assert.Equal("SF", movies.Hits.First().Genre);
@@ -392,7 +392,7 @@ namespace Meilisearch.Tests
                 });
             movies.Hits.Should().NotBeEmpty();
             movies.FacetDistribution.Should().BeNull();
-            Assert.Equal(2, movies.Hits.Count());
+            Assert.Equal(2, movies.Hits.Count);
             Assert.Equal("14", movies.Hits.First().Id);
         }
 
@@ -494,7 +494,7 @@ namespace Meilisearch.Tests
             var searchQuery = new SearchQuery() { MatchingStrategy = "last" };
             var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("movie about rich", searchQuery);
 
-            Assert.True(movies.Hits.Count() > 1);
+            Assert.True(movies.Hits.Count > 1);
         }
 
         [Fact]
