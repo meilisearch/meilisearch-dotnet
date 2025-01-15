@@ -162,7 +162,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvPath);
             var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -190,7 +190,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvCustomDelimiterPath);
             var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 15, csvDelimiter: ';')).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -218,7 +218,7 @@ namespace Meilisearch.Tests
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjsonPath);
             var tasks = (await index.AddDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -469,7 +469,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvPath);
             var tasks = (await index.UpdateDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -505,7 +505,7 @@ namespace Meilisearch.Tests
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjsonPath);
             var tasks = (await index.UpdateDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);

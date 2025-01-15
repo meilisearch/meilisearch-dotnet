@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,14 +12,12 @@ namespace Meilisearch.Tests
     public abstract class SettingsTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private readonly Settings _defaultSettings;
-        private readonly MeilisearchClient _client;
         private Index _index;
         private readonly TFixture _fixture;
 
         public SettingsTests(TFixture fixture)
         {
             _fixture = fixture;
-            _client = fixture.DefaultClient;
 
             _defaultSettings = new Settings
             {
@@ -34,19 +33,19 @@ namespace Meilisearch.Tests
                 DistinctAttribute = null,
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
-                Dictionary = new string[] { },
-                StopWords = new string[] { },
+                Dictionary = Array.Empty<string>(),
+                StopWords = Array.Empty<string>(),
                 SeparatorTokens = new List<string> { },
                 NonSeparatorTokens = new List<string> { },
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
-                FilterableAttributes = new string[] { },
-                SortableAttributes = new string[] { },
+                FilterableAttributes = Array.Empty<string>(),
+                SortableAttributes = Array.Empty<string>(),
                 ProximityPrecision = "byWord",
                 TypoTolerance = new TypoTolerance
                 {
                     Enabled = true,
-                    DisableOnAttributes = new string[] { },
-                    DisableOnWords = new string[] { },
+                    DisableOnAttributes = Array.Empty<string>(),
+                    DisableOnWords = Array.Empty<string>(),
                     MinWordSizeForTypos = new TypoTolerance.TypoSize
                     {
                         OneTypo = 5,
@@ -483,7 +482,7 @@ namespace Meilisearch.Tests
             var returnedTypoTolerance = new TypoTolerance
             {
                 Enabled = true,
-                DisableOnAttributes = new string[] { },
+                DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
                 {
@@ -541,7 +540,7 @@ namespace Meilisearch.Tests
             var returnedTypoTolerance = new TypoTolerance
             {
                 Enabled = true,
-                DisableOnAttributes = new string[] { },
+                DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
                 {
@@ -734,13 +733,13 @@ namespace Meilisearch.Tests
             };
         }
 
-        private async Task AssertGetEquality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        private static async Task AssertGetEquality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
         {
             var value = await getMethod();
             value.Should().BeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertGetInequality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        private static async Task AssertGetInequality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
         {
             var value = await getMethod();
             value.Should().NotBeEquivalentTo(expectedValue);
