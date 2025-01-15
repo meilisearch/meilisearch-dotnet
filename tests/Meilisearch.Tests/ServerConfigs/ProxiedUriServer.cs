@@ -13,9 +13,7 @@ namespace Meilisearch.Tests.ServerConfigs
         {
             public override string MeilisearchAddress()
             {
-                var env = Environment.GetEnvironmentVariable("PROXIED_MEILISEARCH");
-
-                return env == null ? MeilisearchTestAddress : env;
+                return Environment.GetEnvironmentVariable("PROXIED_MEILISEARCH") ?? MeilisearchTestAddress;
             }
         }
 
