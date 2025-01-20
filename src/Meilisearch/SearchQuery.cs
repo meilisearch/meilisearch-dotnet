@@ -39,5 +39,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("distinct")]
         public string Distinct { get; set; }
+
+        /// <summary>
+        /// Gets or sets rankingScoreThreshold, a number between 0.0 and 1.0. 
+        /// </summary>
+        [JsonPropertyName("rankingScoreThreshold")]
+        public decimal? RankingScoreThreshold { get; set; }
     }
 }

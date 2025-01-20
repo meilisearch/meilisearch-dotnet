@@ -30,7 +30,6 @@
 ## Table of Contents <!-- omit in TOC -->
 
 - [📖 Documentation](#-documentation)
-- [⚡ Supercharge your Meilisearch experience](#-supercharge-your-meilisearch-experience)
 - [🔧 Installation](#-installation)
 - [🚀 Getting started](#-getting-started)
 - [🤖 Compatibility with Meilisearch](#-compatibility-with-meilisearch)
@@ -48,10 +47,6 @@ This readme contains all the documentation you need to start using this Meilisea
 
 For general information on how to use Meilisearch—such as our API reference, tutorials, guides, and in-depth articles—refer to our [main documentation website](https://www.meilisearch.com/docs/).
 
-
-## ⚡ Supercharge your Meilisearch experience
-
-Say goodbye to server deployment and manual updates with [Meilisearch Cloud](https://www.meilisearch.com/cloud?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-dotnet). Get started with a 14-day free trial! No credit card required.
 
 ## 🔧 Installation
 
@@ -71,18 +66,9 @@ Install-Package MeiliSearch
 
 ### Run Meilisearch <!-- omit in toc -->
 
-There are many easy ways to [download and run a Meilisearch instance](https://www.meilisearch.com/docs/learn/getting_started/installation).
+⚡️ **Launch, scale, and streamline in minutes with Meilisearch Cloud**—no maintenance, no commitment, cancel anytime. [Try it free now](https://cloud.meilisearch.com/login?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-dotnet).
 
-For example, using the `curl` command in [your Terminal](https://itconnect.uw.edu/learn/workshops/online-tutorials/web-publishing/what-is-a-terminal/):
-
-```bash
-# Install Meilisearch
-curl -L https://install.meilisearch.com | sh
-# Launch Meilisearch
-./meilisearch --master-key=masterKey
-```
-
-NB: you can also download Meilisearch from **Homebrew** or **APT** or even run it using **Docker**.
+🪨  Prefer to self-host? [Download and deploy](https://www.meilisearch.com/docs/learn/self_hosted/getting_started_with_self_hosted_meilisearch?utm_campaign=oss&utm_source=github&utm_medium=meilisearch-dotnet) our fast, open-source search engine on your own infrastructure.
 
 ## 🚀 Getting started
 
@@ -160,7 +146,7 @@ JSON Output:
 All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
 
 ```c#
-SearchResult<Movie> movies = await index.SearchAsync<Movie>(
+var movies = await index.SearchAsync<Movie>(
     "car",
     new SearchQuery
     {
@@ -211,7 +197,7 @@ Note that MeiliSearch will rebuild your index whenever you update `FilterableAtt
 Then, you can perform the search:
 
 ```c#
-SearchResult<Movie> movies = await index.SearchAsync<Movie>(
+var movies = await index.SearchAsync<Movie>(
     "wonder",
     new SearchQuery
     {
@@ -236,6 +222,41 @@ JSON Output:
   "estimatedTotalHits": 1,
   "processingTimeMs": 0,
   "query": "wonder"
+}
+```
+
+#### Search with Limit and Offset
+
+You can paginate search results by making queries combining both [offset](https://www.meilisearch.com/docs/reference/api/search#offset) and [limit](https://www.meilisearch.com/docs/reference/api/search#limit).
+
+```c#
+var results = await index.SearchAsync<T>(query, new SearchQuery()
+{
+    Limit = 5,
+    Offset = 0
+});
+
+if (results is SearchResult<T> limitedResults)
+{
+    var estimatedTotalHits = limitedResults.EstimatedTotalHits;
+}
+```
+
+#### Search with defined number of results per page
+
+To get paginated results with page numbers, the [HitsPerPage](https://www.meilisearch.com/docs/reference/api/search#number-of-results-per-page) and [Page](https://www.meilisearch.com/docs/reference/api/search#page) properties must be defined.
+
+```c#
+var results = await index.SearchAsync<T>(query, new SearchQuery()
+{
+    HitsPerPage = pageSize,
+    Page = pageNumber,
+});
+
+if (results is PaginatedSearchResult<T> paginatedResults)
+{
+    var totalHits = paginatedResults.TotalHits;
+    var totalPages = paginatedResults.TotalPages;
 }
 ```
 
