@@ -8,6 +8,7 @@ namespace Meilisearch
     /// <summary>
     ///  Search query used in federated multi-index search
     /// </summary>
+    [JsonConverter(typeof(MultiSearchFederationOptionsConverter))]
     public class FederatedMultiSearchQuery
     {
         /// <summary>
