@@ -8,17 +8,28 @@ namespace Meilisearch.Converters
 {
     /// <summary>
     /// Always include property in json. MultiSearchFederationOptions will be serialized as "{}"
-    ///
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class MultiSearchFederationOptionsConverter : JsonConverter<MultiSearchFederationOptions>
     {
+        /// <summary>
+        /// Would override the default read logic, but here we use the default
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="typeToConvert"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public override MultiSearchFederationOptions Read(ref Utf8JsonReader reader, Type typeToConvert,
             JsonSerializerOptions options)
         {
             return JsonSerializer.Deserialize<MultiSearchFederationOptions>(ref reader, options);
         }
 
+        /// <summary>
+        /// Write json for MultiSearchFederationOptions and include it always as empty object
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, MultiSearchFederationOptions value,
             JsonSerializerOptions options)
         {
@@ -28,20 +39,9 @@ namespace Meilisearch.Converters
             }
             else
             {
-                var sanitizedOptions =
-                    RemoveSelfFromSerializerOptions(options); //Prevents getting stuck in a loop during serialization
-                JsonSerializer.Serialize(writer, value, sanitizedOptions);
+                JsonSerializer.Serialize(writer, value);
             }
         }
-
-        private static JsonSerializerOptions RemoveSelfFromSerializerOptions(JsonSerializerOptions options)
-        {
-            var sanitizedOptions = new JsonSerializerOptions(options);
-            sanitizedOptions.Converters.Remove(sanitizedOptions.Converters.First(c =>
-                c.GetType() == typeof(MultiSearchFederationOptionsConverter)));
-            return sanitizedOptions;
-        }
-
         private static void WriteEmptyObject(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
@@ -61,7 +61,6 @@ namespace Meilisearch.Converters
                     return true;
                 }
             }
-
             return false;
         }
 

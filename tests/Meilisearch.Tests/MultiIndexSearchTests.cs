@@ -89,7 +89,10 @@ namespace Meilisearch.Tests
                     Queries = new List<FederatedSearchQuery>()
                     {
                         new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
-                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                        new FederatedSearchQuery()
+                        {
+                            IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'"
+                        }
                     },
                 });
 
@@ -105,11 +108,12 @@ namespace Meilisearch.Tests
                     Queries = new List<FederatedSearchQuery>()
                     {
                         new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
-                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                        new FederatedSearchQuery()
+                        {
+                            IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'"
+                        }
                     },
-                    FederationOptions = new MultiSearchFederationOptions()
-                    {
-                    }
+                    FederationOptions = new MultiSearchFederationOptions() { }
                 });
 
             result.Hits.Should().HaveCount(4);
@@ -118,20 +122,19 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task FederatedSearchWithLimitAndOffset()
         {
-            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
-                new FederatedMultiSearchQuery()
+            var federatedquer = new FederatedMultiSearchQuery()
+            {
+                Queries = new List<FederatedSearchQuery>()
                 {
-                    Queries = new List<FederatedSearchQuery>()
-                    {
-                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
-                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
-                    },
-                    FederationOptions = new MultiSearchFederationOptions()
-                    {
-                        Limit = 2,
-                        Offset = 0
-                    }
-                });
+                    new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                    new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                },
+                FederationOptions = new MultiSearchFederationOptions() { Limit = 2, Offset = 0 }
+            };
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(federatedquer
+            );
+
+            var testJson = JsonSerializer.Serialize(federatedquer);
 
             result.Hits.Should().HaveCount(2);
         }
