@@ -585,7 +585,7 @@ namespace Meilisearch
             SimilarDocumentsSearch searchAttributes = default, CancellationToken cancellationToken = default)
         {
             SimilarDocumentsSearch similarSearch;
-            if(searchAttributes == null)
+            if (searchAttributes == null)
             {
                 similarSearch = new SimilarDocumentsSearch() { Id = id };
             }
