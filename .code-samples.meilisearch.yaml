@@ -843,7 +843,7 @@ facet_search_3: |-
     FacetQuery = "c"
   };
   await client.Index("books").FacetSearchAsync("genres", query);
-search_parameter_reference_locales_1: |-  
+search_parameter_reference_locales_1: |-
   var searchQuery = new SearchQuery { Locales = new[] { "jpn" } };
   await client.index('INDEX_NAME').SearchAsync('進撃の巨人', searchQuery);
 get_localized_attribute_settings_1: |-
