@@ -18,7 +18,9 @@
         <!-- You may want to remove the NoWarn node in case documentation will be mandatory in the future -->
         <NoWarn Condition=" '$(Configuration)' == 'Release'">$(NoWarn);1591</NoWarn>
     </PropertyGroup>
-
+    <PropertyGroup>
+        <InvariantGlobalization>true</InvariantGlobalization>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
         <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />

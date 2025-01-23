@@ -14,13 +14,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libicu-dev
       - name: Check release validity
         run: sh .github/scripts/check-release.sh
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 8.x
       - name: Pack
         run: dotnet pack src/Meilisearch/Meilisearch.csproj -c Release -o src/Meilisearch/bin/Release
       - name: Publish
