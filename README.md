@@ -117,7 +117,7 @@ With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, 
 #### Basic Search <!-- omit in toc -->
 
 ```c#
-# Meilisearch is typo-tolerant:
+//Meilisearch is typo-tolerant:
 SearchResult<Movie> movies = await index.SearchAsync<Movie>("philadalphia");
 foreach(var prop in movies.Hits) {
     Console.WriteLine (prop.Title);
