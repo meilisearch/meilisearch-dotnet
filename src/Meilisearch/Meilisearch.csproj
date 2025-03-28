@@ -68,5 +68,23 @@
         <Compile Update="Index.SearchCutoffMs.cs">
             <DependentUpon>Index.cs</DependentUpon>
         </Compile>
+        <Compile Update="Index.Faceting.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.NonSeparatorTokens.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Pagination.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.ProximityPrecision.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.SeparatorTokens.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Index.Embedders.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>
