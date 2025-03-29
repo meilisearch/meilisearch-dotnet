@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Meilisearch.Tests
 {
@@ -72,5 +73,20 @@ namespace Meilisearch.Tests
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Naming convention used to match meilisearch.")]
         public IDictionary<string, JsonElement> _RankingScoreDetails { get; set; }
+    }
+
+    public class MovieWithVector
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
+
+        [JsonPropertyName("release_year")]
+        public int? ReleaseYear { get; set; }
+
+        [JsonPropertyName("_vectors")]
+        public IDictionary<string, IEnumerable<float>> _Vectors { get; set; }
     }
 }

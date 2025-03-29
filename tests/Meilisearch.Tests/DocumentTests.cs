@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using FluentAssertions;
+using FluentAssertions.Execution;
 
 using Meilisearch.QueryParameters;
 
@@ -757,6 +761,50 @@ namespace Meilisearch.Tests
             // Check all the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
             docs.Results.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetSimilarDocumentsAsync()
+        {
+            var index = await _fixture.SetUpEmptyIndex("GetSimilarDocumentsAsyncTest");
+
+            var embedders = new Dictionary<string, Embedder>
+            {
+                { "manual", new Embedder() { Source = EmbedderSource.UserProvided, Dimensions = 3 }},
+            };
+
+            var settings = await index.GetSettingsAsync();
+            settings.FilterableAttributes = new string[] { "release_year" };
+            settings.Embedders = embedders;
+            var task = await index.UpdateSettingsAsync(settings);
+
+            await index.WaitForTaskAsync(task.TaskUid);
+            settings = await index.GetSettingsAsync();
+
+            // Add documents
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithVector>>(Datasets.MoviesWithVectorJsonPath);
+            task = await index.AddDocumentsAsync(movies);
+
+            string json = JsonSerializer.Serialize(movies);
+
+            // Check the documents have been added
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(task.TaskUid);
+
+            var xx = (await index.GetDocumentsAsync<object>(new DocumentsQuery() { RetrieveVectors = true })).Results.ToList();
+
+            // Get similar documents
+            var docs = (await index.GetSimilarDocumentsAsync<MovieWithVector>(
+                new SimilarDocumentsQuery() {
+                    Id = "143",
+                    Embedder = "manual"
+                })).Hits.ToList();
+
+            Assert.Equal(4, docs.Count);
+            Assert.Equal("Escape Room", docs[0].Title);
+            Assert.Equal("Captain Marvel", docs[1].Title);
+            Assert.Equal("How to Train Your Dragon: The Hidden World", docs[2].Title);
+            Assert.Equal("Shazam!", docs[3].Title);
         }
     }
 }

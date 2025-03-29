@@ -843,3 +843,8 @@ facet_search_3: |-
     FacetQuery = "c"
   };
   await client.Index("books").FacetSearchAsync("genres", query);
+get_similar_documents_post_1: |-
+  await client.Index("movies").GetSimilarDocumentsAsync<Movie>(new SimilarDocumentsQuery() {
+      Id = 143,
+      Embedder = "manual"
+  });

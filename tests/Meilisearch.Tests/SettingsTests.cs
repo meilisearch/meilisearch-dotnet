@@ -63,7 +63,8 @@ namespace Meilisearch.Tests
                 Pagination = new Pagination
                 {
                     MaxTotalHits = 1000
-                }
+                },
+                Embedders = new Dictionary<string, Embedder> { }
             };
         }
 
@@ -682,7 +683,8 @@ namespace Meilisearch.Tests
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
-                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs
+                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs,
+                Embedders = inputSettings.Embedders ?? defaultSettings.Embedders,
             };
         }
 

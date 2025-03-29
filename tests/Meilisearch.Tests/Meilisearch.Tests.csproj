@@ -33,6 +33,7 @@
       <None Update="Datasets\movies_for_faceting.json" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\movies_with_int_id.json" CopyToOutputDirectory="PreserveNewest" />
       <None Update="Datasets\movies_with_info.json" CopyToOutputDirectory="PreserveNewest" />
+      <None Update="Datasets\movies_with_vector.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

@@ -31,5 +31,11 @@ namespace Meilisearch.QueryParameters
         /// </summary>
         [JsonPropertyName("filter")]
         public object Filter { get; set; }
+
+        /// <summary>
+        /// Return document vector data with search result
+        /// </summary>
+        [JsonPropertyName("retrieveVectors")]
+        public bool? RetrieveVectors { get; set; }
     }
 }

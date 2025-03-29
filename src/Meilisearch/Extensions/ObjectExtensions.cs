@@ -62,6 +62,10 @@ namespace Meilisearch.Extensions
                         {
                             values.Add(key + "=" + Uri.EscapeDataString(datetimeValue.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
                         }
+                        else if(value is Boolean boolValue)
+                        {
+                            values.Add(key + "=" + (boolValue ? "true" : "false"));
+                        }
                         else
                         {
                             values.Add(key + "=" + Uri.EscapeDataString(value.ToString()));

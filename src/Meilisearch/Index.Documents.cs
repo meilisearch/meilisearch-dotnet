@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -410,6 +411,32 @@ namespace Meilisearch
                 return await _http
                     .GetFromJsonAsync<ResourceResults<IEnumerable<T>>>(uri, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Get similar documents with the allowed Query Parameters.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SimilarDocumentsResult<T>> GetSimilarDocumentsAsync<T>(SimilarDocumentsQuery query = default, 
+            CancellationToken cancellationToken = default)
+        {
+            try{
+                var uri = $"indexes/{Uid}/similar";
+                var result = await _http.PostAsJsonAsync(uri, query, Constants.JsonSerializerOptionsRemoveNulls,
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                return await result.Content
+                    .ReadFromJsonAsync<SimilarDocumentsResult<T>>(cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (MeilisearchCommunicationError e)
+            {
+                throw new MeilisearchCommunicationError(
+                    Constants.VersionErrorHintMessage(e.Message, nameof(GetDocumentsAsync)), e);
             }
         }
 
