@@ -577,5 +577,23 @@ namespace Meilisearch.Tests
             Assert.Equal("522681", movies.Hits.First().Id);
             Assert.Equal("Escape Room", movies.Hits.First().Title);
         }
+
+        [Fact]
+        public async Task CustomSearchWithSimilarDocuments()
+        {
+            var query = new SimilarDocumentsQuery("143")
+            {
+                Embedder = "manual"
+            };
+
+            var movies = await _indexForVectorSearch.SearchSimilarDocumentsAsync<VectorMovie>(query);
+
+            Assert.Collection(movies.Hits,
+                m => Assert.Equal("Escape Room", m.Title),
+                m => Assert.Equal("Captain Marvel", m.Title),
+                m => Assert.Equal("How to Train Your Dragon: The Hidden World", m.Title),
+                m => Assert.Equal("Shazam!", m.Title)
+            );
+        }
     }
 }

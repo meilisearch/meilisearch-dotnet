@@ -86,5 +86,8 @@
         <Compile Update="Index.Embedders.cs">
           <DependentUpon>Index.cs</DependentUpon>
         </Compile>
+        <Compile Update="Index.SimilarDocuments.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>
