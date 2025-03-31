@@ -108,6 +108,6 @@ namespace Meilisearch
         /// Embedders translate documents and queries into vector embeddings.
         /// </summary>
         [JsonPropertyName("embedders")]
-        public IDictionary<string, Embedder> Embedders { get; set; }
+        public Dictionary<string, Embedder> Embedders { get; set; }
     }
 }
