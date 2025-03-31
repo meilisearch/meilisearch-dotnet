@@ -109,6 +109,37 @@ namespace Meilisearch.Tests
             return index;
         }
 
+        public async Task<Index> SetUpIndexForVectorSearch(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+
+            var task = await index.UpdateEmbeddersAsync(new Dictionary<string, Embedder>
+            {
+                { "manual", new Embedder { Source = EmbedderSource.UserProvided, Dimensions = 3 } }
+            });
+
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForVectorSearch.\n" +
+                                    $"Impossible to run the tests.\n" +
+                                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
+            }
+
+            var movies = await JsonFileReader.ReadAsync<List<MovieWithVector>>(Datasets.MoviesWithVectorJsonPath);
+            task = await index.AddDocumentsAsync(movies, primaryKey: "id");
+
+            finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForVectorSearch.\n" +
+                                    $"Impossible to run the tests.\n" +
+                                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
+            }
+
+            return index;
+        }
+
         public async Task<Index> SetUpIndexForNestedSearch(string indexUid)
         {
             var index = DefaultClient.Index(indexUid);

@@ -766,32 +766,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task GetSimilarDocumentsAsync()
         {
-            var index = await _fixture.SetUpEmptyIndex("GetSimilarDocumentsAsyncTest");
-
-            var embedders = new Dictionary<string, Embedder>
-            {
-                { "manual", new Embedder() { Source = EmbedderSource.UserProvided, Dimensions = 3 }},
-            };
-
-            var settings = await index.GetSettingsAsync();
-            settings.FilterableAttributes = new string[] { "release_year" };
-            settings.Embedders = embedders;
-            var task = await index.UpdateSettingsAsync(settings);
-
-            await index.WaitForTaskAsync(task.TaskUid);
-            settings = await index.GetSettingsAsync();
-
-            // Add documents
-            var movies = await JsonFileReader.ReadAsync<List<MovieWithVector>>(Datasets.MoviesWithVectorJsonPath);
-            task = await index.AddDocumentsAsync(movies);
-
-            string json = JsonSerializer.Serialize(movies);
-
-            // Check the documents have been added
-            task.TaskUid.Should().BeGreaterOrEqualTo(0);
-            await index.WaitForTaskAsync(task.TaskUid);
-
-            var xx = (await index.GetDocumentsAsync<object>(new DocumentsQuery() { RetrieveVectors = true })).Results.ToList();
+            var index = await _fixture.SetUpIndexForVectorSearch("GetSimilarDocumentsAsyncTest");
 
             // Get similar documents
             var docs = (await index.GetSimilarDocumentsAsync<MovieWithVector>(

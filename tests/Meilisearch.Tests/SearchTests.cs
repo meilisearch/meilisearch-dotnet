@@ -12,6 +12,7 @@ namespace Meilisearch.Tests
         private Index _basicIndex;
         private Index _nestedIndex;
         private Index _indexForFaceting;
+        private Index _indexForVectorSearch;
         private Index _indexWithIntId;
         private Index _productIndexForDistinct;
         private Index _indexForRankingScoreThreshold;
@@ -28,6 +29,7 @@ namespace Meilisearch.Tests
             await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
             _basicIndex = await _fixture.SetUpBasicIndex("BasicIndex-SearchTests");
             _indexForFaceting = await _fixture.SetUpIndexForFaceting("IndexForFaceting-SearchTests");
+            _indexForVectorSearch = await _fixture.SetUpIndexForVectorSearch("IndexForVector-SearchTests");
             _indexWithIntId = await _fixture.SetUpBasicIndexWithIntId("IndexWithIntId-SearchTests");
             _nestedIndex = await _fixture.SetUpIndexForNestedSearch("IndexForNestedDocs-SearchTests");
             _productIndexForDistinct = await _fixture.SetUpIndexForDistinctProductsSearch("IndexForDistinctProducts-SearchTests");
@@ -553,6 +555,25 @@ namespace Meilisearch.Tests
             movies.Hits.Count.Should().Be(1);
             movies.Hits.First().Id.Should().Be("13");
             movies.Hits.First().Name.Should().Be("Harry Potter");
+        }
+
+        [Fact]
+        public async Task CustomSearchWithVector()
+        {
+            var searchQuery = new SearchQuery
+            {
+                Hybrid = new Hybrid
+                {
+                    Embedder = "manual",
+                    SemanticRatio = 1.0f
+                },
+                Vector = new[] { 0.1f, 0.6f, 0.8f },
+            };
+
+            var movies = await _indexForVectorSearch.SearchAsync<MovieWithVector>(string.Empty, searchQuery);
+
+            Assert.Equal("522681", movies.Hits.First().Id);
+            Assert.Equal("Escape Room", movies.Hits.First().Title);
         }
     }
 }
