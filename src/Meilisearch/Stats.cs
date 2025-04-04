@@ -9,11 +9,12 @@ namespace Meilisearch
     /// </summary>
     public class Stats
     {
-        public Stats(long databaseSize, DateTime? lastUpdate, IReadOnlyDictionary<string, IndexStats> indexes)
+        public Stats(long databaseSize, DateTime? lastUpdate, IReadOnlyDictionary<string, IndexStats> indexes, long usedDatabaseSize)
         {
             DatabaseSize = databaseSize;
             LastUpdate = lastUpdate;
             Indexes = indexes;
+            UsedDatabaseSize = usedDatabaseSize;
         }
 
         /// <summary>
@@ -21,6 +22,12 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("databaseSize")]
         public long DatabaseSize { get; }
+
+        /// <summary>
+        /// Gets the total space used by the data stored in Meilisearch.
+        /// </summary>
+        [JsonPropertyName("usedDatabaseSize")]
+        public long UsedDatabaseSize { get; }
 
         /// <summary>
         /// Gets last update timestamp.
