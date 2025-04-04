@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using FluentAssertions;
+using FluentAssertions.Execution;
 
 using Meilisearch.QueryParameters;
 
@@ -757,6 +761,25 @@ namespace Meilisearch.Tests
             // Check all the documents have been deleted
             var docs = await index.GetDocumentsAsync<Movie>();
             docs.Results.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetSimilarDocumentsAsync()
+        {
+            var index = await _fixture.SetUpIndexForVectorSearch("GetSimilarDocumentsAsyncTest");
+
+            // Get similar documents
+            var docs = (await index.GetSimilarDocumentsAsync<MovieWithVector>(
+                new SimilarDocumentsQuery() {
+                    Id = "143",
+                    Embedder = "manual"
+                })).Hits.ToList();
+
+            Assert.Equal(4, docs.Count);
+            Assert.Equal("Escape Room", docs[0].Title);
+            Assert.Equal("Captain Marvel", docs[1].Title);
+            Assert.Equal("How to Train Your Dragon: The Hidden World", docs[2].Title);
+            Assert.Equal("Shazam!", docs[3].Title);
         }
     }
 }
