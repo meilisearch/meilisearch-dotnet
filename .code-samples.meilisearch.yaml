@@ -361,7 +361,7 @@ getting_started_add_documents: |-
   // In the command line:
   dotnet add package Meilisearch
 
-  // In our .cs file:
+  // In your .cs file:
   using System.IO;
   using System.Text.Json;
   using Meilisearch;
