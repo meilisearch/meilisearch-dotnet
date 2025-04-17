@@ -357,12 +357,11 @@ search_parameter_guide_facet_stats_1: |-
     Facets = new string[] { "genres", "rating" }
   };
   await client.Index("movie_ratings").SearchAsync<Movie>("Batman", sq);
-getting_started_add_documents_md: |-
-  ```bash
+getting_started_add_documents: |-
+  // In the command line:
   dotnet add package Meilisearch
-  ```
 
-  ```csharp
+  // In our .cs file:
   using System.IO;
   using System.Text.Json;
   using Meilisearch;
@@ -398,12 +397,9 @@ getting_started_add_documents_md: |-
           }
       }
   }
-  ```
-  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 getting_started_check_task_status: |-
   TaskInfo task = await client.GetTaskAsync(0);
-getting_started_search_md: |-
-  ```csharp
+getting_started_search: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var index = client.Index("movies");
 
@@ -412,8 +408,6 @@ getting_started_search_md: |-
   {
       Console.WriteLine(movie.Title);
   }
-  ```
-  [About this SDK](https://www.github.com/meilisearch/meilisearch-dotnet)
 getting_started_add_meteorites: |-
   MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
   var options = new JsonSerializerOptions
