@@ -359,7 +359,7 @@ search_parameter_guide_facet_stats_1: |-
   await client.Index("movie_ratings").SearchAsync<Movie>("Batman", sq);
 getting_started_add_documents: |-
   // In the command line:
-  dotnet add package Meilisearch
+  // dotnet add package Meilisearch
 
   // In your .cs file:
   using System.IO;
