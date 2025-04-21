@@ -758,5 +758,31 @@ namespace Meilisearch.Tests
             var docs = await index.GetDocumentsAsync<Movie>();
             docs.Results.Should().BeEmpty();
         }
+
+        [Fact]
+        public async Task CanFetchMultipleDocumentsByIds()
+        {
+            var indexUID = nameof(CanFetchMultipleDocumentsByIds);
+            var index = _client.Index(indexUID);
+
+            var documents = new[]
+            {
+                new Movie { Id = "1", Name = "The Matrix" },
+                new Movie { Id = "2", Name = "Inception" },
+                new Movie { Id = "3", Name = "Arrival" }
+            };
+
+            var task = await index.AddDocumentsAsync(documents);
+            await index.WaitForTaskAsync(task.TaskUid);
+
+            // Fetch by IDs
+            var idsToFetch = new List<string> { "1", "3" };
+            var fetched = await index.GetDocumentsAsync<Movie>(idsToFetch);
+            var resultDocs = fetched.Results.ToList();
+
+            Assert.Equal(2, resultDocs.Count);
+            Assert.Contains(resultDocs, d => d.Id == "1" && d.Name == "The Matrix");
+            Assert.Contains(resultDocs, d => d.Id == "3" && d.Name == "Arrival");
+        }
     }
 }
