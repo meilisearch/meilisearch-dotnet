@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -412,6 +413,29 @@ namespace Meilisearch
                     .ConfigureAwait(false);
             }
         }
+
+        /// <summary>
+        /// Gets documents by list of Ids
+        /// </summary>
+        /// <param name="ids">Ids to be searched</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the list of documents.</returns>
+        public async Task<ResourceResults<IEnumerable<T>>> GetDocumentsAsync<T>(List<string> ids, CancellationToken cancellationToken = default)
+        {
+            if (ids == null || ids.Count == 0)
+                throw new ArgumentException("At least one ID must be provided.", nameof(ids));
+
+            var query = new DocumentsQuery { Ids = ids };
+
+            var uri = $"indexes/{Uid}/documents/fetch";
+            var result = await _http.PostAsJsonAsync(uri, query, Constants.JsonSerializerOptionsRemoveNulls,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return await result.Content
+                .ReadFromJsonAsync<ResourceResults<IEnumerable<T>>>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
 
         /// <summary>
         /// Delete one document.

@@ -31,5 +31,11 @@ namespace Meilisearch.QueryParameters
         /// </summary>
         [JsonPropertyName("filter")]
         public object Filter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of Ids
+        /// </summary>
+        [JsonPropertyName("ids")]
+        public List<string> Ids { get; set; }
     }
 }
