@@ -55,6 +55,14 @@ namespace Meilisearch.Tests.ServerConfigs
         }
 
         [Collection(CollectionFixtureName)]
+        public class SearchSimilarDocumentsTests : SearchSimilarDocumentsTests<ConfigFixture>
+        {
+            public SearchSimilarDocumentsTests(ConfigFixture fixture) : base(fixture)
+            {
+            }
+        }
+
+        [Collection(CollectionFixtureName)]
         public class SearchTests : SearchTests<ConfigFixture>
         {
             public SearchTests(ConfigFixture fixture) : base(fixture)
