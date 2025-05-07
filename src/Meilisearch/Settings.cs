@@ -63,6 +63,12 @@ namespace Meilisearch
         public IEnumerable<string> FilterableAttributes { get; set; }
 
         /// <summary>
+        /// Gets or sets the localized attributes.
+        /// </summary>
+        [JsonPropertyName("localizedAttributes")]
+        public IEnumerable<LocalizedAttributeLocale> LocalizedAttributes { get; set; }
+
+        /// <summary>
         /// Gets or sets the sortable attributes.
         /// </summary>
         [JsonPropertyName("sortableAttributes")]
