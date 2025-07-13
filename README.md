@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/meilisearch/integration-guides/main/assets/logos/meilisearch_dotnet.svg" alt="Meilisearch-Dotnet" width="200" height="200" />
 </p>
 
-<h1 align="center">Meilisearch .NET</h1>
+<h1 align="center">Meilisearch .NET</h1>test
 
 <h4 align="center">
   <a href="https://github.com/meilisearch/meilisearch">Meilisearch</a> |
