@@ -103,5 +103,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("searchCutoffMs")]
         public int? SearchCutoffMs { get; set; }
+
+        /// <summary>
+        /// Embedders translate documents and queries into vector embeddings.
+        /// </summary>
+        [JsonPropertyName("embedders")]
+        public Dictionary<string, Embedder> Embedders { get; set; }
     }
 }
