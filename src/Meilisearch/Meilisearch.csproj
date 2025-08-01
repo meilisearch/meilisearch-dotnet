@@ -23,8 +23,8 @@
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
-        <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+        <PackageReference Include="System.Net.Http.Json" Version="9.0.6" />
     </ItemGroup>
 
     <ItemGroup>
