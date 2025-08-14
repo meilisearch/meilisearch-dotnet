@@ -644,6 +644,70 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetMultipleExistingDocumentWithAscSort()
+        {
+            var index = await _fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
+            var updateSortable = await index.UpdateSortableAttributesAsync(new[] { "id" });
+            updateSortable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateSortable.TaskUid);
+
+            var documents =
+                await index.GetDocumentsAsync<MovieWithIntId>(new DocumentsQuery()
+                {
+                    Sort = new List<string> { "id:asc" }
+                });
+
+            Assert.Equal(7, documents.Results.Count());
+            documents.Results.Should().BeInAscendingOrder(x => x.Id);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingDocumentWithDescSort()
+        {
+            var index = await _fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
+            var updateSortable = await index.UpdateSortableAttributesAsync(new[] { "id" });
+            updateSortable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateSortable.TaskUid);
+
+            var documents =
+                await index.GetDocumentsAsync<MovieWithIntId>(new DocumentsQuery()
+                {
+                    Sort = new List<string> { "id:desc" }
+                });
+
+            Assert.Equal(7, documents.Results.Count());
+            documents.Results.Should().BeInDescendingOrder(x => x.Id);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingDocumentWithMultiSort()
+        {
+            var index = await _fixture.SetUpBasicIndexWithIntId("GetOneExistingDocumentWithIntegerIdTest");
+            var updateFilterable = await index.UpdateFilterableAttributesAsync(new[] { "genre" });
+            updateFilterable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateFilterable.TaskUid);
+
+            var updateSortable = await index.UpdateSortableAttributesAsync(new[] { "genre", "name" });
+            updateSortable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateSortable.TaskUid);
+
+            var documents =
+                await index.GetDocumentsAsync<MovieWithIntId>(new DocumentsQuery()
+                {
+                    Filter = "genre IN ['SF','Action']",
+                    Sort = new List<string> { "genre:asc", "name:desc" }
+                });
+
+            Assert.Equal(4, documents.Results.Count());
+            var first = documents.Results.First();
+            first.Genre.Should().Be("Action");
+            first.Name.Should().Be("Spider-Man");
+            var last = documents.Results.Last();
+            last.Genre.Should().Be("SF");
+            last.Name.Should().Be("Harry Potter");
+        }
+
+        [Fact]
         public async Task DeleteOneExistingDocumentWithStringId()
         {
             var index = await _fixture.SetUpBasicIndex("DeleteOneExistingDocumentWithStringIdTest");
