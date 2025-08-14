@@ -260,6 +260,17 @@ if (results is PaginatedSearchResult<T> paginatedResults)
 }
 ```
 
+#### Search with sort
+
+To get results sorted by attributes and preferred sorting order, the [Sort](https://www.meilisearch.com/docs/reference/api/search#sort) property must be defined.
+
+```c#
+var results = await index.SearchAsync<T>(query, new SearchQuery()
+{
+    Sort = new List<string> { "genre:asc", "name:desc" }
+});
+```
+
 ## 🤖 Compatibility with Meilisearch
 
 This package guarantees compatibility with [version v1.x of Meilisearch](https://github.com/meilisearch/meilisearch/releases/latest), but some features may not be present. Please check the [issues](https://github.com/meilisearch/meilisearch-dotnet/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+label%3Aenhancement) for more info.
