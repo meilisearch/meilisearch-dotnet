@@ -80,6 +80,14 @@ namespace Meilisearch
         /// </summary>
         All,
         /// <summary>
+        /// Provides access to all get endpoints.
+        /// </summary>
+        AllGet,
+        /// <summary>
+        /// Provides access to chat completions endpoint.
+        /// </summary>
+        ChatCompletions,
+        /// <summary>
         /// Provides access to both POST and GET search endpoints.
         /// </summary>
         Search,
