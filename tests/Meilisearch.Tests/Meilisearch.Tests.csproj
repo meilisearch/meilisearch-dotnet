@@ -6,33 +6,35 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <NoWarn>1701;1702;CA1861</NoWarn>
+        <NoWarn>1701;1702;CA1861</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <NoWarn>1701;1702;CA1861</NoWarn>
+        <NoWarn>1701;1702;CA1861</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-        <PackageReference Include="xunit" Version="2.7.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" />
+        <PackageReference Include="FluentAssertions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
+        <PackageReference Include="xunit" Version="2.7.0"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Meilisearch\Meilisearch.csproj" />
+        <ProjectReference Include="..\..\src\Meilisearch\Meilisearch.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\songs.csv" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\songs_custom_delimiter.csv" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\songs.ndjson" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\movies_with_string_id.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\movies_for_faceting.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\movies_with_int_id.json" CopyToOutputDirectory="PreserveNewest" />
-      <None Update="Datasets\movies_with_info.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Datasets\movies_for_faceting.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\movies_for_vector.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\movies_with_info.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\movies_with_int_id.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\movies_with_string_id.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\products_for_distinct_search.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\small_movies.json" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\songs.csv" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\songs.ndjson" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update="Datasets\songs_custom_delimiter.csv" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 
 </Project>
