@@ -34,10 +34,5 @@ namespace Meilisearch
         /// User-provided
         /// </summary>
         UserProvided,
-
-        /// <summary>
-        /// Unknown
-        /// </summary>
-        Unknown
     }
 }

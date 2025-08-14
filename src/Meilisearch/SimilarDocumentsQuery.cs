@@ -38,7 +38,7 @@ namespace Meilisearch
         /// Gets or sets the attributes to retrieve.
         /// </summary>
         [JsonPropertyName("attributesToRetrieve")]
-        public string[] AttributesToRetrieve { get; set; } = { "*" };
+        public string[] AttributesToRetrieve { get; set; } = new[] { "*" };
 
         /// <summary>
         /// Gets or sets the offset.
@@ -74,7 +74,7 @@ namespace Meilisearch
         /// Gets or sets the ranking score threshold.
         /// </summary>
         [JsonPropertyName("rankingScoreThreshold")]
-        public int? RankingScoreThreshold { get; set; }
+        public decimal? RankingScoreThreshold { get; set; }
 
         /// <summary>
         /// Gets or sets whether to retrieve the vectors.

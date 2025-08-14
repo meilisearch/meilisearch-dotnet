@@ -40,31 +40,31 @@ namespace Meilisearch
         public IReadOnlyCollection<T> Hits { get; }
 
         /// <summary>
-        /// Gets or sets the id.
+        /// Gets the id.
         /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; }
 
         /// <summary>
-        /// Gets or sets the processing time in milliseconds.
+        /// Gets the processing time in milliseconds.
         /// </summary>
         [JsonPropertyName("processingTimeMs")]
         public int ProcessingTimeMs { get; }
 
         /// <summary>
-        /// Gets or sets the offset.
+        /// Gets the offset.
         /// </summary>
         [JsonPropertyName("offset")]
         public int Offset { get; }
 
         /// <summary>
-        /// Gets or sets the limit.
+        /// Gets the limit.
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; }
 
         /// <summary>
-        /// Gets or sets the estimated total hits.
+        /// Gets the estimated total hits.
         /// </summary>
         [JsonPropertyName("estimatedTotalHits")]
         public int EstimatedTotalHits { get; }

@@ -15,9 +15,11 @@ namespace Meilisearch.Converters
                 {
                     return embedderSource;
                 }
+
+                throw new JsonException($"Invalid EmbedderSource value: '{enumValue}'.");
             }
 
-            return EmbedderSource.Unknown;
+            throw new JsonException($"Expected string for EmbedderSource, but found {reader.TokenType}.");
         }
 
         public override void Write(Utf8JsonWriter writer, EmbedderSource value, JsonSerializerOptions options)
@@ -40,7 +42,6 @@ namespace Meilisearch.Converters
                 case EmbedderSource.UserProvided:
                     source = "userProvided";
                     break;
-                case EmbedderSource.Unknown:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
