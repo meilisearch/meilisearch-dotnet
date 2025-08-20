@@ -15,7 +15,7 @@ namespace Meilisearch.Tests
             Assert.Equal(new List<string> { "indexA", "indexB" }, swap.Indexes);
         }
 
-                [Fact]
+        [Fact]
         public void CreateExpectedJSONFormat()
         {
             var swap = new IndexSwap("indexA", "indexB");
