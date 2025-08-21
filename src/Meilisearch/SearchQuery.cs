@@ -21,7 +21,6 @@ namespace Meilisearch
         [JsonPropertyName("limit")]
         public int? Limit { get; set; }
 
-
         /// <summary>
         /// Gets or sets hitsPerPage.
         /// </summary>
@@ -41,9 +40,27 @@ namespace Meilisearch
         public string Distinct { get; set; }
 
         /// <summary>
-        /// Gets or sets rankingScoreThreshold, a number between 0.0 and 1.0. 
+        /// Gets or sets rankingScoreThreshold, a number between 0.0 and 1.0.
         /// </summary>
         [JsonPropertyName("rankingScoreThreshold")]
         public decimal? RankingScoreThreshold { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hybrid search settings.
+        /// </summary>
+        [JsonPropertyName("hybrid")]
+        public HybridSearch Hybrid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vector.
+        /// </summary>
+        [JsonPropertyName("vector")]
+        public double[] Vector { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to retrieve vectors.
+        /// </summary>
+        [JsonPropertyName("retrieveVectors")]
+        public bool RetrieveVectors { get; set; }
     }
 }
