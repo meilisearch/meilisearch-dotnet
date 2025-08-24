@@ -31,5 +31,11 @@ namespace Meilisearch.QueryParameters
         /// </summary>
         [JsonPropertyName("filter")]
         public object Filter { get; set; }
+
+        /// <summary>
+        /// An optional sort to apply
+        /// </summary>
+        [JsonPropertyName("sort")]
+        public List<string> Sort { get; set; }
     }
 }
