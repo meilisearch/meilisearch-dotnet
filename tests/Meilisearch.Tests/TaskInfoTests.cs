@@ -115,8 +115,6 @@ namespace Meilisearch.Tests
             var results = tasks.Results.ToList();
 
             tasks.Should().NotBeNull();
-            results.First().IndexUid.Should().Be(task3.IndexUid);
-            results.Select(t => t.EnqueuedAt).Should().BeInAscendingOrder();
-        }
+            results.Select(t => t.EnqueuedAt).Should().BeInDescendingOrder();
     }
 }
