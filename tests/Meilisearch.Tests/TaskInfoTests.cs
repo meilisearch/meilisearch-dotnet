@@ -103,5 +103,20 @@ namespace Meilisearch.Tests
             var task = await _index.AddDocumentsAsync(new[] { new Movie { Id = "5" } });
             await Assert.ThrowsAsync<MeilisearchTimeoutError>(() => _index.WaitForTaskAsync(task.TaskUid, 0.0, 20));
         }
+
+        [Fact]
+        public async Task ReverseTasksByEnqueuedAt()
+        {
+            var task1 = await _index.AddDocumentsAsync(new[] { new Movie { Id = "6" } });
+            var task2 = await _index.AddDocumentsAsync(new[] { new Movie { Id = "7" } });
+            var task3 = await _index.AddDocumentsAsync(new[] { new Movie { Id = "8" } });
+
+            var tasks = await _index.GetTasksAsync(reverseOrder: true);
+            var results = tasks.Results.ToList();
+
+            tasks.Should().NotBeNull();
+            results.First().IndexUid.Should().Be(task3.IndexUid);
+            results.Select(t => t.EnqueuedAt).Should().BeInAscendingOrder();
+        }
     }
 }

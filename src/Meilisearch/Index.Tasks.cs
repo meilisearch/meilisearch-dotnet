@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,15 +14,22 @@ namespace Meilisearch
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <param name="reverseOrder">Whether to reverse the order of the tasks by EnqueuedAt.</param>
         /// <returns>Returns a list of the operations status.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = null, CancellationToken cancellationToken = default)
+        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = null, CancellationToken cancellationToken = default, bool reverseOrder = false)
         {
             if (query == null)
             {
                 query = new TasksQuery { IndexUids = new List<string> { this.Uid } };
             }
 
-            return await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
+            var tasks = await TaskEndpoint().GetTasksAsync(query, cancellationToken).ConfigureAwait(false);
+
+            return reverseOrder ? new TasksResults<IEnumerable<TaskResource>>(tasks.Results.OrderBy(t => t.EnqueuedAt),
+            tasks.Limit,
+            tasks.From,
+            tasks.Next,
+            tasks.Total) : tasks;
         }
 
         /// <summary>
