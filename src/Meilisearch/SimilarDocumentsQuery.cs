@@ -56,7 +56,7 @@ namespace Meilisearch
         /// Gets or sets the filter.
         /// </summary>
         [JsonPropertyName("filter")]
-        public string Filter { get; set; }
+        public dynamic Filter { get; set; }
 
         /// <summary>
         /// Gets or sets whether to show the ranking score.
