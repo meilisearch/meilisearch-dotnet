@@ -162,7 +162,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvPath);
             var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -190,7 +190,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvCustomDelimiterPath);
             var tasks = (await index.AddDocumentsCsvInBatchesAsync(csvDocuments, 15, csvDelimiter: ';')).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -218,7 +218,7 @@ namespace Meilisearch.Tests
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjsonPath);
             var tasks = (await index.AddDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -469,7 +469,7 @@ namespace Meilisearch.Tests
 
             var csvDocuments = await File.ReadAllTextAsync(Datasets.SongsCsvPath);
             var tasks = (await index.UpdateDocumentsCsvInBatchesAsync(csvDocuments, 250)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -505,7 +505,7 @@ namespace Meilisearch.Tests
 
             var ndjsonDocuments = await File.ReadAllTextAsync(Datasets.SongsNdjsonPath);
             var tasks = (await index.UpdateDocumentsNdjsonInBatchesAsync(ndjsonDocuments, 150)).ToList();
-            Assert.Equal(2, tasks.Count());
+            Assert.Equal(2, tasks.Count);
             foreach (var u in tasks)
             {
                 u.TaskUid.Should().BeGreaterOrEqualTo(0);
@@ -641,6 +641,64 @@ namespace Meilisearch.Tests
             documents.Results.First().Id.Should().Be("10");
             documents.Results.First().Name.Should().Be("Gladiator");
             documents.Results.Last().Id.Should().Be("11");
+        }
+
+        [Theory]
+        [InlineData("id:asc", true)]
+        [InlineData("id:desc", false)]
+        public async Task GetMultipleExistingDocumentsWithIdSort(string sort, bool ascending)
+        {
+            var index = await _fixture.SetUpBasicIndexWithIntId($"GetMultipleExistingDocumentsWithIdSort_{(ascending ? "Asc" : "Desc")}Test");
+            var updateSortable = await index.UpdateSortableAttributesAsync(new[] { "id" });
+            updateSortable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateSortable.TaskUid);
+
+            var results = (await index.GetDocumentsAsync<MovieWithIntId>(
+                new DocumentsQuery { Sort = new List<string> { sort } }
+            )).Results.ToList();
+
+            Assert.Equal(7, results.Count);
+            if (ascending)
+                results.Should().BeInAscendingOrder(x => x.Id);
+            else
+                results.Should().BeInDescendingOrder(x => x.Id);
+        }
+
+        [Fact]
+        public async Task GetMultipleExistingDocumentsWithMultiSort()
+        {
+            var index = await _fixture.SetUpBasicIndexWithIntId("GetMultipleExistingDocumentsWithMultiSort");
+            var updateFilterable = await index.UpdateFilterableAttributesAsync(new[] { "genre" });
+            updateFilterable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateFilterable.TaskUid);
+
+            var updateSortable = await index.UpdateSortableAttributesAsync(new[] { "genre", "name" });
+            updateSortable.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await index.WaitForTaskAsync(updateSortable.TaskUid);
+
+            var results = (await index.GetDocumentsAsync<MovieWithIntId>(
+                new DocumentsQuery
+                {
+                    Filter = "genre IN ['SF','Action']",
+                    Sort = new List<string> { "genre:asc", "name:desc" }
+                }
+            )).Results.ToList();
+
+            Assert.Equal(4, results.Count);
+            var first = results.First();
+            first.Genre.Should().Be("Action");
+            first.Name.Should().Be("Spider-Man");
+            var last = results.Last();
+            last.Genre.Should().Be("SF");
+            last.Name.Should().Be("Harry Potter");
+
+            results.Should().BeInAscendingOrder(x => x.Genre);
+            var split = results.FindIndex(x => x.Genre == "SF");
+            split.Should().BeGreaterThan(0); // at least one Action before SF
+            results.Take(split).Should().OnlyContain(x => x.Genre == "Action");
+            results.Skip(split).Should().OnlyContain(x => x.Genre == "SF");
+            results.Take(split).Should().BeInDescendingOrder(x => x.Name);
+            results.Skip(split).Should().BeInDescendingOrder(x => x.Name);
         }
 
         [Fact]

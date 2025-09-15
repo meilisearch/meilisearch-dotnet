@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -43,31 +42,25 @@ namespace Meilisearch.Extensions
 
                     if (value != null)
                     {
-                        var type = value.GetType();
-
-                        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+                        if (value is List<string> stringValue)
                         {
-                            var itemType = type.GetGenericArguments()[0];
-                            if (itemType == typeof(string))
-                            {
-                                values.Add(key + "=" + string.Join(",", (List<string>)value));
-                            }
-                            else if (itemType == typeof(int))
-                            {
-                                values.Add(key + "=" + string.Join(",", (List<int>)value));
-                            }
-                            else if (itemType == typeof(TaskInfoStatus))
-                            {
-                                values.Add(key + "=" + string.Join(",", ((List<TaskInfoStatus>)value).Select(x => x.ToString())));
-                            }
-                            else if (itemType == typeof(TaskInfoType))
-                            {
-                                values.Add(key + "=" + string.Join(",", ((List<TaskInfoType>)value).Select(x => x.ToString())));
-                            }
+                            values.Add(key + "=" + string.Join(",", stringValue));
                         }
-                        else if (value is DateTime)
+                        else if (value is List<int> intValue)
                         {
-                            values.Add(key + "=" + Uri.EscapeDataString(((DateTime)value).ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
+                            values.Add(key + "=" + string.Join(",", intValue));
+                        }
+                        else if (value is List<TaskInfoStatus> taskInfoStatusValue)
+                        {
+                            values.Add(key + "=" + string.Join(",", taskInfoStatusValue.Select(x => x.ToString())));
+                        }
+                        else if (value is List<TaskInfoType> taskInfoTypeValue)
+                        {
+                            values.Add(key + "=" + string.Join(",", taskInfoTypeValue.Select(x => x.ToString())));
+                        }
+                        else if (value is DateTime datetimeValue)
+                        {
+                            values.Add(key + "=" + Uri.EscapeDataString(datetimeValue.ToString("yyyy-MM-dd'T'HH:mm:ss.fffzzz")));
                         }
                         else
                         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,14 +12,12 @@ namespace Meilisearch.Tests
     public abstract class SettingsTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
         private readonly Settings _defaultSettings;
-        private readonly MeilisearchClient _client;
         private Index _index;
         private readonly TFixture _fixture;
 
         public SettingsTests(TFixture fixture)
         {
             _fixture = fixture;
-            _client = fixture.DefaultClient;
 
             _defaultSettings = new Settings
             {
@@ -34,18 +33,19 @@ namespace Meilisearch.Tests
                 DistinctAttribute = null,
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
-                StopWords = new string[] { },
+                Dictionary = Array.Empty<string>(),
+                StopWords = Array.Empty<string>(),
                 SeparatorTokens = new List<string> { },
                 NonSeparatorTokens = new List<string> { },
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
-                FilterableAttributes = new string[] { },
-                SortableAttributes = new string[] { },
+                FilterableAttributes = Array.Empty<string>(),
+                SortableAttributes = Array.Empty<string>(),
                 ProximityPrecision = "byWord",
                 TypoTolerance = new TypoTolerance
                 {
                     Enabled = true,
-                    DisableOnAttributes = new string[] { },
-                    DisableOnWords = new string[] { },
+                    DisableOnAttributes = Array.Empty<string>(),
+                    DisableOnWords = Array.Empty<string>(),
                     MinWordSizeForTypos = new TypoTolerance.TypoSize
                     {
                         OneTypo = 5,
@@ -54,7 +54,11 @@ namespace Meilisearch.Tests
                 },
                 Faceting = new Faceting
                 {
-                    MaxValuesPerFacet = 100
+                    MaxValuesPerFacet = 100,
+                    SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>()
+                    {
+                        ["*"] = SortFacetValuesByType.Alpha
+                    }
                 },
                 Pagination = new Pagination
                 {
@@ -91,6 +95,8 @@ namespace Meilisearch.Tests
                 SearchableAttributes = new string[] { "name", "genre" },
                 StopWords = new string[] { "of", "the" },
                 DistinctAttribute = "name",
+                Dictionary = new string[] { "dictionary" },
+                SearchCutoffMs = 1000,
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -110,6 +116,7 @@ namespace Meilisearch.Tests
                     { "hp", new string[] { "harry potter" } },
                     { "harry potter", new string[] { "hp" } },
                 },
+                Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsOne);
 
@@ -139,7 +146,8 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 DisplayedAttributes = new string[] { "name" },
                 RankingRules = new string[] { "typo" },
-                FilterableAttributes = new string[] { "genre" }
+                FilterableAttributes = new string[] { "genre" },
+                Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
             await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
@@ -428,7 +436,7 @@ namespace Meilisearch.Tests
             var returnedTypoTolerance = new TypoTolerance
             {
                 Enabled = true,
-                DisableOnAttributes = new string[] { },
+                DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
                 {
@@ -517,7 +525,7 @@ namespace Meilisearch.Tests
             var returnedTypoTolerance = new TypoTolerance
             {
                 Enabled = true,
-                DisableOnAttributes = new string[] { },
+                DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
                 MinWordSizeForTypos = new TypoTolerance.TypoSize
                 {
@@ -545,7 +553,11 @@ namespace Meilisearch.Tests
         {
             var newFaceting = new Faceting
             {
-                MaxValuesPerFacet = 20
+                MaxValuesPerFacet = 20,
+                SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+                {
+                    ["*"] = SortFacetValuesByType.Count
+                }
             };
 
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
@@ -557,7 +569,11 @@ namespace Meilisearch.Tests
         {
             var newFaceting = new Faceting
             {
-                MaxValuesPerFacet = 30
+                MaxValuesPerFacet = 30,
+                SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
+                {
+                    ["*"] = SortFacetValuesByType.Count
+                }
             };
 
             await AssertUpdateSuccess(_index.UpdateFacetingAsync, newFaceting);
@@ -623,9 +639,60 @@ namespace Meilisearch.Tests
             await AssertUpdateSuccess(_index.UpdateProximityPrecisionAsync, newPrecision);
             await AssertGetEquality(_index.GetProximityPrecisionAsync, newPrecision);
 
-            await AssertResetSuccess(_index.ResetProximityPrecisionAsync
-            );
+            await AssertResetSuccess(_index.ResetProximityPrecisionAsync);
             await AssertGetEquality(_index.GetProximityPrecisionAsync, _defaultSettings.ProximityPrecision);
+        }
+
+        [Fact]
+        public async Task GetDictionaryAsync()
+        {
+            await AssertGetEquality(_index.GetDictionaryAsync, _defaultSettings.Dictionary);
+        }
+
+        [Fact]
+        public async Task UpdateDictionaryAsync()
+        {
+            var newDictionary = new string[] { "W. E. B.", "W.E.B." };
+
+            await AssertUpdateSuccess(_index.UpdateDictionaryAsync, newDictionary);
+            await AssertGetEquality(_index.GetDictionaryAsync, newDictionary);
+        }
+
+        [Fact]
+        public async Task ResetDictionaryAsync()
+        {
+            var newDictionary = new string[] { "W. E. B.", "W.E.B." };
+
+            await AssertUpdateSuccess(_index.UpdateDictionaryAsync, newDictionary);
+            await AssertGetEquality(_index.GetDictionaryAsync, newDictionary);
+
+            await AssertResetSuccess(_index.ResetDictionaryAsync);
+            await AssertGetEquality(_index.GetDictionaryAsync, _defaultSettings.Dictionary);
+        }
+
+        [Fact]
+        public async Task GetSearchCutoffMsAsync()
+        {
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, _defaultSettings.SearchCutoffMs);
+        }
+
+        [Fact]
+        public async Task UpdateSearchCutoffMsAsync()
+        {
+            var newSearchCutoffMs = 2000;
+            await AssertUpdateSuccess(_index.UpdateSearchCutoffMsAsync, newSearchCutoffMs);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, newSearchCutoffMs);
+        }
+
+        [Fact]
+        public async Task ResetSearchCutoffMsAsync()
+        {
+            var newSearchCutoffMs = 2000;
+            await AssertUpdateSuccess(_index.UpdateSearchCutoffMsAsync, newSearchCutoffMs);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, newSearchCutoffMs);
+
+            await AssertResetSuccess(_index.ResetSearchCutoffMsAsync);
+            await AssertGetEquality(_index.GetSearchCutoffMsAsync, _defaultSettings.SearchCutoffMs);
         }
 
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
@@ -645,17 +712,19 @@ namespace Meilisearch.Tests
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
                 Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
-                ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision
+                ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
+                Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
+                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs
             };
         }
 
-        private async Task AssertGetEquality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        private static async Task AssertGetEquality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
         {
             var value = await getMethod();
             value.Should().BeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertGetInequality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
+        private static async Task AssertGetInequality<TValue>(IndexGetMethod<TValue> getMethod, TValue expectedValue)
         {
             var value = await getMethod();
             value.Should().NotBeEquivalentTo(expectedValue);

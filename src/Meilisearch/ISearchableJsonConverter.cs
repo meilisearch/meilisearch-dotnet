@@ -33,7 +33,7 @@ namespace Meilisearch
     /// The json converter for <see cref="ISearchable{T}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ISearchableJsonConverter<T> : JsonConverter<ISearchable<T>> where T : class
+    public class ISearchableJsonConverter<T> : JsonConverter<ISearchable<T>>
     {
         /// <inheritdoc/>
         public override ISearchable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

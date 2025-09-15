@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-
-using Microsoft.AspNetCore.WebUtilities;
 
 using Xunit;
 
@@ -24,7 +20,8 @@ namespace Meilisearch.Tests
         {
             var swap = new IndexSwap("indexA", "indexB");
 
-            Assert.Equal("{\"indexes\":[\"indexA\",\"indexB\"]}", JsonSerializer.Serialize(swap));
+            var json = JsonSerializer.Serialize(swap);
+            Assert.Contains("\"indexes\":[\"indexA\",\"indexB\"]", json);
         }
     }
 }

@@ -12,6 +12,14 @@ namespace Meilisearch.Tests
         public string Genre { get; set; }
     }
 
+    public struct MovieStruct
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+    }
     public class MovieInfo
     {
         public string Comment { get; set; }
@@ -46,7 +54,7 @@ namespace Meilisearch.Tests
 
         public string Genre { get; set; }
 
-#pragma warning disable SA1300
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Naming convention used to match meilisearch.")]
         public Movie _Formatted { get; set; }
     }
 
@@ -57,6 +65,8 @@ namespace Meilisearch.Tests
         public string Name { get; set; }
 
         public string Genre { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Naming convention used to match meilisearch.")]
         public double? _RankingScore { get; set; }
     }
 
@@ -67,6 +77,8 @@ namespace Meilisearch.Tests
         public string Name { get; set; }
 
         public string Genre { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Naming convention used to match meilisearch.")]
         public IDictionary<string, JsonElement> _RankingScoreDetails { get; set; }
     }
 }

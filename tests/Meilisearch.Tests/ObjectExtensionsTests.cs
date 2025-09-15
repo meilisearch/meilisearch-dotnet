@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 
-using Meilisearch.Converters;
 using Meilisearch.Extensions;
 using Meilisearch.QueryParameters;
 
@@ -159,6 +157,20 @@ namespace Meilisearch.Tests
                 Assert.Contains("fields", actualQuery);
                 Assert.Contains(String.Join(",", dq.Fields), actualQuery);
             }
+        }
+
+        [Theory]
+        [InlineData(null, new string[] { "id:asc", "title:desc" })]
+        public void QueryStringsWithSortAreEqualForDocumentsQuery(int? limit, string[] sort)
+        {
+            var uri = "indexes/myindex/documents";
+            var dq = new DocumentsQuery { Limit = limit, Sort = sort.ToList() };
+            var actualQuery = dq.ToQueryString(uri: uri);
+
+            Assert.NotEmpty(actualQuery);
+            Assert.NotNull(actualQuery);
+            Assert.Contains("sort", actualQuery);
+            Assert.Contains(String.Join(",", dq.Sort), actualQuery);
         }
     }
 }
