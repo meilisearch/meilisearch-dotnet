@@ -21,15 +21,7 @@ namespace Meilisearch.Tests
 
             _defaultSettings = new Settings
             {
-                RankingRules = new string[]
-                {
-                    "words",
-                    "typo",
-                    "proximity",
-                    "attribute",
-                    "sort",
-                    "exactness",
-                },
+                RankingRules = new string[] { "words", "typo", "proximity", "attribute", "sort", "exactness", },
                 DistinctAttribute = null,
                 SearchableAttributes = new string[] { "*" },
                 DisplayedAttributes = new string[] { "*" },
@@ -46,30 +38,23 @@ namespace Meilisearch.Tests
                     Enabled = true,
                     DisableOnAttributes = Array.Empty<string>(),
                     DisableOnWords = Array.Empty<string>(),
-                    MinWordSizeForTypos = new TypoTolerance.TypoSize
-                    {
-                        OneTypo = 5,
-                        TwoTypos = 9
-                    }
+                    MinWordSizeForTypos = new TypoTolerance.TypoSize { OneTypo = 5, TwoTypos = 9 },
+                    DisableOnNumbers = false
                 },
                 Faceting = new Faceting
                 {
                     MaxValuesPerFacet = 100,
-                    SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>()
-                    {
-                        ["*"] = SortFacetValuesByType.Alpha
-                    }
+                    SortFacetValuesBy =
+                        new Dictionary<string, SortFacetValuesByType>() { ["*"] = SortFacetValuesByType.Alpha }
                 },
-                Pagination = new Pagination
-                {
-                    MaxTotalHits = 1000
-                }
+                Pagination = new Pagination { MaxTotalHits = 1000 }
             };
         }
 
         private delegate Task<TValue> IndexGetMethod<TValue>(CancellationToken cancellationToken = default);
 
-        private delegate Task<TaskInfo> IndexUpdateMethod<TValue>(TValue newValue, CancellationToken cancellationToken = default);
+        private delegate Task<TaskInfo> IndexUpdateMethod<TValue>(TValue newValue,
+            CancellationToken cancellationToken = default);
 
         private delegate Task<TaskInfo> IndexResetMethod(CancellationToken cancellationToken = default);
 
@@ -99,8 +84,10 @@ namespace Meilisearch.Tests
                 SearchCutoffMs = 1000,
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
-            await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
-            await AssertGetEquality(_index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
+            await AssertGetInequality(_index.GetSettingsAsync,
+                newSettings); // fields omitted in newSettings shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync,
+                SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
         }
 
         [Fact]
@@ -113,26 +100,24 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 Synonyms = new Dictionary<string, IEnumerable<string>>
                 {
-                    { "hp", new string[] { "harry potter" } },
-                    { "harry potter", new string[] { "hp" } },
+                    { "hp", new string[] { "harry potter" } }, { "harry potter", new string[] { "hp" } },
                 },
                 Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsOne);
 
             var expectedSettingsOne = SettingsWithDefaultedNullFields(newSettingsOne, _defaultSettings);
-            await AssertGetInequality(_index.GetSettingsAsync, newSettingsOne); // fields omitted in newSettingsOne shouldn't have changed
+            await AssertGetInequality(_index.GetSettingsAsync,
+                newSettingsOne); // fields omitted in newSettingsOne shouldn't have changed
             await AssertGetEquality(_index.GetSettingsAsync, expectedSettingsOne);
 
             // Second update: this one should not overwritten StopWords and DistinctAttribute.
-            var newSettingsTwo = new Settings
-            {
-                SearchableAttributes = new string[] { "name" },
-            };
+            var newSettingsTwo = new Settings { SearchableAttributes = new string[] { "name" }, };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettingsTwo);
 
             var expectedSettingsTwo = SettingsWithDefaultedNullFields(newSettingsTwo, expectedSettingsOne);
-            await AssertGetInequality(_index.GetSettingsAsync, newSettingsTwo); // fields omitted in newSettingsTwo shouldn't have changed
+            await AssertGetInequality(_index.GetSettingsAsync,
+                newSettingsTwo); // fields omitted in newSettingsTwo shouldn't have changed
             await AssertGetEquality(_index.GetSettingsAsync, expectedSettingsTwo);
         }
 
@@ -150,8 +135,10 @@ namespace Meilisearch.Tests
                 Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
-            await AssertGetInequality(_index.GetSettingsAsync, newSettings); // fields omitted in newSettings shouldn't have changed
-            await AssertGetEquality(_index.GetSettingsAsync, SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
+            await AssertGetInequality(_index.GetSettingsAsync,
+                newSettings); // fields omitted in newSettings shouldn't have changed
+            await AssertGetEquality(_index.GetSettingsAsync,
+                SettingsWithDefaultedNullFields(newSettings, _defaultSettings));
 
             await AssertResetSuccess(_index.ResetSettingsAsync);
             await AssertGetEquality(_index.GetSettingsAsync, _defaultSettings);
@@ -393,8 +380,7 @@ namespace Meilisearch.Tests
         {
             var newSynonyms = new Dictionary<string, IEnumerable<string>>
             {
-                { "hp", new string[] { "harry potter" } },
-                { "harry potter", new string[] { "hp" } },
+                { "hp", new string[] { "harry potter" } }, { "harry potter", new string[] { "hp" } },
             };
             await AssertUpdateSuccess(_index.UpdateSynonymsAsync, newSynonyms);
             await AssertGetEquality(_index.GetSynonymsAsync, newSynonyms);
@@ -405,8 +391,7 @@ namespace Meilisearch.Tests
         {
             var newSynonyms = new Dictionary<string, IEnumerable<string>>
             {
-                { "hp", new string[] { "harry potter" } },
-                { "harry potter", new string[] { "hp" } },
+                { "hp", new string[] { "harry potter" } }, { "harry potter", new string[] { "hp" } },
             };
             await AssertUpdateSuccess(_index.UpdateSynonymsAsync, newSynonyms);
             await AssertGetEquality(_index.GetSynonymsAsync, newSynonyms);
@@ -427,10 +412,7 @@ namespace Meilisearch.Tests
             var newTypoTolerance = new TypoTolerance
             {
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12
-                }
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12 }
             };
 
             var returnedTypoTolerance = new TypoTolerance
@@ -438,11 +420,7 @@ namespace Meilisearch.Tests
                 Enabled = true,
                 DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12,
-                    OneTypo = 5
-                }
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12, OneTypo = 5 }
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
@@ -456,10 +434,7 @@ namespace Meilisearch.Tests
             var newTypoTolerance = new TypoTolerance
             {
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12
-                },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12 },
                 DisableOnNumbers = true
             };
 
@@ -468,11 +443,7 @@ namespace Meilisearch.Tests
                 Enabled = true,
                 DisableOnAttributes = new string[] { },
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12,
-                    OneTypo = 5
-                },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12, OneTypo = 5 },
                 DisableOnNumbers = true
             };
 
@@ -483,26 +454,16 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdateTypoTolerancePartially()
         {
-            var newTypoTolerance = new TypoTolerance
-            {
-                DisableOnWords = new string[] { "harry", "potter" },
-            };
+            var newTypoTolerance = new TypoTolerance { DisableOnWords = new string[] { "harry", "potter" }, };
 
-            var otherUpdateTypoTolerance = new TypoTolerance
-            {
-                DisableOnAttributes = new string[] { "title" },
-            };
+            var otherUpdateTypoTolerance = new TypoTolerance { DisableOnAttributes = new string[] { "title" }, };
 
             var returnedTypoTolerance = new TypoTolerance
             {
                 Enabled = true,
                 DisableOnAttributes = new string[] { "title" },
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 9,
-                    OneTypo = 5
-                }
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 9, OneTypo = 5 }
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
@@ -516,10 +477,7 @@ namespace Meilisearch.Tests
             var newTypoTolerance = new TypoTolerance
             {
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12
-                }
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12 }
             };
 
             var returnedTypoTolerance = new TypoTolerance
@@ -527,11 +485,7 @@ namespace Meilisearch.Tests
                 Enabled = true,
                 DisableOnAttributes = Array.Empty<string>(),
                 DisableOnWords = new string[] { "harry", "potter" },
-                MinWordSizeForTypos = new TypoTolerance.TypoSize
-                {
-                    TwoTypos = 12,
-                    OneTypo = 5
-                }
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12, OneTypo = 5 }
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
@@ -592,10 +546,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdatePagination()
         {
-            var newPagination = new Pagination
-            {
-                MaxTotalHits = 20
-            };
+            var newPagination = new Pagination { MaxTotalHits = 20 };
 
             await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
             await AssertGetEquality(_index.GetPaginationAsync, newPagination);
@@ -604,10 +555,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ResetPagination()
         {
-            var newPagination = new Pagination
-            {
-                MaxTotalHits = 30
-            };
+            var newPagination = new Pagination { MaxTotalHits = 30 };
 
             await AssertUpdateSuccess(_index.UpdatePaginationAsync, newPagination);
             await AssertGetEquality(_index.GetPaginationAsync, newPagination);
