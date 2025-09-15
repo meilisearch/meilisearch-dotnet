@@ -32,6 +32,12 @@ namespace Meilisearch
         [JsonPropertyName("minWordSizeForTypos")]
         public TypoSize MinWordSizeForTypos { get; set; }
 
+        /// <summary>
+        /// Disable the typo tolerance feature for numbers.
+        /// </summary>
+        [JsonPropertyName("disableOnNumbers")]
+        public bool? DisableOnNumbers { get; set; }
+
         public class TypoSize
         {
             /// <summary>

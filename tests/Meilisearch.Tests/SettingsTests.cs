@@ -441,6 +441,37 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
         }
 
+
+        [Fact]
+        public async Task UpdateTypoToleranceForDisableOnNumbers()
+        {
+            var newTypoTolerance = new TypoTolerance
+            {
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12
+                },
+                DisableOnNumbers = true
+            };
+
+            var returnedTypoTolerance = new TypoTolerance
+            {
+                Enabled = true,
+                DisableOnAttributes = new string[] { },
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize
+                {
+                    TwoTypos = 12,
+                    OneTypo = 5
+                },
+                DisableOnNumbers = true
+            };
+
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
+        }
+
         [Fact]
         public async Task UpdateTypoTolerancePartially()
         {
@@ -501,6 +532,7 @@ namespace Meilisearch.Tests
             await AssertResetSuccess(_index.ResetTypoToleranceAsync);
             await AssertGetEquality(_index.GetTypoToleranceAsync, _defaultSettings.TypoTolerance);
         }
+
 
         [Fact]
         public async Task GetFaceting()
