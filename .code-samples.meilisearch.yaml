@@ -834,6 +834,7 @@ facet_search_1: |-
 facet_search_3: |-
   var query = new SearchFacetsQuery()
   {
-    FacetQuery = "c"
+    FacetQuery = "c",
+    ExhaustiveFacetCount: true
   };
   await client.Index("books").FacetSearchAsync("genres", query);
