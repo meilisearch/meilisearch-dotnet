@@ -43,5 +43,13 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("attributesToSearchOn")]
         public IEnumerable<string> AttributesToSearchOn { get; set; }
+
+        /// <summary>
+        /// When true, returns an exhaustive (exact) count for facet values during facet search.
+        /// This may increase response time on large datasets. Omit or set to false to favor performance.
+        /// Default (when null/omitted): server defaults apply.
+        /// </summary>
+        [JsonPropertyName("exhaustiveFacetCount")]
+        public bool? ExhaustiveFacetCount { get; set; }
     }
 }
