@@ -45,5 +45,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("rankingScoreThreshold")]
         public decimal? RankingScoreThreshold { get; set; }
+
+        /// <summary>
+        /// Gets or sets locales.
+        /// </summary>
+        [JsonPropertyName("locales")]
+        public IEnumerable<string> Locales { get; set; }
     }
 }

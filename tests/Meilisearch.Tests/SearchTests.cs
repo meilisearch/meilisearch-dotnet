@@ -576,5 +576,14 @@ namespace Meilisearch.Tests
             movies.Hits.First().Id.Should().Be("13");
             movies.Hits.First().Name.Should().Be("Harry Potter");
         }
+
+        [Fact]
+        public async Task CustomSearchWithLocalizedAttribute()
+        {
+            var searchQuery = new SearchQuery { Locales = new[] { "eng" } };
+            var movies = await _nestedIndex.SearchAsync<MovieWithInfo>("a wizard movie", searchQuery);
+
+            movies.Hits.Count.Should().Be(4);
+        }
     }
 }
