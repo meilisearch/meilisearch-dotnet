@@ -11,9 +11,13 @@ namespace Meilisearch
         [JsonPropertyName("indexes")]
         public List<string> Indexes { get; private set; }
 
-        public IndexSwap(string indexA, string indexB)
+        [JsonPropertyName("rename")]
+        public bool Rename { get; set; } = false;
+
+        public IndexSwap(string indexA, string indexB, bool rename = false)
         {
             this.Indexes = new List<string> { indexA, indexB };
+            this.Rename = rename;
         }
     }
 }
