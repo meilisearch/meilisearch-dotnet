@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+
+- Use Docker for local development
+- Run tests with `docker-compose run --rm package bash -c "dotnet test && dotnet format --verbosity normal --verify-no-changes"`

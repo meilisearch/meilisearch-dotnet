@@ -22,6 +22,17 @@ namespace Meilisearch.Tests
 
             var json = JsonSerializer.Serialize(swap);
             Assert.Contains("\"indexes\":[\"indexA\",\"indexB\"]", json);
+            Assert.Contains("\"rename\":false", json);
+        }
+
+        [Fact]
+        public void CreateExpectedJSONFormatWithRenameTrue()
+        {
+            var swap = new IndexSwap("indexA", "indexB", rename: true);
+
+            var json = JsonSerializer.Serialize(swap);
+            Assert.Contains("\"indexes\":[\"indexA\",\"indexB\"]", json);
+            Assert.Contains("\"rename\":true", json);
         }
     }
 }
