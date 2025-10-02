@@ -27,6 +27,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Meilisearch (latest version) setup with Docker
+        env:
+          # Any docker tag is actually accepted as a valid version
+          MEILISEARCH_VERSION: latest
         run: docker compose up -d
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
