@@ -423,6 +423,32 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the Batches.
+        /// </summary>
+        /// <param name="query">Query parameters supports by the method.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns a list of the batches.</returns>
+        public async Task<ChunkedResults<IEnumerable<BatchResource>>> GetBatchesAsync(BatchesQuery query = default, CancellationToken cancellationToken = default)
+        {
+            var uri = query.ToQueryString(uri: "batches");
+            return await _http.GetFromJsonAsync<ChunkedResults<IEnumerable<BatchResource>>>(uri, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get a Batch.
+        /// </summary>
+        /// <param name="batchUid">UId of the Batch.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the Batch.</returns>
+        public async Task<BatchResource> GetBatchAsync(int batchUid, CancellationToken cancellationToken = default)
+        {
+            var uri = $"batches/{batchUid}";
+            return await _http.GetFromJsonAsync<BatchResource>(uri, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Create a local reference to a task, without doing an HTTP call.
         /// </summary>
         /// <returns>Returns a Task instance.</returns>
