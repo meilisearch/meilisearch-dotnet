@@ -24,10 +24,10 @@ namespace Meilisearch
         /// <param name="query">Query parameters supports by the method.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of the tasks.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
+        public async Task<ChunkedResults<IEnumerable<TaskResource>>> GetTasksAsync(TasksQuery query = default, CancellationToken cancellationToken = default)
         {
             var uri = query.ToQueryString(uri: "tasks");
-            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<ChunkedResults<IEnumerable<TaskResource>>>(uri, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -79,9 +79,9 @@ namespace Meilisearch
         /// <param name="indexUid">Uid of the index.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns a list of tasks of an index.</returns>
-        public async Task<TasksResults<IEnumerable<TaskResource>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
+        public async Task<ChunkedResults<IEnumerable<TaskResource>>> GetIndexTasksAsync(string indexUid, CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<TasksResults<IEnumerable<TaskResource>>>($"tasks?indexUid={indexUid}", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<ChunkedResults<IEnumerable<TaskResource>>>($"tasks?indexUid={indexUid}", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
