@@ -843,3 +843,7 @@ facet_search_3: |-
     FacetQuery = "c"
   };
   await client.Index("books").FacetSearchAsync("genres", query);
+get_batch_1: |-
+  await client.GetBatchAsync(1);
+get_all_batches_1: |-
+  await client.GetBatchesAsync();
