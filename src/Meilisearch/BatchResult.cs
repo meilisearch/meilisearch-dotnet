@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Meilisearch
@@ -8,7 +7,7 @@ namespace Meilisearch
     /// <summary>
     /// Batch Object
     /// </summary>
-    public class BatchResource
+    public class BatchResult
     {
         /// <summary>
         /// The unique sequential identifier of the batch.
