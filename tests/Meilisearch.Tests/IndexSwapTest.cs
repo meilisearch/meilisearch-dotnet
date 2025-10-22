@@ -20,7 +20,19 @@ namespace Meilisearch.Tests
         {
             var swap = new IndexSwap("indexA", "indexB");
 
-            Assert.Equal("{\"indexes\":[\"indexA\",\"indexB\"]}", JsonSerializer.Serialize(swap));
+            var json = JsonSerializer.Serialize(swap);
+            Assert.Contains("\"indexes\":[\"indexA\",\"indexB\"]", json);
+            Assert.Contains("\"rename\":false", json);
+        }
+
+        [Fact]
+        public void CreateExpectedJSONFormatWithRenameTrue()
+        {
+            var swap = new IndexSwap("indexA", "indexB", rename: true);
+
+            var json = JsonSerializer.Serialize(swap);
+            Assert.Contains("\"indexes\":[\"indexA\",\"indexB\"]", json);
+            Assert.Contains("\"rename\":true", json);
         }
     }
 }

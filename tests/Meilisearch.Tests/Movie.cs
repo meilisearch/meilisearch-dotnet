@@ -12,6 +12,14 @@ namespace Meilisearch.Tests
         public string Genre { get; set; }
     }
 
+    public struct MovieStruct
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+    }
     public class MovieInfo
     {
         public string Comment { get; set; }

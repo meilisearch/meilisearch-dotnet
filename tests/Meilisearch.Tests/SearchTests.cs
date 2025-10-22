@@ -46,6 +46,28 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicSearchWithStruct()
+        {
+            var movies = await _basicIndex.SearchAsync<MovieStruct>("man");
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task PaginatedSearchWithStruct()
+        {
+            var movies = await _basicIndex.SearchAsync<MovieStruct>("man", new SearchQuery()
+            {
+                Page = 1,
+                HitsPerPage = 2,
+            });
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public async Task BasicSearchWithNoQuery()
         {
             var movies = await _basicIndex.SearchAsync<Movie>(null);

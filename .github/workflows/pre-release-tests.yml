@@ -13,11 +13,11 @@ jobs:
     name: integration-tests-against-rc
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 8.x
       - name: Get the latest Meilisearch RC
         run: echo "MEILISEARCH_VERSION=$(curl https://raw.githubusercontent.com/meilisearch/integration-guides/main/scripts/get-latest-meilisearch-rc.sh | bash)" >> $GITHUB_ENV
       - name: Meilisearch (${{ env.MEILISEARCH_VERSION }}) setup with Docker
