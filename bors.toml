@@ -1,3 +1,0 @@
-status = ['integration-tests', 'format-check']
-# 1 hour timeout
-timeout-sec = 3600
