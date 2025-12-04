@@ -224,6 +224,63 @@ JSON Output:
 }
 ```
 
+#### Using SearchQueryFilterBuilder <!-- omit in toc -->
+
+Instead of writing filter strings manually, you can use the fluent `SearchQueryFilterBuilder` to construct type-safe filter expressions:
+
+```c#
+using Meilisearch;
+
+// Simple equality filter
+var filter = SearchQueryFilterBuilder.Where("genre", "Action");
+// Result: "genre = Action"
+
+// Comparison operators
+var filter = SearchQueryFilterBuilder.WhereGreaterThan("rating", 85);
+// Result: "rating > 85"
+
+// IN operator for multiple values
+var filter = SearchQueryFilterBuilder.WhereIn("genre", "horror", "comedy", "action");
+// Result: "genre IN [horror, comedy, action]"
+
+// Combine filters with AND
+var filter = SearchQueryFilterBuilder.Where("genre", "Action")
+    .And(SearchQueryFilterBuilder.WhereGreaterThan("rating", 80));
+// Result: "genre = Action AND rating > 80"
+
+// Combine filters with OR and group them
+var filter = SearchQueryFilterBuilder.GroupOr(
+    SearchQueryFilterBuilder.Where("genre", "horror"),
+    SearchQueryFilterBuilder.Where("genre", "comedy")
+).And(SearchQueryFilterBuilder.WhereGreaterThan("release_date", 795484800));
+// Result: "(genre = horror OR genre = comedy) AND release_date > 795484800"
+
+// Geo radius search
+var filter = SearchQueryFilterBuilder.WhereGeoRadius(45.4777599, 9.1967508, 2000);
+// Result: "_geoRadius(45.4777599, 9.1967508, 2000)"
+
+// Use in search query
+var movies = await index.SearchAsync<Movie>(
+    "wonder",
+    new SearchQuery
+    {
+        Filter = SearchQueryFilterBuilder.Where("genre", "Action")
+            .And(SearchQueryFilterBuilder.WhereGreaterThan("id", 1))
+            .Build()
+    }
+);
+```
+
+The `SearchQueryFilterBuilder` supports the following operations:
+- **Equality**: `Where`, `WhereNot`
+- **Comparison**: `WhereGreaterThan`, `WhereGreaterThanOrEqual`, `WhereLessThan`, `WhereLessThanOrEqual`
+- **Range**: `WhereBetween`
+- **List**: `WhereIn`
+- **Existence**: `WhereExists`, `WhereNotExists`
+- **Empty/Null checks**: `WhereEmpty`, `WhereNotEmpty`, `WhereNull`, `WhereNotNull`
+- **Geo filters**: `WhereGeoRadius`, `WhereGeoBoundingBox`
+- **Logical operators**: `And`, `Or`, `Not`, `Group`, `GroupAnd`, `GroupOr`
+
 #### Search with Limit and Offset
 
 You can paginate search results by making queries combining both [offset](https://www.meilisearch.com/docs/reference/api/search#offset) and [limit](https://www.meilisearch.com/docs/reference/api/search#limit).
