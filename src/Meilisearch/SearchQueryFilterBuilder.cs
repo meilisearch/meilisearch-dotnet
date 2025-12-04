@@ -229,6 +229,11 @@ namespace Meilisearch
         /// <returns>A new FilterBuilder instance.</returns>
         public SearchQueryFilterBuilder And(SearchQueryFilterBuilder other)
         {
+            if (other == null)
+            {
+                return this;
+            }
+
             if (string.IsNullOrEmpty(_expression))
             {
                 return other;
@@ -249,6 +254,11 @@ namespace Meilisearch
         /// <returns>A new FilterBuilder instance.</returns>
         public SearchQueryFilterBuilder Or(SearchQueryFilterBuilder other)
         {
+            if (other == null)
+            {
+                return this;
+            }
+
             if (string.IsNullOrEmpty(_expression))
             {
                 return other;
@@ -394,10 +404,10 @@ namespace Meilisearch
         private static string FormatStringValue(string value)
         {
             // If the value contains spaces or special characters, wrap in single quotes
-            if (value.Contains(' ') || value.Contains('\'') || value.Contains('"'))
+            if (value.Contains(' ') || value.Contains('\'') || value.Contains('"') || value.Contains('\\'))
             {
-                // Escape single quotes by doubling them
-                var escaped = value.Replace("'", "''");
+                // Escape backslashes first, then single quotes (Meilisearch uses backslash escaping)
+                var escaped = value.Replace("\\", "\\\\").Replace("'", "\\'");
                 return $"'{escaped}'";
             }
 
