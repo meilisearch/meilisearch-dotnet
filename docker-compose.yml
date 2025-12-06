@@ -21,7 +21,7 @@ services:
       - nuget:/root/.nuget/packages/
 
   meilisearch:
-    image: getmeili/meilisearch:${MEILISEARCH_VERSION}
+    image: getmeili/meilisearch-enterprise:${MEILISEARCH_VERSION}
     ports:
       - "7700:7700"
     environment:
@@ -29,7 +29,7 @@ services:
       - MEILI_NO_ANALYTICS=true
 
   meilisearchproxy:
-    image: getmeili/meilisearch:${MEILISEARCH_VERSION}
+    image: getmeili/meilisearch-enterprise:${MEILISEARCH_VERSION}
     ports:
       - "7700"
     environment:
