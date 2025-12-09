@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Meilisearch.Tests.Models;
+
 using Xunit;
 
 namespace Meilisearch.Tests
@@ -104,6 +106,37 @@ namespace Meilisearch.Tests
             if (finishedTask.Status != TaskInfoStatus.Succeeded)
             {
                 throw new Exception("The settings were not added during SetUpIndexForFaceting. Impossible to run the tests.");
+            }
+
+            return index;
+        }
+
+        public async Task<Index> SetUpIndexForVectorSearch(string indexUid)
+        {
+            var index = DefaultClient.Index(indexUid);
+
+            var task = await index.UpdateEmbeddersAsync(new Dictionary<string, Embedder>
+            {
+                { "manual", new Embedder { Source = EmbedderSource.UserProvided, Dimensions = 3 } }
+            });
+
+            var finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForVectorSearch.\n" +
+                                    $"Impossible to run the tests.\n" +
+                                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
+            }
+
+            var products = await JsonFileReader.ReadAsync<List<VectorMovie>>(Datasets.MoviesForVectorJsonPath);
+            task = await index.AddDocumentsAsync(products, primaryKey: "id");
+
+            finishedTask = await index.WaitForTaskAsync(task.TaskUid);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"The documents were not added during SetUpIndexForVectorSearch.\n" +
+                                    $"Impossible to run the tests.\n" +
+                                    $"{JsonSerializer.Serialize(finishedTask.Error)}");
             }
 
             return index;
