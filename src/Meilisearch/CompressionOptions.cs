@@ -1,5 +1,3 @@
-using System;
-
 namespace Meilisearch
 {
     /// <summary>
@@ -25,6 +23,8 @@ namespace Meilisearch
     /// </summary>
     public class CompressionOptions
     {
+        private int _minimumSizeBytes = 1400;
+
         /// <summary>
         /// Gets or sets the compression algorithm to use.
         /// Default is None (no compression).
@@ -36,7 +36,19 @@ namespace Meilisearch
         /// Default is 1400 bytes (1.4 KB).
         /// Set to 0 to compress all payloads.
         /// </summary>
-        public int MinimumSizeBytes { get; set; } = 1400;
+        /// <exception cref="System.ArgumentOutOfRangeException">Thrown when value is negative.</exception>
+        public int MinimumSizeBytes
+        {
+            get => _minimumSizeBytes;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new System.ArgumentOutOfRangeException(nameof(value), value, "MinimumSizeBytes cannot be negative.");
+                }
+                _minimumSizeBytes = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets whether to request compressed responses from the server
@@ -71,6 +83,18 @@ namespace Meilisearch
             new CompressionOptions
             {
                 Algorithm = CompressionAlgorithm.Deflate,
+                MinimumSizeBytes = minimumSizeBytes
+            };
+
+        /// <summary>
+        /// Creates compression options with Brotli compression enabled.
+        /// </summary>
+        /// <param name="minimumSizeBytes">Minimum payload size to compress. Default is 1400 bytes.</param>
+        /// <returns>Compression options configured for Brotli.</returns>
+        public static CompressionOptions Brotli(int minimumSizeBytes = 1400) =>
+            new CompressionOptions
+            {
+                Algorithm = CompressionAlgorithm.Brotli,
                 MinimumSizeBytes = minimumSizeBytes
             };
     }
