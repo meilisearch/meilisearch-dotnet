@@ -28,7 +28,13 @@ namespace Meilisearch.Compression
 
             if (!MeetsSizeThreshold(originalBytes, options))
             {
-                return content;
+                // Content stream was already consumed; reconstruct it with original headers
+                var reconstructedContent = new ByteArrayContent(originalBytes);
+                foreach (var header in content.Headers)
+                {
+                    reconstructedContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+                return reconstructedContent;
             }
 
             var compressedBytes = CompressData(originalBytes, options.Algorithm);

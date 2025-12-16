@@ -11,7 +11,7 @@ namespace Meilisearch
         /// <summary>Gzip compression (RFC 1952).</summary>
         Gzip = 1,
 
-        /// <summary>Deflate compression (RFC 1951).</summary>
+        /// <summary>Deflate compression with zlib wrapper (RFC 1950). Requires .NET 6.0+.</summary>
         Deflate = 2,
 
         /// <summary>Brotli compression (.NET Standard 2.1+ / .NET Core 2.1+).</summary>
@@ -67,35 +67,53 @@ namespace Meilisearch
         /// </summary>
         /// <param name="minimumSizeBytes">Minimum payload size to compress. Default is 1400 bytes.</param>
         /// <returns>Compression options configured for Gzip.</returns>
-        public static CompressionOptions Gzip(int minimumSizeBytes = 1400) =>
-            new CompressionOptions
+        public static CompressionOptions Gzip(int minimumSizeBytes = 1400)
+        {
+            if (minimumSizeBytes < 0)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(minimumSizeBytes), minimumSizeBytes, "MinimumSizeBytes cannot be negative.");
+            }
+            return new CompressionOptions
             {
                 Algorithm = CompressionAlgorithm.Gzip,
                 MinimumSizeBytes = minimumSizeBytes
             };
+        }
 
         /// <summary>
         /// Creates compression options with Deflate compression enabled.
         /// </summary>
         /// <param name="minimumSizeBytes">Minimum payload size to compress. Default is 1400 bytes.</param>
         /// <returns>Compression options configured for Deflate.</returns>
-        public static CompressionOptions Deflate(int minimumSizeBytes = 1400) =>
-            new CompressionOptions
+        public static CompressionOptions Deflate(int minimumSizeBytes = 1400)
+        {
+            if (minimumSizeBytes < 0)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(minimumSizeBytes), minimumSizeBytes, "MinimumSizeBytes cannot be negative.");
+            }
+            return new CompressionOptions
             {
                 Algorithm = CompressionAlgorithm.Deflate,
                 MinimumSizeBytes = minimumSizeBytes
             };
+        }
 
         /// <summary>
         /// Creates compression options with Brotli compression enabled.
         /// </summary>
         /// <param name="minimumSizeBytes">Minimum payload size to compress. Default is 1400 bytes.</param>
         /// <returns>Compression options configured for Brotli.</returns>
-        public static CompressionOptions Brotli(int minimumSizeBytes = 1400) =>
-            new CompressionOptions
+        public static CompressionOptions Brotli(int minimumSizeBytes = 1400)
+        {
+            if (minimumSizeBytes < 0)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(minimumSizeBytes), minimumSizeBytes, "MinimumSizeBytes cannot be negative.");
+            }
+            return new CompressionOptions
             {
                 Algorithm = CompressionAlgorithm.Brotli,
                 MinimumSizeBytes = minimumSizeBytes
             };
+        }
     }
 }
