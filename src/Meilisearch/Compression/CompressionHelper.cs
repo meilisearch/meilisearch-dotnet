@@ -79,18 +79,21 @@ namespace Meilisearch.Compression
         {
             var compressedContent = new ByteArrayContent(compressedBytes);
 
-            // Copy headers from original content
+            // Copy headers from original content, excluding Content-Encoding and Content-Length
+            // as these will be set explicitly for the compressed content
             foreach (var header in originalContent.Headers)
             {
-                compressedContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                if (header.Key != "Content-Encoding" && header.Key != "Content-Length")
+                {
+                    compressedContent.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
             }
 
             // Set Content-Encoding header
             var contentEncoding = GetContentEncoding(algorithm);
-            compressedContent.Headers.ContentEncoding.Clear();
             compressedContent.Headers.ContentEncoding.Add(contentEncoding);
 
-            // Update Content-Length
+            // Set Content-Length
             compressedContent.Headers.ContentLength = compressedBytes.Length;
 
             return compressedContent;
