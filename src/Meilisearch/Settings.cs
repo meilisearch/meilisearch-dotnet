@@ -103,5 +103,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("searchCutoffMs")]
         public int? SearchCutoffMs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the embeddings attribute.
+        /// </summary>
+        [JsonPropertyName("embedders")]
+        public Dictionary<string, Embedder> Embedders { get; set; }
     }
 }

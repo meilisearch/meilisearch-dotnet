@@ -3,11 +3,9 @@ name: Tests
 on:
   pull_request:
   push:
-    # trying and staging branches are for BORS config
     branches:
-      - trying
-      - staging
       - main
+  merge_group:
 
 jobs:
   integration_tests:
@@ -17,9 +15,9 @@ jobs:
     name: integration-tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Install dependencies
@@ -27,6 +25,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Meilisearch (latest version) setup with Docker
+        env:
+          # Any docker tag is actually accepted as a valid version
+          MEILISEARCH_VERSION: latest
         run: docker compose up -d
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
@@ -35,9 +36,9 @@ jobs:
     name: format-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Check with dotnet-format
@@ -49,7 +50,7 @@ jobs:
     name: Yaml linting check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Yaml lint check
         uses: ibiqlik/action-yamllint@v3
         with:

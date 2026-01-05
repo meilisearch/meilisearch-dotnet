@@ -47,7 +47,8 @@ namespace Meilisearch.Tests
                     SortFacetValuesBy =
                         new Dictionary<string, SortFacetValuesByType>() { ["*"] = SortFacetValuesByType.Alpha }
                 },
-                Pagination = new Pagination { MaxTotalHits = 1000 }
+                Pagination = new Pagination { MaxTotalHits = 1000 },
+                Embedders = new Dictionary<string, Embedder>()
             };
         }
 
@@ -643,6 +644,57 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetSearchCutoffMsAsync, _defaultSettings.SearchCutoffMs);
         }
 
+        [Fact]
+        public async Task GetEmbeddersAsync()
+        {
+            await AssertGetEquality(_index.GetEmbeddersAsync, _defaultSettings.Embedders);
+        }
+
+        [Fact]
+        public async Task UpdateEmbeddersAsync()
+        {
+            var newEmbedders = new Dictionary<string, Embedder>
+            {
+                {
+                    "default",
+                    new Embedder
+                    {
+                        Source = EmbedderSource.HuggingFace,
+                        Model = "BAAI/bge-base-en-v1.5",
+                        DocumentTemplate = "A movie titled '{{doc.name}}' with the following genre {{doc.genre}}",
+                        DocumentTemplateMaxBytes = 400
+                    }
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
+        }
+
+        [Fact]
+        public async Task ResetEmbeddersAsync()
+        {
+            var newEmbedders = new Dictionary<string, Embedder>
+            {
+                {
+                    "default",
+                    new Embedder
+                    {
+                        Source = EmbedderSource.HuggingFace,
+                        Model = "BAAI/bge-base-en-v1.5",
+                        DocumentTemplate = "A movie titled '{{doc.name}}' with the following genre {{doc.genre}}",
+                        DocumentTemplateMaxBytes = 400
+                    }
+                }
+            };
+
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
+
+            await AssertResetSuccess(_index.ResetEmbeddersAsync);
+            await AssertGetEquality(_index.GetEmbeddersAsync, _defaultSettings.Embedders);
+        }
+
         private static Settings SettingsWithDefaultedNullFields(Settings inputSettings, Settings defaultSettings)
         {
             return new Settings
@@ -662,7 +714,8 @@ namespace Meilisearch.Tests
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
-                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs
+                SearchCutoffMs = inputSettings.SearchCutoffMs ?? defaultSettings.SearchCutoffMs,
+                Embedders = inputSettings.Embedders ?? defaultSettings.Embedders
             };
         }
 
