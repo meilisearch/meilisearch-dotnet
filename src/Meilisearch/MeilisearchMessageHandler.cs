@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -84,19 +83,8 @@ namespace Meilisearch
                         .ConfigureAwait(false);
                 }
 
-                // Add Accept-Encoding header if response decompression is enabled
-                if (_compressionOptions?.EnableResponseDecompression == true)
-                {
-                    request.Headers.AcceptEncoding.Clear();
-                    request.Headers.AcceptEncoding.Add(
-                        new StringWithQualityHeaderValue("gzip"));
-                    request.Headers.AcceptEncoding.Add(
-                        new StringWithQualityHeaderValue("deflate"));
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-                    request.Headers.AcceptEncoding.Add(
-                        new StringWithQualityHeaderValue("br"));
-#endif
-                }
+                // Note: Accept-Encoding headers for response decompression are automatically
+                // added by HttpClientHandler.AutomaticDecompression when enabled
 
                 var response = await base.SendAsync(request, cancellationToken);
                 if (!response.IsSuccessStatusCode)
