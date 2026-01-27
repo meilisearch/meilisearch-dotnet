@@ -51,10 +51,15 @@ namespace Meilisearch
         }
 
         /// <summary>
-        /// Gets or sets whether to request compressed responses from the server
-        /// by setting the Accept-Encoding header.
+        /// Gets or sets whether to enable automatic decompression of compressed responses from the server.
+        /// When enabled, the client will request compressed responses and automatically decompress them.
         /// Default is false.
         /// </summary>
+        /// <remarks>
+        /// This option only takes effect when using the default <see cref="MeilisearchClient"/> constructor
+        /// that creates its own HttpClient internally. If you provide a custom HttpClient, you must configure
+        /// <see cref="System.Net.HttpClientHandler.AutomaticDecompression"/> on your HttpClientHandler yourself.
+        /// </remarks>
         public bool EnableResponseDecompression { get; set; } = false;
 
         /// <summary>

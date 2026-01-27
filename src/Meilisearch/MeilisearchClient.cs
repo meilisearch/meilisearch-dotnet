@@ -35,10 +35,30 @@ namespace Meilisearch
         /// <param name="apiKey">API Key to connect to the Meilisearch server.</param>
         /// <param name="compressionOptions">Compression configuration options.</param>
         public MeilisearchClient(string url, string apiKey = default, CompressionOptions compressionOptions = default) : this(
-            new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler(), compressionOptions)) { BaseAddress = url.ToSafeUri() },
+            new HttpClient(new MeilisearchMessageHandler(CreateHttpClientHandler(compressionOptions), compressionOptions)) { BaseAddress = url.ToSafeUri() },
             apiKey,
             compressionOptions)
         {
+        }
+
+        /// <summary>
+        /// Creates an HttpClientHandler with automatic decompression configured based on compression options.
+        /// </summary>
+        /// <param name="compressionOptions">Compression configuration options.</param>
+        /// <returns>Configured HttpClientHandler.</returns>
+        private static HttpClientHandler CreateHttpClientHandler(CompressionOptions compressionOptions)
+        {
+            var handler = new HttpClientHandler();
+
+            if (compressionOptions?.EnableResponseDecompression == true)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+                handler.AutomaticDecompression |= DecompressionMethods.Brotli;
+#endif
+            }
+
+            return handler;
         }
 
         /// <summary>

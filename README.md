@@ -437,6 +437,8 @@ var client = new MeilisearchClient(
     compressionOptions);
 ```
 
+> **Note:** The `EnableResponseDecompression` option only works when using the default `MeilisearchClient` constructor. If you provide a custom `HttpClient`, you must configure `HttpClientHandler.AutomaticDecompression` yourself.
+
 ### When to Use Compression
 
 Compression is beneficial when:
