@@ -17,13 +17,15 @@ namespace Meilisearch
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <param name="estimatedTotalHits"></param>
+        /// <param name="performanceDetails"></param>
         public SimilarDocumentsResult(
             IReadOnlyCollection<T> hits,
             string id,
             int processingTimeMs,
             int offset,
             int limit,
-            int estimatedTotalHits)
+            int estimatedTotalHits,
+            IReadOnlyDictionary<string, string> performanceDetails)
         {
             Hits = hits;
             Id = id;
@@ -31,6 +33,7 @@ namespace Meilisearch
             Offset = offset;
             Limit = limit;
             EstimatedTotalHits = estimatedTotalHits;
+            PerformanceDetails = performanceDetails;
         }
 
         /// <summary>
@@ -68,5 +71,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("estimatedTotalHits")]
         public int EstimatedTotalHits { get; }
+
+        /// <summary>
+        /// Gets the performance details.
+        /// </summary>
+        [JsonPropertyName("performanceDetails")]
+        public IReadOnlyDictionary<string, string> PerformanceDetails { get; }
     }
 }
