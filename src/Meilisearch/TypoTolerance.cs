@@ -36,7 +36,7 @@ namespace Meilisearch
         /// Disable the typo tolerance feature for numbers.
         /// </summary>
         [JsonPropertyName("disableOnNumbers")]
-        public bool DisableOnNumbers { get; set; }
+        public bool? DisableOnNumbers { get; set; }
 
         public class TypoSize
         {

@@ -50,8 +50,7 @@ namespace Meilisearch.Tests
                     {
                         OneTypo = 5,
                         TwoTypos = 9
-                    },
-                    DisableOnNumbers = false
+                    }
                 },
                 Faceting = new Faceting
                 {
