@@ -3,21 +3,6 @@
 # the documentation on build
 # You can read more on https://github.com/meilisearch/documentation/tree/master/.vuepress/code-samples
 ---
-getting_started_faceting: |-
-  var faceting = new Faceting
-  {
-      MaxValuesPerFacet = 2,
-      SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
-      {
-          ["*"] = SortFacetValuesByType.Count
-      }
-  };
-  await client.Index("movies").UpdateFacetingAsync(faceting);
-getting_started_pagination: |-
-  var pagination = new Pagination {
-    MaxTotalHits = 500
-  };
-  await client.Index("movies").UpdatePaginationAsync(pagination);
 synonyms_guide_1: |-
   var synonyms = new Dictionary<string, IEnumerable<string>>
   {
@@ -46,26 +31,16 @@ filtering_guide_nested_1: |-
 sorting_guide_sort_nested_1: |-
   SearchQuery sort = new SearchQuery() { Sort = new string[] { "rating.users:asc" }};
   await client.Index("books").SearchAsync<Book>("science fiction", sort);
-async_guide_filter_by_date_1: |-
-  await client.GetTasksAsync(new TasksQuery { AfterEnqueuedAt = DateTime.Parse("2020-10-11T11:49:53.000Z") });
 async_guide_multiple_filters_1: |-
   var query = new TasksQuery { IndexUids = new List<string> { "movies" }, Types = new List<TaskInfo> { TaskInfo.DocumentAdditionOrUpdate, TaskInfo.DocumentDeletion }, Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Processing } };
 
   await client.GetTasksAsync(query);
-async_guide_filter_by_ids_1: |-
-  await client.GetTasksAsync(new TasksQuery { Uids = new List<int> { 5, 10, 13 } });
 async_guide_filter_by_statuses_1: |-
   await client.GetTasksAsync(new TasksQuery { Statuses = new List<TaskInfoStatus> { TaskInfoStatus.Failed, TaskInfoStatus.Canceled } });
-async_guide_filter_by_types_1: |-
-  await client.GetTasksAsync(new TasksQuery { Types = new List<TaskInfoType> { TaskInfoType.DumpCreation, TaskInfoType.IndexSwap } });
-async_guide_filter_by_index_uids_1: |-
-  await client.GetTasksAsync(new TasksQuery { IndexUids = new List<string> { "movies" } });
 delete_tasks_1: |-
   await client.DeleteTasksAsync(new DeleteTasksQuery { Uids = new List<int> { 1, 2 } });
 cancel_tasks_1: |-
   await client.CancelTasksAsync(new CancelTasksQuery { Uids = new List<int> { 1, 2 } });
-async_guide_canceled_by_1: |-
-  await client.GetTasksAsync(new TasksQuery { CanceledBy = new List<int> { 9, 15 } });
 swap_indexes_1: |-
   await client.SwapIndexesAsync(new List<IndexSwap> { new IndexSwap("indexA", "indexB"), new IndexSwap("indexX", "indexY") } });
 search_parameter_guide_hitsperpage_1: |-
@@ -408,72 +383,6 @@ getting_started_search: |-
   {
       Console.WriteLine(movie.Title);
   }
-getting_started_add_meteorites: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  var options = new JsonSerializerOptions
-  {
-      PropertyNameCaseInsensitive = true
-  };
-
-  string jsonString = await File.ReadAllTextAsync("meteorites.json");
-  var meteorites = JsonSerializer.Deserialize<IEnumerable<Meteorite>>(jsonString, options);
-
-  var index = client.Index("meteorites");
-  await index.AddDocumentsAsync<Meteorite>(meteorites);
-getting_started_update_ranking_rules: |-
-  await client.Index("movies").UpdateRankingRulesAsync(new string[] {
-    "exactness",
-    "words",
-    "typo",
-    "proximity",
-    "attribute",
-    "sort",
-    "release_date:asc",
-    "rank:desc"
-  });
-getting_started_update_displayed_attributes: |-
-  await client.Index("movies").UpdateDisplayedAttributesAsync(new string[] {
-    "title",
-    "overview",
-    "poster"
-  });
-getting_started_update_searchable_attributes: |-
-  await client.Index("movies").UpdateSearchableAttributesAsync(new string[] {
-    "title"
-  });
-getting_started_update_stop_words: |-
-  await client.Index("movies").UpdateStopWordsAsync(new string[] {
-    "the"
-  });
-getting_started_synonyms: |-
-  var newSynonyms = new Dictionary<string, IEnumerable<string>>
-  {
-      { "winnie", new string[] { "piglet" } },
-      { "piglet", new string[] { "winnie" } },
-  };
-  await client.Index("movies").UpdateSynonymsAsync(newSynonyms);
-getting_started_filtering: |-
-  SearchQuery filter = new SearchQuery() { Filter = "mass < 200" };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geo_radius: |-
-  SearchQuery filter = new SearchQuery() { Filter = "_geoRadius(46.9480, 7.4474, 210000)" };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", filter);
-getting_started_geo_point: |-
-  SearchQuery sort = new SearchQuery() { Sort = new string[] { "_geoPoint(48.8583701,2.2922926):asc" }};
-  await client.Index("meteorites").SearchAsync<Meteorite>("", sort);
-getting_started_sorting: |-
-  SearchQuery searchQuery = new SearchQuery() {
-    Sort = new string[] { "mass:asc" },
-    Filter = "mass < 200",
-  };
-  await client.Index("meteorites").SearchAsync<Meteorite>("", searchQuery);
-getting_started_configure_settings: |-
-  var newSettings = new Settings
-  {
-      FilterableAttributes = new string[] { "mass", "_geo" },
-      SortableAttributes = new string[] { "mass", "_geo" },
-  };
-  await client.Index("meteorites").UpdateSettingsAsync(newSettings);
 filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
 faceted_search_walkthrough_filter_1: |-
@@ -497,19 +406,6 @@ add_movies_json_1: |-
 
   var jsonDocuments = await File.ReadAllTextAsync("movies.json");
   await client.Index("movies").AddDocumentsJsonAsync(jsonDocuments);
-landing_getting_started_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-
-  var documents = new Movie[] {
-      new Movie { Id = "1", Title = "Carol" },
-      new Movie { Id = "2", Title = "Wonder Woman" },
-      new Movie { Id = "3", Title = "Life of Pi" },
-      new Movie { Id = "4", Title = "Mad Max: Fury Road" },
-      new Movie { Id = "5", Title = "Moana", ", "Action" },
-      new Movie { Id = "6", Title = "Philadelphia" }
-  };
-
-  var task = await client.Index("movies").AddDocumentsAsync<Movie>(documents);
 post_dump_1: |-
   await client.CreateDumpAsync();
 phrase_search_1: |-
@@ -629,52 +525,6 @@ update_a_key_1: |-
   )
 delete_a_key_1: |-
   client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
-security_guide_search_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "apiKey");
-  var searchResult = await client.Index("patient_medical_records").SearchAsync<Patient>();
-security_guide_update_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  await client.UpdateKeyAsync("74c9c733-3368-4738-bbe5-1d18a5fecb37", description: "Default Search API Key");
-security_guide_create_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  Key keyOptions = new Key
-  {
-      Description = "Search patient records key",
-      Actions = new string[] { "search" },
-      Indexes = new string[] { "patient_medical_records" },
-      ExpiresAt = DateTime.Parse("2023-01-01T00:00:00Z")
-  };
-  Key createdKey = await this.client.CreateKeyAsync(keyOptions);
-security_guide_list_keys_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  ResourceResults<Key> keyResult = await client.GetKeysAsync();
-  var keys = keyResult.Result;
-security_guide_delete_key_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
-  client.DeleteKeyAsync("ac5cd97d-5a4b-4226-a868-2d0eb6d197ab")
-tenant_token_guide_generate_sdk_1: |-
-  var apiKey = "B5KdX2MY2jV6EXfUs6scSfmC...";
-  var expiresAt = new DateTime(2025, 12, 20);
-  var searchRules = new TenantTokenRules(new Dictionary<string, object> {
-    { "patient_medical_records", new Dictionary<string, object> { { "filter", "user_id = 1" } } }
-  });
-
-  token = client.GenerateTenantToken(
-    searchRules,
-    apiKey: apiKey // optional,
-    expiresAt: expiresAt // optional
-  );
-tenant_token_guide_search_sdk_1: |-
-  frontEndClient = new MeilisearchClient("http://localhost:7700", token);
-  var searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
-getting_started_typo_tolerance: |-
-  var typoTolerance = new TypoTolerance {
-    MinWordSizeTypos = new TypoTolerance.TypoSize {
-      OneTypo = 4
-    }
-  };
-
-  await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 get_typo_tolerance_1: await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
   var typoTolerance = new TypoTolerance {
