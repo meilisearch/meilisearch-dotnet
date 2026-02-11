@@ -23,6 +23,7 @@ namespace Meilisearch
         /// <param name="matchesPosition"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
+        /// <param name="performanceDetails"></param>"
         public PaginatedSearchResult(
             IReadOnlyCollection<T> hits,
             int hitsPerPage,
@@ -34,7 +35,8 @@ namespace Meilisearch
             string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPosition,
             IReadOnlyDictionary<string, FacetStat> facetStats,
-            string indexUid
+            string indexUid,
+            IReadOnlyDictionary<string, string> performanceDetails
         )
         {
             Hits = hits;
@@ -48,6 +50,7 @@ namespace Meilisearch
             MatchesPosition = matchesPosition;
             FacetStats = facetStats;
             IndexUid = indexUid;
+            PerformanceDetails = performanceDetails;
         }
 
         /// <summary>
@@ -101,5 +104,9 @@ namespace Meilisearch
         /// <inheritdoc/>
         [JsonPropertyName("indexUid")]
         public string IndexUid { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("performanceDetails")]
+        public IReadOnlyDictionary<string, string> PerformanceDetails { get; }
     }
 }

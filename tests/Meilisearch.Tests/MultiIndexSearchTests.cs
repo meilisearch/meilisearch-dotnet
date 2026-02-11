@@ -79,6 +79,46 @@ namespace Meilisearch.Tests
             }).Should().BeTrue();
         }
 
+        [Fact]
+        public async Task BasicSearchWithPerformanceDetails()
+        {
+            var result = await _fixture.DefaultClient.MultiSearchAsync(new MultiSearchQuery()
+            {
+                Queries = new System.Collections.Generic.List<SearchQuery>()
+                {
+                    new SearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'", ShowPerformanceDetails = true },
+                    new SearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'", ShowPerformanceDetails = true }
+                }
+            });
+
+            result.Results.Should().HaveCount(2);
+            var res1 = result.Results[0];
+            res1.PerformanceDetails.Should().NotBeNullOrEmpty();
+
+            var res2 = result.Results[1];
+            res2.PerformanceDetails.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task BasicSearchWithoutPerformanceDetails()
+        {
+            var result = await _fixture.DefaultClient.MultiSearchAsync(new MultiSearchQuery()
+            {
+                Queries = new System.Collections.Generic.List<SearchQuery>()
+                {
+                    new SearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                    new SearchQuery() { IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'" }
+                }
+            });
+
+            result.Results.Should().HaveCount(2);
+            var res1 = result.Results[0];
+            res1.PerformanceDetails.Should().BeNull();
+
+            var res2 = result.Results[1];
+            res2.PerformanceDetails.Should().BeNull();
+        }
+
 
         [Fact]
         public async Task FederatedSearchWithNoFederationOptions()
