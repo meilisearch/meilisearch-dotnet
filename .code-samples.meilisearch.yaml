@@ -525,6 +525,21 @@ update_a_key_1: |-
   )
 delete_a_key_1: |-
   client.DeleteKeyAsync("6062abda-a5aa-4414-ac91-ecd7944c0f8d")
+tenant_token_guide_generate_sdk_1: |-
+  var apiKey = "B5KdX2MY2jV6EXfUs6scSfmC...";
+  var expiresAt = new DateTime(2025, 12, 20);
+  var searchRules = new TenantTokenRules(new Dictionary<string, object> {
+    { "patient_medical_records", new Dictionary<string, object> { { "filter", "user_id = 1" } } }
+  });
+
+  token = client.GenerateTenantToken(
+    searchRules,
+    apiKey: apiKey // optional,
+    expiresAt: expiresAt // optional
+  );
+tenant_token_guide_search_sdk_1: |-
+  frontEndClient = new MeilisearchClient("http://localhost:7700", token);
+  var searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
 get_typo_tolerance_1: await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
   var typoTolerance = new TypoTolerance {
