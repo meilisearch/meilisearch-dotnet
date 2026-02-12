@@ -50,7 +50,8 @@ namespace Meilisearch.Tests
                     {
                         OneTypo = 5,
                         TwoTypos = 9
-                    }
+                    },
+                    DisableOnNumbers = false
                 },
                 Faceting = new Faceting
                 {
@@ -443,7 +444,31 @@ namespace Meilisearch.Tests
                 {
                     TwoTypos = 12,
                     OneTypo = 5
-                }
+                },
+                DisableOnNumbers = false
+            };
+
+            await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
+            await AssertGetEquality(_index.GetTypoToleranceAsync, returnedTypoTolerance);
+        }
+
+        [Fact]
+        public async Task UpdateTypoToleranceForDisableOnNumbers()
+        {
+            var newTypoTolerance = new TypoTolerance
+            {
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12 },
+                DisableOnNumbers = true
+            };
+
+            var returnedTypoTolerance = new TypoTolerance
+            {
+                Enabled = true,
+                DisableOnAttributes = new string[] { },
+                DisableOnWords = new string[] { "harry", "potter" },
+                MinWordSizeForTypos = new TypoTolerance.TypoSize { TwoTypos = 12, OneTypo = 5 },
+                DisableOnNumbers = true
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
@@ -472,7 +497,8 @@ namespace Meilisearch.Tests
                 {
                     TwoTypos = 9,
                     OneTypo = 5
-                }
+                },
+                DisableOnNumbers = false
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
@@ -501,7 +527,8 @@ namespace Meilisearch.Tests
                 {
                     TwoTypos = 12,
                     OneTypo = 5
-                }
+                },
+                DisableOnNumbers = false
             };
 
             await AssertUpdateSuccess(_index.UpdateTypoToleranceAsync, newTypoTolerance);
