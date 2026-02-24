@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Meilisearch
 {
     /// <summary>
@@ -7,9 +5,17 @@ namespace Meilisearch
     /// When returning a list, Meilisearch stores the data in the "results" field, to allow better pagination.
     /// </summary>
     /// <typeparam name="T">Type of the Meilisearch server object. Ex: keys, indexes, ...</typeparam>
-    public class TasksResults<T> : Result<T>
+    public class ChunkedResults<T> : Result<T>
     {
-        public TasksResults(T results, int? limit, int? from, int? next, int? total)
+        /// <summary>
+        /// Constructor for ChunkedResults.
+        /// </summary>
+        /// <param name="results">Results</param>
+        /// <param name="limit">Results limit</param>
+        /// <param name="from">Uid of the first item returned</param>
+        /// <param name="next">Value passed to from to view the next “page” of results. When the value of next is null, there are no more items to view</param>
+        /// <param name="total">Total number of items matching the filter or query</param>
+        public ChunkedResults(T results, int? limit, int? from, int? next, int? total)
             : base(results, limit)
         {
             From = from;
@@ -28,7 +34,7 @@ namespace Meilisearch
         public int? Next { get; }
 
         /// <summary>
-        /// Gets total number of tasks.
+        /// Gets total number of results.
         /// </summary>
         public int? Total { get; }
     }
