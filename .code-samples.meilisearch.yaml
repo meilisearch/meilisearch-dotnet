@@ -358,7 +358,7 @@ getting_started_add_documents: |-
       {
           static async Task Main(string[] args)
           {
-              MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "aSampleMasterKey");
+              MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "aSampleMasterKey");
               var options = new JsonSerializerOptions
               {
                   PropertyNameCaseInsensitive = true
@@ -375,7 +375,7 @@ getting_started_add_documents: |-
 getting_started_check_task_status: |-
   TaskInfo task = await client.GetTaskAsync(0);
 getting_started_search: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "masterKey");
   var index = client.Index("movies");
 
   var movies = await index.SearchAsync<Movie>("botman");
@@ -502,7 +502,7 @@ primary_field_guide_add_document_primary_key: |-
     },
     "reference_number");
 authorization_header_1: |-
-  MeilisearchClient client = new MeilisearchClient("http://localhost:7700", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "masterKey");
   var keys = await client.GetKeysAsync();
 get_one_key_1: |-
   Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
@@ -538,7 +538,7 @@ tenant_token_guide_generate_sdk_1: |-
     expiresAt: expiresAt // optional
   );
 tenant_token_guide_search_sdk_1: |-
-  frontEndClient = new MeilisearchClient("http://localhost:7700", token);
+  frontEndClient = new MeilisearchClient("MEILISEARCH_URL", token);
   var searchResult = await frontEndClient.Index("patient_medical_records").SearchAsync<Patient>("blood test");
 get_typo_tolerance_1: await client.Index("books").GetTypoToleranceAsync();
 update_typo_tolerance_1: |-
