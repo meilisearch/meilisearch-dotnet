@@ -710,10 +710,6 @@ typo_tolerance_guide_4: |-
       TwoTypos = 10
     }
   };
-typo_tolerance_guide_5: |-
-  var typoTolerance = new TypoTolerance {
-    DisableOnNumbers = true
-  };
   await client.Index("movies").UpdateTypoToleranceAsync(typoTolerance);
 get_all_tasks_paginating_1: |-
   ResourceResults<TaskInfo> taskResult = await client.GetTasksAsync(new TasksQuery { Limit = 2, From = 10 });
