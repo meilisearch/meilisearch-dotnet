@@ -119,7 +119,6 @@ namespace Meilisearch.Tests
             res2.PerformanceDetails.Should().BeNull();
         }
 
-
         [Fact]
         public async Task FederatedSearchWithNoFederationOptions()
         {
@@ -177,6 +176,48 @@ namespace Meilisearch.Tests
             var testJson = JsonSerializer.Serialize(federatedquer);
 
             result.Hits.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task FederatedSearchWithPerformanceDetails()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                        new FederatedSearchQuery()
+                        {
+                            IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'"
+                        }
+                    },
+                    FederationOptions = new MultiSearchFederationOptions() { Limit = 1, ShowPerformanceDetails = true }
+                });
+
+            result.PerformanceDetails.Should().NotBeNullOrEmpty();
+            result.Hits.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async Task FederatedSearchWithoutPerformanceDetails()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "", Filter = "genre = 'SF'" },
+                        new FederatedSearchQuery()
+                        {
+                            IndexUid = _index2.Uid, Q = "", Filter = "genre = 'Action'"
+                        }
+                    },
+                    FederationOptions = new MultiSearchFederationOptions() { }
+                });
+
+            result.PerformanceDetails.Should().BeNull();
+            result.Hits.Should().HaveCount(4);
         }
     }
 }
