@@ -109,5 +109,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("showRankingScoreDetails")]
         public bool? ShowRankingScoreDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to retrieve performance details.
+        /// </summary>
+        [JsonPropertyName("showPerformanceDetails")]
+        public bool? ShowPerformanceDetails { get; set; }
     }
 }
