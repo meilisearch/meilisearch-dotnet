@@ -62,11 +62,5 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("retrieveVectors")]
         public bool RetrieveVectors { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether to retrieve performance details.
-        /// </summary>
-        [JsonPropertyName("showPerformanceDetails")]
-        public bool ShowPerformanceDetails { get; set; }
     }
 }
