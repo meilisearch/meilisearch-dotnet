@@ -23,7 +23,7 @@ namespace Meilisearch
         /// <param name="matchesPosition"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
-        /// <param name="performanceDetails"></param>"
+        /// <param name="performanceDetails"></param>
         public PaginatedSearchResult(
             IReadOnlyCollection<T> hits,
             int hitsPerPage,
