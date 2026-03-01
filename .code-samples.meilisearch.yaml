@@ -43,16 +43,6 @@ cancel_tasks_1: |-
   await client.CancelTasksAsync(new CancelTasksQuery { Uids = new List<int> { 1, 2 } });
 swap_indexes_1: |-
   await client.SwapIndexesAsync(new List<IndexSwap> { new IndexSwap("indexA", "indexB"), new IndexSwap("indexX", "indexY") } });
-search_parameter_guide_hitsperpage_1: |-
-  var result = await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { HitsPerPage = 15 });
-  if(result is PaginatedSearchResult<Movie> pagedResults)
-  {
-  }
-search_parameter_guide_page_1: |-
-  var result = await client.Index("movies").SearchAsync<Movie>("", new SearchQuery { Page = 2 });
-  if(result is PaginatedSearchResult<Movie> pagedResults)
-  {
-  }
 get_one_index_1: |-
   await client.GetIndexAsync("movies");
 list_all_indexes_1: |-
@@ -259,79 +249,6 @@ filtering_guide_2: |-
 filtering_guide_3: |-
   SearchQuery filters = new SearchQuery() { Filter = "release_date > 1577884550 AND (NOT director = \"Tim Burton\")" };
   var movies = await client.Index("movie_ratings").SearchAsync<Movie>("Planet of the Apes", filters);
-search_parameter_guide_query_1: |-
-  await client.Index("movies").SearchAsync<Movie>("shifu");
-search_parameter_guide_offset_1: |-
-  var sq = new SearchQuery
-  {
-      Offset = 1
-  };
-  var result = await client.Index("movies").SearchAsync<Movie>("shifu", sq);
-  if(result is SearchResult<Movie> pagedResults)
-  {
-  }
-search_parameter_guide_limit_1: |-
-  var sq = new SearchQuery
-  {
-      Limit = 2
-  };
-  var result = await client.Index("movies").SearchAsync<Movie>("shifu", sq);
-  if(result is SearchResult<Movie> pagedResults)
-  {
-  }
-search_parameter_guide_retrieve_1: |-
-  var sq = new SearchQuery
-  {
-      AttributesToRetrieve = new[] {"overview", "title"}
-  };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
-search_parameter_guide_crop_1: |-
-  var sq = new SearchQuery
-  {
-      AttributesToCrop = new[] {"overview"},
-      CropLength = 5
-  };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
-search_parameter_guide_crop_marker_1: |-
-  var sq = new SearchQuery
-  {
-      AttributesToCrop = new[] {"overview"},
-      CropMarker = "[...]"
-  };
-  await client.Index("movies").SearchAsync<Movie>("shifu", sq);
-search_parameter_guide_highlight_1: |-
-  var sq = new SearchQuery
-  {
-      AttributesToHighlight = new[] {"overview"}
-  };
-  await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
-search_parameter_guide_highlight_tag_1: |-
-  var sq = new SearchQuery
-  {
-      AttributesToHighlight = new[] {"overview"},
-      HighlightPreTag = "<span class=\"highlight\">",
-      HighlightPostTag = "</span>"
-  };
-  await client.Index("movies").SearchAsync<Movie>("winter feast", sq);
-search_parameter_guide_show_matches_position_1: |-
-  await client.Index("movies").SearchAsync<T>(
-    "winter feast",
-    new SearchQuery
-    {
-        ShowMatchesPosition = True,
-    });
-search_parameter_guide_attributes_to_search_on_1: |-
-  var searchQuery = new SearchQuery
-  {
-    AttributesToSearchOn = new[] { "overview" }
-  };
-  await client.Index("movies").SearchAsync<Movie>("adventure", searchQuery);
-search_parameter_guide_facet_stats_1: |-
-  var sq = new SearchQuery
-  {
-    Facets = new string[] { "genres", "rating" }
-  };
-  await client.Index("movie_ratings").SearchAsync<Movie>("Batman", sq);
 getting_started_add_documents: |-
   // In the command line:
   // dotnet add package Meilisearch
@@ -385,12 +302,6 @@ getting_started_search: |-
   }
 filtering_update_settings_1: |-
   await client.Index("movies").UpdateFilterableAttributesAsync(new [] { "director", "genres" });
-faceted_search_walkthrough_filter_1: |-
-  var sq = new SearchQuery
-  {
-      Filter = "(genre = 'Horror' AND genre = 'Mystery') OR director = 'Jordan Peele'"
-  };
-  await client.Index("movies").SearchAsync<Movie>("thriller", sq);
 faceted_search_update_settings_1: |-
   List<string> attributes = new() { "genres", "rating", "language" };
   TaskInfo result = await client.Index("movie_ratings").UpdateFilterableAttributesAsync(attributes);
@@ -408,8 +319,6 @@ add_movies_json_1: |-
   await client.Index("movies").AddDocumentsJsonAsync(jsonDocuments);
 post_dump_1: |-
   await client.CreateDumpAsync();
-phrase_search_1: |-
-  await client.Index("movies").SearchAsync<Movie>("\"african american\" horror");
 sorting_guide_update_sortable_attributes_1: |-
   await client.Index("books").UpdateSortableAttributesAsync(new [] { "price", "author" });
 sorting_guide_update_ranking_rules_1: |-
@@ -440,12 +349,6 @@ update_sortable_attributes_1: |-
   await client.Index("books").UpdateSortableAttributesAsync(new [] { "price", "author" });
 reset_sortable_attributes_1: |-
   await client.Index("books").ResetSortableAttributesAsync();
-search_parameter_guide_sort_1: |-
-  var sq = new SearchQuery
-  {
-    Sort = new[] { "price:asc" },
-  };
-  await client.Index("books").SearchAsync<Book>("science fiction", sq);
 geosearch_guide_filter_settings_1: |-
   List<string> attributes = new() { "_geo" };
   TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
@@ -626,18 +529,6 @@ multi_search_1: |-
           },
       }
   });
-search_parameter_guide_matching_strategy_1: |-
-  SearchQuery params = new SearchQuery() { MatchingStrategy = "last" };
-  await client.Index("movies").SearchAsync<Game>("big fat liar", params);
-search_parameter_guide_matching_strategy_2: |-
-  SearchQuery params = new SearchQuery() { MatchingStrategy = "all" };
-  await client.Index("movies").SearchAsync<Game>("big fat liar", params);
-search_parameter_guide_show_ranking_score_1: |-
-  var params = new SearchQuery()
-  {
-    ShowRankingScore = true
-  };
-  await client.Index("movies").SearchAsync<MovieWithRankingScore>("dragon", params);
 search_parameter_guide_show_ranking_score_details_1: |-
   var params = new SearchQuery()
   {
@@ -650,12 +541,6 @@ update_proximity_precision_settings_1: |-
   await client.Index("books").UpdateProximityPrecisionAsync("byAttribute");
 reset_proximity_precision_settings_1: |-
   await client.Index("books").ResetProximityPrecisionAsync();
-search_parameter_reference_distinct_1: |-
-  var params = new SearchQuery()
-  {
-    Distinct = "ATTRIBUTE_A"
-  };
-  await client.Index("INDEX_NAME").SearchAsync<T>("QUERY TERMS", params);
 distinct_attribute_guide_filterable_1: |-
   List<string> attributes = new() { "product_id", "sku", "url" };
   TaskInfo result = await client.Index("products").UpdateFilterableAttributesAsync(attributes);
