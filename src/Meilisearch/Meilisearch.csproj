@@ -23,7 +23,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
-        <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />
+        <PackageReference Include="System.Net.Http.Json" Version="10.0.3" />
     </ItemGroup>
 
     <ItemGroup>
