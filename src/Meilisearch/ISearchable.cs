@@ -51,5 +51,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("facetStats")]
         IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
+
+        /// <summary>
+        /// Gets the performance details.
+        /// </summary>
+        [JsonPropertyName("performanceDetails")]
+        IReadOnlyDictionary<string, string> PerformanceDetails { get; }
     }
 }

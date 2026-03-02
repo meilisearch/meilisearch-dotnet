@@ -1,7 +1,4 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
-
-using Meilisearch.Converters;
 
 namespace Meilisearch
 {
@@ -21,5 +18,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to retrieve performance details.
+        /// </summary>
+        [JsonPropertyName("showPerformanceDetails")]
+        public bool ShowPerformanceDetails { get; set; }
     }
 }

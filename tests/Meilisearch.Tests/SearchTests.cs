@@ -90,6 +90,31 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task BasicSearchWithPerformanceDetails()
+        {
+            var movies = await _basicIndex.SearchAsync<Movie>("man", new SearchQuery()
+            {
+                ShowPerformanceDetails = true
+            });
+
+            movies.PerformanceDetails.Should().NotBeNullOrEmpty();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task BasicSearchWithoutPerformanceDetails()
+        {
+            var movies = await _basicIndex.SearchAsync<Movie>("man");
+
+            movies.PerformanceDetails.Should().BeNull();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+            movies.Hits.ElementAt(1).Name.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public async Task CustomSearchWithLimit()
         {
             var movies = await _basicIndex.SearchAsync<Movie>(
@@ -100,6 +125,30 @@ namespace Meilisearch.Tests
             movies.Hits.First().Id.Should().NotBeEmpty();
             movies.Hits.First().Name.Should().NotBeEmpty();
             movies.Hits.First().Genre.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPageAndPerformanceDetails()
+        {
+            var movies = (PaginatedSearchResult<Movie>)await _basicIndex.SearchAsync<Movie>(
+                "man",
+                new SearchQuery { Page = 1, HitsPerPage = 1, ShowPerformanceDetails = true });
+
+            movies.PerformanceDetails.Should().NotBeNullOrEmpty();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task CustomSearchWithPageAndWithoutPerformanceDetails()
+        {
+            var movies = (PaginatedSearchResult<Movie>)await _basicIndex.SearchAsync<Movie>(
+                "man",
+                new SearchQuery { Page = 1, HitsPerPage = 1 });
+
+            movies.PerformanceDetails.Should().BeNull();
+            movies.Hits.Should().NotBeEmpty();
+            movies.Hits.First().Name.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -609,6 +658,48 @@ namespace Meilisearch.Tests
             };
 
             var movies = await _indexForVectorSearch.SearchSimilarDocumentsAsync<VectorMovie>(query);
+
+            Assert.Collection(movies.Hits,
+                m => Assert.Equal("Escape Room", m.Title),
+                m => Assert.Equal("Captain Marvel", m.Title),
+                m => Assert.Equal("How to Train Your Dragon: The Hidden World", m.Title),
+                m => Assert.Equal("Shazam!", m.Title)
+            );
+        }
+
+        [Fact]
+        public async Task CustomSearchWithSimilarDocumentsAndPerformanceDetails()
+        {
+            var query = new SimilarDocumentsQuery("143")
+            {
+                Embedder = "manual",
+                ShowPerformanceDetails = true
+            };
+
+            var movies = await _indexForVectorSearch.SearchSimilarDocumentsAsync<VectorMovie>(query);
+
+            movies.PerformanceDetails.Should().NotBeNullOrEmpty();
+
+            Assert.Collection(movies.Hits,
+                m => Assert.Equal("Escape Room", m.Title),
+                m => Assert.Equal("Captain Marvel", m.Title),
+                m => Assert.Equal("How to Train Your Dragon: The Hidden World", m.Title),
+                m => Assert.Equal("Shazam!", m.Title)
+            );
+        }
+
+        [Fact]
+        public async Task CustomSearchWithSimilarDocumentsAndWithoutPerformanceDetails()
+        {
+            var query = new SimilarDocumentsQuery("143")
+            {
+                Embedder = "manual",
+                ShowPerformanceDetails = false
+            };
+
+            var movies = await _indexForVectorSearch.SearchSimilarDocumentsAsync<VectorMovie>(query);
+
+            movies.PerformanceDetails.Should().BeNull();
 
             Assert.Collection(movies.Hits,
                 m => Assert.Equal("Escape Room", m.Title),

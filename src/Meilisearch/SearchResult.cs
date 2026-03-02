@@ -22,12 +22,14 @@ namespace Meilisearch
         /// <param name="matchesPosition"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
+        /// <param name="performanceDetails"></param>
         public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPosition,
             IReadOnlyDictionary<string, FacetStat> facetStats,
-            string indexUid)
+            string indexUid,
+            IReadOnlyDictionary<string, string> performanceDetails)
         {
             Hits = hits;
             Offset = offset;
@@ -39,6 +41,7 @@ namespace Meilisearch
             MatchesPosition = matchesPosition;
             FacetStats = facetStats;
             IndexUid = indexUid;
+            PerformanceDetails = performanceDetails;
         }
 
         /// <inheritdoc/>
@@ -86,5 +89,9 @@ namespace Meilisearch
         /// <inheritdoc/>
         [JsonPropertyName("indexUid")]
         public string IndexUid { get; }
+
+        /// <inheritdoc/>
+        [JsonPropertyName("performanceDetails")]
+        public IReadOnlyDictionary<string, string> PerformanceDetails { get; }
     }
 }
