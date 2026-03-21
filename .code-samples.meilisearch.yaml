@@ -292,7 +292,7 @@ getting_started_add_documents: |-
 getting_started_check_task_status: |-
   TaskInfo task = await client.GetTaskAsync(0);
 getting_started_search: |-
-  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "MEILISEARCH_KEY");
   var index = client.Index("movies");
 
   var movies = await index.SearchAsync<Movie>("botman");
@@ -405,7 +405,7 @@ primary_field_guide_add_document_primary_key: |-
     },
     "reference_number");
 authorization_header_1: |-
-  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "masterKey");
+  MeilisearchClient client = new MeilisearchClient("MEILISEARCH_URL", "MEILISEARCH_KEY");
   var keys = await client.GetKeysAsync();
 get_one_key_1: |-
   Key key = await client.GetKeyAsync("d0552b41536279a0ad88bd595327b96f01176a60c2243e906c52ac02375f9bc4");
