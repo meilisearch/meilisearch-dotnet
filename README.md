@@ -11,7 +11,7 @@
   <a href="https://discord.meilisearch.com">Discord</a> |
   <a href="https://roadmap.meilisearch.com/tabs/1-under-consideration">Roadmap</a> |
   <a href="https://www.meilisearch.com">Website</a> |
-  <a href="https://www.meilisearch.com/docs/faq">FAQ</a>
+  <a href="https://www.meilisearch.com/docs/learn/resources/faq">FAQ</a>
 </h4>
 
 <p align="center">
@@ -111,7 +111,7 @@ namespace GettingStarted
 }
 ```
 
-With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/tasks).
+With the `uid`, you can check the status (`enqueued`, `canceled`, `processing`, `succeeded` or `failed`) of your documents addition using the [task](https://www.meilisearch.com/docs/reference/api/async-task-management/list-tasks).
 
 #### Basic Search <!-- omit in toc -->
 
@@ -142,7 +142,7 @@ JSON Output:
 
 #### Custom Search <!-- omit in toc -->
 
-All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search#search-parameters) section of the documentation.
+All the supported options are described in the [search parameters](https://www.meilisearch.com/docs/reference/api/search/search-with-post#search-parameters) section of the documentation.
 
 ```c#
 var movies = await index.SearchAsync<Movie>(
@@ -191,7 +191,7 @@ TaskInfo task = await index.UpdateFilterableAttributesAsync(
 
 You only need to perform this operation once.
 
-Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://www.meilisearch.com/docs/reference/api/tasks#status).
+Note that MeiliSearch will rebuild your index whenever you update `FilterableAttributes`. Depending on the size of your dataset, this might take time. You can track the process using the [update status](https://www.meilisearch.com/docs/reference/api/async-task-management/list-tasks#status).
 
 Then, you can perform the search:
 
@@ -226,7 +226,7 @@ JSON Output:
 
 #### Search with Limit and Offset
 
-You can paginate search results by making queries combining both [offset](https://www.meilisearch.com/docs/reference/api/search#offset) and [limit](https://www.meilisearch.com/docs/reference/api/search#limit).
+You can paginate search results by making queries combining both [offset](https://www.meilisearch.com/docs/reference/api/search/search-with-post#offset) and [limit](https://www.meilisearch.com/docs/reference/api/search/search-with-post#limit).
 
 ```c#
 var results = await index.SearchAsync<T>(query, new SearchQuery()
@@ -243,7 +243,7 @@ if (results is SearchResult<T> limitedResults)
 
 #### Search with defined number of results per page
 
-To get paginated results with page numbers, the [HitsPerPage](https://www.meilisearch.com/docs/reference/api/search#number-of-results-per-page) and [Page](https://www.meilisearch.com/docs/reference/api/search#page) properties must be defined.
+To get paginated results with page numbers, the [HitsPerPage](https://www.meilisearch.com/docs/reference/api/search/search-with-post#number-of-results-per-page) and [Page](https://www.meilisearch.com/docs/reference/api/search/search-with-post#page) properties must be defined.
 
 ```c#
 var results = await index.SearchAsync<T>(query, new SearchQuery()
@@ -261,7 +261,7 @@ if (results is PaginatedSearchResult<T> paginatedResults)
 
 #### Search with sort
 
-To get results sorted by attributes and preferred sorting order, the [Sort](https://www.meilisearch.com/docs/reference/api/search#sort) property must be defined.
+To get results sorted by attributes and preferred sorting order, the [Sort](https://www.meilisearch.com/docs/reference/api/search/search-with-post#sort) property must be defined.
 
 ```c#
 var results = await index.SearchAsync<T>(query, new SearchQuery()
