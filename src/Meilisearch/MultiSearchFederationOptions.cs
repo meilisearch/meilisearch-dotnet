@@ -21,5 +21,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
+
+        /// <summary>
+        /// Attribute whose value must be different for each returned document
+        /// </summary>
+        [JsonPropertyName("distinct")]
+        public string Distinct { get; set; }
     }
 }

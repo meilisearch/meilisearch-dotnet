@@ -138,5 +138,24 @@ namespace Meilisearch.Tests
 
             result.Hits.Should().HaveCount(2);
         }
+
+        [Fact]
+        public async Task FederatedSearchWithDistinct()
+        {
+            var result = await _fixture.DefaultClient.FederatedMultiSearchAsync<Movie>(
+                new FederatedMultiSearchQuery()
+                {
+                    Queries = new List<FederatedSearchQuery>()
+                    {
+                        new FederatedSearchQuery() { IndexUid = _index1.Uid, Q = "" },
+                        new FederatedSearchQuery() { IndexUid = _index2.Uid, Q = "" }
+                    },
+                    FederationOptions = new MultiSearchFederationOptions() { Distinct = "genre" }
+                });
+
+            // With distinct on "genre", each genre value appears at most once
+            result.Hits.Should().NotBeEmpty();
+            result.Hits.Select(h => h.Genre).Distinct().Count().Should().Be(result.Hits.Count);
+        }
     }
 }
