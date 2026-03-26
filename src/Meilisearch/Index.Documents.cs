@@ -22,15 +22,10 @@ namespace Meilisearch
         /// <typeparam name="T">Type of the document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> AddDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
             HttpResponseMessage responseMessage;
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             responseMessage = await _http.PostJsonCustomAsync(uri, documents, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -46,14 +41,9 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> AddDocumentsJsonAsync(string documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Json);
             var responseMessage = await _http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
@@ -102,14 +92,9 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> AddDocumentsNdjsonAsync(string documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Ndjson);
             var responseMessage = await _http.PostAsync(uri, content, cancellationToken).ConfigureAwait(false);
@@ -190,15 +175,10 @@ namespace Meilisearch
         /// <typeparam name="T">Type of document. Even though documents are schemaless in Meilisearch, making it typed helps in compile time.</typeparam>
         /// <returns>Returns the task list.</returns>
         public async Task<TaskInfo> UpdateDocumentsAsync<T>(IEnumerable<T> documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
             HttpResponseMessage responseMessage;
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             responseMessage = await _http
                 .PutJsonCustomAsync(uri, documents, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken)
@@ -216,14 +196,9 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> UpdateDocumentsJsonAsync(string documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Json);
             var responseMessage = await _http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
@@ -239,14 +214,9 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> UpdateDocumentsCsvAsync(string documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Csv);
             var responseMessage = await _http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
@@ -262,14 +232,9 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info.</returns>
         public async Task<TaskInfo> UpdateDocumentsNdjsonAsync(string documents, string primaryKey = default,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, bool? skipCreation = null)
         {
-            var uri = $"indexes/{Uid}/documents";
-
-            if (primaryKey != default)
-            {
-                uri = $"{uri}?{new { primaryKey = primaryKey }.ToQueryString()}";
-            }
+            var uri = new { primaryKey, skipCreation }.ToQueryString(uri: $"indexes/{Uid}/documents");
 
             var content = new StringContent(documents, Encoding.UTF8, ContentType.Ndjson);
             var responseMessage = await _http.PutAsync(uri, content, cancellationToken).ConfigureAwait(false);
