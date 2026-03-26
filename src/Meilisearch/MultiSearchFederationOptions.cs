@@ -21,5 +21,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
+
+        /// <summary>
+        /// Attribute whose values must be unique among returned documents in a federated search
+        /// </summary>
+        [JsonPropertyName("distinct")]
+        public string Distinct { get; set; }
     }
 }
