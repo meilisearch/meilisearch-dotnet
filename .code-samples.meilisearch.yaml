@@ -94,6 +94,8 @@ search_post_1: |-
   await client.Index("movies").SearchAsync<Movie>("American ninja");
 get_task_1: |
   TaskInfo task = await client.GetTaskAsync(1);
+get_task_documents_1: |
+  string documents = await client.GetTaskDocumentsAsync(1);
 get_all_tasks_1: |
   ResourceResults<Task> taskResult = await client.GetTasksAsync();
 get_settings_1: |-

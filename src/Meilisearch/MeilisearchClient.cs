@@ -251,6 +251,17 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the documents associated with a task.
+        /// </summary>
+        /// <param name="taskUid">Unique identifier of the task.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task documents as a JSON string.</returns>
+        public async Task<string> GetTaskDocumentsAsync(int taskUid, CancellationToken cancellationToken = default)
+        {
+            return await TaskEndpoint().GetTaskDocumentsAsync(taskUid, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Waits until the asynchronous task was done.
         /// </summary>
         /// <param name="taskUid">Unique identifier of the asynchronous task.</param>

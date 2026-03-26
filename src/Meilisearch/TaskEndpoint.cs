@@ -74,6 +74,19 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Gets the documents associated with a task.
+        /// </summary>
+        /// <param name="taskUid">Uid of the task.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task documents as a JSON string.</returns>
+        public async Task<string> GetTaskDocumentsAsync(int taskUid, CancellationToken cancellationToken = default)
+        {
+            var response = await _http.GetAsync($"tasks/{taskUid}/documents", cancellationToken)
+                .ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Gets the tasks from an index.
         /// </summary>
         /// <param name="indexUid">Uid of the index.</param>
