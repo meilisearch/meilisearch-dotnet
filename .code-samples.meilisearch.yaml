@@ -224,13 +224,6 @@ get_version_1: |-
   await client.GetVersionAsync();
 distinct_attribute_guide_1: |-
   await client.Index("jackets").UpdateDistinctAttributeAsync("product_id");
-field_properties_guide_searchable_1: |-
-  await client.Index("movies").UpdateSearchableAttributesAsync(new[]
-  {
-      "title",
-      "overview",
-      "genres"
-  });
 field_properties_guide_displayed_1: |-
   await client.Index("movies").UpdateDisplayedAttributesAsync(new[]
   {
@@ -529,12 +522,6 @@ multi_search_1: |-
           },
       }
   });
-search_parameter_guide_show_ranking_score_details_1: |-
-  var params = new SearchQuery()
-  {
-    ShowRankingScoreDetails = true
-  };
-  await client.Index("movies").SearchAsync<MovieWithRankingScoreDetails>("dragon", params);
 get_proximity_precision_settings_1: |-
   await client.Index("books").GetProximityPrecisionAsync();
 update_proximity_precision_settings_1: |-
