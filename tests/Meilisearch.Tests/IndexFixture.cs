@@ -97,7 +97,7 @@ namespace Meilisearch.Tests
             // task settings
             var settings = new Settings
             {
-                FilterableAttributes = new string[] { "genre" },
+                FilterableAttributes = new FilterableAttribute[] { "genre" },
             };
             task = await index.UpdateSettingsAsync(settings);
 
@@ -174,7 +174,7 @@ namespace Meilisearch.Tests
 
             var settings = new Settings
             {
-                FilterableAttributes = new string[] { "product_id" },
+                FilterableAttributes = new FilterableAttribute[] { "product_id" },
             };
             task = await index.UpdateSettingsAsync(settings);
 

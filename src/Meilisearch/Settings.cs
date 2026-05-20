@@ -58,9 +58,12 @@ namespace Meilisearch
 
         /// <summary>
         /// Gets or sets the filterable attributes.
+        ///
+        /// Each entry is either a plain attribute name (legacy syntax) or a granular
+        /// pattern that opts in/out of specific features (Meilisearch v1.14+).
         /// </summary>
         [JsonPropertyName("filterableAttributes")]
-        public IEnumerable<string> FilterableAttributes { get; set; }
+        public IEnumerable<FilterableAttribute> FilterableAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the sortable attributes.

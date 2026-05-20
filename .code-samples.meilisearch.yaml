@@ -198,7 +198,23 @@ reset_searchable_attributes_1: |-
 get_filterable_attributes_1: |-
   IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributesAsync();
 update_filterable_attributes_1: |-
-  List<string> attributes = new() { "genres", "director" };
+  var attributes = new FilterableAttribute[]
+  {
+      "director",
+      new FilterableAttribute
+      {
+          AttributePatterns = new[] { "genres" },
+          Features = new FilterableAttributeFeatures
+          {
+              FacetSearch = true,
+              Filter = new FilterableAttributeFilterFeatures
+              {
+                  Equality = true,
+                  Comparison = true,
+              },
+          },
+      },
+  };
   TaskInfo result = await client.Index("movies").UpdateFilterableAttributesAsync(attributes);
 reset_filterable_attributes_1: |-
   TaskInfo result = await client.Index("movies").ResetFilterableAttributesAsync();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -84,27 +85,41 @@ namespace Meilisearch
 
         /// <summary>
         /// Gets the filterable attributes setting.
+        ///
+        /// Each entry is either a plain attribute name (legacy syntax) or a granular
+        /// pattern that opts in/out of specific features (Meilisearch v1.14+).
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the filterable attributes setting.</returns>
-        public async Task<IEnumerable<string>> GetFilterableAttributesAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<FilterableAttribute>> GetFilterableAttributesAsync(CancellationToken cancellationToken = default)
         {
-            return await _http.GetFromJsonAsync<IEnumerable<string>>($"indexes/{Uid}/settings/filterable-attributes", cancellationToken: cancellationToken)
+            return await _http.GetFromJsonAsync<IEnumerable<FilterableAttribute>>($"indexes/{Uid}/settings/filterable-attributes", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
 
         /// <summary>
         /// Updates the filterable attributes setting.
         /// </summary>
-        /// <param name="filterableAttributes">Collection of filterable attributes.</param>
+        /// <param name="filterableAttributes">Collection of filterable attributes. Each entry may be a plain attribute name or a granular <see cref="FilterableAttribute"/>.</param>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Returns the task info of the asynchronous task.</returns>
-        public async Task<TaskInfo> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
+        public async Task<TaskInfo> UpdateFilterableAttributesAsync(IEnumerable<FilterableAttribute> filterableAttributes, CancellationToken cancellationToken = default)
         {
             var responseMessage =
                 await _http.PutAsJsonAsync($"indexes/{Uid}/settings/filterable-attributes", filterableAttributes, Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Updates the filterable attributes setting using the legacy string-only syntax.
+        /// </summary>
+        /// <param name="filterableAttributes">Collection of attribute names.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the task info of the asynchronous task.</returns>
+        public Task<TaskInfo> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
+        {
+            return UpdateFilterableAttributesAsync(filterableAttributes.Select(a => (FilterableAttribute)a), cancellationToken);
         }
 
         /// <summary>

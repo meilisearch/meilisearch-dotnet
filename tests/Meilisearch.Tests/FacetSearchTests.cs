@@ -101,7 +101,7 @@ namespace Meilisearch.Tests
         {
             var newFilters = new Settings
             {
-                FilterableAttributes = new string[] { "genre", "id" },
+                FilterableAttributes = new FilterableAttribute[] { "genre", "id" },
             };
             var task = await _indexForFaceting.UpdateSettingsAsync(newFilters);
             task.TaskUid.Should().BeGreaterOrEqualTo(0);

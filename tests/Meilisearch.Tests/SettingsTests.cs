@@ -39,7 +39,7 @@ namespace Meilisearch.Tests
                 SeparatorTokens = new List<string> { },
                 NonSeparatorTokens = new List<string> { },
                 Synonyms = new Dictionary<string, IEnumerable<string>> { },
-                FilterableAttributes = Array.Empty<string>(),
+                FilterableAttributes = Array.Empty<FilterableAttribute>(),
                 SortableAttributes = Array.Empty<string>(),
                 ProximityPrecision = "byWord",
                 TypoTolerance = new TypoTolerance
@@ -149,7 +149,7 @@ namespace Meilisearch.Tests
                 DistinctAttribute = "name",
                 DisplayedAttributes = new string[] { "name" },
                 RankingRules = new string[] { "typo" },
-                FilterableAttributes = new string[] { "genre" },
+                FilterableAttributes = new FilterableAttribute[] { "genre" },
                 Dictionary = new string[] { "dictionary" }
             };
             await AssertUpdateSuccess(_index.UpdateSettingsAsync, newSettings);
@@ -219,7 +219,31 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task UpdateFilterableAttributes()
         {
-            var newFilterableAttributes = new string[] { "name", "genre" };
+            IEnumerable<FilterableAttribute> newFilterableAttributes = new FilterableAttribute[] { "name", "genre" };
+            await AssertUpdateSuccess(_index.UpdateFilterableAttributesAsync, newFilterableAttributes);
+            await AssertGetEquality(_index.GetFilterableAttributesAsync, newFilterableAttributes);
+        }
+
+        [Fact]
+        public async Task UpdateFilterableAttributesWithGranularSyntax()
+        {
+            IEnumerable<FilterableAttribute> newFilterableAttributes = new FilterableAttribute[]
+            {
+                "author",
+                new FilterableAttribute
+                {
+                    AttributePatterns = new[] { "genre" },
+                    Features = new FilterableAttributeFeatures
+                    {
+                        FacetSearch = true,
+                        Filter = new FilterableAttributeFilterFeatures
+                        {
+                            Equality = true,
+                            Comparison = false,
+                        },
+                    },
+                },
+            };
             await AssertUpdateSuccess(_index.UpdateFilterableAttributesAsync, newFilterableAttributes);
             await AssertGetEquality(_index.GetFilterableAttributesAsync, newFilterableAttributes);
         }
@@ -227,7 +251,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ResetFilterableAttributes()
         {
-            var newFilterableAttributes = new string[] { "name", "genre" };
+            IEnumerable<FilterableAttribute> newFilterableAttributes = new FilterableAttribute[] { "name", "genre" };
             await AssertUpdateSuccess(_index.UpdateFilterableAttributesAsync, newFilterableAttributes);
             await AssertGetEquality(_index.GetFilterableAttributesAsync, newFilterableAttributes);
 
