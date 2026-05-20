@@ -61,13 +61,16 @@ namespace Meilisearch.Converters
                 return;
             }
 
+            if (value.AttributePatterns == null)
+            {
+                throw new JsonException(
+                    "FilterableAttribute must have either Attribute or AttributePatterns set.");
+            }
+
             writer.WriteStartObject();
 
-            if (value.AttributePatterns != null)
-            {
-                writer.WritePropertyName("attributePatterns");
-                JsonSerializer.Serialize(writer, value.AttributePatterns, options);
-            }
+            writer.WritePropertyName("attributePatterns");
+            JsonSerializer.Serialize(writer, value.AttributePatterns, options);
 
             if (value.Features != null)
             {

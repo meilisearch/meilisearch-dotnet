@@ -119,7 +119,9 @@ namespace Meilisearch
         /// <returns>Returns the task info of the asynchronous task.</returns>
         public Task<TaskInfo> UpdateFilterableAttributesAsync(IEnumerable<string> filterableAttributes, CancellationToken cancellationToken = default)
         {
-            return UpdateFilterableAttributesAsync(filterableAttributes.Select(a => (FilterableAttribute)a), cancellationToken);
+            return filterableAttributes == null
+                ? throw new System.ArgumentNullException(nameof(filterableAttributes))
+                : UpdateFilterableAttributesAsync(filterableAttributes.Select(a => (FilterableAttribute)a), cancellationToken);
         }
 
         /// <summary>

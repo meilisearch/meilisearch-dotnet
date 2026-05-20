@@ -37,11 +37,13 @@ namespace Meilisearch
         /// <summary>
         /// Implicitly wraps a plain attribute name in a <see cref="FilterableAttribute"/>.
         /// Enables passing a <see cref="string"/> wherever a <see cref="FilterableAttribute"/> is expected.
+        /// A <c>null</c> input produces a <c>null</c> result so it serializes as JSON <c>null</c>
+        /// rather than an empty object.
         /// </summary>
-        /// <param name="attribute">The attribute name.</param>
+        /// <param name="attribute">The attribute name, or <c>null</c>.</param>
         public static implicit operator FilterableAttribute(string attribute)
         {
-            return new FilterableAttribute { Attribute = attribute };
+            return attribute == null ? null : new FilterableAttribute { Attribute = attribute };
         }
     }
 
