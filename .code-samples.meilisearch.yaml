@@ -576,9 +576,9 @@ facet_search_3: |-
   };
   await client.Index("books").FacetSearchAsync("genres", query);
 list_dynamic_search_rules_1: |-
-  await _client.ListDynamicSearchRulesAsync();
+  await client.ListDynamicSearchRulesAsync();
 get_dynamic_search_rule_1: |-
-  await _client.GetDynamicSearchRuleAsync("black-friday");
+  await client.GetDynamicSearchRuleAsync("black-friday");
 patch_dynamic_search_rule_1: |-
   var patchQuery = new PatchDynamicSearchRule
   {
@@ -603,6 +603,6 @@ patch_dynamic_search_rule_1: |-
       }
     }
   };
-  await _client.CreateOrUpdateDynamicSearchRuleAsync("black-friday", patchQuery);
+  await client.CreateOrUpdateDynamicSearchRuleAsync("black-friday", patchQuery);
 delete_dynamic_search_rule_1: |-
-  await _client.DeleteDynamicSearchRuleAsync("black-friday");
+  await client.DeleteDynamicSearchRuleAsync("black-friday");

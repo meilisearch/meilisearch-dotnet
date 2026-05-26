@@ -75,7 +75,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task CreateDynamicSearchRuleWithEmptyActionsAsync()
         {
-            const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithoutActionsAsync);
+            const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithEmptyActionsAsync);
             var dynamicSearchRule = new PatchDynamicSearchRule
             {
                 Actions = Array.Empty<DSRAction>(),
@@ -150,7 +150,7 @@ namespace Meilisearch.Tests
         [Fact]
         public async Task ListDynamicSearchRulesWithLimit()
         {
-            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithOffset);
+            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithLimit);
             var (_, dynamicSearchRule) = await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
 
             var resourceResults = await _client.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery { Limit = 1 });
@@ -189,12 +189,14 @@ namespace Meilisearch.Tests
             Assert.Equal(expected.Active, actual.Active);
             if (expected.Conditions != null)
             {
+                Assert.NotNull(actual.Conditions);
                 Assert.Equal(expected.Conditions.Count(), actual.Conditions.Count());
                 Assert.Equivalent(expected.Conditions, actual.Conditions);
             } else Assert.Null(actual.Conditions);
 
             if (expected.Actions != null)
             {
+                Assert.NotNull(actual.Actions);
                 Assert.Equal(expected.Actions.Count(), actual.Actions.Count());
 
                 foreach (var (expectedAction, actualAction) in expected.Actions.Zip(actual.Actions))

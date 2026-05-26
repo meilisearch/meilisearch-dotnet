@@ -9,12 +9,12 @@ namespace Meilisearch.Converters
         public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.String)
-                throw new JsonException($"Expected string for ConditionType, but found {reader.TokenType}.");
+                throw new JsonException($"Expected string for {typeof(TEnum).Name}, but found {reader.TokenType}.");
 
             var enumString = reader.GetString();
             return Enum.TryParse<TEnum>(enumString, true, out var enumValue)
                 ? enumValue
-                : throw new JsonException($"Invalid {typeof(TEnum)} value: '{enumValue}'.");
+                : throw new JsonException($"Invalid {typeof(TEnum).Name} value: '{enumString}'.");
         }
 
         public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
