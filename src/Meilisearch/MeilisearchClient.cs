@@ -378,6 +378,99 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Enables dynamic search rules experimental feature.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Successfulness of enabling as experimental feature.</returns>
+        public async Task<bool> EnableDynamicSearchRules(CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.PatchAsJsonAsync("experimental-features", new
+                    {
+                        dynamicSearchRules = true
+                    }, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            var result = await responseMessage.Content
+                .ReadFromJsonAsync<JsonDocument>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            return result.RootElement.TryGetProperty("dynamicSearchRules", out var dsrElement) &&
+                   dsrElement.GetBoolean();
+        }
+
+        /// <summary>
+        /// Updates dynamic search rule with given uid or creates new one if it doesn't exist.
+        /// </summary>
+        /// <param name="uid">Unique identifier of dynamic search rule.</param>
+        /// <param name="dynamicSearchRule">Content of dynamic search rule.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Created or updated dynamic search rule.</returns>
+        public async Task<DynamicSearchRule> CreateOrUpdateDynamicSearchRuleAsync(string uid, PatchDynamicSearchRule dynamicSearchRule, CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.PatchAsJsonAsync($"dynamic-search-rules/{uid}", dynamicSearchRule, Constants.JsonSerializerOptionsRemoveNulls,
+                    cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<DynamicSearchRule>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets list of dynamic search rules according to query.
+        /// </summary>
+        /// <param name="query">Query for listing dynamic search rules.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>List of dynamic search rules.</returns>
+        public async Task<ResourceResults<IEnumerable<DynamicSearchRule>>> ListDynamicSearchRulesAsync(DynamicSearchRulesQuery query = default, CancellationToken cancellationToken = default)
+        {
+            if (query == default) query =  new DynamicSearchRulesQuery();
+
+            var responseMessage =
+                await _http.PostAsJsonAsync("dynamic-search-rules", query, Constants.JsonSerializerOptionsRemoveNulls,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<ResourceResults<IEnumerable<DynamicSearchRule>>>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets dynamic search rule with given identifier.
+        /// </summary>
+        /// <param name="uid">Unique identifier of dynamic search rule.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Dynamic search rule with given identifier.</returns>
+        public async Task<DynamicSearchRule> GetDynamicSearchRuleAsync(string uid, CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.GetAsync($"dynamic-search-rules/{uid}", cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await responseMessage.Content
+                .ReadFromJsonAsync<DynamicSearchRule>(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes dynamic search rule with given identifier.
+        /// </summary>
+        /// <param name="uid">Unique identifier of dynamic search rule.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Successfulness of deletion.</returns>
+        public async Task<bool> DeleteDynamicSearchRuleAsync(string uid, CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.DeleteAsync($"dynamic-search-rules/{uid}", cancellationToken)
+                    .ConfigureAwait(false);
+
+            return responseMessage.StatusCode == HttpStatusCode.NoContent;
+        }
+
+        /// <summary>
         /// Cancel tasks given a specific query.
         /// </summary>
         /// <param name="query">Query parameters supports by the method.</param>

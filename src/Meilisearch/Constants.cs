@@ -17,6 +17,7 @@ namespace Meilisearch
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new OptionalJsonConverterFactory() },
         };
 
         /// <summary>
