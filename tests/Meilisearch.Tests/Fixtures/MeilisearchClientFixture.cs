@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Xunit;
 
-namespace Meilisearch.Tests
+namespace Meilisearch.Tests.Fixtures
 {
     public abstract class MeilisearchClientFixture : IAsyncLifetime
     {

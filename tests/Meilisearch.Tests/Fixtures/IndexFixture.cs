@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Meilisearch.Tests.Models;
 
-namespace Meilisearch.Tests
+namespace Meilisearch.Tests.Fixtures
 {
     public abstract class IndexFixture : MeilisearchClientFixture
     {

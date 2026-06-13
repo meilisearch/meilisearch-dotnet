@@ -7,7 +7,7 @@ using Meilisearch.QueryParameters;
 
 using Xunit;
 
-namespace Meilisearch.Tests
+namespace Meilisearch.Tests.Fixtures
 {
     public abstract class DynamicSearchRuleFixture : MeilisearchClientFixture
     {
