@@ -5,6 +5,9 @@ using Meilisearch.Converters;
 
 namespace Meilisearch
 {
+    /// <summary>
+    /// Helper to call Meilisearch API for updating or creating dynamic search rule
+    /// </summary>
     public class PatchDynamicSearchRule
     {
         /// <summary>

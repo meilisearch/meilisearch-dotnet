@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Meilisearch
 {
+    /// <summary>
+    /// Meilisearch API dynamic search rule wrapper
+    /// </summary>
     public class DynamicSearchRule
     {
         /// <summary>

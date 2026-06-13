@@ -5,16 +5,31 @@ using Meilisearch.Converters;
 
 namespace Meilisearch
 {
+    /// <summary>
+    /// Enum that indicates action type for BaseAction objects
+    /// </summary>
     [JsonConverter(typeof(EnumToCamelCaseConverter<ConditionType>))]
     public enum ConditionType
     {
+        /// <summary>
+        /// Condition as query
+        /// </summary>
         Query,
+        /// <summary>
+        /// Condition as time interval
+        /// </summary>
         Time
     }
 
+    /// <summary>
+    /// Base class of Conditions for Dynamic Search Rules
+    /// </summary>
     [JsonConverter(typeof(DynamicSearchRuleConditionConverter))]
     public abstract class BaseCondition
     {
+        /// <summary>
+        /// Property name that defines type of BaseCondition object
+        /// </summary>
         public const string ScopePropertyName = "scope";
 
         /// <summary>
@@ -24,8 +39,12 @@ namespace Meilisearch
         public abstract ConditionType Scope { get; }
     }
 
+    /// <summary>
+    /// Condition for searching the documents by the query using Dynamic Search Rules
+    /// </summary>
     public class QueryCondition : BaseCondition
     {
+        /// <inheritdoc/>
         public override ConditionType Scope => ConditionType.Query;
 
         /// <summary>
@@ -41,8 +60,12 @@ namespace Meilisearch
         public string Contains { get; set; }
     }
 
+    /// <summary>
+    /// Condition for searching the documents by the time interval using Dynamic Search Rules
+    /// </summary>
     public class TimeCondition : BaseCondition
     {
+        /// <inheritdoc/>
         public override ConditionType Scope => ConditionType.Time;
 
         /// <summary>

@@ -1,16 +1,24 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Meilisearch.Converters;
 
 namespace Meilisearch
 {
+    /// <summary>
+    /// Enum that indicates action type for BaseAction objects
+    /// </summary>
     [JsonConverter(typeof(EnumToCamelCaseConverter<ActionType>))]
     public enum ActionType
     {
+        /// <summary>
+        /// Pin action
+        /// </summary>
         Pin
     }
 
+    /// <summary>
+    /// Wrapper for Selector - Action pairs
+    /// </summary>
     public class DSRAction
     {
         /// <summary>
@@ -26,6 +34,9 @@ namespace Meilisearch
         public BaseAction Action { get; set; }
     }
 
+    /// <summary>
+    /// Target document selector descriptor
+    /// </summary>
     public class DSRASelector
     {
         /// <summary>
@@ -35,16 +46,22 @@ namespace Meilisearch
         public string IndexUid { get; set; }
 
         /// <summary>
-        /// Gets ir sets id
+        /// Gets or sets id
         /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; set; }
     }
 
 
+    /// <summary>
+    /// Base class of Actions for Dynamic Search Rules
+    /// </summary>
     [JsonConverter(typeof(DynamicSearchRuleActionConverter))]
     public abstract class BaseAction
     {
+        /// <summary>
+        /// Property name that defines type of BaseAction object
+        /// </summary>
         public const string TypePropertyName = "type";
 
         /// <summary>
@@ -54,8 +71,13 @@ namespace Meilisearch
         public abstract ActionType Type { get; }
     }
 
+    /// <summary>
+    /// Pin action for found documents using Dynamic Search Rules
+    /// </summary>
     public class PinAction : BaseAction
     {
+        /// <inheritdoc/>
+        /// <value>ActionType.Pin</value>
         public override ActionType Type => ActionType.Pin;
 
         /// <summary>

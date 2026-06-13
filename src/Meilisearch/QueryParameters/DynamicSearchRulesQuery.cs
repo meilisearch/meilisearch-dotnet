@@ -31,7 +31,7 @@ namespace Meilisearch.QueryParameters
         /// </summary>
         public class DSRQFilter {
             /// <summary>
-            /// Only includes whose names match these patterns.
+            /// Only includes rules whose attribute names match these patterns.
             /// </summary>
             [JsonPropertyName("attribute_patterns")]
             public DSRQFilterPatterns AttributePatterns { get; set; }
