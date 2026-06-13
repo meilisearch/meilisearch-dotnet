@@ -6,10 +6,10 @@ using System.Text.Json.Serialization;
 namespace Meilisearch.Converters
 {
     /// <summary>
-    /// Base converter for classes that have property which can define other properties according to provided value
+    /// Base JSON converter for polymorphic objects identified by a discriminator property
     /// </summary>
-    /// <typeparam name="TBase">Abstract class with type defining property</typeparam>
-    /// <typeparam name="TType">Enum type which defines other fields of inheritor</typeparam>
+    /// <typeparam name="TBase">Base type that contains the discriminator property</typeparam>
+    /// <typeparam name="TType">Enum used to determine the concrete derived type</typeparam>
     public abstract class BaseObjectWithTypesConverter<TBase, TType>: JsonConverter<TBase> where TType : struct, Enum
     {
         private readonly string _typePropertyName;
@@ -18,8 +18,8 @@ namespace Meilisearch.Converters
         /// <summary>
         /// Default constructor to define converter behavior
         /// </summary>
-        /// <param name="typePropertyName">Name of property which defines type</param>
-        /// <param name="mapper">Dictionary defines mapping between Enum value and inheritor type</param>
+        /// <param name="typePropertyName">Name of the discriminator property</param>
+        /// <param name="mapper">Mapping between discriminator values and their corresponding derived types</param>
         protected BaseObjectWithTypesConverter(string typePropertyName, Dictionary<TType, Type> mapper)
         {
             _typePropertyName = typePropertyName;
@@ -54,16 +54,16 @@ namespace Meilisearch.Converters
     }
 
     /// <summary>
-    /// Defines converter for BaseAction implementations
+    /// JSON converter for <see cref="BaseAction"/> implementations.
     /// </summary>
     public class DynamicSearchRuleActionConverter : BaseObjectWithTypesConverter<BaseAction, ActionType>
     {
         /// <summary>
         /// <inheritdoc/>
-        /// Provides next mappings:
+        /// Supports the following mappings:
         /// <list type="bullet">
         /// <item>
-        /// <description>ActionType.Pin -&gt; PinAction</description>
+        /// <description><see cref="ActionType.Pin"/> -&gt; <see cref="PinAction"/></description>
         /// </item>
         /// </list>
         /// </summary>
@@ -80,13 +80,13 @@ namespace Meilisearch.Converters
     {
         /// <summary>
         /// <inheritdoc/>
-        /// Provides next mappings:
+        /// Supports the following mappings:
         /// <list type="bullet">
         /// <item>
-        /// <description>ConditionType.Query -&gt; QueryCondition</description>
+        /// <description><see cref="ConditionType.Query"/> -&gt; <see cref="QueryCondition"/></description>
         /// </item>
         /// <item>
-        /// <description>ConditionType.Time -&gt; TimeCondition</description>
+        /// <description><see cref="ConditionType.Time"/> -&gt; <see cref="TimeCondition"/></description>
         /// </item>
         /// </list>
         /// </summary>

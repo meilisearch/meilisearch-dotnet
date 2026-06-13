@@ -5,7 +5,7 @@ using Meilisearch.Converters;
 namespace Meilisearch
 {
     /// <summary>
-    /// Enum that indicates action type for BaseAction objects
+    /// Enum that indicates action type for <see cref="BaseAction"/> objects
     /// </summary>
     [JsonConverter(typeof(EnumToCamelCaseConverter<ActionType>))]
     public enum ActionType
@@ -72,7 +72,7 @@ namespace Meilisearch
     }
 
     /// <summary>
-    /// Pin action for found documents using Dynamic Search Rules
+    /// Action that pins matching documents to a specific position
     /// </summary>
     public class PinAction : BaseAction
     {

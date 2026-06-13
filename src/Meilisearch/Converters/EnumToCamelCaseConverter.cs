@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Meilisearch.Converters
 {
     /// <summary>
-    /// Converts enum values of <typeparamref name="TEnum"/> into CamelCase string laterals
+    /// Converts enum values of <typeparamref name="TEnum"/> into CamelCase JSON strings
     /// </summary>
     /// <typeparam name="TEnum">Type of enum to convert</typeparam>
     public class EnumToCamelCaseConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct, Enum

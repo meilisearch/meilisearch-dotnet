@@ -11,7 +11,7 @@ namespace Meilisearch.Converters
     public struct Optional<T>
     {
         /// <summary>
-        /// Indicates whether value was provided or not
+        /// Indicates whether a value was explicitly provided
         /// </summary>
         public bool HasValue { get; private set; }
 
@@ -20,7 +20,7 @@ namespace Meilisearch.Converters
         /// <summary>
         /// Provided value
         /// </summary>
-        /// <exception cref="InvalidOperationException">Throws when value was not provided</exception>
+        /// <exception cref="InvalidOperationException">Throws when no value has been provided</exception>
         public T Value
         {
             get =>
@@ -35,20 +35,20 @@ namespace Meilisearch.Converters
         }
 
         /// <summary>
-        /// Default value of Optional&lt;<typeparamref name="T"/>&gt;
+        /// Instance with no value provided
         /// </summary>
         public static Optional<T> None => default;
 
         /// <summary>
-        /// Implicit converter of provided <typeparamref name="T"/> type value into Optional&lt;<typeparamref name="T"/>&gt;
+        /// Implicitly converts a value into an <see cref="Optional{T}"/> instance
         /// </summary>
         /// <param name="value">Provided value</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="Optional{T}"/> containing the specified value</returns>
         public static implicit operator Optional<T>(T value) => new Optional<T> { Value = value };
     }
 
     /// <summary>
-    /// Converter for Optional&lt;<typeparamref name="T"/>&gt;
+    /// Converter for <see cref="Optional{T}"/>
     /// </summary>
     /// <typeparam name="T">Possible type of provided value</typeparam>
     public class OptionalJsonConverter<T> : JsonConverter<Optional<T>>
@@ -59,7 +59,7 @@ namespace Meilisearch.Converters
 
         /// <inheritdoc/>
         /// <summary>
-        /// Writes given <paramref name="value"/> as JSON into <paramref name="writer"/>. Writes null, when value wasn't provided.
+        /// Writes given <paramref name="value"/> as JSON into <paramref name="writer"/>. If the value was not provided, writes <c>null</c>.
         /// Recommended to use with JsonIgnoreAttribute with ignoring when value is default:
         /// <code>[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]</code>
         /// </summary>
@@ -76,7 +76,7 @@ namespace Meilisearch.Converters
     }
 
     /// <summary>
-    /// Factory for automatic creation of OptionalJsonConverter&lt;T&gt; for all incoming types of Optional&lt;T&gt; implicitly
+    /// Factory that automatically creates converters for all <see cref="Optional{T}"/>
     /// </summary>
     public class OptionalJsonConverterFactory : JsonConverterFactory
     {

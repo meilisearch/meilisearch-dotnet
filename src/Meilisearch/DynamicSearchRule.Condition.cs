@@ -6,7 +6,7 @@ using Meilisearch.Converters;
 namespace Meilisearch
 {
     /// <summary>
-    /// Enum that indicates action type for BaseAction objects
+    /// Enum that indicates condition type for <see cref="BaseCondition"/> objects
     /// </summary>
     [JsonConverter(typeof(EnumToCamelCaseConverter<ConditionType>))]
     public enum ConditionType
