@@ -121,6 +121,24 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task RenameIndex()
+        {
+            var indexUid = "RenameIndexTest" + new Random().Next();
+            var newIndexUid = "RenamedIndexTest" + new Random().Next();
+
+            await _fixture.SetUpEmptyIndex(indexUid);
+
+            var task = await _client.RenameIndexAsync(indexUid, newIndexUid);
+            task.TaskUid.Should().BeGreaterOrEqualTo(0);
+            await _client.Index(newIndexUid).WaitForTaskAsync(task.TaskUid);
+
+            var renamed = await _client.GetIndexAsync(newIndexUid);
+            renamed.Uid.Should().Be(newIndexUid);
+
+            await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.GetIndexAsync(indexUid));
+        }
+
+        [Fact]
         public async Task IndexNameWrongFormattedError()
         {
             var indexUid = "Wrong UID";

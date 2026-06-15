@@ -601,6 +601,28 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CustomSearchReturnsQueryVector()
+        {
+            var searchQuery = new SearchQuery
+            {
+                Hybrid = new HybridSearch
+                {
+                    Embedder = "manual",
+                    SemanticRatio = 1.0f
+                },
+                Vector = new[] { 0.1, 0.6, 0.8 },
+                RetrieveVectors = true,
+            };
+
+            var movies = await _indexForVectorSearch.SearchAsync<Movie>(string.Empty, searchQuery);
+
+            var searchResult = movies as SearchResult<Movie>;
+            searchResult.Should().NotBeNull();
+            searchResult.QueryVector.Should().NotBeNull();
+            searchResult.QueryVector.Should().Equal(0.1f, 0.6f, 0.8f);
+        }
+
+        [Fact]
         public async Task CustomSearchWithSimilarDocuments()
         {
             var query = new SimilarDocumentsQuery("143")
