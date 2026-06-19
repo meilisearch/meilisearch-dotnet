@@ -386,9 +386,9 @@ namespace Meilisearch
         {
             var responseMessage =
                 await _http.PatchAsJsonAsync("experimental-features", new
-                    {
-                        dynamicSearchRules = true
-                    }, cancellationToken: cancellationToken)
+                {
+                    dynamicSearchRules = true
+                }, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             var result = await responseMessage.Content
@@ -426,7 +426,7 @@ namespace Meilisearch
         /// <returns>List of dynamic search rules.</returns>
         public async Task<ResourceResults<IEnumerable<DynamicSearchRule>>> ListDynamicSearchRulesAsync(DynamicSearchRulesQuery query = default, CancellationToken cancellationToken = default)
         {
-            if (query == default) query =  new DynamicSearchRulesQuery();
+            if (query == default) query = new DynamicSearchRulesQuery();
 
             var responseMessage =
                 await _http.PostAsJsonAsync("dynamic-search-rules", query, Constants.JsonSerializerOptionsRemoveNulls,

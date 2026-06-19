@@ -10,7 +10,7 @@ namespace Meilisearch.Converters
     /// </summary>
     /// <typeparam name="TBase">Base type that contains the discriminator property</typeparam>
     /// <typeparam name="TType">Enum used to determine the concrete derived type</typeparam>
-    public abstract class BaseObjectWithTypesConverter<TBase, TType>: JsonConverter<TBase> where TType : struct, Enum
+    public abstract class BaseObjectWithTypesConverter<TBase, TType> : JsonConverter<TBase> where TType : struct, Enum
     {
         private readonly string _typePropertyName;
         private readonly Dictionary<TType, Type> _mapper;
@@ -42,7 +42,7 @@ namespace Meilisearch.Converters
                 if (!_mapper.TryGetValue(type, out var resultType))
                     throw new JsonException($"Unimplemented {_typePropertyName} type: {type}");
 
-                return (TBase) JsonSerializer.Deserialize(root.GetRawText(), resultType, options);
+                return (TBase)JsonSerializer.Deserialize(root.GetRawText(), resultType, options);
             }
         }
 

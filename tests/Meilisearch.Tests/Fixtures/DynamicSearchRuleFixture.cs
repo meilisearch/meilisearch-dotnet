@@ -32,7 +32,7 @@ namespace Meilisearch.Tests.Fixtures
 
             while (true)
             {
-                var allDynamicSearchRules = await DefaultClient.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery{ Limit = pageSize });
+                var allDynamicSearchRules = await DefaultClient.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery { Limit = pageSize });
                 if (!allDynamicSearchRules.Results.Any()) break;
 
                 foreach (var dynamicSearchRule in allDynamicSearchRules.Results)

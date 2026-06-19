@@ -188,7 +188,8 @@ namespace Meilisearch.Tests
                 Assert.NotNull(actual.Conditions);
                 Assert.Equal(expected.Conditions.Count(), actual.Conditions.Count());
                 Assert.Equivalent(expected.Conditions, actual.Conditions);
-            } else Assert.Null(actual.Conditions);
+            }
+            else Assert.Null(actual.Conditions);
 
             if (expected.Actions != null)
             {
@@ -200,7 +201,8 @@ namespace Meilisearch.Tests
                     Assert.Equivalent(expectedAction.Selector, actualAction.Selector);
                     Assert.Equivalent(expectedAction.Action, actualAction.Action);
                 }
-            } else Assert.Null(actual.Actions);
+            }
+            else Assert.Null(actual.Actions);
         }
 
         public static TheoryData<string> GetExistingDynamicSearchRuleCases() =>

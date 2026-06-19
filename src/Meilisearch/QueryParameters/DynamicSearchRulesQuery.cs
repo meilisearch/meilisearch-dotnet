@@ -29,7 +29,8 @@ namespace Meilisearch.QueryParameters
         /// <summary>
         /// A class that handles the creation of a filter parameter for query string for DynamicSearchRules.
         /// </summary>
-        public class DSRQFilter {
+        public class DSRQFilter
+        {
             /// <summary>
             /// Only includes rules whose attribute names match these patterns.
             /// </summary>
