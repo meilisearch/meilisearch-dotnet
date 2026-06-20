@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Meilisearch.Tests
 {
-    public class DynamicSearchRuleTests<TFixture> : IAsyncLifetime where TFixture : DynamicSearchRuleFixture
+    public abstract class DynamicSearchRuleTests<TFixture> : IAsyncLifetime where TFixture : DynamicSearchRuleFixture
     {
         private readonly MeilisearchClient _client;
 
