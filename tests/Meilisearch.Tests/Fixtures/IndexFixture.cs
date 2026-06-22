@@ -1,37 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 using Meilisearch.Tests.Models;
 
-using Xunit;
-
-namespace Meilisearch.Tests
+namespace Meilisearch.Tests.Fixtures
 {
-    public abstract class IndexFixture : IAsyncLifetime
+    public abstract class IndexFixture : MeilisearchClientFixture
     {
-        public IndexFixture()
-        {
-            DefaultClient = new MeilisearchClient(MeilisearchAddress(), ApiKey);
-            var httpClient = new HttpClient(new MeilisearchMessageHandler(new HttpClientHandler())) { BaseAddress = new Uri(MeilisearchAddress()) };
-            ClientWithCustomHttpClient = new MeilisearchClient(httpClient, ApiKey);
-        }
+        public override Task InitializeAsync() => Task.CompletedTask;
 
-        private const string ApiKey = "masterKey";
-
-        public virtual string MeilisearchAddress()
-        {
-            throw new InvalidOperationException("Please override the MeilisearchAddress property in inhereted class.");
-        }
-
-        public MeilisearchClient DefaultClient { get; private set; }
-        public MeilisearchClient ClientWithCustomHttpClient { get; private set; }
-
-        public Task InitializeAsync() => Task.CompletedTask;
-
-        public async Task DisposeAsync() => await DeleteAllIndexes(); // Let a clean Meilisearch instance, for maintainers convenience only.
+        public override async Task DisposeAsync() => await DeleteAllIndexes(); // Let a clean Meilisearch instance, for maintainers convenience only.
 
         public async Task<Index> SetUpEmptyIndex(string indexUid, string primaryKey = default)
         {

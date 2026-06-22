@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.Tests.Fixtures;
+
 using Xunit;
 
 namespace Meilisearch.Tests

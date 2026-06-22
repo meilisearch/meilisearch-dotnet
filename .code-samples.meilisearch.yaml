@@ -575,3 +575,34 @@ facet_search_3: |-
     ExhaustiveFacetCount: true
   };
   await client.Index("books").FacetSearchAsync("genres", query);
+list_dynamic_search_rules_1: |-
+  await client.ListDynamicSearchRulesAsync();
+get_dynamic_search_rule_1: |-
+  await client.GetDynamicSearchRuleAsync("black-friday");
+patch_dynamic_search_rule_1: |-
+  var patchQuery = new PatchDynamicSearchRule
+  {
+    Description = "Black Friday 2025 rules",
+    Priority = 10,
+    Active = true,
+    Conditions = new BaseCondition[]
+    {
+      new QueryCondition { IsEmpty = true },
+      new TimeCondition
+      {
+        Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
+        End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
+      },
+    },
+    Actions = new[]
+    {
+      new DSRAction
+      {
+        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
+        Action = new PinAction { Position = 1 }
+      }
+    }
+  };
+  await client.CreateOrUpdateDynamicSearchRuleAsync("black-friday", patchQuery);
+delete_dynamic_search_rule_1: |-
+  await client.DeleteDynamicSearchRuleAsync("black-friday");

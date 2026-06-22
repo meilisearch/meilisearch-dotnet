@@ -88,5 +88,11 @@
         <Compile Update="Index.SimilarDocuments.cs">
           <DependentUpon>Index.cs</DependentUpon>
         </Compile>
+        <Compile Update="DynamicSearchRule.Condition.cs">
+          <DependentUpon>DynamicSearchRule.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DynamicSearchRule.Action.cs">
+          <DependentUpon>DynamicSearchRule.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>

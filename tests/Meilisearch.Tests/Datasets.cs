@@ -20,6 +20,10 @@ namespace Meilisearch.Tests
         public static readonly string MoviesWithInfoJsonPath = Path.Combine(BasePath, "movies_with_info.json");
 
         public static readonly string ProductsForDistinctJsonPath = Path.Combine(BasePath, "products_for_distinct_search.json");
+
+        public const string DynamicSearchRuleJsonPath = "dynamic_search_rule.json";
+        public const string DynamicSearchRuleWithOptionalValuesJsonPath = "dynamic_search_rule_with_optional_values.json";
+        public static string GetDynamicSearchRuleJsonPath(string file) => Path.Combine(BasePath, file);
     }
 
     public class DatasetSmallMovie
