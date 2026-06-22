@@ -1,0 +1,14 @@
+{
+  "description": "Black Friday 2025 rules",
+  "priority": null,
+  "conditions": [
+    { "scope": "query", "isEmpty": true },
+    { "scope": "time", "start": "2025-11-28T00:00:00Z", "end": "2025-11-28T23:59:59Z" }
+  ],
+  "actions": [
+    {
+      "selector": { "indexUid": "products",  "id": "123" },
+      "action": { "type": "pin", "position": 1 }
+    }
+  ]
+}

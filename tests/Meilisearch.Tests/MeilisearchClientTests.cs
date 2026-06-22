@@ -9,6 +9,7 @@ using FluentAssertions;
 using Meilisearch.Converters;
 using Meilisearch.Extensions;
 using Meilisearch.QueryParameters;
+using Meilisearch.Tests.Fixtures;
 
 using Xunit;
 

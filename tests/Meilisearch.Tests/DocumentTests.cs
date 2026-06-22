@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 
 using Meilisearch.QueryParameters;
+using Meilisearch.Tests.Fixtures;
 
 using Xunit;
 

@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageId>MeiliSearch</PackageId>
-        <Version>0.18.0</Version>
+        <Version>0.19.0</Version>
         <Description>.NET wrapper for Meilisearch, an open-source search engine</Description>
         <RepositoryUrl>https://github.com/meilisearch/meilisearch-dotnet</RepositoryUrl>
         <PackageTags>meilisearch;dotnet;sdk;search-engine;search;instant-search</PackageTags>
@@ -22,7 +22,7 @@
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
         <PackageReference Include="System.Net.Http.Json" Version="6.0.2" />
     </ItemGroup>
 
@@ -87,6 +87,12 @@
         </Compile>
         <Compile Update="Index.SimilarDocuments.cs">
           <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DynamicSearchRule.Condition.cs">
+          <DependentUpon>DynamicSearchRule.cs</DependentUpon>
+        </Compile>
+        <Compile Update="DynamicSearchRule.Action.cs">
+          <DependentUpon>DynamicSearchRule.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 </Project>

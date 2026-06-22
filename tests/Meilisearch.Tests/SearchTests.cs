@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using FluentAssertions;
 
+using Meilisearch.Tests.Fixtures;
 using Meilisearch.Tests.Models;
 
 using Xunit;
