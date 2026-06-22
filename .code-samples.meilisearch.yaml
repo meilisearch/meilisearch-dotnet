@@ -122,7 +122,7 @@ update_settings_1: |-
         { "wolverine", new string[] { "xmen", "logan" } },
         { "logan", new string[] { "wolverine" } },
     },
-    FilterableAttributes = new string[] { },
+    FilterableAttributes = new FilterableAttribute[] { },
     TypoTolerance = new TypoTolerance
     {
         DisableOnAttributes = new string[] { "title" },
@@ -196,7 +196,7 @@ update_searchable_attributes_1: |-
 reset_searchable_attributes_1: |-
   await client.Index("movies").ResetSearchableAttributesAsync();
 get_filterable_attributes_1: |-
-  IEnumerable<string> attributes = await client.Index("movies").GetFilterableAttributesAsync();
+  IEnumerable<FilterableAttribute> attributes = await client.Index("movies").GetFilterableAttributesAsync();
 update_filterable_attributes_1: |-
   var attributes = new FilterableAttribute[]
   {
