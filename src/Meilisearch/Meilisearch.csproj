@@ -97,5 +97,8 @@
         <Compile Update="Index.FacetSearch.cs">
           <DependentUpon>Index.cs</DependentUpon>
         </Compile>
+        <Compile Update="Index.PrefixSearch.cs">
+          <DependentUpon>Index.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>

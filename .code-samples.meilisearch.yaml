@@ -523,6 +523,12 @@ update_facet_search_settings_1: |-
   await client.Index("books").UpdateFacetSearchAsync(false);
 reset_facet_search_settings_1: |-
   await client.Index("books").ResetFacetSearchAsync();
+get_prefix_search_settings_1: |-
+  await client.Index("books").GetPrefixSearchAsync();
+update_prefix_search_settings_1: |-
+  await client.Index("books").UpdatePrefixSearchAsync("disabled");
+reset_prefix_search_settings_1: |-
+  await client.Index("books").ResetPrefixSearchAsync();
 multi_search_1: |-
   await client.MultiSearchAsync(new MultiSearchQuery()
   {
