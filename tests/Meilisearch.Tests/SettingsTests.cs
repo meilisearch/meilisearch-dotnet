@@ -64,6 +64,8 @@ namespace Meilisearch.Tests
                         ["*"] = SortFacetValuesByType.Alpha
                     }
                 },
+                FacetSearch = true,
+                PrefixSearch = "indexingTime",
                 Pagination = new Pagination
                 {
                     MaxTotalHits = 1000
@@ -607,6 +609,52 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetFacetSearch()
+        {
+            await AssertGetEquality(_index.GetFacetSearchAsync, _defaultSettings.FacetSearch.Value);
+        }
+
+        [Fact]
+        public async Task UpdateFacetSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdateFacetSearchAsync, false);
+            await AssertGetEquality(_index.GetFacetSearchAsync, false);
+        }
+
+        [Fact]
+        public async Task ResetFacetSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdateFacetSearchAsync, false);
+            await AssertGetEquality(_index.GetFacetSearchAsync, false);
+
+            await AssertResetSuccess(_index.ResetFacetSearchAsync);
+            await AssertGetEquality(_index.GetFacetSearchAsync, _defaultSettings.FacetSearch.Value);
+        }
+
+        [Fact]
+        public async Task GetPrefixSearch()
+        {
+            await AssertGetEquality(_index.GetPrefixSearchAsync, _defaultSettings.PrefixSearch);
+        }
+
+        [Fact]
+        public async Task UpdatePrefixSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdatePrefixSearchAsync, "disabled");
+            await AssertGetEquality(_index.GetPrefixSearchAsync, "disabled");
+        }
+
+        [Fact]
+        public async Task ResetPrefixSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdatePrefixSearchAsync, "disabled");
+            await AssertGetEquality(_index.GetPrefixSearchAsync, "disabled");
+
+            await AssertResetSuccess(_index.ResetPrefixSearchAsync);
+            await AssertGetEquality(_index.GetPrefixSearchAsync, _defaultSettings.PrefixSearch);
+        }
+
+        [Fact]
         public async Task GetPagination()
         {
             await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
@@ -785,6 +833,8 @@ namespace Meilisearch.Tests
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
                 Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
+                FacetSearch = inputSettings.FacetSearch ?? defaultSettings.FacetSearch,
+                PrefixSearch = inputSettings.PrefixSearch ?? defaultSettings.PrefixSearch,
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,

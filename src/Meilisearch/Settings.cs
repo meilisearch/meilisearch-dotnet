@@ -84,6 +84,18 @@ namespace Meilisearch
         public Faceting Faceting { get; set; }
 
         /// <summary>
+        /// Gets or sets whether facet search is enabled (default: true).
+        /// </summary>
+        [JsonPropertyName("facetSearch")]
+        public bool? FacetSearch { get; set; }
+
+        /// <summary>
+        /// Gets or sets the prefix search setting (default: "indexingTime").
+        /// </summary>
+        [JsonPropertyName("prefixSearch")]
+        public string PrefixSearch { get; set; }
+
+        /// <summary>
         /// Gets or sets the pagination attributes.
         /// </summary>
         [JsonPropertyName("pagination")]
