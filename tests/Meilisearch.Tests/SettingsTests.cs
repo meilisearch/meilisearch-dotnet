@@ -64,6 +64,7 @@ namespace Meilisearch.Tests
                         ["*"] = SortFacetValuesByType.Alpha
                     }
                 },
+                FacetSearch = true,
                 Pagination = new Pagination
                 {
                     MaxTotalHits = 1000
@@ -607,6 +608,29 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task GetFacetSearch()
+        {
+            await AssertGetEquality(_index.GetFacetSearchAsync, _defaultSettings.FacetSearch.Value);
+        }
+
+        [Fact]
+        public async Task UpdateFacetSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdateFacetSearchAsync, false);
+            await AssertGetEquality(_index.GetFacetSearchAsync, false);
+        }
+
+        [Fact]
+        public async Task ResetFacetSearch()
+        {
+            await AssertUpdateSuccess(_index.UpdateFacetSearchAsync, false);
+            await AssertGetEquality(_index.GetFacetSearchAsync, false);
+
+            await AssertResetSuccess(_index.ResetFacetSearchAsync);
+            await AssertGetEquality(_index.GetFacetSearchAsync, _defaultSettings.FacetSearch.Value);
+        }
+
+        [Fact]
         public async Task GetPagination()
         {
             await AssertGetEquality(_index.GetPaginationAsync, _defaultSettings.Pagination);
@@ -785,6 +809,7 @@ namespace Meilisearch.Tests
                 SortableAttributes = inputSettings.SortableAttributes ?? defaultSettings.SortableAttributes,
                 TypoTolerance = inputSettings.TypoTolerance ?? defaultSettings.TypoTolerance,
                 Faceting = inputSettings.Faceting ?? defaultSettings.Faceting,
+                FacetSearch = inputSettings.FacetSearch ?? defaultSettings.FacetSearch,
                 Pagination = inputSettings.Pagination ?? defaultSettings.Pagination,
                 ProximityPrecision = inputSettings.ProximityPrecision ?? defaultSettings.ProximityPrecision,
                 Dictionary = inputSettings.Dictionary ?? defaultSettings.Dictionary,
