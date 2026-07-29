@@ -1,52 +1,38 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
-
-using Meilisearch.Converters;
 
 namespace Meilisearch
 {
     /// <summary>
-    /// Enum that indicates condition type for <see cref="BaseCondition"/> objects
+    /// Conditions that must match before a Dynamic Search Rule applies.
     /// </summary>
-    [JsonConverter(typeof(EnumToCamelCaseConverter<ConditionType>))]
-    public enum ConditionType
+    public class DynamicSearchRuleConditions
     {
         /// <summary>
-        /// Condition as query
+        /// Query condition.
         /// </summary>
-        Query,
-        /// <summary>
-        /// Condition as time interval
-        /// </summary>
-        Time
-    }
-
-    /// <summary>
-    /// Base class of Conditions for Dynamic Search Rules
-    /// </summary>
-    [JsonConverter(typeof(DynamicSearchRuleConditionConverter))]
-    public abstract class BaseCondition
-    {
-        /// <summary>
-        /// Property name that defines type of BaseCondition object
-        /// </summary>
-        public const string ScopePropertyName = "scope";
+        [JsonPropertyName("query")]
+        public QueryCondition Query { get; set; }
 
         /// <summary>
-        /// Describes condition type
+        /// Time condition.
         /// </summary>
-        [JsonPropertyName(ScopePropertyName)]
-        public abstract ConditionType Scope { get; }
+        [JsonPropertyName("time")]
+        public TimeCondition Time { get; set; }
+
+        /// <summary>
+        /// Filter condition.
+        /// </summary>
+        [JsonPropertyName("filter")]
+        public FilterCondition Filter { get; set; }
     }
 
     /// <summary>
     /// Condition for searching the documents by the query using Dynamic Search Rules
     /// </summary>
-    public class QueryCondition : BaseCondition
+    public class QueryCondition
     {
-        /// <inheritdoc/>
-        public override ConditionType Scope => ConditionType.Query;
-
         /// <summary>
         /// Gets or sets isEmpty
         /// </summary>
@@ -54,20 +40,17 @@ namespace Meilisearch
         public bool? IsEmpty { get; set; }
 
         /// <summary>
-        /// Gets or sets contains
+        /// Gets or sets the words that must occur in the search query.
         /// </summary>
-        [JsonPropertyName("contains")]
-        public string Contains { get; set; }
+        [JsonPropertyName("words")]
+        public string Words { get; set; }
     }
 
     /// <summary>
     /// Condition for searching the documents by the time interval using Dynamic Search Rules
     /// </summary>
-    public class TimeCondition : BaseCondition
+    public class TimeCondition
     {
-        /// <inheritdoc/>
-        public override ConditionType Scope => ConditionType.Time;
-
         /// <summary>
         /// Gets or sets start
         /// </summary>
@@ -79,5 +62,18 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("end")]
         public DateTimeOffset? End { get; set; }
+    }
+
+    /// <summary>
+    /// Condition for matching filter values using Dynamic Search Rules.
+    /// </summary>
+    public class FilterCondition
+    {
+        /// <summary>
+        /// Gets or sets expected values keyed by facet name.
+        /// Values may contain any JSON-compatible value.
+        /// </summary>
+        [JsonPropertyName("values")]
+        public Dictionary<string, object> Values { get; set; }
     }
 }

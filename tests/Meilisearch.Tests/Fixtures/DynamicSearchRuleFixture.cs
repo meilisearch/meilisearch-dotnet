@@ -3,8 +3,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using Meilisearch.QueryParameters;
-
 using Xunit;
 
 namespace Meilisearch.Tests.Fixtures
@@ -14,7 +12,7 @@ namespace Meilisearch.Tests.Fixtures
         public override async Task InitializeAsync() =>
             Assert.True(await DefaultClient.EnableDynamicSearchRules());
 
-        public override async Task DisposeAsync() => await DeleteAllDynamicSearchRule();
+        public override async Task DisposeAsync() => await DeleteAllDynamicSearchRulesAsync();
 
         public Task<(PatchDynamicSearchRule, DynamicSearchRule)> SetUpDynamicSearchRuleExampleAsync(string uid) =>
             SetUpDynamicSearchRuleAsync(uid, Datasets.DynamicSearchRuleJsonPath);
@@ -23,21 +21,21 @@ namespace Meilisearch.Tests.Fixtures
         {
             var dsrJson = await File.ReadAllTextAsync(Datasets.GetDynamicSearchRuleJsonPath(jsonPath));
             var dynamicSearchRule = JsonSerializer.Deserialize<PatchDynamicSearchRule>(dsrJson, Constants.JsonSerializerOptionsRemoveNulls);
-            return (dynamicSearchRule, await DefaultClient.CreateOrUpdateDynamicSearchRuleAsync(uid, dynamicSearchRule));
+            var task = await DefaultClient.CreateOrUpdateDynamicSearchRuleAsync(uid, dynamicSearchRule);
+            var finishedTask = await DefaultClient.WaitForTaskAsync(task.TaskUid, timeoutMs: 10000);
+            Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
+
+            return (dynamicSearchRule, await DefaultClient.GetDynamicSearchRuleAsync(uid));
         }
 
-        public async Task DeleteAllDynamicSearchRule()
+        public async Task DeleteAllDynamicSearchRulesAsync()
         {
-            const int pageSize = 100;
-
-            while (true)
+            var allDynamicSearchRules = await DefaultClient.ListDynamicSearchRulesAsync();
+            if (allDynamicSearchRules.Results.Any())
             {
-                var allDynamicSearchRules = await DefaultClient.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery { Limit = pageSize });
-                if (!allDynamicSearchRules.Results.Any()) break;
-
-                foreach (var dynamicSearchRule in allDynamicSearchRules.Results)
-                    await DefaultClient.DeleteDynamicSearchRuleAsync(dynamicSearchRule.Uid);
-
+                var task = await DefaultClient.DeleteAllDynamicSearchRulesAsync();
+                var finishedTask = await DefaultClient.WaitForTaskAsync(task.TaskUid, timeoutMs: 10000);
+                Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
             }
         }
     }

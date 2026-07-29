@@ -611,22 +611,26 @@ patch_dynamic_search_rule_1: |-
   var patchQuery = new PatchDynamicSearchRule
   {
     Description = "Black Friday 2025 rules",
-    Priority = 10,
+    Precedence = 10,
     Active = true,
-    Conditions = new BaseCondition[]
+    Conditions = new DynamicSearchRuleConditions
     {
-      new QueryCondition { IsEmpty = true },
-      new TimeCondition
+      Query = new QueryCondition { IsEmpty = false, Words = "black friday" },
+      Time = new TimeCondition
       {
         Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
         End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
       },
+      Filter = new FilterCondition
+      {
+        Values = new Dictionary<string, object> { { "color", "red" } }
+      }
     },
     Actions = new[]
     {
       new DSRAction
       {
-        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
+        Selector = new DSRASelector("products", "123"),
         Action = new PinAction { Position = 1 }
       }
     }

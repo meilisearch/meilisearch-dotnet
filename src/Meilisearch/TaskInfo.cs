@@ -118,6 +118,8 @@ namespace Meilisearch
         SnapshotCreation,
         TaskDeletion,
         IndexSwap,
-        Unknown
+        Unknown,
+        DsrUpdate,
+        DsrClear
     }
 }

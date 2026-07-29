@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -27,15 +28,21 @@ namespace Meilisearch
         public string Description { get; set; }
 
         /// <summary>
+        /// The date and time when the dynamic search rule was last updated.
+        /// </summary>
+        [JsonPropertyName("lastUpdatedAt")]
+        public DateTimeOffset? LastUpdatedAt { get; set; }
+
+        /// <summary>
         /// Precedence of the dynamic search rule.
         /// Lower numeric values take precedence over higher ones.
         /// <list type="bullets">
-        ///     <item> If the same document is selected by multiple rules, the smallest <i>priority</i> number wins  </item>
-        ///     <item> If different documents are pinned to the same position, they are ordered by ascending <i>priority</i> </item>
+        ///     <item> If the same document is selected by multiple rules, the smallest <i>precedence</i> number wins  </item>
+        ///     <item> If different documents are pinned to the same position, they are ordered by ascending <i>precedence</i> </item>
         /// </list>
         /// </summary>
-        [JsonPropertyName("priority")]
-        public ulong? Priority { get; set; }
+        [JsonPropertyName("precedence")]
+        public ulong? Precedence { get; set; }
 
         /// <summary>
         /// Whether the dynamic search rule is active
@@ -47,6 +54,6 @@ namespace Meilisearch
         /// Conditions that must match before the dynamic search rule applies
         /// </summary>
         [JsonPropertyName("conditions")]
-        public IEnumerable<BaseCondition> Conditions { get; set; }
+        public DynamicSearchRuleConditions Conditions { get; set; }
     }
 }
