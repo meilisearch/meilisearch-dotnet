@@ -137,6 +137,14 @@ namespace Meilisearch.Tests
         {
             Assert.Throws<ArgumentNullException>(() => new DSRASelector("products", id));
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void SelectorRequiresIndexUid(string indexUid)
+        {
+            Assert.Throws<ArgumentNullException>(() => new DSRASelector(indexUid, "123"));
+        }
     }
 
     public abstract class DynamicSearchRuleTests<TFixture> : IAsyncLifetime where TFixture : DynamicSearchRuleFixture
