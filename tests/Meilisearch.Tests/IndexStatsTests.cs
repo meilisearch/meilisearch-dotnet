@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 
 using FluentAssertions;
@@ -49,6 +50,37 @@ namespace Meilisearch.Tests
             stats.UsedIndexSize.Should().BeNull();
             stats.NumberOfDocuments.Should().Be(2);
             stats.RawDocumentDbSize.Should().Be(4096);
+        }
+
+        [Fact]
+        public void ReportedZeroSizesAreDistinctFromOmittedOnes()
+        {
+            var json = @"{
+                ""numberOfDocuments"": 0,
+                ""isIndexing"": false,
+                ""fieldDistribution"": {},
+                ""rawDocumentDbSize"": 0,
+                ""avgDocumentSize"": 0,
+                ""numberOfEmbeddedDocuments"": 0,
+                ""numberOfEmbeddings"": 0,
+                ""indexSize"": 0,
+                ""usedIndexSize"": 0
+            }";
+
+            var stats = JsonSerializer.Deserialize<IndexStats>(json);
+
+            stats.IndexSize.Should().Be(0);
+            stats.UsedIndexSize.Should().Be(0);
+        }
+
+        [Fact]
+        public void ConstructorWithoutIndexSizesLeavesThemNull()
+        {
+            var stats = new IndexStats(2, false, new Dictionary<string, int>(), 4096, 2040, 0, 0);
+
+            stats.IndexSize.Should().BeNull();
+            stats.UsedIndexSize.Should().BeNull();
+            stats.NumberOfDocuments.Should().Be(2);
         }
 
         [Fact]
