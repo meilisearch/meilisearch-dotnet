@@ -58,7 +58,7 @@ namespace Meilisearch
         /// <remarks>
         /// This option only takes effect when using the default <see cref="MeilisearchClient"/> constructor
         /// that creates its own HttpClient internally. If you provide a custom HttpClient, you must configure
-        /// <see cref="System.Net.HttpClientHandler.AutomaticDecompression"/> on your HttpClientHandler yourself.
+        /// <see cref="System.Net.Http.HttpClientHandler.AutomaticDecompression"/> on your HttpClientHandler yourself.
         /// </remarks>
         public bool EnableResponseDecompression { get; set; } = false;
 
