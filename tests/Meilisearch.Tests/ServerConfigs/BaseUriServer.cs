@@ -107,6 +107,14 @@ namespace Meilisearch.Tests.ServerConfigs
                 {
                 }
             }
+
+            [Collection(IndexCollectionFixtureName)]
+            public class CompressionTests : CompressionTests<ConfigFixture>
+            {
+                public CompressionTests(ConfigFixture fixture) : base(fixture)
+                {
+                }
+            }
         }
 
         public class DynamicSearchRuleCollectionTests

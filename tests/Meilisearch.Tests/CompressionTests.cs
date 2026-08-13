@@ -5,18 +5,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 
 using Meilisearch.QueryParameters;
-using Meilisearch.Tests.ServerConfigs;
+using Meilisearch.Tests.Fixtures;
 
 using Xunit;
 
 namespace Meilisearch.Tests
 {
-    [Collection(nameof(BaseUriServer))]
-    public class CompressionTests : IAsyncLifetime
+    public abstract class CompressionTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
-        private readonly IndexFixture _fixture;
+        private readonly TFixture _fixture;
 
-        public CompressionTests(BaseUriServer.ConfigFixture fixture)
+        public CompressionTests(TFixture fixture)
         {
             _fixture = fixture;
         }
