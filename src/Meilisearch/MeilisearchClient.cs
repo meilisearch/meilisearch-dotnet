@@ -382,21 +382,29 @@ namespace Meilisearch
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Successfulness of enabling as experimental feature.</returns>
-        public async Task<bool> EnableDynamicSearchRules(CancellationToken cancellationToken = default)
+        public Task<bool> EnableDynamicSearchRules(CancellationToken cancellationToken = default) => SetExperimentalFeature("dynamicSearchRules", true, cancellationToken);
+
+        /// <summary>
+        /// Toggles an experimental feature by its name.
+        /// </summary>
+        /// <param name="featureName">Name of the experimental feature, as returned by the experimental-features route.</param>
+        /// <param name="enabled">Whether the feature should be enabled.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Successfulness of the toggle as experimental feature.</returns>
+        private async Task<bool> SetExperimentalFeature(string featureName, bool enabled, CancellationToken cancellationToken = default)
         {
             var responseMessage =
-                await _http.PatchAsJsonAsync("experimental-features", new
-                {
-                    dynamicSearchRules = true
-                }, cancellationToken: cancellationToken)
+                await _http.PatchAsJsonAsync("experimental-features",
+                    new Dictionary<string, bool> { [featureName] = enabled },
+                    cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
 
             var result = await responseMessage.Content
                 .ReadFromJsonAsync<JsonDocument>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            return result.RootElement.TryGetProperty("dynamicSearchRules", out var dsrElement) &&
-                   dsrElement.GetBoolean();
+            return result.RootElement.TryGetProperty(featureName, out var featureElement) &&
+                   featureElement.GetBoolean() == enabled;
         }
 
         /// <summary>
@@ -487,6 +495,20 @@ namespace Meilisearch
                 .ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Enables foreign keys experimental feature.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Successfulness of enabling as experimental feature.</returns>
+        public Task<bool> EnableForeignKeys(CancellationToken cancellationToken = default) => SetExperimentalFeature("foreignKeys", true, cancellationToken);
+
+        /// <summary>
+        /// Disables foreign keys experimental feature.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Successfulness of disabling as experimental feature.</returns>
+        public Task<bool> DisableForeignKeys(CancellationToken cancellationToken = default) => SetExperimentalFeature("foreignKeys", false, cancellationToken);
 
         /// <summary>
         /// Cancel tasks given a specific query.

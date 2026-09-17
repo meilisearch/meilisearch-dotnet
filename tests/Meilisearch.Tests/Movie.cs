@@ -81,4 +81,32 @@ namespace Meilisearch.Tests
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Naming convention used to match meilisearch.")]
         public IDictionary<string, JsonElement> _RankingScoreDetails { get; set; }
     }
+
+    /// <summary>
+    /// A movie hit from a federated multi-search, carrying the `_federation` metadata Meilisearch
+    /// adds to every hit.
+    /// </summary>
+    public class FederatedMovie
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Genre { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("_federation")]
+        public FederationMetadata Federation { get; set; }
+    }
+
+    public class FederationMetadata
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("indexUid")]
+        public string IndexUid { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("queriesPosition")]
+        public int QueriesPosition { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("weightedRankingScore")]
+        public double WeightedRankingScore { get; set; }
+    }
 }

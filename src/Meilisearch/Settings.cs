@@ -32,6 +32,14 @@ namespace Meilisearch
         [JsonPropertyName("displayedAttributes")]
         public IEnumerable<string> DisplayedAttributes { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the foreign keys.
+        /// <remarks>This is an experimental Meilisearch feature (v1.39+).</remarks>
+        /// </summary>
+        [JsonPropertyName("foreignKeys")]
+        public IEnumerable<ForeignKey> ForeignKeys { get; set; }
+
         /// <summary>
         /// Gets or sets the stop-words list.
         /// </summary>

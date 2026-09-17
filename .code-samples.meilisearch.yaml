@@ -634,3 +634,23 @@ patch_dynamic_search_rule_1: |-
   await client.CreateOrUpdateDynamicSearchRuleAsync("black-friday", patchQuery);
 delete_dynamic_search_rule_1: |-
   await client.DeleteDynamicSearchRuleAsync("black-friday");
+get_foreign_keys_setting_1: |-
+  // Foreign keys are experimental and must be enabled first
+  await client.EnableForeignKeys();
+
+  await client.Index("books").GetForeignKeysAsync();
+update_foreign_keys_setting_1: |-
+  // Foreign keys are experimental and must be enabled first
+  await client.EnableForeignKeys();
+
+  var foreignKeys = new ForeignKey[]
+  {
+      new ForeignKey { ForeignIndexUid = "authors", FieldName = "author"  },
+      new ForeignKey { ForeignIndexUid = "authors", FieldName = "related_authors"  }
+  };
+  await client.Index("books").UpdateForeignKeysAsync(foreignKeys);
+reset_foreign_keys_setting_1: |-
+  // Foreign keys are experimental and must be enabled first
+  await client.EnableForeignKeys();
+
+  await client.Index("books").ResetForeignKeysAsync();
