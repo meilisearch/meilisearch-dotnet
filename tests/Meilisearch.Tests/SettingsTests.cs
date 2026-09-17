@@ -13,6 +13,8 @@ namespace Meilisearch.Tests
 {
     public abstract class SettingsTests<TFixture> : IAsyncLifetime where TFixture : IndexFixture
     {
+        private const double EmbedderTaskTimeoutMs = 60000.0;
+
         private readonly Settings _defaultSettings;
         private Index _index;
         private readonly TFixture _fixture;
@@ -824,7 +826,7 @@ namespace Meilisearch.Tests
                 }
             };
 
-            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders, EmbedderTaskTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
         }
 
@@ -845,10 +847,12 @@ namespace Meilisearch.Tests
                 }
             };
 
-            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            // Embedder updates download and load the model, which can take well over the
+            // default 5s wait on CI runners.
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders, EmbedderTaskTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
 
-            await AssertResetSuccess(_index.ResetEmbeddersAsync);
+            await AssertResetSuccess(_index.ResetEmbeddersAsync, EmbedderTaskTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, _defaultSettings.Embedders);
         }
 
@@ -891,23 +895,23 @@ namespace Meilisearch.Tests
             value.Should().NotBeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertTaskInfoSucceeded(TaskInfo task)
+        private async Task AssertTaskInfoSucceeded(TaskInfo task, double timeoutMs = 5000.0)
         {
             task.TaskUid.Should().BeGreaterThan(0);
-            var taskResource = await _index.WaitForTaskAsync(task.TaskUid);
+            var taskResource = await _index.WaitForTaskAsync(task.TaskUid, timeoutMs);
             taskResource.Status.Should().Be(TaskInfoStatus.Succeeded);
         }
 
-        private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
+        private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue, double timeoutMs = 5000.0)
         {
             var task = await updateMethod(newValue);
-            await AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task, timeoutMs);
         }
 
-        private async Task AssertResetSuccess(IndexResetMethod resetMethod)
+        private async Task AssertResetSuccess(IndexResetMethod resetMethod, double timeoutMs = 5000.0)
         {
             var task = await resetMethod();
-            await AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task, timeoutMs);
         }
     }
 }
