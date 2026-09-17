@@ -73,30 +73,4 @@ namespace Meilisearch.Converters
         }
     }
 
-    /// <summary>
-    /// Defines converter for BaseCondition implementations
-    /// </summary>
-    public class DynamicSearchRuleConditionConverter : BaseObjectWithTypesConverter<BaseCondition, ConditionType>
-    {
-        /// <summary>
-        /// <inheritdoc/>
-        /// Supports the following mappings:
-        /// <list type="bullet">
-        /// <item>
-        /// <description><see cref="ConditionType.Query"/> -&gt; <see cref="QueryCondition"/></description>
-        /// </item>
-        /// <item>
-        /// <description><see cref="ConditionType.Time"/> -&gt; <see cref="TimeCondition"/></description>
-        /// </item>
-        /// </list>
-        /// </summary>
-        public DynamicSearchRuleConditionConverter() : base(BaseCondition.ScopePropertyName,
-            new Dictionary<ConditionType, Type>
-            {
-                [ConditionType.Query] = typeof(QueryCondition),
-                [ConditionType.Time] = typeof(TimeCondition)
-            })
-        {
-        }
-    }
 }

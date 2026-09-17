@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Meilisearch.QueryParameters
@@ -32,28 +31,16 @@ namespace Meilisearch.QueryParameters
         public class DSRQFilter
         {
             /// <summary>
-            /// Only includes rules whose attribute names match these patterns.
+            /// Only includes rules whose description or query words match this query.
             /// </summary>
-            [JsonPropertyName("attribute_patterns")]
-            public DSRQFilterPatterns AttributePatterns { get; set; }
+            [JsonPropertyName("query")]
+            public string Query { get; set; }
 
             /// <summary>
             /// An option to include only active or not active rules.
             /// </summary>
             [JsonPropertyName("active")]
             public bool? Active { get; set; }
-
-            /// <summary>
-            /// A class that handles creation of list of patterns wrapped into object for filter class
-            /// </summary>
-            public class DSRQFilterPatterns
-            {
-                /// <summary>
-                /// Patterns list
-                /// </summary>
-                [JsonPropertyName("patterns")]
-                public IEnumerable<string> Patterns { get; set; }
-            }
         }
     }
 }

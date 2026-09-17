@@ -28,13 +28,13 @@ namespace Meilisearch
         /// Precedence of the dynamic search rule.
         /// Lower numeric values take precedence over higher ones.
         /// <list type="bullets">
-        ///     <item> If the same document is selected by multiple rules, the smallest <i>priority</i> number wins  </item>
-        ///     <item> If different documents are pinned to the same position, they are ordered by ascending <i>priority</i> </item>
+        ///     <item> If the same document is selected by multiple rules, the smallest <i>precedence</i> number wins  </item>
+        ///     <item> If different documents are pinned to the same position, they are ordered by ascending <i>precedence</i> </item>
         /// </list>
         /// </summary>
-        [JsonPropertyName("priority")]
+        [JsonPropertyName("precedence")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public Optional<ulong?> Priority { get; set; }
+        public Optional<ulong?> Precedence { get; set; }
 
         /// <summary>
         /// Whether the dynamic search rule is active
@@ -48,6 +48,6 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("conditions")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public Optional<IEnumerable<BaseCondition>> Conditions { get; set; }
+        public Optional<DynamicSearchRuleConditions> Conditions { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 using Meilisearch.QueryParameters;
@@ -29,33 +31,14 @@ namespace Meilisearch.Tests
         public async Task CreateDynamicSearchRuleAsync()
         {
             const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleAsync);
-            var dynamicSearchRule = new PatchDynamicSearchRule
-            {
-                Description = "Black Friday 2025 rules",
-                Priority = 10,
-                Active = true,
-                Conditions = new BaseCondition[]
-                {
-                    new QueryCondition { IsEmpty = true },
-                    new TimeCondition
-                    {
-                        Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
-                        End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.FromHours(3))
-                    },
-                },
-                Actions = new[]
-                {
-                    new DSRAction
-                    {
-                        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
-                        Action = new PinAction { Position = 1 }
-                    }
-                }
-            };
+            var patchRule = CreateDynamicSearchRulePatch();
 
-            var result = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
 
-            AssertDynamicSearchRule(dynamicSearchRule.ToDynamicSearchRule(dynamicSearchRuleUid), result);
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            AssertPatchApplied(patchRule, dynamicSearchRuleUid, result);
+            AssertDynamicSearchRule(patchRule.ToDynamicSearchRule(dynamicSearchRuleUid), result);
         }
 
         [Fact]
@@ -64,8 +47,11 @@ namespace Meilisearch.Tests
             const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithoutActionsAsync);
             var dynamicSearchRule = new PatchDynamicSearchRule();
 
-            var exception = await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule));
-            Assert.Equal("invalid_dynamic_search_rule_actions", exception.Code);
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
         }
 
         [Fact]
@@ -77,22 +63,34 @@ namespace Meilisearch.Tests
                 Actions = Array.Empty<DSRAction>(),
             };
 
-            var exception = await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule));
-            Assert.Equal("invalid_dynamic_search_rule_actions", exception.Code);
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            Assert.True(result.Actions == null || !result.Actions.Any());
         }
 
         [Fact]
         public async Task UpdateDynamicSearchRuleAsync()
         {
             const string dynamicSearchRuleUid = nameof(UpdateDynamicSearchRuleAsync);
-            var (patchRule, _) = await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
+            var (_, originalRule) = await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
 
             // modify dynamic-search-rule
-            patchRule.Active = false;
+            var patchRule = new PatchDynamicSearchRule { Active = false };
             patchRule.Description = "Some updated description";
 
-            var result = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
-            AssertDynamicSearchRule(patchRule.ToDynamicSearchRule(dynamicSearchRuleUid), result);
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            Assert.Equal(patchRule.Description.Value, result.Description);
+            Assert.Equal(patchRule.Active.Value ?? true, result.Active);
+            Assert.Equal(originalRule.Precedence, result.Precedence);
+            AssertJsonEquivalent(originalRule.Conditions, result.Conditions);
+            AssertJsonEquivalent(originalRule.Actions, result.Actions);
         }
 
         [Theory]
@@ -165,44 +163,90 @@ namespace Meilisearch.Tests
             const string dynamicSearchRuleUid = nameof(DeleteExistingDynamicSearchRuleAsync);
             await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
 
-            var result = await _client.DeleteDynamicSearchRuleAsync(dynamicSearchRuleUid);
-            Assert.True(result);
+            var taskInfo = await _client.DeleteDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var exception = await Assert.ThrowsAsync<MeilisearchApiError>(() =>
+                _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid));
+            Assert.Equal("dynamic_search_rule_not_found", exception.Code);
         }
 
         [Fact]
         public async Task DeleteNotExistingDynamicSearchRuleAsync()
         {
-            var exception = await Assert.ThrowsAsync<MeilisearchApiError>(() => _client.DeleteDynamicSearchRuleAsync(nameof(DeleteNotExistingDynamicSearchRuleAsync)));
+            var taskInfo = await _client.DeleteDynamicSearchRuleAsync(nameof(DeleteNotExistingDynamicSearchRuleAsync));
+            await WaitForTaskSucceededAsync(taskInfo);
+        }
 
-            Assert.Equal("dynamic_search_rule_not_found", exception.Code);
+        private async Task WaitForTaskSucceededAsync(TaskInfo taskInfo)
+        {
+            Assert.NotNull(taskInfo);
+            Assert.True(taskInfo.TaskUid > 0);
+
+            var finishedTask = await _client.WaitForTaskAsync(taskInfo.TaskUid, timeoutMs: 10000);
+            Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
+        }
+
+        private static PatchDynamicSearchRule CreateDynamicSearchRulePatch()
+        {
+            return new PatchDynamicSearchRule
+            {
+                Description = "Black Friday 2025 rules",
+                Precedence = 10,
+                Active = true,
+                Conditions = new DynamicSearchRuleConditions
+                {
+                    Query = new QueryCondition { IsEmpty = false, Words = "black friday" },
+                    Time = new TimeCondition
+                    {
+                        Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
+                        End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
+                    }
+                },
+                Actions = new[]
+                {
+                    new DSRAction
+                    {
+                        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
+                        Action = new PinAction { Position = 1 }
+                    }
+                }
+            };
+        }
+
+        private static void AssertPatchApplied(PatchDynamicSearchRule expected, string expectedUid, DynamicSearchRule actual)
+        {
+            Assert.Equal(expectedUid, actual.Uid);
+            if (expected.Description.HasValue)
+                Assert.Equal(expected.Description.Value, actual.Description);
+            if (expected.Precedence.HasValue)
+                Assert.Equal(expected.Precedence.Value, actual.Precedence);
+            if (expected.Active.HasValue)
+                Assert.Equal(expected.Active.Value ?? true, actual.Active);
+            if (expected.Conditions.HasValue)
+                Assert.Equivalent(expected.Conditions.Value, actual.Conditions);
+            if (expected.Actions.HasValue)
+                AssertJsonEquivalent(expected.Actions.Value, actual.Actions);
         }
 
         private static void AssertDynamicSearchRule(DynamicSearchRule expected, DynamicSearchRule actual)
         {
             Assert.Equal(expected.Uid, actual.Uid);
             Assert.Equal(expected.Description, actual.Description);
-            Assert.Equal(expected.Priority, actual.Priority);
+            Assert.Equal(expected.Precedence, actual.Precedence);
             Assert.Equal(expected.Active, actual.Active);
-            if (expected.Conditions != null)
-            {
-                Assert.NotNull(actual.Conditions);
-                Assert.Equal(expected.Conditions.Count(), actual.Conditions.Count());
-                Assert.Equivalent(expected.Conditions, actual.Conditions);
-            }
-            else Assert.Null(actual.Conditions);
+            Assert.Equivalent(expected.Conditions, actual.Conditions);
+            AssertJsonEquivalent(expected.Actions, actual.Actions);
+        }
 
-            if (expected.Actions != null)
-            {
-                Assert.NotNull(actual.Actions);
-                Assert.Equal(expected.Actions.Count(), actual.Actions.Count());
+        private static void AssertJsonEquivalent(object expected, object actual)
+        {
+            var expectedNode = JsonSerializer.SerializeToNode(expected, Constants.JsonSerializerOptionsRemoveNulls);
+            var actualNode = JsonSerializer.SerializeToNode(actual, Constants.JsonSerializerOptionsRemoveNulls);
 
-                foreach (var (expectedAction, actualAction) in expected.Actions.Zip(actual.Actions))
-                {
-                    Assert.Equivalent(expectedAction.Selector, actualAction.Selector);
-                    Assert.Equivalent(expectedAction.Action, actualAction.Action);
-                }
-            }
-            else Assert.Null(actual.Actions);
+            Assert.True(
+                JsonNode.DeepEquals(expectedNode, actualNode),
+                $"Expected JSON: {expectedNode}{Environment.NewLine}Actual JSON: {actualNode}");
         }
 
         public static TheoryData<string> GetExistingDynamicSearchRuleCases() =>
@@ -217,8 +261,8 @@ namespace Meilisearch.Tests
         public static DynamicSearchRule ToDynamicSearchRule(this PatchDynamicSearchRule patchRule, string uid)
         {
             var result = new DynamicSearchRule { Uid = uid };
-            if (patchRule.Priority.HasValue)
-                result.Priority = patchRule.Priority.Value;
+            if (patchRule.Precedence.HasValue)
+                result.Precedence = patchRule.Precedence.Value;
             if (patchRule.Active.HasValue)
                 result.Active = patchRule.Active.Value ?? true;
             if (patchRule.Description.HasValue)

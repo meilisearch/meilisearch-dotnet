@@ -517,6 +517,18 @@ update_faceting_settings_1: |-
   await client.Index("books").UpdateFacetingAsync(faceting);
 reset_faceting_settings_1: |-
   await client.Index("movies").ResetFacetingAsync();
+get_facet_search_settings_1: |-
+  await client.Index("books").GetFacetSearchAsync();
+update_facet_search_settings_1: |-
+  await client.Index("books").UpdateFacetSearchAsync(false);
+reset_facet_search_settings_1: |-
+  await client.Index("books").ResetFacetSearchAsync();
+get_prefix_search_settings_1: |-
+  await client.Index("books").GetPrefixSearchAsync();
+update_prefix_search_settings_1: |-
+  await client.Index("books").UpdatePrefixSearchAsync("disabled");
+reset_prefix_search_settings_1: |-
+  await client.Index("books").ResetPrefixSearchAsync();
 multi_search_1: |-
   await client.MultiSearchAsync(new MultiSearchQuery()
   {
@@ -599,16 +611,16 @@ patch_dynamic_search_rule_1: |-
   var patchQuery = new PatchDynamicSearchRule
   {
     Description = "Black Friday 2025 rules",
-    Priority = 10,
+    Precedence = 10,
     Active = true,
-    Conditions = new BaseCondition[]
+    Conditions = new DynamicSearchRuleConditions
     {
-      new QueryCondition { IsEmpty = true },
-      new TimeCondition
+      Query = new QueryCondition { IsEmpty = true },
+      Time = new TimeCondition
       {
         Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
         End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
-      },
+      }
     },
     Actions = new[]
     {

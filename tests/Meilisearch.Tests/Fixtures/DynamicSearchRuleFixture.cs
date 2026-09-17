@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -22,8 +23,9 @@ namespace Meilisearch.Tests.Fixtures
         public async Task<(PatchDynamicSearchRule, DynamicSearchRule)> SetUpDynamicSearchRuleAsync(string uid, string jsonPath)
         {
             var dsrJson = await File.ReadAllTextAsync(Datasets.GetDynamicSearchRuleJsonPath(jsonPath));
-            var dynamicSearchRule = JsonSerializer.Deserialize<PatchDynamicSearchRule>(dsrJson, Constants.JsonSerializerOptionsRemoveNulls);
-            return (dynamicSearchRule, await DefaultClient.CreateOrUpdateDynamicSearchRuleAsync(uid, dynamicSearchRule));
+            var patchRule = JsonSerializer.Deserialize<PatchDynamicSearchRule>(dsrJson, Constants.JsonSerializerOptionsRemoveNulls);
+            await WaitForTaskSucceededAsync(await DefaultClient.CreateOrUpdateDynamicSearchRuleAsync(uid, patchRule));
+            return (patchRule, await DefaultClient.GetDynamicSearchRuleAsync(uid));
         }
 
         public async Task DeleteAllDynamicSearchRule()
@@ -36,8 +38,16 @@ namespace Meilisearch.Tests.Fixtures
                 if (!allDynamicSearchRules.Results.Any()) break;
 
                 foreach (var dynamicSearchRule in allDynamicSearchRules.Results)
-                    await DefaultClient.DeleteDynamicSearchRuleAsync(dynamicSearchRule.Uid);
+                    await WaitForTaskSucceededAsync(await DefaultClient.DeleteDynamicSearchRuleAsync(dynamicSearchRule.Uid));
+            }
+        }
 
+        private async Task WaitForTaskSucceededAsync(TaskInfo taskInfo)
+        {
+            var finishedTask = await DefaultClient.WaitForTaskAsync(taskInfo.TaskUid, timeoutMs: 10000);
+            if (finishedTask.Status != TaskInfoStatus.Succeeded)
+            {
+                throw new Exception($"Dynamic search rule task {taskInfo.TaskUid} finished with status {finishedTask.Status}.");
             }
         }
     }
