@@ -507,7 +507,7 @@ namespace Meilisearch
         /// Disables foreign keys experimental feature.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token for this call.</param>
-        /// <returns>Successfulness of enabling as experimental feature.</returns>
+        /// <returns>Successfulness of disabling as experimental feature.</returns>
         public Task<bool> DisableForeignKeys(CancellationToken cancellationToken = default) => SetExperimentalFeature("foreignKeys", false, cancellationToken);
 
         /// <summary>
