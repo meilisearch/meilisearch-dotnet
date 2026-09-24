@@ -8,7 +8,11 @@ namespace Meilisearch
     /// </summary>
     public class IndexStats
     {
-        public IndexStats(int numberOfDocuments, bool isIndexing, IReadOnlyDictionary<string, int> fieldDistribution, long rawDocumentDbSize, long avgDocumentSize, int numberOfEmbeddedDocuments, int numberOfEmbeddings)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexStats"/> class.
+        /// </summary>
+        /// <paraaram name="usedIndexSize">The used size of the index on disk (in bytes).</param>
+        public IndexStats(int numberOfDocuments, bool isIndexing, IReadOnlyDictionary<string, int> fieldDistribution, long rawDocumentDbSize, long avgDocumentSize, int numberOfEmbeddedDocuments, int numberOfEmbeddings, long indexSize, long usedIndexSize)
         {
             NumberOfDocuments = numberOfDocuments;
             IsIndexing = isIndexing;
@@ -17,6 +21,8 @@ namespace Meilisearch
             AvgDocumentSize = avgDocumentSize;
             NumberOfEmbeddedDocuments = numberOfEmbeddedDocuments;
             NumberOfEmbeddings = numberOfEmbeddings;
+            IndexSize = indexSize;
+            UsedIndexSize = usedIndexSize;
         }
 
         /// <summary>
@@ -61,5 +67,17 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("numberOfEmbeddings")]
         public int NumberOfEmbeddings { get; }
+
+        /// <summary>
+        /// Gets the total size of the index on disk (in bytes).
+        /// </summary>
+        [JsonPropertyName("indexSize")]
+        public long IndexSize { get; }
+
+        /// <summary>
+        /// Gets the used size of the index on disk (in bytes).
+        /// </summary>
+        [JsonPropertyName("usedIndexSize")]
+        public long UsedIndexSize { get; }
     }
 }
