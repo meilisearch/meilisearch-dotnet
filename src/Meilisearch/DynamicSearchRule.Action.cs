@@ -1,89 +1,78 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
-
-using Meilisearch.Converters;
 
 namespace Meilisearch
 {
     /// <summary>
-    /// Enum that indicates action type for <see cref="BaseAction"/> objects
+    /// Actions applied when a dynamic search rule matches.
     /// </summary>
-    [JsonConverter(typeof(EnumToCamelCaseConverter<ActionType>))]
-    public enum ActionType
+    public class DSRActions
     {
         /// <summary>
-        /// Pin action
+        /// Documents to pin to a fixed result position.
         /// </summary>
-        Pin
+        [JsonPropertyName("pin")]
+        public IEnumerable<DSRPin> Pin { get; set; }
+
+        /// <summary>
+        /// Documents whose relevancy score is scaled.
+        /// Weight greater than 1 boosts, less than 1 demotes, and 0 hides.
+        /// </summary>
+        [JsonPropertyName("scale")]
+        public IEnumerable<DSRScale> Scale { get; set; }
     }
 
     /// <summary>
-    /// Wrapper for Selector - Action pairs
+    /// Pins a document to a fixed result position.
     /// </summary>
-    public class DSRAction
+    public class DSRPin
     {
         /// <summary>
-        /// Target document selector for this action
-        /// </summary>
-        [JsonPropertyName("selector")]
-        public DSRASelector Selector { get; set; }
-
-        /// <summary>
-        /// Action payload to apply to the selected document
-        /// </summary>
-        [JsonPropertyName("action")]
-        public BaseAction Action { get; set; }
-    }
-
-    /// <summary>
-    /// Target document selector descriptor
-    /// </summary>
-    public class DSRASelector
-    {
-        /// <summary>
-        /// Gets or sets indexUid
-        /// </summary>
-        [JsonPropertyName("indexUid")]
-        public string IndexUid { get; set; }
-
-        /// <summary>
-        /// Gets or sets id
+        /// Document id to pin.
         /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; set; }
-    }
-
-
-    /// <summary>
-    /// Base class of Actions for Dynamic Search Rules
-    /// </summary>
-    [JsonConverter(typeof(DynamicSearchRuleActionConverter))]
-    public abstract class BaseAction
-    {
-        /// <summary>
-        /// Property name that defines type of BaseAction object
-        /// </summary>
-        public const string TypePropertyName = "type";
 
         /// <summary>
-        /// Describes action type
-        /// </summary>
-        [JsonPropertyName(TypePropertyName)]
-        public abstract ActionType Type { get; }
-    }
-
-    /// <summary>
-    /// Action that pins matching documents to a specific position
-    /// </summary>
-    public class PinAction : BaseAction
-    {
-        /// <inheritdoc/>
-        /// <value>ActionType.Pin</value>
-        public override ActionType Type => ActionType.Pin;
-
-        /// <summary>
-        /// Gets or sets position
+        /// Zero-based position where the document is pinned.
         /// </summary>
         [JsonPropertyName("position")]
         public int Position { get; set; }
+
+        /// <summary>
+        /// Index the pin applies to. When null or omitted, the pin applies to any index containing the document id.
+        /// </summary>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; set; }
+    }
+
+    /// <summary>
+    /// Scales selected documents' relevancy.
+    /// </summary>
+    public class DSRScale
+    {
+        /// <summary>
+        /// Multiplicative weight applied to the selected documents' relevancy score.
+        /// </summary>
+        [JsonPropertyName("weight")]
+        public double Weight { get; set; }
+
+        /// <summary>
+        /// Document ids to scale.
+        /// </summary>
+        [JsonPropertyName("ids")]
+        public IEnumerable<string> Ids { get; set; }
+
+        /// <summary>
+        /// Filter selecting documents to scale. A string or a nested filter array, same shape as search filters.
+        /// </summary>
+        [JsonPropertyName("filter")]
+        public dynamic Filter { get; set; }
+
+        /// <summary>
+        /// Index the scale applies to. When null or omitted, the scale applies to any index.
+        /// </summary>
+        [JsonPropertyName("indexUid")]
+        public string IndexUid { get; set; }
     }
 }
