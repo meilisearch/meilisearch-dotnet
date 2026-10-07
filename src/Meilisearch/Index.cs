@@ -106,6 +106,21 @@ namespace Meilisearch
         }
 
         /// <summary>
+        /// Renames the index by updating its <c>uid</c>.
+        /// </summary>
+        /// <param name="newUid">The new unique identifier to rename the index to.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Returns the associated task.</returns>
+        public async Task<TaskInfo> RenameAsync(string newUid, CancellationToken cancellationToken = default)
+        {
+            var responseMessage =
+                await _http.PatchAsJsonAsync($"indexes/{Uid}", new { uid = newUid }, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+            return await responseMessage.Content.ReadFromJsonAsync<TaskInfo>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Deletes the index.
         /// It's not a recovery delete. You will also lose the documents within the index.
         /// </summary>
