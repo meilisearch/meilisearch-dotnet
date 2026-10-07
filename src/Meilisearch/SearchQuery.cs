@@ -62,5 +62,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("retrieveVectors")]
         public bool RetrieveVectors { get; set; }
+
+        /// <summary>
+        /// Gets or sets the personalization settings used to rerank the results.
+        /// </summary>
+        [JsonPropertyName("personalize")]
+        public Personalize Personalize { get; set; }
     }
 }
