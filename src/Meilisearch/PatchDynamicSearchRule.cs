@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Meilisearch.Converters;
@@ -11,11 +10,12 @@ namespace Meilisearch
     public class PatchDynamicSearchRule
     {
         /// <summary>
-        /// Actions to apply when dynamic search rule matches
+        /// Actions applied when the dynamic search rule matches.
+        /// Pins documents to a fixed position and scales selected documents' relevancy.
         /// </summary>
         [JsonPropertyName("actions")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public Optional<IEnumerable<DSRAction>> Actions { get; set; }
+        public Optional<DSRActions> Actions { get; set; }
 
         /// <summary>
         /// Optional field. Gets or sets the description

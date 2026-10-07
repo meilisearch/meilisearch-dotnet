@@ -80,6 +80,11 @@ namespace Meilisearch.Tests
 
         private delegate Task<TaskInfo> IndexResetMethod(CancellationToken cancellationToken = default);
 
+        private const double DefaultTaskTimeoutMs = 5000;
+
+        // Hugging Face embedder setup downloads and loads a model. Cold starts observed around 50s.
+        private const double EmbedderSettingsTimeoutMs = 120000;
+
         public async Task InitializeAsync()
         {
             await _fixture.DeleteAllIndexes(); // Test context cleaned for each [Fact]
@@ -789,7 +794,7 @@ namespace Meilisearch.Tests
                 }
             };
 
-            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders, timeoutMs: EmbedderSettingsTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
         }
 
@@ -810,10 +815,10 @@ namespace Meilisearch.Tests
                 }
             };
 
-            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders);
+            await AssertUpdateSuccess(_index.UpdateEmbeddersAsync, newEmbedders, timeoutMs: EmbedderSettingsTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, newEmbedders);
 
-            await AssertResetSuccess(_index.ResetEmbeddersAsync);
+            await AssertResetSuccess(_index.ResetEmbeddersAsync, timeoutMs: EmbedderSettingsTimeoutMs);
             await AssertGetEquality(_index.GetEmbeddersAsync, _defaultSettings.Embedders);
         }
 
@@ -855,23 +860,23 @@ namespace Meilisearch.Tests
             value.Should().NotBeEquivalentTo(expectedValue);
         }
 
-        private async Task AssertTaskInfoSucceeded(TaskInfo task)
+        private async Task AssertTaskInfoSucceeded(TaskInfo task, double timeoutMs = DefaultTaskTimeoutMs)
         {
             task.TaskUid.Should().BeGreaterThan(0);
-            var taskResource = await _index.WaitForTaskAsync(task.TaskUid);
+            var taskResource = await _index.WaitForTaskAsync(task.TaskUid, timeoutMs);
             taskResource.Status.Should().Be(TaskInfoStatus.Succeeded);
         }
 
-        private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue)
+        private async Task AssertUpdateSuccess<TValue>(IndexUpdateMethod<TValue> updateMethod, TValue newValue, double timeoutMs = DefaultTaskTimeoutMs)
         {
             var task = await updateMethod(newValue);
-            await AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task, timeoutMs);
         }
 
-        private async Task AssertResetSuccess(IndexResetMethod resetMethod)
+        private async Task AssertResetSuccess(IndexResetMethod resetMethod, double timeoutMs = DefaultTaskTimeoutMs)
         {
             var task = await resetMethod();
-            await AssertTaskInfoSucceeded(task);
+            await AssertTaskInfoSucceeded(task, timeoutMs);
         }
     }
 }

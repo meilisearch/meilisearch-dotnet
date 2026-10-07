@@ -167,15 +167,137 @@ namespace Meilisearch.Tests
             const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithEmptyActionsAsync);
             var dynamicSearchRule = new PatchDynamicSearchRule
             {
-                Actions = Array.Empty<DSRAction>(),
+                Actions = new DSRActions(),
             };
 
-            var task = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
-            await AssertTaskSucceededAsync(task, TaskInfoType.DsrUpdate);
-            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
+            await AssertTaskSucceededAsync(taskInfo, TaskInfoType.DsrUpdate);
 
-            Assert.Empty(result.Actions);
-            AssertLastUpdatedAtMatchesTask(result, task);
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            Assert.True(
+                result.Actions == null
+                || ((result.Actions.Pin == null || !result.Actions.Pin.Any())
+                    && (result.Actions.Scale == null || !result.Actions.Scale.Any())));
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithoutActionsAsync()
+        {
+            const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithoutActionsAsync);
+            var dynamicSearchRule = new PatchDynamicSearchRule();
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
+            await AssertTaskSucceededAsync(taskInfo, TaskInfoType.DsrUpdate);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithScaleFilterAsync()
+        {
+            const string dynamicSearchRuleUid = "batman-festival";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale { Filter = "series = batman", Weight = 4.0 }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await AssertTaskSucceededAsync(taskInfo, TaskInfoType.DsrUpdate);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithScaleIdsAsync()
+        {
+            const string dynamicSearchRuleUid = "hide-movie";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale { Ids = new[] { "1" }, IndexUid = "movies", Weight = 0.0 }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await AssertTaskSucceededAsync(taskInfo, TaskInfoType.DsrUpdate);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithNestedScaleFilterAsync()
+        {
+            const string dynamicSearchRuleUid = "nested-scale-filter";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale
+                        {
+                            Filter = new object[]
+                            {
+                                new[] { "series = batman", "series = superman" },
+                                "year > 2000"
+                            },
+                            Weight = 2.0
+                        }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await AssertTaskSucceededAsync(taskInfo, TaskInfoType.DsrUpdate);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
+        }
+
+        [Fact]
+        public async Task ListDynamicSearchRulesWithOffset()
+        {
+            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithOffset);
+            await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
+
+            var resourceResults = await _client.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery { Offset = 1 });
+
+            Assert.Equal(1, resourceResults.Offset);
+            Assert.Equal(1, resourceResults.Total);
+            Assert.Empty(resourceResults.Results);
+        }
+
+        [Fact]
+        public async Task ListDynamicSearchRulesWithLimit()
+        {
+            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithLimit);
+            var (_, dynamicSearchRule) = await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
+
+            var resourceResults = await _client.ListDynamicSearchRulesAsync(new DynamicSearchRulesQuery { Limit = 1 });
+
+            var results = resourceResults.Results.ToList();
+            Assert.Equal(1, resourceResults.Limit);
+            Assert.Equal(0, resourceResults.Offset);
+            Assert.Equal(1, resourceResults.Total);
+            Assert.Single(results);
+            AssertDynamicSearchRule(dynamicSearchRule, results.First());
         }
 
         [Fact]
@@ -306,7 +428,7 @@ namespace Meilisearch.Tests
                 {
                     Query = new QueryCondition { IsEmpty = false, Words = "summer sale" }
                 },
-                Actions = Array.Empty<DSRAction>(),
+                Actions = new DSRActions(),
             };
             var createTask = await _client.CreateOrUpdateDynamicSearchRuleAsync(nonMatchingUid, nonMatchingRule);
             await AssertTaskSucceededAsync(createTask, TaskInfoType.DsrUpdate);
@@ -379,6 +501,9 @@ namespace Meilisearch.Tests
 
         private async Task AssertTaskSucceededAsync(TaskInfo task, TaskInfoType expectedType)
         {
+            Assert.NotNull(task);
+            Assert.True(task.TaskUid >= 0);
+            Assert.NotEqual(default, task.EnqueuedAt);
             Assert.Equal(expectedType, task.Type);
 
             var finishedTask = await _client.WaitForTaskAsync(task.TaskUid, timeoutMs: 10000);
@@ -414,12 +539,11 @@ namespace Meilisearch.Tests
                         }
                     }
                 },
-                Actions = new[]
+                Actions = new DSRActions
                 {
-                    new DSRAction
+                    Pin = new[]
                     {
-                        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
-                        Action = new PinAction { Position = 1 }
+                        new DSRPin { Id = "123", Position = 1, IndexUid = "products" }
                     }
                 }
             };
