@@ -440,6 +440,7 @@ namespace Meilisearch.Tests
                 new DynamicSearchRulesQuery { Limit = 1 });
 
             Assert.Equal(1, result.Limit);
+            Assert.Equal(0, result.Offset);
             Assert.Equal(1, result.Total);
             AssertDynamicSearchRule(rule, Assert.Single(result.Results));
         }
