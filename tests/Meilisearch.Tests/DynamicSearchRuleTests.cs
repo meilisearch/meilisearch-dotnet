@@ -162,6 +162,19 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
+        public async Task CreateDynamicSearchRuleWithoutActionsAsync()
+        {
+            const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithoutActionsAsync);
+            var task = await _client.CreateOrUpdateDynamicSearchRuleAsync(
+                dynamicSearchRuleUid, new PatchDynamicSearchRule());
+            await AssertTaskSucceededAsync(task, TaskInfoType.DsrUpdate);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertLastUpdatedAtMatchesTask(result, task);
+        }
+
+        [Fact]
         public async Task CreateDynamicSearchRuleWithEmptyActionsAsync()
         {
             const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithEmptyActionsAsync);
@@ -401,6 +414,34 @@ namespace Meilisearch.Tests
             Assert.Equal(1, resourceResults.Total);
             Assert.Equal(dynamicSearchRuleUid, result.Uid);
             Assert.NotNull(result.LastUpdatedAt);
+        }
+
+        [Fact]
+        public async Task ListDynamicSearchRulesWithOffset()
+        {
+            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithOffset);
+            await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
+
+            var result = await _client.ListDynamicSearchRulesAsync(
+                new DynamicSearchRulesQuery { Offset = 1 });
+
+            Assert.Equal(1, result.Offset);
+            Assert.Equal(1, result.Total);
+            Assert.Empty(result.Results);
+        }
+
+        [Fact]
+        public async Task ListDynamicSearchRulesWithLimit()
+        {
+            const string dynamicSearchRuleUid = nameof(ListDynamicSearchRulesWithLimit);
+            var (_, rule) = await _fixture.SetUpDynamicSearchRuleExampleAsync(dynamicSearchRuleUid);
+
+            var result = await _client.ListDynamicSearchRulesAsync(
+                new DynamicSearchRulesQuery { Limit = 1 });
+
+            Assert.Equal(1, result.Limit);
+            Assert.Equal(1, result.Total);
+            AssertDynamicSearchRule(rule, Assert.Single(result.Results));
         }
 
         [Fact]
