@@ -610,27 +610,21 @@ get_dynamic_search_rule_1: |-
 patch_dynamic_search_rule_1: |-
   var patchQuery = new PatchDynamicSearchRule
   {
-    Description = "Black Friday 2025 rules",
-    Precedence = 10,
+    Description = "Promote billing help for invoice searches",
+    Precedence = 1,
     Active = true,
     Conditions = new DynamicSearchRuleConditions
     {
-      Query = new QueryCondition { IsEmpty = true },
-      Time = new TimeCondition
-      {
-        Start = new DateTimeOffset(2025, 11, 28, 0, 0, 0, TimeSpan.Zero),
-        End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
-      }
+      Query = new QueryCondition { Words = "invoice" }
     },
-    Actions = new[]
+    Actions = new DSRActions
     {
-      new DSRAction
+      Pin = new[]
       {
-        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
-        Action = new PinAction { Position = 1 }
+        new DSRPin { Id = "299537", Position = 0, IndexUid = "movies" }
       }
     }
   };
-  await client.CreateOrUpdateDynamicSearchRuleAsync("black-friday", patchQuery);
+  await client.CreateOrUpdateDynamicSearchRuleAsync("RULE_UID", patchQuery);
 delete_dynamic_search_rule_1: |-
   await client.DeleteDynamicSearchRuleAsync("black-friday");

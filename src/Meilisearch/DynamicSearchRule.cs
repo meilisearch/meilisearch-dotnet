@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Meilisearch
@@ -22,10 +21,11 @@ namespace Meilisearch
         public DateTimeOffset? LastUpdatedAt { get; set; }
 
         /// <summary>
-        /// Actions to apply when dynamic search rule matches
+        /// Actions applied when the dynamic search rule matches.
+        /// Pins documents to a fixed position and scales selected documents' relevancy.
         /// </summary>
         [JsonPropertyName("actions")]
-        public IEnumerable<DSRAction> Actions { get; set; }
+        public DSRActions Actions { get; set; }
 
         /// <summary>
         /// Optional field. Gets or sets the description
