@@ -41,7 +41,6 @@ namespace Meilisearch.QueryParameters
             /// </summary>
             [JsonPropertyName("active")]
             public bool? Active { get; set; }
-
         }
     }
 }

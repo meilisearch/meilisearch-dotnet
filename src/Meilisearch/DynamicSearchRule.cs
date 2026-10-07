@@ -16,6 +16,12 @@ namespace Meilisearch
         public string Uid { get; set; }
 
         /// <summary>
+        /// Date and time of the last update of this rule.
+        /// </summary>
+        [JsonPropertyName("lastUpdatedAt")]
+        public DateTimeOffset? LastUpdatedAt { get; set; }
+
+        /// <summary>
         /// Actions to apply when dynamic search rule matches
         /// </summary>
         [JsonPropertyName("actions")]
@@ -26,12 +32,6 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("description")]
         public string Description { get; set; }
-
-        /// <summary>
-        /// The date and time when the dynamic search rule was last updated.
-        /// </summary>
-        [JsonPropertyName("lastUpdatedAt")]
-        public DateTimeOffset? LastUpdatedAt { get; set; }
 
         /// <summary>
         /// Precedence of the dynamic search rule.

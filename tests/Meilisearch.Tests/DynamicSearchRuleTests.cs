@@ -129,22 +129,6 @@ namespace Meilisearch.Tests
 
             Assert.Null(rule.LastUpdatedAt);
         }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void SelectorRequiresDocumentId(string id)
-        {
-            Assert.Throws<ArgumentNullException>(() => new DSRASelector("products", id));
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void SelectorRequiresIndexUid(string indexUid)
-        {
-            Assert.Throws<ArgumentNullException>(() => new DSRASelector(indexUid, "123"));
-        }
     }
 
     public abstract class DynamicSearchRuleTests<TFixture> : IAsyncLifetime where TFixture : DynamicSearchRuleFixture
@@ -434,7 +418,7 @@ namespace Meilisearch.Tests
                 {
                     new DSRAction
                     {
-                        Selector = new DSRASelector("products", "123"),
+                        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
                         Action = new PinAction { Position = 1 }
                     }
                 }

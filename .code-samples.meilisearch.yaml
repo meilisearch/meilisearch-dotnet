@@ -630,7 +630,7 @@ patch_dynamic_search_rule_1: |-
     {
       new DSRAction
       {
-        Selector = new DSRASelector("products", "123"),
+        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
         Action = new PinAction { Position = 1 }
       }
     }

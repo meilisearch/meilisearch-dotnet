@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 
 using Meilisearch.Converters;
@@ -41,37 +40,16 @@ namespace Meilisearch
     public class DSRASelector
     {
         /// <summary>
-        /// Creates a document selector.
-        /// </summary>
-        /// <param name="indexUid">Index containing the selected document.</param>
-        /// <param name="id">Identifier of the selected document.</param>
-        public DSRASelector(string indexUid, string id)
-        {
-            if (string.IsNullOrEmpty(indexUid))
-            {
-                throw new ArgumentNullException(nameof(indexUid));
-            }
-
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            IndexUid = indexUid;
-            Id = id;
-        }
-
-        /// <summary>
-        /// Gets indexUid
+        /// Gets or sets indexUid
         /// </summary>
         [JsonPropertyName("indexUid")]
-        public string IndexUid { get; }
+        public string IndexUid { get; set; }
 
         /// <summary>
-        /// Gets id
+        /// Gets or sets id
         /// </summary>
         [JsonPropertyName("id")]
-        public string Id { get; }
+        public string Id { get; set; }
     }
 
 
