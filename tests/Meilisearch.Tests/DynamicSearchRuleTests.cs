@@ -60,7 +60,7 @@ namespace Meilisearch.Tests
             const string dynamicSearchRuleUid = nameof(CreateDynamicSearchRuleWithEmptyActionsAsync);
             var dynamicSearchRule = new PatchDynamicSearchRule
             {
-                Actions = Array.Empty<DSRAction>(),
+                Actions = new DSRActions(),
             };
 
             var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, dynamicSearchRule);
@@ -68,7 +68,87 @@ namespace Meilisearch.Tests
 
             var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
             Assert.Equal(dynamicSearchRuleUid, result.Uid);
-            Assert.True(result.Actions == null || !result.Actions.Any());
+            Assert.True(
+                result.Actions == null
+                || ((result.Actions.Pin == null || !result.Actions.Pin.Any())
+                    && (result.Actions.Scale == null || !result.Actions.Scale.Any())));
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithScaleFilterAsync()
+        {
+            const string dynamicSearchRuleUid = "batman-festival";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale { Filter = "series = batman", Weight = 4.0 }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithScaleIdsAsync()
+        {
+            const string dynamicSearchRuleUid = "hide-movie";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale { Ids = new[] { "1" }, IndexUid = "movies", Weight = 0.0 }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
+        }
+
+        [Fact]
+        public async Task CreateDynamicSearchRuleWithNestedScaleFilterAsync()
+        {
+            const string dynamicSearchRuleUid = "nested-scale-filter";
+            var patchRule = new PatchDynamicSearchRule
+            {
+                Actions = new DSRActions
+                {
+                    Scale = new[]
+                    {
+                        new DSRScale
+                        {
+                            Filter = new object[]
+                            {
+                                new[] { "series = batman", "series = superman" },
+                                "year > 2000"
+                            },
+                            Weight = 2.0
+                        }
+                    }
+                }
+            };
+
+            var taskInfo = await _client.CreateOrUpdateDynamicSearchRuleAsync(dynamicSearchRuleUid, patchRule);
+            await WaitForTaskSucceededAsync(taskInfo);
+
+            var result = await _client.GetDynamicSearchRuleAsync(dynamicSearchRuleUid);
+            Assert.Equal(dynamicSearchRuleUid, result.Uid);
+            AssertJsonEquivalent(patchRule.Actions.Value, result.Actions);
         }
 
         [Fact]
@@ -181,7 +261,9 @@ namespace Meilisearch.Tests
         private async Task WaitForTaskSucceededAsync(TaskInfo taskInfo)
         {
             Assert.NotNull(taskInfo);
-            Assert.True(taskInfo.TaskUid > 0);
+            // Task uids are zero-based. The first task on a fresh server is 0.
+            Assert.True(taskInfo.TaskUid >= 0);
+            Assert.NotEqual(default, taskInfo.EnqueuedAt);
 
             var finishedTask = await _client.WaitForTaskAsync(taskInfo.TaskUid, timeoutMs: 10000);
             Assert.Equal(TaskInfoStatus.Succeeded, finishedTask.Status);
@@ -203,12 +285,11 @@ namespace Meilisearch.Tests
                         End = new DateTimeOffset(2025, 11, 28, 23, 59, 59, TimeSpan.Zero)
                     }
                 },
-                Actions = new[]
+                Actions = new DSRActions
                 {
-                    new DSRAction
+                    Pin = new[]
                     {
-                        Selector = new DSRASelector { IndexUid = "products", Id = "123" },
-                        Action = new PinAction { Position = 1 }
+                        new DSRPin { Id = "123", Position = 1, IndexUid = "products" }
                     }
                 }
             };
