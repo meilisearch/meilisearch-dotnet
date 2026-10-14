@@ -93,7 +93,7 @@ namespace Meilisearch.Tests
                     }
                 };
 
-                var result = await client.MultiSearchAsync(query, includeMetadata: true);
+                var result = await client.MultiSearchAsync(query, includeMetadata: true, cancellationToken: CancellationToken.None);
 
                 Assert.True(handler.IncludeMetadataHeader);
                 using (var request = JsonDocument.Parse(handler.RequestBody))
@@ -131,6 +131,13 @@ namespace Meilisearch.Tests
 
                 Assert.False(handler.IncludeMetadataHeader);
                 Assert.Null(result.Results[0].Metadata);
+
+                // Existing positional calls with an untyped default token must still compile.
+                var resultWithDefaultToken = await client.MultiSearchAsync(new MultiSearchQuery
+                {
+                    Queries = new List<SearchQuery> { new SearchQuery { IndexUid = "movies", Q = "test" } }
+                }, default);
+                Assert.Single(resultWithDefaultToken.Results);
 
                 using (var request = JsonDocument.Parse(handler.RequestBody))
                 {
