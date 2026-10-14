@@ -46,6 +46,7 @@ namespace Meilisearch.Tests
                 }
 
                 Assert.Null(result.Metadata);
+                Assert.Null(typeof(InlineSearchRule).GetProperty("Description"));
             }
         }
 
@@ -62,7 +63,7 @@ namespace Meilisearch.Tests
                             ""indexUid"": ""products"",
                             ""inlineRuleConditionOutcomes"": {
                                 ""satisfiesActiveCondition"": true,
-                                ""satisfiesQueryWordsCondition"": { ""missingWord"": { ""word"": ""pants"" } },
+                                ""satisfiesQueryWordsCondition"": { ""missingWord"": ""pants"" },
                                 ""satisfiesFilterCondition"": { ""missingConstraintOnField"": { ""field"": ""stock_intent"" } }
                             }
                         }
@@ -111,7 +112,7 @@ namespace Meilisearch.Tests
 
                 var outcomes = metadata.InlineRuleConditionOutcomes.Value;
                 Assert.True(outcomes.GetProperty("satisfiesActiveCondition").GetBoolean());
-                Assert.Equal("pants", outcomes.GetProperty("satisfiesQueryWordsCondition").GetProperty("missingWord").GetProperty("word").GetString());
+                Assert.Equal("pants", outcomes.GetProperty("satisfiesQueryWordsCondition").GetProperty("missingWord").GetString());
                 Assert.Equal("stock_intent", outcomes.GetProperty("satisfiesFilterCondition").GetProperty("missingConstraintOnField").GetProperty("field").GetString());
             }
         }
