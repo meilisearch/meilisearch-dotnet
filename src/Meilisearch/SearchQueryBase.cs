@@ -21,6 +21,12 @@ namespace Meilisearch
         public string Q { get; set; }
 
         /// <summary>
+        /// Dynamic search rule to preview for this query, without saving it on the server.
+        /// </summary>
+        [JsonPropertyName("inlineRule")]
+        public InlineSearchRule InlineRule { get; set; }
+
+        /// <summary>
         /// Gets or sets the filter to apply to the query.
         /// </summary>
         [JsonPropertyName("filter")]

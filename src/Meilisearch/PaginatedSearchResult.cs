@@ -101,5 +101,11 @@ namespace Meilisearch
         /// <inheritdoc/>
         [JsonPropertyName("indexUid")]
         public string IndexUid { get; }
+
+        /// <summary>
+        /// Optional search metadata, including inline rule condition outcomes.
+        /// </summary>
+        [JsonPropertyName("metadata")]
+        public SearchMetadata Metadata { get; set; }
     }
 }

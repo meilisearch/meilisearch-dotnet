@@ -105,19 +105,42 @@ namespace Meilisearch
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query,
+        public Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query,
             CancellationToken cancellationToken = default)
+        {
+            return MultiSearchAsync(query, false, cancellationToken);
+        }
+
+        /// <summary>
+        /// Searches multiple indexes at once, optionally requesting per-query metadata.
+        /// </summary>
+        /// <param name="query">Queries to execute, each with an IndexUid.</param>
+        /// <param name="includeMetadata">When true, sends Meili-Include-Metadata: true to retrieve rule preview outcomes.</param>
+        /// <param name="cancellationToken">The cancellation token for this call.</param>
+        /// <returns>Search results, including metadata when requested and returned by the server.</returns>
+        public async Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query, bool includeMetadata,
+            CancellationToken cancellationToken)
         {
             if (!query.Queries.TrueForAll(x => x.IndexUid != null))
             {
                 throw new ArgumentNullException("IndexUid", "IndexUid should be provided for all search queries");
             }
 
-            var responseMessage = await _http.PostAsJsonAsync("multi-search", query,
-                Constants.JsonSerializerOptionsRemoveNulls, cancellationToken: cancellationToken);
-            return await responseMessage.Content
-                .ReadFromJsonAsync<MultiSearchResult>(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+            using (var request = new HttpRequestMessage(HttpMethod.Post, "multi-search"))
+            {
+                request.Content = JsonContent.Create(query, options: Constants.JsonSerializerOptionsRemoveNulls);
+                if (includeMetadata)
+                {
+                    request.Headers.Add("Meili-Include-Metadata", "true");
+                }
+
+                using (var responseMessage = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                {
+                    return await responseMessage.Content
+                        .ReadFromJsonAsync<MultiSearchResult>(cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
