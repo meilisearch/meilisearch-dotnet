@@ -43,9 +43,12 @@ What we expect:
 You can set up your local environment natively or using `docker`, check out the [`docker-compose.yml`](/docker-compose.yml).
 
 Example of running all the checks with docker:
+
 ```bash
-docker-compose run --rm package bash -c "dotnet test && dotnet format --verbosity normal --verify-no-changes"
+docker compose run --rm package bash -c "dotnet test && dotnet format --verbosity normal --verify-no-changes"
 ```
+
+NuGet packages and build outputs stay in Docker volumes.
 
 To install dependencies:
 
@@ -57,10 +60,10 @@ You need to install the [.NET Core command-line interface (CLI) tools](https://d
 
 ### Tests <!-- omit in TOC -->
 
-To run the tests locally, the Meilisearch instance must be started with the specific docker-compose file in the directory:
+To run the tests locally, start Meilisearch with the docker-compose file in the directory:
 
 ```bash
-docker-compose up
+docker compose up -d
 ```
 
 You need to run the following command to launch tests in the Dotnet SDK:

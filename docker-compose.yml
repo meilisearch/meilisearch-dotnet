@@ -1,24 +1,27 @@
-version: "3.7"
-
-volumes:
-  nuget:
-
 services:
   package:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
+    profiles: ["dev"]
+    build:
+      context: ./docker
+      dockerfile: dotnet.Dockerfile
+    image: meilisearch-dotnet-dev
     tty: true
     stdin_open: true
     working_dir: /home/package
     env_file: .env
+    environment:
+      NUGET_PACKAGES: /nuget/packages
     depends_on:
-      - meilisearch
-      - nginx
-    links:
       - meilisearch
       - nginx
     volumes:
       - ./:/home/package
-      - nuget:/root/.nuget/packages/
+      # Keep NuGet packages and build outputs off the host.
+      - package_nuget:/nuget/packages
+      - package_src_bin:/home/package/src/Meilisearch/bin
+      - package_src_obj:/home/package/src/Meilisearch/obj
+      - package_tests_bin:/home/package/tests/Meilisearch.Tests/bin
+      - package_tests_obj:/home/package/tests/Meilisearch.Tests/obj
 
   meilisearch:
     image: getmeili/meilisearch-enterprise:${MEILISEARCH_VERSION}
@@ -27,6 +30,7 @@ services:
     environment:
       - MEILI_MASTER_KEY=masterKey
       - MEILI_NO_ANALYTICS=true
+      - MEILI_EXPERIMENTAL_ALLOWED_IP_NETWORKS=any
 
   meilisearchproxy:
     image: getmeili/meilisearch-enterprise:${MEILISEARCH_VERSION}
@@ -35,13 +39,20 @@ services:
     environment:
       - MEILI_MASTER_KEY=masterKey
       - MEILI_NO_ANALYTICS=true
+      - MEILI_EXPERIMENTAL_ALLOWED_IP_NETWORKS=any
 
   nginx:
-    image: nginx:latest
-    container_name: production_nginx
+    image: nginx:1-alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - 8080:80
+      - "8080:80"
     depends_on:
       - meilisearchproxy
+
+volumes:
+  package_nuget:
+  package_src_bin:
+  package_src_obj:
+  package_tests_bin:
+  package_tests_obj:
