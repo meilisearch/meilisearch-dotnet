@@ -119,7 +119,7 @@ namespace Meilisearch
         /// <param name="cancellationToken">The cancellation token for this call.</param>
         /// <returns>Search results, including metadata when requested and returned by the server.</returns>
         public async Task<MultiSearchResult> MultiSearchAsync(MultiSearchQuery query, bool includeMetadata,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (!query.Queries.TrueForAll(x => x.IndexUid != null))
             {
