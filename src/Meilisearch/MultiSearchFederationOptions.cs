@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -21,5 +22,19 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
+
+        /// <summary>
+        /// Facets requested for each index, keyed by index UID.
+        /// </summary>
+        [JsonPropertyName("facetsByIndex")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Dictionary<string, string[]> FacetsByIndex { get; set; }
+
+        /// <summary>
+        /// Options for merging facet distributions across indexes.
+        /// </summary>
+        [JsonPropertyName("mergeFacets")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public MultiSearchFederationMergeFacetsOptions MergeFacets { get; set; }
     }
 }
