@@ -618,5 +618,26 @@ namespace Meilisearch.Tests
                 m => Assert.Equal("Shazam!", m.Title)
             );
         }
+
+        [Fact]
+        public async Task CustomSearchWithPersonalize()
+        {
+            var searchQuery = new SearchQuery
+            {
+                Personalize = new Personalize { UserContext = "The user only watches science fiction movies" }
+            };
+
+            try
+            {
+                var movies = await _basicIndex.SearchAsync<Movie>("man", searchQuery);
+                movies.Hits.Should().NotBeNull();
+            }
+            catch (MeilisearchApiError ex)
+            {
+                // Reranking needs a personalization API key, which the test instance does not set.
+                // Any other code means the SDK sent a request Meilisearch considers malformed.
+                Assert.Equal("feature_not_enabled", ex.Code);
+            }
+        }
     }
 }
