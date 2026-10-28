@@ -21,6 +21,10 @@ namespace Meilisearch.Converters
             return SortFacetValuesByType.Alpha;
         }
 
+        /// <inheritdoc/>
+        /// <summary>
+        /// Writes the facet sort value as a JSON string, preserving the API's <c>sampledCount</c> casing.
+        /// </summary>
         public override void Write(Utf8JsonWriter writer, SortFacetValuesByType value, JsonSerializerOptions options)
         {
             writer.WriteStringValue(value == SortFacetValuesByType.SampledCount ? "sampledCount" : value.ToString().ToLower());
