@@ -34,6 +34,11 @@ namespace Meilisearch
         /// <summary>
         /// Sort by count value.
         /// </summary>
-        Count
+        Count,
+
+        /// <summary>
+        /// Sort by sampled count value.
+        /// </summary>
+        SampledCount
     }
 }

@@ -511,7 +511,7 @@ update_faceting_settings_1: |-
       SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
       {
           ["*"] = SortFacetValuesByType.Alpha,
-          ["genres"] = SortFacetValuesByType.Count
+          ["genres"] = SortFacetValuesByType.SampledCount
       }
   };
   await client.Index("books").UpdateFacetingAsync(faceting);

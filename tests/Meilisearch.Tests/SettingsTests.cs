@@ -578,15 +578,19 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetFacetingAsync, _defaultSettings.Faceting);
         }
 
-        [Fact]
-        public async Task UpdateFaceting()
+        [Theory]
+        [InlineData(SortFacetValuesByType.Count, SortFacetValuesByType.Alpha)]
+        [InlineData(SortFacetValuesByType.SampledCount, SortFacetValuesByType.Alpha)]
+        [InlineData(SortFacetValuesByType.Alpha, SortFacetValuesByType.SampledCount)]
+        public async Task UpdateFaceting(SortFacetValuesByType defaultSort, SortFacetValuesByType genresSort)
         {
             var newFaceting = new Faceting
             {
                 MaxValuesPerFacet = 20,
                 SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
                 {
-                    ["*"] = SortFacetValuesByType.Count
+                    ["*"] = defaultSort,
+                    ["genres"] = genresSort
                 }
             };
 
@@ -594,15 +598,19 @@ namespace Meilisearch.Tests
             await AssertGetEquality(_index.GetFacetingAsync, newFaceting);
         }
 
-        [Fact]
-        public async Task ResetFaceting()
+        [Theory]
+        [InlineData(SortFacetValuesByType.Count, SortFacetValuesByType.Alpha)]
+        [InlineData(SortFacetValuesByType.SampledCount, SortFacetValuesByType.Alpha)]
+        [InlineData(SortFacetValuesByType.Alpha, SortFacetValuesByType.SampledCount)]
+        public async Task ResetFaceting(SortFacetValuesByType defaultSort, SortFacetValuesByType genresSort)
         {
             var newFaceting = new Faceting
             {
                 MaxValuesPerFacet = 30,
                 SortFacetValuesBy = new Dictionary<string, SortFacetValuesByType>
                 {
-                    ["*"] = SortFacetValuesByType.Count
+                    ["*"] = defaultSort,
+                    ["genres"] = genresSort
                 }
             };
 

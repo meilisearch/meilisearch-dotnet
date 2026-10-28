@@ -23,7 +23,7 @@ namespace Meilisearch.Converters
 
         public override void Write(Utf8JsonWriter writer, SortFacetValuesByType value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString().ToLower());
+            writer.WriteStringValue(value == SortFacetValuesByType.SampledCount ? "sampledCount" : value.ToString().ToLower());
         }
     }
 }
