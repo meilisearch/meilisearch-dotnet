@@ -9,6 +9,12 @@ namespace Meilisearch
     public class IndexStats
     {
         public IndexStats(int numberOfDocuments, bool isIndexing, IReadOnlyDictionary<string, int> fieldDistribution, long rawDocumentDbSize, long avgDocumentSize, int numberOfEmbeddedDocuments, int numberOfEmbeddings)
+            : this(numberOfDocuments, isIndexing, fieldDistribution, rawDocumentDbSize, avgDocumentSize, numberOfEmbeddedDocuments, numberOfEmbeddings, null, null)
+        {
+        }
+
+        [JsonConstructor]
+        public IndexStats(int numberOfDocuments, bool isIndexing, IReadOnlyDictionary<string, int> fieldDistribution, long rawDocumentDbSize, long avgDocumentSize, int numberOfEmbeddedDocuments, int numberOfEmbeddings, long? indexSize, long? usedIndexSize)
         {
             NumberOfDocuments = numberOfDocuments;
             IsIndexing = isIndexing;
@@ -17,6 +23,8 @@ namespace Meilisearch
             AvgDocumentSize = avgDocumentSize;
             NumberOfEmbeddedDocuments = numberOfEmbeddedDocuments;
             NumberOfEmbeddings = numberOfEmbeddings;
+            IndexSize = indexSize;
+            UsedIndexSize = usedIndexSize;
         }
 
         /// <summary>
@@ -61,5 +69,19 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("numberOfEmbeddings")]
         public int NumberOfEmbeddings { get; }
+
+        /// <summary>
+        /// Get the size of the index database, in bytes.
+        /// Null when the Meilisearch instance is older than v1.53.0 and does not report it.
+        /// </summary>
+        [JsonPropertyName("indexSize")]
+        public long? IndexSize { get; }
+
+        /// <summary>
+        /// Get the size of the used pages of the index database, in bytes.
+        /// Null when the Meilisearch instance is older than v1.53.0 and does not report it.
+        /// </summary>
+        [JsonPropertyName("usedIndexSize")]
+        public long? UsedIndexSize { get; }
     }
 }
