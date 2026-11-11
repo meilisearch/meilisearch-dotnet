@@ -38,6 +38,7 @@
   - [Get Task information](#get-task-information)
   - [Search](#search)
 - [🧰 Use a Custom HTTP Client](#-use-a-custom-http-client)
+- [🗜️ Request Compression](#️-request-compression)
 - [⚙️ Contributing](#️-contributing)
 
 ## 📖 Documentation
@@ -387,6 +388,73 @@ var client = new MeilisearchClient(_httpClient);
 ```
 
 Where `ClientFactory` is declared [like this](/tests/Meilisearch.Tests/ClientFactory.cs).
+
+## 🗜️ Request Compression
+
+The SDK supports automatic HTTP request compression to reduce bandwidth usage and improve performance when sending large document payloads. This is especially beneficial for document upload operations.
+
+### Supported Algorithms
+
+- **Gzip** (recommended) - Widely supported, good compression ratio, works with .NET Standard 2.0+
+- **Deflate** - Alternative to Gzip (requires .NET 6.0+ for ZLibStream support)
+- **Brotli** - Best compression ratio (requires .NET Standard 2.1+ / .NET Core 2.1+)
+
+> **Note:** The package ships a .NET Standard 2.0 build and a .NET 6 build. Gzip is available in both. Deflate and Brotli are included in the .NET 6 build, so applications targeting .NET 6 or later get them automatically. On .NET Standard 2.0, only Gzip is available.
+
+### Basic Usage
+
+Enable compression by passing `CompressionOptions` when creating the client:
+
+```c#
+using Meilisearch;
+
+// Enable Gzip compression with default settings (1400 byte threshold)
+var client = new MeilisearchClient(
+    "http://localhost:7700",
+    "masterKey",
+    CompressionOptions.Gzip());
+
+// All document operations automatically use compression
+var index = client.Index("movies");
+await index.AddDocumentsAsync(largeDocumentCollection);
+```
+
+### Custom Configuration
+
+You can customize compression behavior:
+
+```c#
+var compressionOptions = new CompressionOptions
+{
+    Algorithm = CompressionAlgorithm.Gzip,
+    MinimumSizeBytes = 1024,  // Only compress payloads >= 1KB
+    EnableResponseDecompression = true  // Request compressed responses from server
+};
+
+var client = new MeilisearchClient(
+    "http://localhost:7700",
+    "masterKey",
+    compressionOptions);
+```
+
+> **Note:** Request compression and `EnableResponseDecompression` apply only when using the URL constructor, which creates the `HttpClient` itself. Passing `CompressionOptions` to the custom `HttpClient` constructor stores the options and does not compress requests or decompress responses. With your own `HttpClient`, add a `MeilisearchMessageHandler` configured with those options to the handler pipeline, and set `HttpClientHandler.AutomaticDecompression` for response decompression.
+
+### When to Use Compression
+
+Compression is beneficial when:
+- Sending large document collections (hundreds to thousands of documents)
+- Working with documents containing large text fields
+- Operating on limited bandwidth connections
+- Performing batch operations with significant payload sizes
+
+The default threshold of 1400 bytes ensures compression only applies when beneficial, avoiding unnecessary overhead for small payloads.
+
+### Performance Notes
+
+- Compression adds minimal CPU overhead (typically <5ms for MB-sized payloads)
+- Network transfer time reduction often exceeds compression overhead
+- Most effective with text-heavy documents (JSON, CSV, NDJSON)
+- The 1400-byte default threshold aligns with TCP packet sizes for optimal performance
 
 ## ⚙️ Contributing
 
