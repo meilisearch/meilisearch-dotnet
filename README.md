@@ -399,7 +399,7 @@ The SDK supports automatic HTTP request compression to reduce bandwidth usage an
 - **Deflate** - Alternative to Gzip (requires .NET 6.0+ for ZLibStream support)
 - **Brotli** - Best compression ratio (requires .NET Standard 2.1+ / .NET Core 2.1+)
 
-> **Note:** This SDK targets .NET Standard 2.0, so only **Gzip** is available by default. If your project targets .NET 6.0+ or .NET Standard 2.1+, Deflate and Brotli will also be available.
+> **Note:** The package ships a .NET Standard 2.0 build and a .NET 6 build. Gzip is available in both. Deflate and Brotli are included in the .NET 6 build, so applications targeting .NET 6 or later get them automatically. On .NET Standard 2.0, only Gzip is available.
 
 ### Basic Usage
 
@@ -437,7 +437,7 @@ var client = new MeilisearchClient(
     compressionOptions);
 ```
 
-> **Note:** The `EnableResponseDecompression` option only works when using the default `MeilisearchClient` constructor. If you provide a custom `HttpClient`, you must configure `HttpClientHandler.AutomaticDecompression` yourself.
+> **Note:** Request compression and `EnableResponseDecompression` apply only when using the URL constructor, which creates the `HttpClient` itself. Passing `CompressionOptions` to the custom `HttpClient` constructor stores the options and does not compress requests or decompress responses. With your own `HttpClient`, add a `MeilisearchMessageHandler` configured with those options to the handler pipeline, and set `HttpClientHandler.AutomaticDecompression` for response decompression.
 
 ### When to Use Compression
 

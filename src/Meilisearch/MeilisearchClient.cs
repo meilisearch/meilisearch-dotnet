@@ -67,7 +67,13 @@ namespace Meilisearch
         /// </summary>
         /// <param name="client">Injects the reusable HttpClient.</param>
         /// <param name="apiKey">API Key to connect to the Meilisearch server. Best practice is to use HttpClient default header rather than this parameter.</param>
-        /// <param name="compressionOptions">Compression configuration options.</param>
+        /// <param name="compressionOptions">
+        /// Stored on <see cref="CompressionOptions"/> for reference only.
+        /// This constructor does not compress requests or decompress responses.
+        /// Use the URL constructor for that behavior, or add a <see cref="MeilisearchMessageHandler"/>
+        /// configured with these options to the <paramref name="client"/> pipeline and set
+        /// <see cref="HttpClientHandler.AutomaticDecompression"/> for response decompression.
+        /// </param>
         public MeilisearchClient(HttpClient client, string apiKey = default, CompressionOptions compressionOptions = default)
         {
             client.BaseAddress = client.BaseAddress.OriginalString.ToSafeUri();

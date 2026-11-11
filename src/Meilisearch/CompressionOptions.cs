@@ -14,13 +14,19 @@ namespace Meilisearch
         /// <summary>Deflate compression with zlib wrapper (RFC 1950). Requires .NET 6.0+.</summary>
         Deflate = 2,
 
-        /// <summary>Brotli compression (.NET Standard 2.1+ / .NET Core 2.1+).</summary>
+        /// <summary>Brotli compression. Available in the .NET 6 build of this package.</summary>
         Brotli = 3
     }
 
     /// <summary>
     /// Configuration options for HTTP request compression.
     /// </summary>
+    /// <remarks>
+    /// The <see cref="MeilisearchClient"/> URL constructor applies these options.
+    /// The constructor that accepts an existing <see cref="System.Net.Http.HttpClient"/> stores them and does not apply them.
+    /// Gzip is available on every target. Deflate and Brotli are available in the .NET 6 build of this package;
+    /// the .NET Standard 2.0 build supports Gzip only.
+    /// </remarks>
     public class CompressionOptions
     {
         private int _minimumSizeBytes = 1400;

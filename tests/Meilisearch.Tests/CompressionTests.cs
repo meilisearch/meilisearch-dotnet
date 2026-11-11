@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +49,7 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task DeflateCompression_ShouldThrowNotSupportedExceptionOnNetStandard20()
+        public async Task DeflateCompression_ShouldSuccessfullyAddDocuments()
         {
             // Arrange
             var compressionOptions = CompressionOptions.Deflate(minimumSizeBytes: 100);
@@ -60,18 +59,17 @@ namespace Meilisearch.Tests
                 compressionOptions);
 
             var index = client.Index("movies-deflate-test");
-            var movies = new[] { new Movie { Id = "1", Name = "Test Movie" } };
+            var movies = Enumerable.Range(1, 100)
+                .Select(i => new Movie { Id = i.ToString(), Name = $"Movie {i}" })
+                .ToList();
 
-            // Act & Assert
-            // Since Meilisearch library targets netstandard2.0, Deflate will always throw
-            // NotSupportedException regardless of the test target framework.
-            // Deflate requires .NET 6.0+ for ZLibStream support.
-            var exception = await Assert.ThrowsAsync<NotSupportedException>(async () =>
-            {
-                await index.AddDocumentsAsync(movies);
-            });
+            // Act
+            var task = await index.AddDocumentsAsync(movies);
+            await index.WaitForTaskAsync(task.TaskUid);
 
-            exception.Message.Should().Contain("Deflate requires .NET 6.0+");
+            // Assert
+            var docs = await index.GetDocumentsAsync<Movie>(new DocumentsQuery { Limit = 100 });
+            docs.Results.Should().HaveCount(100);
         }
 
         [Fact]
@@ -187,36 +185,31 @@ namespace Meilisearch.Tests
         }
 
         [Fact]
-        public async Task BrotliCompression_ShouldThrowNotSupportedExceptionOnNetStandard20()
+        public async Task BrotliCompression_ShouldSuccessfullyAddDocuments()
         {
             // Arrange
-            var compressionOptions = new CompressionOptions
-            {
-                Algorithm = CompressionAlgorithm.Brotli,
-                MinimumSizeBytes = 100
-            };
+            var compressionOptions = CompressionOptions.Brotli(minimumSizeBytes: 100);
             var client = new MeilisearchClient(
                 _fixture.MeilisearchAddress(),
                 "masterKey",
                 compressionOptions);
 
             var index = client.Index("movies-brotli-test");
-            var movies = new[] { new Movie { Id = "1", Name = "Test Movie" } };
+            var movies = Enumerable.Range(1, 100)
+                .Select(i => new Movie { Id = i.ToString(), Name = $"Movie {i}" })
+                .ToList();
 
-            // Act & Assert
-            // Since Meilisearch library targets netstandard2.0, Brotli will always throw
-            // NotSupportedException regardless of the test target framework.
-            // Brotli requires .NET Standard 2.1+ or .NET Core 2.1+.
-            var exception = await Assert.ThrowsAsync<NotSupportedException>(async () =>
-            {
-                await index.AddDocumentsAsync(movies);
-            });
+            // Act
+            var task = await index.AddDocumentsAsync(movies);
+            await index.WaitForTaskAsync(task.TaskUid);
 
-            exception.Message.Should().Contain("Brotli requires .NET Standard 2.1+");
+            // Assert
+            var docs = await index.GetDocumentsAsync<Movie>(new DocumentsQuery { Limit = 100 });
+            docs.Results.Should().HaveCount(100);
         }
 
         [Fact]
-        public async Task GzipCompression_ShouldReducePayloadSize()
+        public async Task GzipCompression_ServerAcceptsCompressedDocuments()
         {
             // Arrange - Create a large dataset to ensure compression has an effect
             var compressionOptions = CompressionOptions.Gzip(minimumSizeBytes: 100);
@@ -240,8 +233,8 @@ namespace Meilisearch.Tests
             var task = await index.AddDocumentsAsync(movies);
             await index.WaitForTaskAsync(task.TaskUid);
 
-            // Assert - Verify documents were successfully added
-            // This confirms compression worked without errors
+            // Assert - The server accepted the gzip body and stored the documents.
+            // Wire-format checks live in CompressionHandlerTests.
             var docs = await index.GetDocumentsAsync<Movie>(new DocumentsQuery { Limit = 50 });
             docs.Results.Should().HaveCount(50);
 
