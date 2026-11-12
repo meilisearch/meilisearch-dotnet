@@ -51,5 +51,11 @@ namespace Meilisearch
         /// </summary>
         [JsonPropertyName("facetStats")]
         IReadOnlyDictionary<string, FacetStat> FacetStats { get; }
+
+        /// <summary>
+        /// Optional search metadata, returned when requested from the API.
+        /// </summary>
+        [JsonPropertyName("metadata")]
+        SearchMetadata Metadata { get; }
     }
 }
