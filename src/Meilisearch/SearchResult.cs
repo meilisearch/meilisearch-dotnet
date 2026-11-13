@@ -22,12 +22,14 @@ namespace Meilisearch
         /// <param name="matchesPosition"></param>
         /// <param name="facetStats"></param>
         /// <param name="indexUid"></param>
+        /// <param name="queryVector"></param>
         public SearchResult(IReadOnlyCollection<T> hits, int offset, int limit, int estimatedTotalHits,
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, int>> facetDistribution,
             int processingTimeMs, string query,
             IReadOnlyDictionary<string, IReadOnlyCollection<MatchPosition>> matchesPosition,
             IReadOnlyDictionary<string, FacetStat> facetStats,
-            string indexUid)
+            string indexUid,
+            IReadOnlyList<float> queryVector = null)
         {
             Hits = hits;
             Offset = offset;
@@ -39,6 +41,7 @@ namespace Meilisearch
             MatchesPosition = matchesPosition;
             FacetStats = facetStats;
             IndexUid = indexUid;
+            QueryVector = queryVector;
         }
 
         /// <inheritdoc/>
@@ -86,5 +89,12 @@ namespace Meilisearch
         /// <inheritdoc/>
         [JsonPropertyName("indexUid")]
         public string IndexUid { get; }
+
+        /// <summary>
+        /// The embedding used as the query vector for a vector/semantic search.
+        /// Only returned when the search request sets <c>retrieveVectors</c> to <c>true</c>.
+        /// </summary>
+        [JsonPropertyName("queryVector")]
+        public IReadOnlyList<float> QueryVector { get; }
     }
 }
